@@ -35,7 +35,8 @@ function _Server_project_dataTypeTemplate(_projectId, _dataTypeTemplate) {
       if (this.list[i][this.DataTypeIdKey] != newItem[this.DataTypeIdKey]) continue;
       return this.list[i] = newItem;
     }
-    return this.list.push(newItem);
+    this.list.push(newItem);
+    return newItem;
   }
 
 

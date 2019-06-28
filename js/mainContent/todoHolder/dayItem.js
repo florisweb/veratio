@@ -228,12 +228,11 @@ function _MainContent_todoHolder_dayItem(_date, _appendTo, _preferences = {}, _t
 
 			resetEditMode(true);
 
-			project.todos.update(todo);
+			todo = project.todos.update(todo);
+			Parent.todo.renderTodo(todo);
+			
 			this.close();
 			MainContent.searchOptionMenu.close();
-
-			todo = Server.todos.get(todo.id);
-			Parent.todo.renderTodo(todo);
 
 			return true;
 		}

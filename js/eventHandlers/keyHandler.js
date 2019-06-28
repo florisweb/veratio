@@ -21,11 +21,8 @@ function _KeyHandler() {
     {
       keys: ["Escape"], 
       event: function () {
-        console.log("escape");
         if (MainContent.searchOptionMenu.openState)                         return MainContent.searchOptionMenu.hide(true);
-        console.log("1");
         if (MainContent.optionMenu.openState)                               return MainContent.optionMenu.close();
-        console.log("2");
         if (MainContent.menu.Main.todoHolder.dayItem.closeAllCreateMenus()) return true;
       },
       ignoreIfInInputField: false
