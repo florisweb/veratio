@@ -54,22 +54,6 @@ function _Server_project_dataTypeTemplate(_projectId, _dataTypeTemplate) {
 
 
   this.DB = new function() {
-    function encodeJSON(_JSON) {
-      let jsonStr = JSON.stringify(_JSON);
-      jsonStr = jsonStr.replace(/\+/g, "<plusSign>");
-      
-      return encodeURIComponent(jsonStr);
-    }
-
-    function decodeJSON(_jsonObj) {
-      let jsonStr = JSON.stringify(_jsonObj);
-      jsonStr = jsonStr.replace(/<plusSign>/g, "+");
-      
-      return JSON.parse(jsonStr);
-    }
-
-
-
     this.update = function(_newItem) {
       let parameters = "projectId=" + projectId + "&dataType=" + This.DataType + "&method=update&parameter=" + Encoder.objToString(_newItem);
        REQUEST.send("database/project/simpleOperation.php", parameters).then(
