@@ -28,7 +28,6 @@ function _Server_project_todoComponent(_parent) {
   this.remove = function(_id) {return DTTemplate.remove(_id);}
 
   this.update = function(_newItem, _updateServer = true) {
-    if (_newItem.title == "hey there <plusSign> 1") console.trace("u", _newItem);
     _newItem.projectId = Parent.id;
     return DTTemplate.update(_newItem, _updateServer);
   }
