@@ -146,6 +146,7 @@
 			$.getScript("js/sideBar.js?antiCache=" 									+ antiCache, function() {});
 			
 
+			$.getScript("js/server/encoder.js?antiCache=" 							+ antiCache, function() {});
 			$.getScript("js/server/projectHelpers/dataTypeTemplate.js?antiCache=" 	+ antiCache, function() {});
 			$.getScript("js/server/projectHelpers/userComponent.js?antiCache=" 		+ antiCache, function() {});
 			$.getScript("js/server/projectHelpers/todoComponent.js?antiCache=" 		+ antiCache, function() {});
@@ -157,11 +158,6 @@
 
 			$.getScript("js/app.js?antiCache=" 										+ antiCache, function() {});
 
-
-
-
-			// let project = Server.projectList[3];
-			// project.users.update({id: "abc", permissions: "[]"})
 		</script>
  	<!-- 
  		<script type="text/javascript" src="js/mainContent/navigator.js" asy nc></script>
