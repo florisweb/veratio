@@ -1,0 +1,203 @@
+Style:
+- Discord
+- Bol.com: https://klantreactie.bol.com/forms/awgyPK/positive
+		verified=true&mailing=CLI_ORDER_CONFIRMATION_092018&id=d6f2b71c-289c-4959-b277-c062fa782a83&fr_id=kJM7672
+- todoist
+- evernote
+
+
+
+
+Colors:
+bDefault: 7592BF
+bWarn: ff632c
+
+dark: 4E6280
+darker: 2B3646
+light: 8CB0E6
+lighter: 9CC3FF
+
+Colors V2:
+rgb(225, 166, 255)
+rgb(180, 175, 255)
+rgb(128, 204, 228)
+bDefault: rgb(120, 123, 237)
+
+
+
+
+
+
+
+
+Possible names:
+Veratio
+
+
+Efficienty:
+push todos at the lists front, this way the most recent will be accessed earlier and it has to loop over less todos
+
+
+
+Bugs:
++ Can't use '+' in the title of a todo
++ Overdue menu's tasks don't show their project's title
+
+
+
+Date:
+Version: 0.1
+
+
+Todolist for version 0.1: 
++ create membermanagement-UI
+
++ create 'remove project'-UI
++ create 'edit project title'-UI
+
+
+
+
+
+Date: 18-6-2019
++ Fixed a bug where .todoItem.hide would have a height of a few pixels, so when you'd remove 7 or 8 of them that'd start to pile up.
+
+
+Date: 9-6-2019
++ Some minor improvements in the code
++ Fixed a bug where the 'overdue'-items wouldn't display their projectTitle
++ Updated the color of the bDefault-button to fit with the new colour scheme
+
+
+Date: 8-6-2019
++ added the sideBar background
++ added sideBar-shadow, makes it 'pop'
++ move the sideBarBackground-script to php (<img src="sideBarBackground.php">)
++ added '+ Create project'-button
+
+
+Date: 6-6-2019
++ altered the design and feel of the optionMenus (also removed the input field at the top of the normal option menu)
++ Fixed: When rightclicking you would select the text you were clicking on.
+
+
+Date: 5-6-2019
++ MainContent.TodoItem, the optionmenu button only appears when you hover over it
++ MainContent: added RightClick, when rightclicking on a todo the optionmenu opens
++ Fixed a bug where tasks would get duplicated when you'd edit them, due to giving them the wrong projectid
++ When creating a task remove the spaces on the start and end of the title
++ Added membertext delimitation: "Floris, Jarle, Dirk and 4 others"
+
+
+Date: 27-5-2019
++ Fixed: MainContent popup-menu out of sight bug: they didn't take scrollTop into account so they'd be out of view when you scrolled down 
+
+
+Date: 26-5-2019
+++ Restructured the MainContent navigation
+++ Added front- and backend support for creating projects
++ Fixed a bug with the overflow of the sidebar's projectHolder
++ DB: Projects now have an access checker, (aka have to be in the userlist)
++ DB: Started working on the permissions
+
+
+
+Date: 25-5-2019
++ Fixed the MainContent.menu.Main.page system, it'd set the pagename to the projectId instead of 'Project' which caused the following problem:
+	\- 'overdue'-menu doesn't get removed when it's empty and you refresh the page (only under the project-page)
++ created compontent.css: contains css custom components such as buttons and input fields
+
+
+
+Date: 23-5-2019
++ Restructured and rewrote some html and css to make it easier to add pages (for example for a projects settings or createmenu)
+
+
+
+Date: 20-5-2019
++ started the reform to use groupType and groupValue instead of 'date', this will become important later, when I'm going to add folders, non-date items and subtasks.
++ started the switch from 'todo' to 'task'
+
+
+
+Date: 19-5-2019
++ refactored js file structure
++ refactored MainContent.menu.Main.page
++ refactored quite some code
+
+Date: 18-5-2019
+++ uploaded to florisweb.tk
+++ fixed a lot of bugs
+
+
+Date: 16-5-2019
++ Added 'overdue'-UI ()
++ Refactored some code
+
+
+Date: 12-5-2019
++ dataTypeTemplate.update now uses encodeUriComponent to send updated items, this ensures the application won't break when you send & enz
+	\- '+' doesn't work yet
+	
+
+Date: 11-5-2019
+++ Rewrote the @# system and added @users
+	|- Active-checks are functional too
+	|- @users system fully implemented (will be added to the todos assignedTo array)
+	\- Use Enter to autocomplete your #@
+
+
+
+Date: 10-5-2019
++ Fixed: On TodoEditFinish the previous todo's html wouldn't be removed which resulted in having two times the same todo
++ Added: Started adding @users in 
+
+
+Date: 9-5-2019
++ Fixed: When a todo is removed the system thinks it still exists because it only updates, it doesn't remove and re-add, (FRONTEND)
+	\- Meta-data is now kept
+
+
+
+Date: 7-5-2019
++++ Rewrote entire MainContent and rendering engine
+	\- Added: Dynamic adding of todos, so the whole page doesn't have to refresh
+++ Added early version of searchOptionMenu which automatically detects tags and members and sugests them in the form of an optionlist.
+
+
+
+Date: 5-5-2019
++ Added Shortcut: l: load more, r: refresh
++ Added 'load more'-button
++ Added the sorting system to MainContent.renderSettings
+	|- Sort by tags
+	|- Sort by Projects
+	|- Sort by Alphabeth (Default)
+	\- Sort by Finished
++ Restructured mainContentHolder so overlays can be added more easily
++ Added the 'edit-todo'-system
++ Added access to the 'edit-todo'-system via
+	|- Doubleclick on the todo
+	\- Click on edit todo under the optionMenu
+
+
+
+
+Date: 4-5-2019
++ Added Shortcuts: N, Enter, Escape, i, r, t
++ Added animation when switching between pages
++ Added create-todo-UI
++ Added a 'filter' system, (UI not yet written)
++ Added the optionMenu so todos can be removed
+
+* Fixed a backend bug where the getTodosByDateRange wouldn't work (hardcoded the date in instead of using the variable)
++ Rewrote loads of code in order to improve performance and stability
+
+
+
+Date: < 4-5-2019
++++ General setup
++++ Backend basic-build
+
+
+

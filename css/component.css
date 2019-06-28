@@ -1,0 +1,85 @@
+
+
+.button {
+	position: relative;
+	width: auto;
+	padding: 7px 15px !important;
+
+	border-radius: 30px;
+	font-size: 13px;
+
+	cursor: pointer;
+}
+	.button.bBoxy {
+		border-radius: 4px;	
+	}
+
+	.button.bDefault {
+		/*background: #7592BF !important;*/
+		background: rgb(140, 153, 247) !important;
+		color: #fff !important;
+	}
+	.button.bWarn {
+		background: #ff632c !important;
+		color: #fff !important;
+	}
+
+
+
+
+
+
+
+
+
+
+.inputField {
+	position: relative;
+	left: 0;
+	padding: 7px 3px;
+	height: 15px;
+	
+	border-radius: 30px;
+
+	border: 2px solid #f3f3f3;
+	outline: none;
+}
+	.inputField.iBoxy {
+		border-radius: 3px;
+	}
+
+
+
+
+
+
+
+
+.text {
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+	color: #999;
+	font-size: 14px;
+}
+
+.text.tHeaderSmall {
+	color: #888;
+}
+
+.text.tHeaderMedium {
+	font-size: 16px;
+}
+
+.text.tHeaderLarge {
+	font-size: 20px;
+}
+
+
+
+
+
+
+
+
+
+
+
