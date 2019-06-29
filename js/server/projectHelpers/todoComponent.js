@@ -29,6 +29,7 @@ function _Server_project_todoComponent(_parent) {
 
   this.update = function(_newItem, _updateServer = true) {
     _newItem.projectId = Parent.id;
+    if (typeof _newItem.groupValue != "string") _newItem.groupValue = String(_newItem.groupValue);
     return DTTemplate.update(_newItem, _updateServer);
   }
 

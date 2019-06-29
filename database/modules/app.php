@@ -3,7 +3,7 @@
 	require_once "$root/PHPV2/PacketManager.php";
 	$GLOBALS["PM"]->includePacket("SESSION", "1.0");
 	
-	require_once "$root/PC/todo/database/modules/project.php";
+	require_once "$root/git/todo/database/modules/project.php";
 
 	class _App {
 		public $userId;
@@ -62,10 +62,4 @@
 
 	global $App;
 	$App = new _App();
-
-	// $project = $App->getProject("68f08fa3f055a8eb14f17609937f3f37c97dc23f");
-	// echo "<pre>";
-	// var_dump(
-	// 	$project->users->getPermissions("FLORIESCH", "users")
-	// );
 ?>

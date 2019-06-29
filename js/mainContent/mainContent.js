@@ -110,7 +110,6 @@ function _MainContent_searchOptionMenu() {
 		inputField = _item;
 		keyupTimeout = 0;
 		inputField.onkeyup = function() {
-			console.warn("keyTimeout:" + keyupTimeout);
 			if (keyupTimeout > 0) return keyupTimeout--;
 			
 			addTagItemsByValue(this.value, this.selectionStart);

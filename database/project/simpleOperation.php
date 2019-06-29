@@ -1,6 +1,6 @@
 <?php
 	$root = realpath($_SERVER["DOCUMENT_ROOT"]);
-	require_once "$root/PC/todo/database/modules/app.php";
+	require_once "$root/git/todo/database/modules/app.php";
 
 	$_projectId 	= (String)$_POST["projectId"];
 	$_dataType 		= (String)$_POST["dataType"];
@@ -28,7 +28,8 @@
 	if (!$firstMethods) die("E_invalidMethod");
 	$methodOptions = array_splice($firstMethods, 1, 100);
 	if (!in_array($_method, $methodOptions)) die("E_invalidMethod");
-	
+
+
 	try {
 		$parameter = json_decode($_parameter, true);
 	}
@@ -36,8 +37,8 @@
 		$parameter = $_parameter;
 	}
 	if ($parameter == NULL) $parameter = $_parameter;
+	
 
 	$result = $target->{$_method}($parameter);
 	echo json_encode($result);
-
 ?>

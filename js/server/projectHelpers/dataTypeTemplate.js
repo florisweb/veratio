@@ -27,7 +27,6 @@ function _Server_project_dataTypeTemplate(_projectId, _dataTypeTemplate) {
   this.update = function(_newItem, _updateServer = true) {
     let newItem = _filterData(_newItem);
     if (!newItem) return false;
-
     if (_updateServer) this.DB.update(newItem);
 
     for (let i = 0; i < this.list.length; i++)
@@ -35,6 +34,7 @@ function _Server_project_dataTypeTemplate(_projectId, _dataTypeTemplate) {
       if (this.list[i][this.DataTypeIdKey] != newItem[this.DataTypeIdKey]) continue;
       return this.list[i] = newItem;
     }
+
     this.list.push(newItem);
     return newItem;
   }

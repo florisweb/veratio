@@ -1,7 +1,6 @@
 <?php
 	$type = (String)$_GET["type"];
 	$mainPath = "/*.*";
-	// var_dump($type);
 
 	switch ($type)
 	{

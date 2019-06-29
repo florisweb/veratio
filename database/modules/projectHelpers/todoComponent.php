@@ -1,6 +1,6 @@
 <?php
 	$root = realpath($_SERVER["DOCUMENT_ROOT"]);
-	require_once "$root/PC/todo/database/modules/projectHelpers/dataTypeTemplate.php";
+	require_once "$root/git/todo/database/modules/projectHelpers/dataTypeTemplate.php";
 
 
 	class _project_todoComponent {
@@ -96,7 +96,6 @@
 			$date = $this->_filterDate($_newTodo["groupValue"]);
 			if (!$date) return false;
 			$_newTodo["groupValue"] = $date;
-		
 
 			return $this->DTTemplate->update($_newTodo);
 		}
@@ -123,7 +122,8 @@
 			private function _filterDate($_dateStr) {
 				$dateParts = explode("-", $_dateStr);
 				if (sizeof($dateParts) != 3) return false;
-				return (int)$dateParts[0] . "-" . (int)$dateParts[1] . "-" . (int)$dateParts[2];
+
+				return (int)substr($dateParts[0], 0, 2) . "-" . (int)substr($dateParts[1], 0, 2) . "-" . (int)substr($dateParts[2], 0, 4);
 			}
 
 
