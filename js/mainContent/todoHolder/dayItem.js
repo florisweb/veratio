@@ -1,14 +1,14 @@
-console.warn("mainContent/dayItem.js: loaded");
+/* preferences:
 
-// preferences:
-// 	- customTitle 
 // 	- class
+	- title
+*/
 
 
-
-function _MainContent_todoHolder_dayItem(_date, _appendTo, _preferences = {}, _todoRenderPreferences = {}) {
-	this.date = typeof _date == "string" ? new Date().toString(_date) : _date;
+function _MainContent_todoHolder_dayItem(_appendTo, _preferences = {}, _todoRenderPreferences = {}) {
+	this.date = typeof _preferences.date == "string" ? new Date().toString(_preferences.date) : _preferences.date;
 	this.preferences = _preferences;
+	
 	this.id = newId();
 
 	let This = this;
@@ -17,13 +17,13 @@ function _MainContent_todoHolder_dayItem(_date, _appendTo, _preferences = {}, _t
 		Self: null,
 	}
 
-	__construct(_date, _todoRenderPreferences);
+	__construct(_todoRenderPreferences);
 
 
 
 
-	function __construct(_date, _todoRenderPreferences) {
-		HTML.Self = _renderDayItem(_date);
+	function __construct(_todoRenderPreferences) {
+		HTML.Self = _renderDayItem();
 		HTML.Parent.append(HTML.Self);
 		This.createMenu = new _MainContent_todoHolder_dayItem_createMenu(This);
 		This.todo		= new _MainContent_todoHolder_dayItem_todo(This, _todoRenderPreferences);
@@ -31,70 +31,28 @@ function _MainContent_todoHolder_dayItem(_date, _appendTo, _preferences = {}, _t
 		This.createMenu.close(false);
 	}
 
-		function _renderDayItem(_date) {
+		function _renderDayItem() {
 			let html = document.createElement("div");
 			html.className = "dayItem";
-			html.setAttribute("date", _date.toString());
+			if (This.preferences.class) html.classList.add(This.preferences.class);
+
 			html.setAttribute("dayItemId", This.id);
+			if (This.date) html.setAttribute("date", This.date.toString());
+
 
 			html.innerHTML = 	'<div class="header dateHolder"></div>' + 
 								'<div class="todoHolder"></div>' + 
 								'<div class="todoItem createTodoHolder">' + 
 								'</div>';
-			
-			let dayTitle = __giveDayTitleByDate(_date);
-			if (This.preferences.customTitle) dayTitle = This.preferences.customTitle;
-			if (This.preferences.class) html.classList.add(This.preferences.class);
+
+			let dayTitle = "";
+			if (This.date) 				dayTitle = dateToDisplayText(This.date);
+			if (This.preferences.title) dayTitle = This.preferences.title;
 
 			setTextToElement(html.children[0], dayTitle);
 
 			return html;
 		}
-
-			function __giveDayTitleByDate(_date) {
-				let dayTitle = "";
-				let dayDifference = _date.getDateInDays(true) - new Date().getDateInDays(true);
-				if (dayDifference == -1) dayTitle = "Yesterday";
-				if (dayDifference == 0) dayTitle = "Today";
-				if (dayDifference == 1) dayTitle = "Tomorrow";
-
-				if (!dayTitle) dayTitle = _date.getDayName();
-				let monthName = _date.getMonths()[_date.getMonth()].name;
-				dayTitle += " - " + _date.getDate() + " " + monthName;
-
-				if (_date.getFullYear() != new Date().getFullYear()) dayTitle += " " + _date.getFullYear();
-
-				return dayTitle;
-			}
-
-
-	
-	this.remove = function() {
-
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	
-	
-
-
-
 
 
 
@@ -310,23 +268,6 @@ function _MainContent_todoHolder_dayItem(_date, _appendTo, _preferences = {}, _t
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	function _MainContent_todoHolder_dayItem_todo(_Parent, _renderPreferences) {
 		let Parent = _Parent;
 		HTML.todoHolder = HTML.Self.children[1];
@@ -358,6 +299,151 @@ function _MainContent_todoHolder_dayItem(_date, _appendTo, _preferences = {}, _t
 				todos[parseInt(_location)]
 			);
 		}
-
 	}
 }
+
+
+
+
+
+
+
+
+// types
+// 	day - default
+// 	overdue
+//	list
+
+
+
+
+
+function _MainContent_dayItem() {
+	let HTML = {
+		todoHolder: $("#mainContentHolder .todoListHolder")[0],
+	}
+	this.list = [];
+
+	this.add = function(_preferences = {}, _todoRenderPreferences = {}, _type = "day") {
+		let dayItem = new _MainContent_todoHolder_dayItem(
+			HTML.todoHolder,
+			_preferences,
+			_todoRenderPreferences
+		);
+
+		dayItem.type = _type;
+		this.list.push(dayItem);
+
+		return dayItem;
+	}
+
+	this.addOverdue = function() {
+		let project = Server.getProject(MainContent.menu.Main.page.curProjectId);
+		let todoList = []; 
+		if (project) 
+		{
+			todoList = project.todos.getTodosByDate(new Date().moveDay(-1));
+		} else {
+			todoList = Server.todos.getByDate(new Date().moveDay(-1));
+		}
+		
+		todoList = MainContent.menu.Main.todoHolder.renderSettings.applyFilter(
+			todoList,
+			{
+				renderFinishedTodos: false,
+			}
+		);
+		
+		if (!todoList.length) return false;
+
+
+
+		let item = this.add( 
+			{
+				title: "Overdue", 
+				class: "overdue", 
+			},
+			{},
+			"overdue"
+		);
+
+		item.createMenu.disable();
+		item.todo.renderTodoList(todoList);
+	}
+
+
+	this.addList = function(_listName = "List") {
+		let item = this.add( 
+			{
+				title: _listName, 
+				class: "list", 
+			},
+			{},
+			"list"
+		);
+
+		item.todo.renderTodoList(todoList);
+	}
+
+
+
+
+
+
+
+
+
+	this.get = function(_id) {
+		for (let i = 0; i < this.list.length; i++)
+		{
+			if (this.list[i].id != _id) continue;
+			return this.list[i];
+		}
+		return false;
+	}
+
+
+	this.clear = function() {
+		HTML.todoHolder.innerHTML = "";
+		this.list = [];
+	}
+
+
+	this.createTodo = function() {
+		for (let i = 0; i < this.list.length; i++)
+		{
+			if (!this.list[i].createMenu.openState) continue;
+			this.list[i].createMenu.createTodo();
+			return true;
+		}
+		return false;
+	}
+
+
+	this.closeAllCreateMenus = function() {
+		let found = false;
+		for (let i = 0; i < this.list.length; i++)
+		{
+			if (!this.list[i].createMenu.openState) continue;
+			this.list[i].createMenu.close();
+			found = true;
+		}
+		return found;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -176,3 +176,27 @@ function clearSelection() {
  if (window.getSelection) {window.getSelection().removeAllRanges();}
  else if (document.selection) {document.selection.empty();}
 }
+
+
+
+
+
+
+
+
+
+function dateToDisplayText(_date) {
+  let dayTitle = "";
+  let dayDifference = _date.getDateInDays(true) - new Date().getDateInDays(true);
+  if (dayDifference == -1) dayTitle = "Yesterday";
+  if (dayDifference == 0) dayTitle = "Today";
+  if (dayDifference == 1) dayTitle = "Tomorrow";
+
+  if (!dayTitle) dayTitle = _date.getDayName();
+  let monthName = _date.getMonths()[_date.getMonth()].name;
+  dayTitle += " - " + _date.getDate() + " " + monthName;
+
+  if (_date.getFullYear() != new Date().getFullYear()) dayTitle += " " + _date.getFullYear();
+
+  return dayTitle;
+}

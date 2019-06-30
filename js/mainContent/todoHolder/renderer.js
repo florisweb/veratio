@@ -1,8 +1,6 @@
 console.warn("mainContent/renderer.js: loaded");
 
 
-
-
 function _TodoRenderer() {
 	let This = this;
 
@@ -20,11 +18,12 @@ function _TodoRenderer() {
 			memberText: _createMemberTextByUserIdList(_todo.assignedTo, project),
 		}
 
-		if (_displayProjectTitle) todoRenderData.projectTitle = project.title;
+		if (_displayProjectTitle !== false) todoRenderData.projectTitle = project.title;
 		if (tag) todoRenderData.tagColour = tag.colour;
 		
 		return _createTodoHTML(todoRenderData);
 	}
+
 
 		function _createMemberTextByUserIdList(_userIdList, _project) {
 			let memberList = [];
