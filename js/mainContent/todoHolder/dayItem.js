@@ -17,10 +17,21 @@ function _MainContent_todoHolder_dayItem(_appendTo, _preferences = {}, _todoRend
 		Self: null,
 	}
 
+
+
+
+
+
+
+	this.remove = function() {
+		HTML.Self.parentNode.removeChild(HTML.Self);
+		MainContent.menu["Main"].todoHolder.dayItem.remove(this.id);
+	}
+
+
+
+
 	__construct(_todoRenderPreferences);
-
-
-
 
 	function __construct(_todoRenderPreferences) {
 		HTML.Self = _renderDayItem();
@@ -266,8 +277,6 @@ function _MainContent_todoHolder_dayItem(_appendTo, _preferences = {}, _todoRend
 
 
 
-
-
 	function _MainContent_todoHolder_dayItem_todo(_Parent, _renderPreferences) {
 		let Parent = _Parent;
 		HTML.todoHolder = HTML.Self.children[1];
@@ -398,6 +407,16 @@ function _MainContent_dayItem() {
 		{
 			if (this.list[i].id != _id) continue;
 			return this.list[i];
+		}
+		return false;
+	}
+
+	this.remove = function(_id) {
+		for (let i = 0; i < this.list.length; i++)
+		{
+			if (this.list[i].id != _id) continue;
+			this.list.splice(i, 1);
+			return true;
 		}
 		return false;
 	}
