@@ -1,7 +1,3 @@
-console.warn("app.js: loaded");
-
-
-
 
 
 

@@ -1,5 +1,3 @@
-console.warn("mainContent/renderer.js: loaded");
-
 
 function _TodoRenderer() {
 	let This = this;

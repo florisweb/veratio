@@ -1,4 +1,3 @@
-console.warn("KeyHandler.js: loaded");
 
 
 let KEYS = {};

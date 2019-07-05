@@ -1,4 +1,3 @@
-console.warn("mainContent/renderSettings.js: loaded");
 
 
 function _MainContent_renderSettings() {

@@ -1,5 +1,3 @@
-console.warn("sideBar.js: loaded");
-
 
 
 function _SideBar() {

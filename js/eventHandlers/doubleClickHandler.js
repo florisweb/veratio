@@ -1,4 +1,3 @@
-console.warn("doubleClick.js: loaded");
 
 let DoubleClick = new _DoubleClick();
 function _DoubleClick() {

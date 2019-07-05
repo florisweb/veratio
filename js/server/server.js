@@ -1,6 +1,5 @@
-console.warn("server/server.js: loaded");
 
-var Server = new _Server;
+const Server = new _Server;
 function _Server() {
   let This = this;
   this.projectList = [];

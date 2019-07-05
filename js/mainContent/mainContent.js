@@ -1,5 +1,3 @@
-console.warn("mainContent/mainContent.js: loaded");
-
 
 
 function _MainContent() {

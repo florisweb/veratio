@@ -1,4 +1,3 @@
-console.warn("Time.js: loaded");
 
 // formats:
 // str: "dd-mm-yyyy hh:mm"

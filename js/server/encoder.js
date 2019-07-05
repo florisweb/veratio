@@ -1,4 +1,3 @@
-console.warn("server/encoder.js: loaded");
 
 const Encoder = new function() {
     this.objToString = function(_JSON) {

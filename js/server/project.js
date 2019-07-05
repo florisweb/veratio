@@ -1,4 +1,3 @@
-console.warn("server/project.js: loaded");
 
 function _Server_project(_projectId, _projectTitle) {
   this.id     = String(_projectId);

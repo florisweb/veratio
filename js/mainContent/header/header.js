@@ -1,4 +1,3 @@
-console.warn("js/mainContent/header.js: loaded");
 
 
 function _MainContent_header() {

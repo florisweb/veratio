@@ -1,4 +1,3 @@
-console.warn("extraFunctions.js: loaded");
 
 
 function newId() {return parseInt(Math.round(Math.random() * 100000000) + "" + Math.round(Math.random() * 100000000));}

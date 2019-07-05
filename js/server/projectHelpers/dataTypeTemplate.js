@@ -1,4 +1,4 @@
-console.warn("server/projectHelpers/DataTypeTemplate.js: loaded");
+
 
 function _Server_project_dataTypeTemplate(_projectId, _dataTypeTemplate) {
   this.DataType = Object.keys(_dataTypeTemplate)[0];

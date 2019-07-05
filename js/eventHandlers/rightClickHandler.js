@@ -1,4 +1,3 @@
-console.warn("rightClickHandler.js: loaded");
 
 let RightClick = new _RightClick();
 function _RightClick() {

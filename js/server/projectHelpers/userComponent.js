@@ -1,4 +1,4 @@
-console.warn("server/projectHelpers/userComponent.js: loaded");
+
 
 function _Server_project_userComponent(_parent) {
   let Parent = _parent;
