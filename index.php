@@ -77,11 +77,15 @@
 					
 					<div class='optionMenuHolder hide'>
 						<div class='optionItem clickable'>
-							<img class='optionIcon' src='images/icons/removeIcon.png'>
-							<div class='optionText'>Remove todo</div>
+							<img class='optionIcon' src='images/icons/weekIcon.png'>
+							<div class='header userText optionText'>Finish task</div> 
 						</div>
 						<div class='optionItem clickable'>
-							<div class='optionText'>Edit todo</div>
+							<img class='optionIcon' src='images/icons/removeIcon.png'>
+							<div class='optionText'>Remove task</div>
+						</div>
+						<div class='optionItem clickable'>
+							<div class='optionText'>Edit task</div>
 						</div>
 						<div class='optionItem clickable'>
 							<img class='optionIcon' src='images/icons/weekIcon.png'>

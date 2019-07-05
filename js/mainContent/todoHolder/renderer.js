@@ -36,6 +36,8 @@ function _TodoRenderer() {
 				this.dayItem = _dayItem;
 
 
+
+
 				this.finish = function() {
 					let task = Server.todos.get(this.taskId);
 					
@@ -53,6 +55,7 @@ function _TodoRenderer() {
 
 					//notify the dayItem
 					this.dayItem.onTaskFinish(task);
+
 				}
 
 			}

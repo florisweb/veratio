@@ -34,6 +34,14 @@ function _MainContent_optionMenu() {
 		let menu = $("#mainContentHolder .optionMenuHolder")[0];
 		
 		menu.children[0].onclick = function() {
+			let data = DOMData.get(_item.parentNode.parentNode);
+			if (!data) return;
+			
+			data.finish();
+			This.close();
+		};
+
+		menu.children[1].onclick = function() {
 			let todo = Server.todos.get(_todoId);
 			if (!todo) return;
 			
@@ -44,7 +52,7 @@ function _MainContent_optionMenu() {
 			This.close();
 		};
 
-		menu.children[1].onclick = function() {
+		menu.children[2].onclick = function() {
 			let item = _item.parentNode.parentNode;
 			let dayItemId = item.parentNode.parentNode.getAttribute("dayItemId");
 
