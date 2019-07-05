@@ -5,7 +5,7 @@ function _TodoRenderer() {
 	let This = this;
 
 
-	this.renderToDo = function(_todo, _displayProjectTitle) {
+	this.renderToDo = function(_todo, _dayItem, _displayProjectTitle) {
 		if (!_todo) return false;
 		let project = Server.getProject(_todo.projectId);
 		let tag = project.tags.get(_todo.tagId);
@@ -21,7 +21,7 @@ function _TodoRenderer() {
 		if (_displayProjectTitle !== false) todoRenderData.projectTitle = project.title;
 		if (tag) todoRenderData.tagColour = tag.colour;
 		
-		return _createTodoHTML(todoRenderData);
+		return _createTodoHTML(todoRenderData, _dayItem);
 	}
 
 
@@ -41,7 +41,7 @@ function _TodoRenderer() {
 
 
 
-		function _createTodoHTML(_toDoData) {
+		function _createTodoHTML(_toDoData, _dayItem) {
 			let html = document.createElement("div");
 			html.className = "todoItem";
 			if (_toDoData.finished) html.classList.add("finished");
@@ -98,10 +98,10 @@ function _TodoRenderer() {
 			}
 
 
-			return _assignEventHandlers(html, _toDoData);
+			return _assignEventHandlers(html, _toDoData, _dayItem);
 		}
 
-			function _assignEventHandlers(_html, _toDoData) {
+			function _assignEventHandlers(_html, _toDoData, _dayItem) {
 				_html.children[0].onclick = function() {
 					let todo = Server.todos.get(_toDoData.id);
 					
@@ -116,6 +116,9 @@ function _TodoRenderer() {
 
 					let project = Server.getProject(todo.projectId);
 					project.todos.update(todo, true);
+
+					//notify the dayItem
+					_dayItem.onTaskFinish(todo);
 				}
 
 				DoubleClick.register(_html, function() {

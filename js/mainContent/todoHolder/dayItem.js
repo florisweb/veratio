@@ -20,13 +20,23 @@ function _MainContent_todoHolder_dayItem(_appendTo, _preferences = {}, _todoRend
 
 
 
-
-
-
 	this.remove = function() {
 		HTML.Self.parentNode.removeChild(HTML.Self);
 		MainContent.menu["Main"].todoHolder.dayItem.remove(this.id);
 	}
+
+
+
+
+
+	this.onTaskFinish = function(_task) {
+		console.warn("FINISH", _task);
+
+	}
+
+
+
+
 
 
 
@@ -190,7 +200,7 @@ function _MainContent_todoHolder_dayItem(_appendTo, _preferences = {}, _todoRend
 
 		this.constructor.prototype.createTodo = function() {
 			let todo 		= _scrapeTodoData();
-			console.warn(todo);
+
 			let project 	= Server.getProject(todo.projectId);
 			if (!project) 	return false;
 			if (typeof todo != "object") return todo;
@@ -198,7 +208,7 @@ function _MainContent_todoHolder_dayItem(_appendTo, _preferences = {}, _todoRend
 			resetEditMode(true);
 
 			todo = project.todos.update(todo);
-			Parent.todo.renderTodo(todo);
+			Parent.todo.renderTodo(todo, Parent);
 			
 			this.close();
 			MainContent.searchOptionMenu.close();
@@ -301,7 +311,7 @@ function _MainContent_todoHolder_dayItem(_appendTo, _preferences = {}, _todoRend
 			if (typeof _location != "number") _location = todos.length;
 			_todo.dayItemId = Parent.id;
 
-			let todo = MainContent.menu.Main.todoHolder.renderer.renderToDo(_todo, RenderPreferences.displayProjectTitle);
+			let todo = MainContent.menu["Main"].todoHolder.renderer.renderToDo(_todo, Parent, RenderPreferences.displayProjectTitle);
 
 			HTML.todoHolder.insertBefore(
 				todo, 
@@ -318,10 +328,18 @@ function _MainContent_todoHolder_dayItem(_appendTo, _preferences = {}, _todoRend
 
 
 
+
+
+
+
+
+
 // types
 // 	day - default
 // 	overdue
 //	list
+
+
 
 
 
