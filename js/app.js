@@ -61,6 +61,7 @@ function _app() {
 
 
   this.setup = function() {
+    new _MainContent_todoHolder_dayItem(document.body).remove();
     this.update();
 
     document.body.addEventListener("keydown", function(_e) {

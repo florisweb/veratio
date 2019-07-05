@@ -333,6 +333,15 @@ function _MainContent_todoHolder_dayItem(_appendTo, _preferences = {}, _todoRend
 
 
 
+
+
+
+
+
+
+
+
+
 	_MainContent_todoHolder_dayItem_overdue = function(_appendTo, _preferences = {}, _todoRenderPreferences = {}) {
 		(function(_this) {
 			_preferences.class = "overdue";
@@ -347,6 +356,10 @@ function _MainContent_todoHolder_dayItem(_appendTo, _preferences = {}, _todoRend
 			_this.createMenu.disable();
 		})(this);
 	}
+
+
+
+
 }
 
 
@@ -501,3 +514,4 @@ function _MainContent_dayItem() {
 
 
 
+// new _MainContent_todoHolder_dayItem(document.body).remove();
