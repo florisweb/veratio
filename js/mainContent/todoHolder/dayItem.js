@@ -31,11 +31,11 @@ function _MainContent_todoHolder_dayItem(_appendTo, _preferences = {}, _todoRend
 
 	this.onTaskFinish = function(_task) {
 		console.warn("FINISH", _task);
-
 	}
 
-
-
+	this.onTaskRemove = function(_taskId) {
+		console.warn("REMOVE", _taskId);
+	}
 
 
 

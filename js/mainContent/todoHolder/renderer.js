@@ -36,8 +36,6 @@ function _TodoRenderer() {
 				this.dayItem = _dayItem;
 
 
-
-
 				this.finish = function() {
 					let task = Server.todos.get(this.taskId);
 					
@@ -55,7 +53,20 @@ function _TodoRenderer() {
 
 					//notify the dayItem
 					this.dayItem.onTaskFinish(task);
+				}
 
+
+				this.remove = function() {					
+					let project = Server.getProject(this.projectId);
+					project.todos.remove(this.taskId);
+
+					//notify the dayItem
+					this.dayItem.onTaskRemove(this.taskId);
+				}
+
+
+				this.openEdit = function() {
+					this.dayItem.createMenu.openEdit(this.element, this.taskId);
 				}
 
 			}
@@ -150,10 +161,7 @@ function _TodoRenderer() {
 				}
 
 				DoubleClick.register(_html, function() {
-					let dayItem = MainContent.menu.Main.todoHolder.dayItem.get(_toDoData.dayItemId);
-					if (!dayItem) return;
-
-					dayItem.createMenu.openEdit(this.html, _toDoData.id)
+					DOMData.get(_html).openEdit();
 				});
 
 				RightClick.register(_html, function(_event, _html) {

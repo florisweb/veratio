@@ -36,29 +36,24 @@ function _MainContent_optionMenu() {
 		menu.children[0].onclick = function() {
 			let data = DOMData.get(_item.parentNode.parentNode);
 			if (!data) return;
-			
+
 			data.finish();
 			This.close();
 		};
 
 		menu.children[1].onclick = function() {
-			let todo = Server.todos.get(_todoId);
-			if (!todo) return;
+			let data = DOMData.get(_item.parentNode.parentNode);
+			if (!data) return;
 			
-			let project = Server.getProject(todo.projectId);
-			project.todos.remove(todo.id);
-			
-			_item.parentNode.parentNode.classList.add("hide");
+			data.remove();
 			This.close();
 		};
 
 		menu.children[2].onclick = function() {
-			let item = _item.parentNode.parentNode;
-			let dayItemId = item.parentNode.parentNode.getAttribute("dayItemId");
-
-			let dayItem = MainContent.menu.Main.todoHolder.dayItem.get(dayItemId);
-			dayItem.createMenu.openEdit(item, _todoId);
-
+			let data = DOMData.get(_item.parentNode.parentNode);
+			if (!data) return;
+			
+			data.openEdit();
 			This.close();
 		}
 	}
