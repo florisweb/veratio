@@ -19,8 +19,50 @@ function _TodoRenderer() {
 		if (_displayProjectTitle !== false) todoRenderData.projectTitle = project.title;
 		if (tag) todoRenderData.tagColour = tag.colour;
 		
-		return _createTodoHTML(todoRenderData, _dayItem);
+		let html = _createTodoHTML(todoRenderData, _dayItem);
+
+		
+
+		_setDOMData(html, _todo, _dayItem);
+		return html;
 	}
+
+		function _setDOMData(_element, _task, _dayItem) {
+			let data = new function () {
+				this.taskId 		= _task.id;
+				this.projectId 		= _task.projectId;
+				this.element 		= _element;
+
+				this.dayItem = _dayItem;
+
+
+				this.finish = function() {
+					let task = Server.todos.get(this.taskId);
+					
+					if (task.finished)
+					{
+						this.element.classList.remove("finished");
+						task.finished = false;
+					} else {
+						this.element.classList.add("finished");
+						task.finished = true;
+					}
+
+					let project = Server.getProject(this.projectId);
+					project.todos.update(task, true);
+
+					//notify the dayItem
+					this.dayItem.onTaskFinish(task);
+				}
+
+			}
+
+
+			DOMData.set(_element, data);
+		}
+
+
+
 
 
 		function _createMemberTextByUserIdList(_userIdList, _project) {
@@ -101,22 +143,7 @@ function _TodoRenderer() {
 
 			function _assignEventHandlers(_html, _toDoData, _dayItem) {
 				_html.children[0].onclick = function() {
-					let todo = Server.todos.get(_toDoData.id);
-					
-					if (todo.finished)
-					{
-						_html.classList.remove("finished");
-						todo.finished = false;
-					} else {
-						_html.classList.add("finished");
-						todo.finished = true;
-					}
-
-					let project = Server.getProject(todo.projectId);
-					project.todos.update(todo, true);
-
-					//notify the dayItem
-					_dayItem.onTaskFinish(todo);
+					DOMData.get(_html).finish();
 				}
 
 				DoubleClick.register(_html, function() {
