@@ -5,6 +5,8 @@
 */
 
 
+var _MainContent_todoHolder_dayItem_overdue;
+
 function _MainContent_todoHolder_dayItem(_appendTo, _preferences = {}, _todoRenderPreferences = {}) {
 	this.date = typeof _preferences.date == "string" ? new Date().toString(_preferences.date) : _preferences.date;
 	this.preferences = _preferences;
@@ -19,12 +21,10 @@ function _MainContent_todoHolder_dayItem(_appendTo, _preferences = {}, _todoRend
 
 
 
-
 	this.remove = function() {
 		HTML.Self.parentNode.removeChild(HTML.Self);
 		MainContent.menu["Main"].todoHolder.dayItem.remove(this.id);
 	}
-
 
 
 
@@ -36,9 +36,6 @@ function _MainContent_todoHolder_dayItem(_appendTo, _preferences = {}, _todoRend
 	this.onTaskRemove = function(_taskId) {
 		console.warn("REMOVE", _taskId);
 	}
-
-
-
 
 
 	__construct(_todoRenderPreferences);
@@ -121,7 +118,6 @@ function _MainContent_todoHolder_dayItem(_appendTo, _preferences = {}, _todoRend
 			let todo = Server.todos.get(_todoId);
 			if (!todo || !_todoHTML) return false;
 			this.open(true);
-			console.log("edit", todo.projectId);
 
 			edit_todo = todo;
 			edit_todoHTML = _todoHTML;
@@ -319,9 +315,39 @@ function _MainContent_todoHolder_dayItem(_appendTo, _preferences = {}, _todoRend
 			);
 		}
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	_MainContent_todoHolder_dayItem_overdue = function(_appendTo, _preferences = {}, _todoRenderPreferences = {}) {
+		(function(_this) {
+			_preferences.class = "overdue";
+			_preferences.title = "Overdue";
+
+			let extender = new _MainContent_todoHolder_dayItem(_appendTo, _preferences, _todoRenderPreferences);
+			for (n of Object.keys(extender))
+			{
+				_this[n] = extender[n];
+			}
+
+			_this.createMenu.disable();
+		})(this);
+	}
 }
-
-
 
 
 
@@ -340,11 +366,6 @@ function _MainContent_todoHolder_dayItem(_appendTo, _preferences = {}, _todoRend
 //	list
 
 
-
-
-
-
-
 function _MainContent_dayItem() {
 	let HTML = {
 		todoHolder: $("#mainContentHolder .todoListHolder")[0],
@@ -352,13 +373,19 @@ function _MainContent_dayItem() {
 	this.list = [];
 
 	this.add = function(_preferences = {}, _todoRenderPreferences = {}, _type = "day") {
-		let dayItem = new _MainContent_todoHolder_dayItem(
+		let constructor;
+		switch (_type)
+		{
+			case "overdue": 	constructor =  _MainContent_todoHolder_dayItem_overdue; 	break;
+			default: 			constructor =  _MainContent_todoHolder_dayItem;			 	break;
+		}
+
+		let dayItem = new constructor(
 			HTML.todoHolder,
 			_preferences,
 			_todoRenderPreferences
 		);
 
-		dayItem.type = _type;
 		this.list.push(dayItem);
 
 		return dayItem;
@@ -380,21 +407,11 @@ function _MainContent_dayItem() {
 				renderFinishedTodos: false,
 			}
 		);
-		
 		if (!todoList.length) return false;
 
 
 
-		let item = this.add( 
-			{
-				title: "Overdue", 
-				class: "overdue", 
-			},
-			{},
-			"overdue"
-		);
-
-		item.createMenu.disable();
+		let item = this.add({}, {}, "overdue");
 		item.todo.renderTodoList(todoList);
 	}
 
