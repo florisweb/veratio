@@ -208,9 +208,9 @@ function y() {let todoList = Server.todos.getByDate(new Date()); window.html = M
 
 
 
-//dayItemHTML renderen:     14.68ms
+//taskHolderHTML renderen:     14.68ms
 // + for loop:              14.136ms
-// + appending dayItemHTML  13.41ms
+// + appending taskHolderHTML  13.41ms
 // + get keys:              13.69ms
 // + get todoList           13.28ms
 // + _renderTodoList                      558ms

@@ -7,7 +7,7 @@
 		<link rel="stylesheet" type="text/css" href="css/main.css?a=14">
 		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=16">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=18">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/dayItem.css?a=17">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=17">
 
 		<script type="text/javascript" src="/JS/jQuery.js" asy nc></script>
 		<script type="text/javascript" src="/JS/request2.js" asy nc></script>
@@ -141,7 +141,7 @@
 
 			$.getScript("js/mainContent/navigator.js?antiCache=" 					+ antiCache, function() {});
 			
-			$.getScript("js/mainContent/todoHolder/dayItem.js?antiCache=" 			+ antiCache, function() {});
+			$.getScript("js/mainContent/todoHolder/taskHolder.js?antiCache=" 			+ antiCache, function() {});
 			$.getScript("js/mainContent/todoHolder/renderSettings.js?antiCache=" 	+ antiCache, function() {});
 			$.getScript("js/mainContent/todoHolder/renderer.js?antiCache=" 			+ antiCache, function() {});
 			$.getScript("js/mainContent/todoHolder/todoHolder.js?antiCache=" 		+ antiCache, function() {});
@@ -168,7 +168,7 @@
  	<!-- 
  		<script type="text/javascript" src="js/mainContent/navigator.js" asy nc></script>
 
-		<script type="text/javascript" src="js/mainContent/todoHolder/dayItem.js" asy nc></script>
+		<script type="text/javascript" src="js/mainContent/todoHolder/taskHolder.js" asy nc></script>
 		<script type="text/javascript" src="js/mainContent/todoHolder/renderSettings.js" asy nc></script>
 		<script type="text/javascript" src="js/mainContent/todoHolder/renderer.js" asy nc></script>
 		<script type="text/javascript" src="js/mainContent/todoHolder/todoHolder.js" asy nc></script>

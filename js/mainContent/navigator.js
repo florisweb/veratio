@@ -129,8 +129,8 @@ function _MainContent_menuMain_page(_parent) {
 			This.curProjectId = _projectId;
 			This.curPage = _pageName;
 
-			Parent.todoHolder.dayItem.clear();
-			Parent.todoHolder.dayItem.addOverdue();
+			Parent.todoHolder.taskHolder.clear();
+			Parent.todoHolder.taskHolder.addOverdue();
 			page.onOpen(_projectId);
 		}, 55);
 
@@ -148,8 +148,8 @@ function _MainContent_menuMain_page(_parent) {
 		MainContent.header.setMemberList([]);
 
 		let todoList = MainContent.menu.Main.todoHolder.renderSettings.applyFilter(Server.todos.getByDate(date));
-		let dayItem = Parent.todoHolder.dayItem.add({displayProjectTitle: true, date: date});
-		dayItem.todo.renderTodoList(todoList);
+		let taskHolder = Parent.todoHolder.taskHolder.add({displayProjectTitle: true, date: date});
+		taskHolder.todo.renderTodoList(todoList);
 	}
 
 
@@ -161,8 +161,8 @@ function _MainContent_menuMain_page(_parent) {
 		{
 			let date = new Date().moveDay(i);
 			let todoList = MainContent.menu.Main.todoHolder.renderSettings.applyFilter(Server.todos.getByDate(date));
-			let dayItem = Parent.todoHolder.dayItem.add({displayProjectTitle: true, date: date});
-			dayItem.todo.renderTodoList(todoList);
+			let taskHolder = Parent.todoHolder.taskHolder.add({displayProjectTitle: true, date: date});
+			taskHolder.todo.renderTodoList(todoList);
 		}
 	}
 
@@ -178,8 +178,8 @@ function _MainContent_menuMain_page(_parent) {
 		{
 			let date = new Date().moveDay(i);
 			let todoList = MainContent.menu.Main.todoHolder.renderSettings.applyFilter(project.todos.getTodosByDate(date));
-			let dayItem = Parent.todoHolder.dayItem.add({displayProjectTitle: false, date: date});
-			dayItem.todo.renderTodoList(todoList);
+			let taskHolder = Parent.todoHolder.taskHolder.add({displayProjectTitle: false, date: date});
+			taskHolder.todo.renderTodoList(todoList);
 		}
 	}
 

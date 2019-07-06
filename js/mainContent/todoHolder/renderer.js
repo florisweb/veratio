@@ -3,7 +3,7 @@ function _TodoRenderer() {
 	let This = this;
 
 
-	this.renderToDo = function(_todo, _dayItem, _displayProjectTitle) {
+	this.renderToDo = function(_todo, _taskHolder, _displayProjectTitle) {
 		if (!_todo) return false;
 		let project = Server.getProject(_todo.projectId);
 		let tag = project.tags.get(_todo.tagId);
@@ -11,7 +11,7 @@ function _TodoRenderer() {
 		let todoRenderData = {
 			id: _todo.id,
 			title: _todo.title,
-			dayItemId: _todo.dayItemId,
+			taskHolderId: _todo.taskHolderId,
 			finished: _todo.finished,
 			memberText: _createMemberTextByUserIdList(_todo.assignedTo, project),
 		}
@@ -19,58 +19,16 @@ function _TodoRenderer() {
 		if (_displayProjectTitle !== false) todoRenderData.projectTitle = project.title;
 		if (tag) todoRenderData.tagColour = tag.colour;
 		
-		let html = _createTodoHTML(todoRenderData, _dayItem);
+		let html = _createTodoHTML(todoRenderData, _taskHolder);
 
 		
 
-		_setDOMData(html, _todo, _dayItem);
+		_setDOMData(html, _todo, _taskHolder);
 		return html;
 	}
 
-		function _setDOMData(_element, _task, _dayItem) {
-			let data = new function () {
-				this.taskId 		= _task.id;
-				this.projectId 		= _task.projectId;
-				this.element 		= _element;
-
-				this.dayItem = _dayItem;
-
-
-				this.finish = function() {
-					let task = Server.todos.get(this.taskId);
-					
-					if (task.finished)
-					{
-						this.element.classList.remove("finished");
-						task.finished = false;
-					} else {
-						this.element.classList.add("finished");
-						task.finished = true;
-					}
-
-					let project = Server.getProject(this.projectId);
-					project.todos.update(task, true);
-
-					//notify the dayItem
-					this.dayItem.onTaskFinish(task);
-				}
-
-
-				this.remove = function() {					
-					let project = Server.getProject(this.projectId);
-					project.todos.remove(this.taskId);
-
-					//notify the dayItem
-					this.dayItem.onTaskRemove(this.taskId);
-				}
-
-
-				this.openEdit = function() {
-					this.dayItem.createMenu.openEdit(this.element, this.taskId);
-				}
-
-			}
-
+		function _setDOMData(_element, _task, _taskHolder) {
+			let data = new taskConstructor(_element, _task, _taskHolder);
 
 			DOMData.set(_element, data);
 		}
@@ -95,7 +53,7 @@ function _TodoRenderer() {
 
 
 
-		function _createTodoHTML(_toDoData, _dayItem) {
+		function _createTodoHTML(_toDoData, _taskHolder) {
 			let html = document.createElement("div");
 			html.className = "todoItem";
 			if (_toDoData.finished) html.classList.add("finished");
@@ -152,10 +110,10 @@ function _TodoRenderer() {
 			}
 
 
-			return _assignEventHandlers(html, _toDoData, _dayItem);
+			return _assignEventHandlers(html, _toDoData, _taskHolder);
 		}
 
-			function _assignEventHandlers(_html, _toDoData, _dayItem) {
+			function _assignEventHandlers(_html, _toDoData, _taskHolder) {
 				_html.children[0].onclick = function() {
 					DOMData.get(_html).finish();
 				}
@@ -173,3 +131,48 @@ function _TodoRenderer() {
 			}	
 }
 
+
+
+
+function taskConstructor(_element, _task, _taskHolder) {
+	this.taskId 		= _task.id;
+	this.projectId 		= _task.projectId;
+	this.html 		= _element;
+
+	this.taskHolder = _taskHolder;
+
+
+	this.finish = function() {
+		let task = Server.todos.get(this.taskId);
+		
+		if (task.finished)
+		{
+			this.html.classList.remove("finished");
+			task.finished = false;
+		} else {
+			this.html.classList.add("finished");
+			task.finished = true;
+		}
+
+		let project = Server.getProject(this.projectId);
+		project.todos.update(task, true);
+
+		//notify the taskHolder
+		this.taskHolder.onTaskFinish(task);
+	}
+
+
+	this.remove = function() {					
+		let project = Server.getProject(this.projectId);
+		project.todos.remove(this.taskId);
+
+		//notify the taskHolder
+		this.taskHolder.onTaskRemove(this.taskId);
+	}
+
+
+	this.openEdit = function() {
+		this.taskHolder.createMenu.openEdit(this.html, this.taskId);
+	}
+
+}
