@@ -1,6 +1,6 @@
 
 
-.mainContentMenu .todoListHolder .dayItem {
+.mainContentMenu .todoListHolder .taskHolder {
 	position: relative;
 	width: calc(100% - 35px);
 	height: auto;
@@ -10,7 +10,7 @@
 	margin-bottom: 25px;
 }
 
-	.dayItem.overdue {
+	.taskHolder.overdue {
 		left: -33px;
 		top: -20px;
 		padding: 10px 0;
@@ -23,17 +23,17 @@
 		color: #f00;
 	}
 
-	.dayItem.overdue .dateHolder {
+	.taskHolder.overdue .dateHolder {
 		color: #f00;
 	}
 
 
-	.dayItem .dateHolder {
+	.taskHolder .dateHolder {
 		color: #666;
 		font-weight: bold;
 	}
 
-	.dayItem .todoHolder {
+	.taskHolder .todoHolder {
 		position: relative;
 		width: calc(100% - 2px);
 		height: auto;
@@ -202,7 +202,7 @@
 
 
 
-	.dayItem .createTodoHolder {
+	.taskHolder .createTodoHolder {
 		position: relative;
 		height: auto;
 		overflow: hidden;

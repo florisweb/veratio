@@ -6,7 +6,7 @@ function _MainContent_todoHolder() {
 	}
 
 		
-	this.dayItem 		= new _MainContent_dayItem();
+	this.taskHolder 		= new _MainContent_taskHolder();
 	this.renderSettings = new _MainContent_renderSettings();
 	this.renderer 		= new _TodoRenderer(HTML.todoHolder);
 
@@ -68,8 +68,8 @@ function _MainContent_todoHolder() {
 
 
 		function _getNewDate() {
-			let dayItems = $("#mainContentHolder .dayItem");
-			let date = dayItems[dayItems.length - 1].getAttribute("date");
+			let taskHolders = $("#mainContentHolder .taskHolder");
+			let date = taskHolders[taskHolders.length - 1].getAttribute("date");
 			return new Date().setDateFromStr(date).moveDay(1);
 		}
 
@@ -84,8 +84,8 @@ function _MainContent_todoHolder() {
 
 
 			todoList = MainContent.menu.Main.todoHolder.renderSettings.applyFilter(todoList);
-			let dayItem = MainContent.menu.Main.todoHolder.dayItem.add({date: _date}, {displayProjectTitle: !project});
-			dayItem.todo.renderTodoList(todoList);
+			let taskHolder = MainContent.menu.Main.todoHolder.taskHolder.add({date: _date}, {displayProjectTitle: !project});
+			taskHolder.todo.renderTodoList(todoList);
 		}
 	}
 }	
