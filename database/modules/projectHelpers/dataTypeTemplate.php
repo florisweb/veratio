@@ -42,6 +42,8 @@
 					
 					if (!$_data[$curKey]) $_data[$curKey] = "";
 
+					if ($curKey == "assignedTo") var_dump("DATA", $_data[$curKey]);
+
 					$curValue = $this->__valueToType($_data[$curKey], $curKeyType);
 					$data[$curKey] = $curValue;
 				}
@@ -52,7 +54,7 @@
 					switch ($_type) 
 					{
 						case "String": 		return (String)$_value; 	break;
-						case "Array": 		return (Array)$_value; 		break;
+						case "Array": 		if ($_value === "") 		return array(); else return (Array)$_value; break;
 						case "float": 		return (float)$_value; 		break;
 						case "Boolean": 	return (Boolean)$_value; 	break;
 						default: 			return (int)$_value; 		break;
