@@ -6,7 +6,7 @@
 		<link rel="stylesheet" type="text/css" href="css/popup.css?a=20">
 		<link rel="stylesheet" type="text/css" href="css/main.css?a=14">
 		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=16">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=18">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=19">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=17">
 
 		<script type="text/javascript" src="/JS/jQuery.js" asy nc></script>

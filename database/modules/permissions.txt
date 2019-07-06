@@ -1,0 +1,15 @@
+
+
+
+
+["2","2","22","2"]
+
+PERMISSIONS
+- 0: Tags
+?
+- 1: Tasks
+	- 0: Finish: Assigned to you, Own, All
+	- 1: Update/remove: None, Own, All
+	
+- 2: Users
+- 3: Project

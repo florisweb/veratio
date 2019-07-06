@@ -31,8 +31,7 @@
 
 		public function getAll() {
 			$todos = $this->DTTemplate->getAllData();
-			//do some permission stuff 
-			
+			//do some permission stuff ?
 			return $todos;
 		}
 
@@ -87,19 +86,61 @@
 
 
 
-		public function update($_newTodo) {
-			//do some permission stuff
+		public function update($_newTask) {
+			$userId = $GLOBALS["App"]->userId;
+			$_newTask["creatorId"]	= $userId;
 
-			$_newTodo["creatorId"] = $GLOBALS["App"]->userId;
-			if ($_newTodo["groupType"] != "date") return $this->DTTemplate->update($_newTodo);
+			$oldTask 				= $this->get($_newTask["id"]);
+			$difference 			= $this->getDifferenceBetweenTasks($_newTask, $oldTask);
 			
-			$date = $this->_filterDate($_newTodo["groupValue"]);
-			if (!$date) return false;
-			$_newTodo["groupValue"] = $date;
+			$permissions 			= $this->Parent->users->getPermissions("tasks");
+			if (!$permissions || !$_newTask) return false;
+			var_dump($difference, $permissions);
 
-			return $this->DTTemplate->update($_newTodo);
+			// only the finished-state is changed
+			if ($difference[0] == "finished" && sizeof($difference) == 1)
+			{
+				switch ((int)$permissions[1])
+				{
+					default: 	if (!in_array($userId, $oldTask["assignedTo"])) return false;	break;
+					case 1: 	if ($oldTask["creatorId"] != $userId) 			return false; 	break;
+					case 2: 																	break;
+				}
+			} else {
+				switch ((int)$permissions[0])
+				{
+					default: 	return false;										break;
+					case 1: 	if ($oldTask["creatorId"] != $userId) return false; break;
+					case 2:															break;
+				}
+			}
+
+			
+
+
+			if ($_newTask["groupType"] != "date") return $this->DTTemplate->update($_newTask);
+			$date = $this->_filterDate($_newTask["groupValue"]);
+			if (!$date) return false;
+			$_newTask["groupValue"] = $date;
+
+			return $this->DTTemplate->update($_newTask);
 		}
 
+			private function getDifferenceBetweenTasks($_newTask, $_oldTask) {
+				if (!$_newTask || !$_oldTask) return false;
+
+				$keys = array_keys($_oldTask);
+				$difference = [];
+
+				for ($i = 0; $i < sizeof($keys); $i++)
+				{
+					$curKey = $keys[$i];
+					if ($_newTask[$curKey] === $_oldTask[$curKey]) continue;
+					array_push($difference, $curKey);
+				}
+
+				return $difference;
+			}
 			
 
 		public function remove($_id) {

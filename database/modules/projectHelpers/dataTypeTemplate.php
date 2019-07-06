@@ -42,8 +42,6 @@
 					
 					if (!$_data[$curKey]) $_data[$curKey] = "";
 
-					if ($curKey == "assignedTo") var_dump("DATA", $_data[$curKey]);
-
 					$curValue = $this->__valueToType($_data[$curKey], $curKeyType);
 					$data[$curKey] = $curValue;
 				}
