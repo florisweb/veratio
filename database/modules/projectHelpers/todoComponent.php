@@ -91,12 +91,13 @@
 			$_newTask["creatorId"]	= $userId;
 
 			$oldTask 				= $this->get($_newTask["id"]);
-			$difference 			= $this->getDifferenceBetweenTasks($_newTask, $oldTask);
-			
+			$difference 			= $this->getDifferenceBetweenTasks($_newTask, $oldTask, ["creatorId"]);
+		
 			$permissions 			= $this->Parent->users->getPermissions("tasks");
 			if (!$permissions || !$_newTask) return false;
 
 			// only the finished-state is changed
+			var_dump("finish:", $difference[0] == "finished" && sizeof($difference) == 1);
 			if ($difference[0] == "finished" && sizeof($difference) == 1)
 			{
 				$allowed = false;
@@ -108,7 +109,8 @@
 			} else {
 				$allowed = false;
 				if ($permissions[0] >= 1 && $oldTask["creatorId"] === $userId) 			$allowed = true;
-				if ($permissions[0] >= 2)				
+				if ($permissions[0] >= 1 && !$oldTask) 									$allowed = true;
+				if ($permissions[0] >= 2)												$allowed = true;
 				
 				if ($allowed == false) return false;	
 			}
@@ -123,7 +125,7 @@
 			return $this->DTTemplate->update($_newTask);
 		}
 
-			private function getDifferenceBetweenTasks($_newTask, $_oldTask) {
+			private function getDifferenceBetweenTasks($_newTask, $_oldTask, $_ignoreKeys = []) {
 				if (!$_newTask || !$_oldTask) return false;
 
 				$keys = array_keys($_oldTask);
@@ -132,7 +134,9 @@
 				for ($i = 0; $i < sizeof($keys); $i++)
 				{
 					$curKey = $keys[$i];
-					if ($_newTask[$curKey] === $_oldTask[$curKey]) continue;
+					if ($_newTask[$curKey] === $_oldTask[$curKey]) 	continue;
+					if (in_array($curKey, $_ignoreKeys))			continue;
+
 					array_push($difference, $curKey);
 				}
 
