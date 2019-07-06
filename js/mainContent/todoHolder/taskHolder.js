@@ -1,4 +1,11 @@
 
+/*
+	preferences: {
+		title: "customTitle",
+		class: "customClass",
+		customAttributes: [{key: "click", value: function}]
+	}
+*/
 
 
 
@@ -14,7 +21,8 @@ function _MainContent_todoHolder_taskHolder() {
 		}
 		this.HTML.Parent.append(this.HTML.Self);
 
-
+		
+		if (!this.preferences.customAttributes) return;
 		for (attribute of this.preferences.customAttributes) 
 		{
 			this.HTML.Self.setAttribute(attribute.key, attribute.value);
