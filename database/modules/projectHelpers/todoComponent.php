@@ -141,7 +141,19 @@
 			
 
 		public function remove($_id) {
-			//do some permission stuff
+			$task 			= $this->get($_id);
+			$userId 		= $GLOBALS["App"]->userId;
+			$permissions 	= $this->Parent->users->getPermissions("tasks");
+			if (!$task || $userId || $permissions) return false;
+			
+			
+			switch ((int)$permissions[0])
+			{
+				default: 	return false;										break;
+				case 1: 	if ($task["creatorId"] != $userId) return false; 	break;
+				case 2:															break;
+			}
+
 			return $this->DTTemplate->remove($_id);
 		}
 
