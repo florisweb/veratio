@@ -99,23 +99,23 @@
 			// only the finished-state is changed
 			if ($difference[0] == "finished" && sizeof($difference) == 1)
 			{
-				switch ((int)$permissions[1])
-				{
-					default: 	if (!in_array($userId, $oldTask["assignedTo"])) return false;	break;
-					case 1: 	if ($oldTask["creatorId"] != $userId) 			return false; 	break;
-					case 2: 																	break;
-				}
+				$allowed = false;
+				if ($permissions[1] >= 0 && in_array($userId, $oldTask["assignedTo"])) 	$allowed = true;
+				if ($permissions[1] >= 1 && $oldTask["creatorId"] === $userId) 			$allowed = true;
+				if ($permissions[1] >= 2)												$allowed = true;
+
+				if ($allowed == false) return false;
 			} else {
-				switch ((int)$permissions[0])
-				{
-					default: 	return false;										break;
-					case 1: 	if ($oldTask["creatorId"] != $userId) return false; break;
-					case 2:															break;
-				}
+				$allowed = false;
+				if ($permissions[0] >= 1 && $oldTask["creatorId"] === $userId) 			$allowed = true;
+				if ($permissions[0] >= 2)				
+				
+				if ($allowed == false) return false;	
 			}
 
 
 			if ($_newTask["groupType"] != "date") return $this->DTTemplate->update($_newTask);
+			
 			$date = $this->_filterDate($_newTask["groupValue"]);
 			if (!$date) return false;
 			$_newTask["groupValue"] = $date;
@@ -144,15 +144,15 @@
 			$task 			= $this->get($_id);
 			$userId 		= $GLOBALS["App"]->userId;
 			$permissions 	= $this->Parent->users->getPermissions("tasks");
-			if (!$task || $userId || $permissions) return false;
-			
-			
-			switch ((int)$permissions[0])
-			{
-				default: 	return false;										break;
-				case 1: 	if ($task["creatorId"] != $userId) return false; 	break;
-				case 2:															break;
-			}
+			if (!$task || !$userId || !$permissions) return false;
+
+
+			$allowed = false;
+			if ($permissions[0] >= 1 && $oldTask["creatorId"] === $userId) 			$allowed = true;
+			if ($permissions[1] >= 2)												$allowed = true;
+
+			if ($allowed == false) return false;
+
 
 			return $this->DTTemplate->remove($_id);
 		}
