@@ -97,7 +97,6 @@
 			if (!$permissions || !$_newTask) return false;
 
 			// only the finished-state is changed
-			var_dump("finish:", $difference[0] == "finished" && sizeof($difference) == 1);
 			if ($difference[0] == "finished" && sizeof($difference) == 1)
 			{
 				$allowed = false;
