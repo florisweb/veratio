@@ -95,7 +95,6 @@
 			
 			$permissions 			= $this->Parent->users->getPermissions("tasks");
 			if (!$permissions || !$_newTask) return false;
-			var_dump($difference, $permissions);
 
 			// only the finished-state is changed
 			if ($difference[0] == "finished" && sizeof($difference) == 1)
@@ -114,8 +113,6 @@
 					case 2:															break;
 				}
 			}
-
-			
 
 
 			if ($_newTask["groupType"] != "date") return $this->DTTemplate->update($_newTask);
