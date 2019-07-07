@@ -178,7 +178,11 @@ function _MainContent_menuMain_page(_parent) {
 		{
 			let date = new Date().moveDay(i);
 			let todoList = MainContent.menu.Main.todoHolder.renderSettings.applyFilter(project.todos.getTodosByDate(date));
-			let taskHolder = Parent.todoHolder.taskHolder.add({displayProjectTitle: false, date: date});
+			let taskHolder = Parent.todoHolder.taskHolder.add(
+				{displayProjectTitle: false, date: date}, 
+				{displayProjectTitle: false}
+			);
+			
 			taskHolder.todo.renderTodoList(todoList);
 		}
 	}

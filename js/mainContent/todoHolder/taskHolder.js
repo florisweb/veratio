@@ -11,7 +11,7 @@
 
 
 function _MainContent_todoHolder_taskHolder() {
-	this.setup = function(_appendTo, _preferences = {}, _todoRenderPreferences = {}) {
+	this.setup = function(_appendTo, _preferences = {}) {
 		this.id = newId();
 		this.preferences = _preferences;
 
@@ -261,10 +261,10 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 					task.assignedTo.push(member.id);
 				}
 
-
 				task.title 	= removeSpacesFromEnds(task.title);
 				return task;
 			}
+
 
 				function getListByValue(_value, _type) {
 					let items = MainContent.searchOptionMenu.getListByValue(_value, _type);
@@ -320,22 +320,21 @@ function _MainContent_todoHolder_taskHolder_todo() {
 		}
 	}
 
-	this.renderTodo = function(_todo, _location) {
+	this.renderTodo = function(_task, _location) {
 		let todos = Parent.HTML.todoHolder.children;
 		if (typeof _location != "number") _location = todos.length;
-		_todo.taskHolderId = Parent.id;
+		_task.taskHolderId = Parent.id;
 
-
-		let todo = MainContent.menu["Main"].todoHolder.renderer.renderToDo(_todo, Parent, RenderPreferences.displayProjectTitle);
+		let task = MainContent.menu["Main"].todoHolder.renderer.renderToDo(_task, Parent, RenderPreferences.displayProjectTitle);
 
 		Parent.HTML.todoHolder.insertBefore(
-			todo, 
+			task, 
 			todos[parseInt(_location)]
 		);
 
 		this.taskList.push({
-			taskId: _todo.id,
-			html: todo
+			taskId: _task.id,
+			html: task
 		});
 	}
 
@@ -475,7 +474,7 @@ function _MainContent_taskHolder() {
 		extendTaskHolder(_type, taskHolder, _preferences)
 
 
-		taskHolder.setup(_appendTo, _preferences, _todoRenderPreferences);
+		taskHolder.setup(_appendTo, _preferences);
 		taskHolder.createMenu.setup(taskHolder);
 		taskHolder.todo.setup(taskHolder, _todoRenderPreferences);
 
