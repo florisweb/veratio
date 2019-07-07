@@ -192,16 +192,20 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 
 
 	this.createTodo = function() {
-		let todo 		= _scrapeTodoData();
+		let task 		= _scrapeTodoData();
+		let project 	= Server.getProject(task.projectId);
 
-		let project 	= Server.getProject(todo.projectId);
 		if (!project) 	return false;
-		if (typeof todo != "object") return todo;
+		if (typeof task != "object") return task;
 
-		resetEditMode(true);
+		console.debug(window.p = Parent);
 
-		todo = project.todos.update(todo);
-		Parent.todo.renderTodo(todo, Parent);
+		resetEditMode(true);	
+
+		task = project.todos.update(task);
+
+		let curProjectId = MainContent.menu["Main"].page.curProjectId;
+		if (curProjectId == task.projectId || !curProjectId) Parent.todo.renderTodo(task, Parent);
 		
 		this.close();
 		MainContent.searchOptionMenu.close();
@@ -225,56 +229,59 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 			return task;
 		}
 			function __inputValueToData(_value) {
-				let todo = {};
-				
-				let project 	= Server.getProject(MainContent.menu.Main.page.curProjectId);
-				todo.projectId 	= project ? project.id : Server.projectList[0].id;
-				
-				if (edit_todo) todo = edit_todo;
-				
+				let task = {
+					assignedTo: []
+				};
 
-				todo.title 	= _value;
-				let tag 	= ___findTagInValue(_value, todo.projectId);
-				if (tag) 
+				if (edit_todo) task = edit_todo;
+
+				// add projectId
+				let projects = getListByValue(_value, ".");
+				task.title 	= projects.value;
+				if (projects.list[0]) 
 				{
-					todo.tagId = tag.id;
-					todo.title = tag.value;
+					task.projectId = projects.list[0].id;
+				} else {
+					let project 	= Server.getProject(MainContent.menu.Main.page.curProjectId);
+					task.projectId 	= project ? project.id : Server.projectList[0].id;
 				}
 
-				let members 	= ___findMembersInValue(todo.title, todo.projectId);
-				todo.title 		= members.value;
-				todo.assignedTo = members.memberList;
 				
+				// add tagId
+				let tags = getListByValue(_value, "#");
+				task.title 	= tags.value;
+				if (tags.list[0]) task.tagId = tags.list[0].id;
 
-				todo.title 	= removeSpacesFromEnds(todo.title);
-				return todo;
-			}
-				function ___findTagInValue(_value, _projectId) {
-					let project = Server.getProject(_projectId);
-					let tags = project.tags.list;
 
-					for (let i = 0; i < tags.length; i++)
-					{
-						let parts = _value.split("#" + tags[i].title);
-						if (parts.length <= 1) continue;
-						return {id: tags[i].id, value: parts.join("")}
-					}
+				// add assignedTo-list
+				let members = getListByValue(task.title, "@");
+				task.title 	= members.value;
+				for (member of members.list)
+				{
+					task.assignedTo.push(member.id);
 				}
 
-				function ___findMembersInValue(_value, _projectId) {
-					let project = Server.getProject(_projectId);
-					let members = project.users.getList();;
-					let memberList = [];
 
-					for (let i = 0; i < members.length; i++)
+				task.title 	= removeSpacesFromEnds(task.title);
+				return task;
+			}
+
+				function getListByValue(_value, _type) {
+					let items = MainContent.searchOptionMenu.getListByValue(_value, _type);
+					let found = [];
+					for (item of items)
 					{
-						let parts = _value.split("@" + members[i].name);
-						if (parts.length <= 1) continue;
-						memberList.push(members[i].id);
+						if (!item) continue;
+						if (item.score < 1) return {list: found, value: _value};
+						found.push(item.item);
+						
+						let parts = _value.split(_type + item.str);
 						_value = parts.join("");
 					}
-					return {memberList: memberList, value: _value};
+
+					return {list: found, value: _value};
 				}
+
 }
 
 

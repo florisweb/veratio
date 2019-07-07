@@ -147,12 +147,14 @@ function _MainContent_searchOptionMenu() {
 
 
 
-	function getItemListByType(_type) {
+	this.getItemListByType = function(_type, _project) {
+		if (!_project) _project = curProject;
+		if (!_project) _project = Server.projectList[0];
 		switch (_type)
 		{
-			case "#": 	return curProject.tags.list; 		break;
+			case "#": 	return _project.tags.list; 			break;
 			case ".": 	return Server.projectList; 			break;
-			default: 	return curProject.users.getList(); 	break;
+			default: 	return _project.users.getList(); 	break;
 		}
 	}
 	
@@ -172,7 +174,7 @@ function _MainContent_searchOptionMenu() {
 
 		function addListItemsByValueAndType(_value, _cursorPosition, _type) {
 			let active = 0;
-			let items = _getListByValue(_value, _cursorPosition, _type);
+			let items = _getListByValue(_value, _type, _cursorPosition);
 			for (let i = 0; i < items.length; i++)
 			{
 				if (!items[i].active) continue;
@@ -183,17 +185,19 @@ function _MainContent_searchOptionMenu() {
 			return active > 0;
 		}
 
-		function _getListByValue(_value, _cursorPosition, _type) {
+		this.getListByValue = _getListByValue;
+		function _getListByValue(_value, _type, _cursorPosition) {
 			let found = [];
-			let itemList = getItemListByType(_type);
+			let itemList = This.getItemListByType(_type);
 
 			for (let i = 0; i < itemList.length; i++)
 			{
 				let item = _checkValueByItem(_value, itemList[i], _type);
-				let active = false;
-				if (item.startAt <= parseInt(_cursorPosition) && item.length + item.startAt >= parseInt(_cursorPosition)) active = true;
-				item.active = active;
-
+				if (!item) continue;
+				
+				item.active = false;
+				if (item.startAt <= parseInt(_cursorPosition) && item.length + item.startAt >= parseInt(_cursorPosition)) item.active = true;
+				
 				found.push(item);
 			}
 
