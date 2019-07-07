@@ -88,7 +88,6 @@
 
 		public function update($_newTask) {
 			$userId = $GLOBALS["App"]->userId;
-			$_newTask["creatorId"]	= $userId;
 
 			$oldTask 				= $this->get($_newTask["id"]);
 			$difference 			= $this->getDifferenceBetweenTasks($_newTask, $oldTask, ["creatorId"]);
@@ -100,8 +99,8 @@
 			if ($difference[0] == "finished" && sizeof($difference) == 1)
 			{
 				$allowed = false;
-				if ($permissions[1] >= 0 && in_array($userId, $oldTask["assignedTo"])) 	$allowed = true;
-				if ($permissions[1] >= 1 && $oldTask["creatorId"] === $userId) 			$allowed = true;
+				if ($permissions[1] >= 0 && $oldTask["creatorId"] === $userId) 			$allowed = true;
+				if ($permissions[1] >= 1 && in_array($userId, $oldTask["assignedTo"])) 	$allowed = true;
 				if ($permissions[1] >= 2)												$allowed = true;
 
 				if ($allowed == false) return false;
@@ -112,6 +111,8 @@
 				if ($permissions[0] >= 2)												$allowed = true;
 				
 				if ($allowed == false) return false;	
+
+				$_newTask["creatorId"]	= $userId;
 			}
 
 
@@ -149,9 +150,8 @@
 			$permissions 	= $this->Parent->users->getPermissions("tasks");
 			if (!$task || !$userId || !$permissions) return false;
 
-
 			$allowed = false;
-			if ($permissions[0] >= 1 && $oldTask["creatorId"] === $userId) 			$allowed = true;
+			if ($permissions[1] >= 1 && $task["creatorId"] === $userId) 			$allowed = true;
 			if ($permissions[1] >= 2)												$allowed = true;
 
 			if ($allowed == false) return false;
