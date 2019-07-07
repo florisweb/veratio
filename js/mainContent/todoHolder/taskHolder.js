@@ -198,8 +198,6 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 		if (!project) 	return false;
 		if (typeof task != "object") return task;
 
-		console.debug(window.p = Parent);
-
 		resetEditMode(true);	
 
 		task = project.todos.update(task);
@@ -228,6 +226,7 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 
 			return task;
 		}
+
 			function __inputValueToData(_value) {
 				let task = {
 					assignedTo: []
@@ -241,14 +240,15 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 				if (projects.list[0]) 
 				{
 					task.projectId = projects.list[0].id;
-				} else {
+				} else if (!edit_todo) 
+				{
 					let project 	= Server.getProject(MainContent.menu.Main.page.curProjectId);
 					task.projectId 	= project ? project.id : Server.projectList[0].id;
 				}
 
 				
 				// add tagId
-				let tags = getListByValue(_value, "#");
+				let tags = getListByValue(task.title, "#");
 				task.title 	= tags.value;
 				if (tags.list[0]) task.tagId = tags.list[0].id;
 
@@ -271,18 +271,23 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 					let found = [];
 					for (item of items)
 					{
-						if (!item) continue;
 						if (item.score < 1) return {list: found, value: _value};
 						found.push(item.item);
+
+
 						
 						let parts = _value.split(_type + item.str);
+						console.log(item.str, parts, _value);
 						_value = parts.join("");
+						console.log(_value);
 					}
 
 					return {list: found, value: _value};
 				}
-
 }
+
+
+
 
 
 
