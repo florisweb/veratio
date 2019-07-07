@@ -26,7 +26,6 @@ function _app() {
 			function() {
 				MainContent.menu.Main.page.reopenCurPage();
 				SideBar.projectList.fillProjectHolder();
-        SideBar.projectList.open();
 			}, function() {}
 		);
 	}
@@ -84,6 +83,8 @@ function _app() {
       MainContent.searchOptionMenu.hide();
     });
     
+
+    SideBar.projectList.open();
   }
 }
 
