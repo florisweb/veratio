@@ -113,10 +113,11 @@ function _MainContent_searchOptionMenu() {
 		inputField.onkeyup = function() {
 			if (keyupTimeout > 0) return keyupTimeout--;
 			
-			addTagItemsByValue(this.value, this.selectionStart);
+			addListItemsByValue(this.value, this.selectionStart);
 			moveToItem(this, this.selectionStart);
 		}
 	}
+
 
 	this.hide = function(_reFocusTextElement = false, _setTimeOut = 5) {
 		this.openState = false;
@@ -137,46 +138,58 @@ function _MainContent_searchOptionMenu() {
 		setTimeout('$("#mainContentHolder .optionMenuHolder.searchOption")[0].style.top = "-50px";', 300);
 	}
 
+	this.chooseFirstSearchItem = function() {
+		let searchItem = $(".searchOption .optionItem.clickable")[0];
+		if (!searchItem) return false;
+		searchItem.click();
+		return true;
+	}
 
 
-	function addTagItemsByValue(_value, _cursorPosition) {
+
+	function getItemListByType(_type) {
+		switch (_type)
+		{
+			case "#": 	return curProject.tags.list; 		break;
+			case ".": 	return Server.projectList; 			break;
+			default: 	return curProject.users.getList(); 	break;
+		}
+	}
+	
+
+
+	function addListItemsByValue(_value, _cursorPosition) {
 		HTML.menu.innerHTML = "";
 		HTML.menu.classList.remove("hide");
 		This.openState = true;
-		
 
-		let activeTags = 0;
-		let tags = _getListByValue(_value, _cursorPosition, curProject.tags.list, "#");
-		for (let i = 0; i < tags.length; i++)
-		{
-			if (!tags[i].active) continue;
-			_addSearchItem(tags[i], "#");
-			activeTags++;
-		}
-
-		if (activeTags > 0) return;
-
-		let activeMembers = 0;
-		let members = _getListByValue(_value, _cursorPosition, curProject.users.getList(), "@");
-		for (let i = 0; i < members.length; i++)
-		{
-			if (!members[i].active) continue;
-			_addSearchItem(members[i], "@");
-			activeMembers++
-		}
-		
-		if (!activeTags && !activeMembers) return This.hide(false, 0);
+		if (addListItemsByValueAndType(_value, _cursorPosition, "#")) return;
+		if (addListItemsByValueAndType(_value, _cursorPosition, "@")) return;
+		if (addListItemsByValueAndType(_value, _cursorPosition, ".")) return;
+	
+		This.hide(false, 0);
 	}	
 
-
-
-
-		function _getListByValue(_value, _cursorPosition, _items, _type) {
-			let found = [];
-
-			for (let i = 0; i < _items.length; i++)
+		function addListItemsByValueAndType(_value, _cursorPosition, _type) {
+			let active = 0;
+			let items = _getListByValue(_value, _cursorPosition, _type);
+			for (let i = 0; i < items.length; i++)
 			{
-				let item = _checkValueByItem(_value, _items[i], _type);
+				if (!items[i].active) continue;
+				_addSearchItem(items[i], _type);
+				active++;
+			}
+
+			return active > 0;
+		}
+
+		function _getListByValue(_value, _cursorPosition, _type) {
+			let found = [];
+			let itemList = getItemListByType(_type);
+
+			for (let i = 0; i < itemList.length; i++)
+			{
+				let item = _checkValueByItem(_value, itemList[i], _type);
 				let active = false;
 				if (item.startAt <= parseInt(_cursorPosition) && item.length + item.startAt >= parseInt(_cursorPosition)) active = true;
 				item.active = active;
@@ -231,12 +244,7 @@ function _MainContent_searchOptionMenu() {
 
 
 
-		this.chooseFirstSearchItem = function() {
-			let searchItem = $(".searchOption .optionItem.clickable")[0];
-			if (!searchItem) return false;
-			searchItem.click();
-			return true;
-		}
+
 
 		function _addSearchItem(_item, _type = "@") {
 			let html = 	document.createElement("div");
@@ -249,9 +257,9 @@ function _MainContent_searchOptionMenu() {
 			switch (_type)
 			{
 				case "#": title = _addSearchItem_tag(html, _item); break;
+				case ".": title = _addSearchItem_project(html, _item); break;
 				default: title = _addSearchItem_member(html, _item); break;
 			}
-
 
 
 			html.addEventListener("click", function() {
@@ -277,12 +285,18 @@ function _MainContent_searchOptionMenu() {
 			}
 
 			function _addSearchItem_member(_html, _item) {
-				let html = "<img src='images/icons/projectIconDark.svg' class='optionIcon statusCircle'>";
+				let html = "<img src='images/icons/memberIcon.png' style='opacity: 0.3' class='optionIcon'>";
 				_html.insertAdjacentHTML("afterbegin", html);
 
 				return _item.item.name;
 			}
 
+			function _addSearchItem_project(_html, _item) {
+				let html = "<img src='images/icons/projectIconDark.svg' class='optionIcon'>";
+				_html.insertAdjacentHTML("afterbegin", html);
+
+				return _item.item.title;
+			}
 
 
 
