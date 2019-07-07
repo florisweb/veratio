@@ -133,7 +133,10 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 										'<div class="text button bDefault bBoxy" style="float: left">Create</div>' + 
 										'<div class="text button" style="float: left">Cancel</div>' + 
 									'</div>' +
-									'<div class="rightHand">Tags' + 
+									'<div class="rightHand">' + 
+										'<img src="images/icons/projectIconDark.svg" class="icon projectIcon clickable">' +
+										'<img src="images/icons/memberIcon.png" class="icon clickable">' +
+										'<img src="images/icons/tagIcon.png" class="icon tagIcon clickable">' +
 									'</div>' +
 								'</div>';
 			

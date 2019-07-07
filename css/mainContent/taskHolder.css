@@ -271,11 +271,25 @@
 				float: right;
 				right: 20px;
 				margin-top: 10px;
-
-				border: 1px solid red;
 			}
-			
-			
+
+			.createMenuHolder .rightHand .icon {
+				position: relative;
+				height: 20px;
+				
+				width: auto;
+				opacity: 0.5;
+				margin-right: 11px;
+			}
+			.createMenuHolder .rightHand .icon.projectIcon {
+				height: 18px;
+			}
+
+			.createMenuHolder .rightHand .icon.tagIcon {
+				top: -2.5px;
+				height: 12px;
+				/*transform: rotateZ(-45deg);*/
+			}
 
 
 
