@@ -91,7 +91,7 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 
 		this.openState = true;
 		_addCreateMenuHtml(Parent.HTML.menuHolder, _editing);
-		MainContent.searchOptionMenu.open(Parent.HTML.menuHolder.children[0].children[0]);
+		MainContent.searchOptionMenu.openWithInputField(Parent.HTML.menuHolder.children[0].children[0]);
 	}
 
 	let edit_todo = null;

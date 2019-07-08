@@ -45,10 +45,11 @@ function _app() {
       memberText += _members[m].name;
       
       if (memberText.length <= _delimiter || m == _members.length - 1) continue;   
+
       let hiddenMemberCount = _members.length - m - 1;
       memberText += " and " + hiddenMemberCount + " other";
       if (hiddenMemberCount > 1) memberText += "s";
-
+      
       break;
     }
 

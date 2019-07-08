@@ -102,11 +102,17 @@ function _MainContent_searchOptionMenu() {
 
 	this.openState = false;
 	this.open = function(_item) {
-		if (!_item || _item.type != "text") return;
+		if (!_item) return;
 
 		let project 	= Server.getProject(MainContent.menu.Main.page.curProjectId);
 		let projectId 	= project ? project.id : Server.projectList[0].id;
 		curProject 		= Server.getProject(projectId);
+		moveToItem(_item, 0);
+	}
+
+
+	this.openWithInputField = function(_item) {
+		if (!_item || _item.type != "text") return;
 
 		inputField = _item;
 		keyupTimeout = 0;
@@ -116,7 +122,10 @@ function _MainContent_searchOptionMenu() {
 			addListItemsByValue(this.value, this.selectionStart);
 			moveToItem(this, this.selectionStart);
 		}
+
+		this.open(_item);
 	}
+
 
 
 	this.hide = function(_reFocusTextElement = false, _setTimeOut = 5) {
@@ -301,7 +310,6 @@ function _MainContent_searchOptionMenu() {
 
 				return _item.item.title;
 			}
-
 
 
 
