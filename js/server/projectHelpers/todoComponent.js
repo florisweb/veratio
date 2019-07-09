@@ -29,7 +29,14 @@ function _Server_project_todoComponent(_parent) {
 
   this.update = function(_newItem, _updateServer = true) {
     _newItem.projectId = Parent.id;
-    if (typeof _newItem.groupValue != "string") _newItem.groupValue = String(_newItem.groupValue);
+
+    // search if the task has been moved to another project, and if so, remove the previous one
+    let foundTask = Server.todos.get(_newItem.id);
+    if (foundTask && foundTask.projectId != Parent.id)
+    {
+      Server.getProject(foundTask.projectId).todos.remove(foundTask.id);
+    }
+
     return DTTemplate.update(_newItem, _updateServer);
   }
 
@@ -80,7 +87,12 @@ function _Server_project_todoComponent(_parent) {
     return REQUEST.send("database/project/simpleOperation.php", parameters).then(
       function (_results) {
         if (typeof _results != "object") return false;
-        for (let i = 0; i < _results.length; i++) This.update(_results[i], false);
+        
+        for (let i = 0; i < _results.length; i++) 
+        {
+          _results[i].projectId = Parent.id;
+          This.DTTemplate.update(_results[i], false);
+        }
       }
     ).catch(function () {});
   }

@@ -231,7 +231,7 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 			if (!task.title || task.title.split(" ").join("").length < 1) return "E_InvalidTitle";
 			
 			task.groupType = "date";
-			task.groupValue = Parent.date.copy();
+			task.groupValue = Parent.date.copy().toString();
 			if (!task.groupValue) return "E_InvalidDate";
 
 			return task;
