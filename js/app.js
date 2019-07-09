@@ -75,9 +75,10 @@ function _app() {
 
     document.body.addEventListener("click", function(_e) {
       let close = true;
-      if (isDescendant($("#mainContentHolder .optionMenuHolder")[0], _e.target)) close = false;
-      if (isDescendant($(".functionItem.optionIcon"), _e.target)) close = false;
+      if (isDescendant($("#mainContentHolder .optionMenuHolder")[0], _e.target))              close = false;
+      if (isDescendant($(".functionItem.optionIcon"), _e.target))                             close = false;
       if (isDescendant($("#mainContentHolder .optionMenuHolder.searchOption")[0], _e.target)) close = false;
+      if (isDescendant($(".todoItem.createTodoHolder .rightHand"), _e.target))                close = false;
       
       if (!close) return false;
       MainContent.optionMenu.close();

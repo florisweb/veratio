@@ -107,6 +107,11 @@ function _MainContent_searchOptionMenu() {
 		let project 	= Server.getProject(MainContent.menu.Main.page.curProjectId);
 		let projectId 	= project ? project.id : Server.projectList[0].id;
 		curProject 		= Server.getProject(projectId);
+
+		HTML.menu.innerHTML = "";
+		HTML.menu.classList.remove("hide");
+		this.openState = true;
+
 		moveToItem(_item, 0);
 	}
 
@@ -183,19 +188,18 @@ function _MainContent_searchOptionMenu() {
 
 		function addListItemsByValueAndType(_value, _cursorPosition, _type) {
 			let active = 0;
-			let items = _getListByValue(_value, _type, _cursorPosition);
+			let items = This.getListByValue(_value, _type, _cursorPosition);
 			for (let i = 0; i < items.length; i++)
 			{
 				if (!items[i].active) continue;
-				_addSearchItem(items[i], _type);
+				This.addSearchItem(items[i], _type);
 				active++;
 			}
 
 			return active > 0;
 		}
 
-		this.getListByValue = _getListByValue;
-		function _getListByValue(_value, _type, _cursorPosition) {
+		this.getListByValue = function(_value, _type, _cursorPosition) {
 			let found = [];
 			let itemList = This.getItemListByType(_type);
 
@@ -259,7 +263,7 @@ function _MainContent_searchOptionMenu() {
 
 
 
-		function _addSearchItem(_item, _type = "@") {
+		this.addSearchItem = function(_item, _type = "@") {
 			let html = 	document.createElement("div");
 			html.className = "optionItem clickable";
 			html.innerHTML = "<div class='userText optionText'></div>";
@@ -319,7 +323,10 @@ function _MainContent_searchOptionMenu() {
 			let top = _item.getBoundingClientRect().top + HTML.scrollYHolder.scrollTop - 25;
 			let left = _item.getBoundingClientRect().left - HTML.scrollYHolder.getBoundingClientRect().left;
 			_characterIndex -= 1;
-			left += _characterIndex * 5;
+			left += _characterIndex * 6.2 - 10;
+
+			let maxLeft = $("#mainContent")[0].offsetWidth - HTML.menu.offsetWidth - 15;
+			if (left > maxLeft) left = maxLeft;
 
 			HTML.menu.style.left 	= left + "px";
 			HTML.menu.style.top 	= top + "px";

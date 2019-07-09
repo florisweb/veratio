@@ -76,10 +76,12 @@ function _MainContent_todoHolder_taskHolder() {
 
 function _MainContent_todoHolder_taskHolder_createMenu() {
 	let Parent;
+	let This = this;
+
 	this.setup = function(_parent) {
 		Parent = _parent;
 		Parent.HTML.menuHolder = Parent.HTML.Self.children[2];
-		
+
 		this.close(false);
 	} 
 
@@ -146,6 +148,14 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 			if (_editing) createMenu.children[1].children[0].innerHTML = "Change";
 			createMenu.children[1].children[0].onclick = function () {Parent.createMenu.createTodo();}
 			createMenu.children[1].children[1].onclick = function () {Parent.createMenu.close();}
+
+
+			createMenu.children[2].children[0].onclick = function () {Parent.createMenu.openProjectSelectMenu();}
+			createMenu.children[2].children[1].onclick = function () {Parent.createMenu.openMemberSelectMenu();}
+			createMenu.children[2].children[2].onclick = function () {Parent.createMenu.openTagSelectMenu();}
+
+
+			
 
 
 			const placeholderOptions = [
@@ -216,7 +226,7 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 			let createMenuItems = Parent.HTML.menuHolder.children[0].children;
 			if (!createMenuItems[0]) return false;
 
-			let task = __inputValueToData(createMenuItems[0].value);
+			let task = _inputValueToData(createMenuItems[0].value);
 
 			if (!task.title || task.title.split(" ").join("").length < 1) return "E_InvalidTitle";
 			
@@ -227,7 +237,7 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 			return task;
 		}
 
-			function __inputValueToData(_value) {
+			function _inputValueToData(_value) {
 				let task = {
 					assignedTo: []
 				};
@@ -273,17 +283,47 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 					{
 						if (item.score < 1) return {list: found, value: _value};
 						found.push(item.item);
-
-
 						
 						let parts = _value.split(_type + item.str);
-						console.log(item.str, parts, _value);
 						_value = parts.join("");
-						console.log(_value);
 					}
 
 					return {list: found, value: _value};
 				}
+
+
+
+	this.openProjectSelectMenu = function() {
+		openSelectMenu(0, ".", Server.projectList);
+	}
+
+
+	this.openMemberSelectMenu = function() {
+		openSelectMenu(1, "@", Server.projectList[0].users.getList());
+	}
+
+
+	this.openTagSelectMenu = function() {
+		openSelectMenu(2, "#", Server.projectList[0].tags.list);
+	}
+	
+
+		function openSelectMenu(_iconIndex = 0, _indicator = ".", _items = []) {
+			if (!This.openState) return;
+			let item = Parent.HTML.menuHolder.children[0].children[2].children[_iconIndex];
+			MainContent.searchOptionMenu.open(item);
+			
+			for (item of _items) 
+			{
+				MainContent.searchOptionMenu.addSearchItem(
+					{
+						item: item,
+					}, 
+					_indicator
+				);
+			}
+		}
+
 }
 
 
