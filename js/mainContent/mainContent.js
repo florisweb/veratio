@@ -33,15 +33,9 @@ function _MainContent_optionMenu() {
 
 		let menu = $("#mainContentHolder .optionMenuHolder")[0];
 		
+	
+
 		menu.children[0].onclick = function() {
-			let data = DOMData.get(_item.parentNode.parentNode);
-			if (!data) return;
-
-			data.finish();
-			This.close();
-		};
-
-		menu.children[1].onclick = function() {
 			let data = DOMData.get(_item.parentNode.parentNode);
 			if (!data) return;
 			
@@ -49,6 +43,14 @@ function _MainContent_optionMenu() {
 			This.close();
 		};
 
+		menu.children[1].onclick = function() {
+			let data = DOMData.get(_item.parentNode.parentNode);
+			if (!data) return;
+
+			data.finish();
+			This.close();
+		};
+		
 		menu.children[2].onclick = function() {
 			let data = DOMData.get(_item.parentNode.parentNode);
 			if (!data) return;

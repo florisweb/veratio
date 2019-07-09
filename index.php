@@ -77,12 +77,12 @@
 					
 					<div class='optionMenuHolder hide'>
 						<div class='optionItem clickable'>
-							<img class='optionIcon' src='images/icons/weekIcon.png'>
-							<div class='header userText optionText'>Finish task</div> 
-						</div>
-						<div class='optionItem clickable'>
 							<img class='optionIcon' src='images/icons/removeIcon.png'>
 							<div class='optionText'>Remove task</div>
+						</div>
+						<div class='optionItem clickable'>
+							<img class='optionIcon' src='images/icons/checkIcon.svg' style="transform: scale(0.8)">
+							<div class='header userText optionText'>Finish task</div> 
 						</div>
 						<div class='optionItem clickable'>
 							<div class='optionText'>Edit task</div>
