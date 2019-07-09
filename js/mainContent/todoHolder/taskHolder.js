@@ -136,9 +136,9 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 										'<div class="text button" style="float: left">Cancel</div>' + 
 									'</div>' +
 									'<div class="rightHand">' + 
-										'<img src="images/icons/projectIconDark.svg" class="icon projectIcon clickable">' +
-										'<img src="images/icons/memberIcon.png" class="icon clickable">' +
 										'<img src="images/icons/tagIcon.png" class="icon tagIcon clickable">' +
+										'<img src="images/icons/memberIcon.png" class="icon clickable">' +
+										'<img src="images/icons/projectIconDark.svg" class="icon projectIcon clickable">' +
 									'</div>' +
 								'</div>';
 			
@@ -150,9 +150,10 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 			createMenu.children[1].children[1].onclick = function () {Parent.createMenu.close();}
 
 
-			createMenu.children[2].children[0].onclick = function () {Parent.createMenu.openProjectSelectMenu();}
-			createMenu.children[2].children[1].onclick = function () {Parent.createMenu.openMemberSelectMenu();}
-			createMenu.children[2].children[2].onclick = function () {Parent.createMenu.openTagSelectMenu();}
+			createMenu.children[2].children[0].onclick = function () {Parent.createMenu.openTagSelectMenu()}
+			createMenu.children[2].children[1].onclick = function () {Parent.createMenu.openMemberSelectMenu()}
+			createMenu.children[2].children[2].onclick = function () {Parent.createMenu.openProjectSelectMenu()}
+			
 
 
 			
@@ -293,20 +294,18 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 
 
 
-	this.openProjectSelectMenu = function() {
-		openSelectMenu(0, ".", Server.projectList);
+	this.openTagSelectMenu = function() {
+		openSelectMenu(0, "#", Server.projectList[0].tags.list);
 	}
-
 
 	this.openMemberSelectMenu = function() {
 		openSelectMenu(1, "@", Server.projectList[0].users.getList());
 	}
-
-
-	this.openTagSelectMenu = function() {
-		openSelectMenu(2, "#", Server.projectList[0].tags.list);
-	}
 	
+	this.openProjectSelectMenu = function() {
+		openSelectMenu(2, ".", Server.projectList);
+	}
+
 
 		function openSelectMenu(_iconIndex = 0, _indicator = ".", _items = []) {
 			if (!This.openState) return;
