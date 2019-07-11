@@ -76,7 +76,7 @@ function _MainContent_todoHolder_taskHolder() {
 
 function _MainContent_todoHolder_taskHolder_createMenu() {
 	let Parent;
-	let This = this;
+	let This;
 
 	let edit_todo = null;
 	let edit_todoHTML = null;
@@ -85,8 +85,10 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 		openState: false,
 
 		setup: function(_parent) {
+			This = this;
 			Parent = _parent;
 			Parent.HTML.menuHolder = Parent.HTML.Self.children[2];
+
 
 			this.close(false);
 		},
@@ -142,7 +144,7 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 			return true;
 		},
 
-
+		op: openSelectMenu,
 		openTagSelectMenu: function() {
 			openSelectMenu(0, "#", Server.projectList[0].tags.list);
 		},
@@ -155,7 +157,6 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 			openSelectMenu(2, ".", Server.projectList);
 		}
 	}
-
 
 
 
@@ -301,7 +302,7 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 
 
 	function openSelectMenu(_iconIndex = 0, _indicator = ".", _items = []) {
-		if (!This.openState) return;
+		if (!This.openState) return false;
 		let item = Parent.HTML.menuHolder.children[0].children[2].children[_iconIndex];
 		MainContent.searchOptionMenu.open(item);
 		

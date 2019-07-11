@@ -6,7 +6,7 @@ function _MainContent_todoHolder() {
 	}
 
 		
-	this.taskHolder 		= new _MainContent_taskHolder();
+	this.taskHolder 	= new _MainContent_taskHolder();
 	this.renderSettings = new _MainContent_renderSettings();
 	this.renderer 		= new _TodoRenderer(HTML.todoHolder);
 

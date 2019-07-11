@@ -22,20 +22,18 @@ function _MainContent() {
 function _MainContent_optionMenu() {
 	let HTML = {
 		mainContentHolder: mainContentHolder,
-		menu: $("#mainContentHolder .mainContentMenu")[0]
+		contentHolder: $("#mainContentHolder .mainContentMenu")[0],
+		menu: $("#mainContentHolder .optionMenuHolder")[0]
 	}
 	let This = this;
 
 	this.openState = false;
 	this.open = function(_item, _todoId, _event) {
 		this.openState = true;
-		moveToItem(_item, _event);
-
-		let menu = $("#mainContentHolder .optionMenuHolder")[0];
-		
+		moveToItem(_item, _event);		
 	
 
-		menu.children[0].onclick = function() {
+		HTML.menu.children[0].onclick = function() {
 			let data = DOMData.get(_item.parentNode.parentNode);
 			if (!data) return;
 			
@@ -43,7 +41,7 @@ function _MainContent_optionMenu() {
 			This.close();
 		};
 
-		menu.children[1].onclick = function() {
+		HTML.menu.children[1].onclick = function() {
 			let data = DOMData.get(_item.parentNode.parentNode);
 			if (!data) return;
 
@@ -51,7 +49,7 @@ function _MainContent_optionMenu() {
 			This.close();
 		};
 		
-		menu.children[2].onclick = function() {
+		HTML.menu.children[2].onclick = function() {
 			let data = DOMData.get(_item.parentNode.parentNode);
 			if (!data) return;
 			
@@ -73,13 +71,15 @@ function _MainContent_optionMenu() {
 
 		function moveToItem(_item, _event) {
 			if (!_item) return false;
-			let top = _item.getBoundingClientRect().top + HTML.menu.scrollTop - 30;
+			let top = _item.getBoundingClientRect().top + HTML.contentHolder.scrollTop - 30;
 			let left = _event ? _event.clientX - 325 :  $("#mainContentHolder")[0].offsetWidth - 180;
 
-			let menu = $("#mainContentHolder .optionMenuHolder")[0];
-			menu.style.top = top + "px";
-			menu.style.left = left + "px";
-			menu.classList.remove("hide");
+			let maxLeft = $("#mainContent")[0].offsetWidth - HTML.menu.offsetWidth - 15;
+			if (left > maxLeft) left = maxLeft;
+			
+			HTML.menu.style.left = left + "px";
+			HTML.menu.style.top = top + "px";
+			HTML.menu.classList.remove("hide");
 		}
 }
 
