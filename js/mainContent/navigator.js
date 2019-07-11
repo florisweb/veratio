@@ -251,7 +251,6 @@ function _MainContent_menuCreateProject(_parent) {
 
 			return project;
 		}
-
 }
 
 

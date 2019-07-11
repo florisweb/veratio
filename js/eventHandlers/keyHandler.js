@@ -31,7 +31,7 @@ function _KeyHandler() {
       keys: ["Enter"], 
       event: function () {
         if (MainContent.searchOptionMenu.openState) return MainContent.searchOptionMenu.chooseFirstSearchItem();
-        return MainContent.menu.Main.todoHolder.taskHolder.createTodo();
+        return MainContent.menu.Main.todoHolder.taskHolder.createTask();
       },
       ignoreIfInInputField: false
     },

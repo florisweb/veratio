@@ -19,7 +19,7 @@ function _TodoRenderer() {
 		if (_displayProjectTitle !== false) todoRenderData.projectTitle = project.title;
 		if (tag) todoRenderData.tagColour = tag.colour;
 		
-		let html = _createTodoHTML(todoRenderData, _taskHolder);
+		let html = _createTaskHTML(todoRenderData, _taskHolder);
 
 		
 
@@ -53,7 +53,7 @@ function _TodoRenderer() {
 
 
 
-		function _createTodoHTML(_toDoData, _taskHolder) {
+		function _createTaskHTML(_toDoData, _taskHolder) {
 			let html = document.createElement("div");
 			html.className = "todoItem";
 			if (_toDoData.finished) html.classList.add("finished");

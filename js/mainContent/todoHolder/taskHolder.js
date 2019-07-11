@@ -11,44 +11,44 @@
 
 
 function _MainContent_todoHolder_taskHolder() {
-	this.setup = function(_appendTo, _preferences = {}) {
-		this.id = newId();
-		this.preferences = _preferences;
+	return {
+		setup: function(_appendTo, _preferences = {}) {
+			this.id = newId();
+			this.preferences = _preferences;
 
-		this.HTML = {
-			Parent: _appendTo,
-			Self: _renderDayItem(this),
+			this.HTML = {
+				Parent: _appendTo,
+				Self: renderDayItem(this),
+			}
+			this.HTML.Parent.append(this.HTML.Self);
+
+			
+			if (!this.preferences.customAttributes) return;
+			for (attribute of this.preferences.customAttributes) 
+			{
+				this.HTML.Self.setAttribute(attribute.key, attribute.value);
+			}
+		},
+
+
+		remove: function() {
+			this.HTML.Self.parentNode.removeChild(this.HTML.Self);
+			MainContent.menu["Main"].todoHolder.taskHolder.remove(this.id);
+		},
+
+
+		onTaskFinish: function(_task) {
+			console.warn("FINISH", _task);
+		},
+
+		onTaskRemove: function(_taskId) {
+			console.warn("REMOVE", _taskId);
+			this.todo.removeTask(_taskId);
 		}
-		this.HTML.Parent.append(this.HTML.Self);
-
-		
-		if (!this.preferences.customAttributes) return;
-		for (attribute of this.preferences.customAttributes) 
-		{
-			this.HTML.Self.setAttribute(attribute.key, attribute.value);
-		}
 	}
 
 
-
-	this.remove = function() {
-		this.HTML.Self.parentNode.removeChild(this.HTML.Self);
-		MainContent.menu["Main"].todoHolder.taskHolder.remove(this.id);
-	}
-
-
-	this.onTaskFinish = function(_task) {
-		console.warn("FINISH", _task);
-	}
-
-	this.onTaskRemove = function(_taskId) {
-		console.warn("REMOVE", _taskId);
-		this.todo.removeTask(_taskId);
-	}
-
-
-
-	function _renderDayItem(This) {
+	function renderDayItem(This) {
 		let html = document.createElement("div");
 		html.className = "taskHolder";
 
@@ -59,7 +59,7 @@ function _MainContent_todoHolder_taskHolder() {
 
 		html.innerHTML = 	'<div class="header dateHolder"></div>' + 
 							'<div class="todoHolder"></div>' + 
-							'<div class="todoItem createTodoHolder">' + 
+							'<div class="todoItem createTaskHolder">' + 
 							'</div>';
 
 		setTextToElement(html.children[0], This.preferences.title);
@@ -78,47 +78,88 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 	let Parent;
 	let This = this;
 
-	this.setup = function(_parent) {
-		Parent = _parent;
-		Parent.HTML.menuHolder = Parent.HTML.Self.children[2];
-
-		this.close(false);
-	} 
-
-
-	this.openState = false;
-	this.open = function(_editing = false) {
-		if (this.disabled) return false;
-		MainContent.menu.Main.todoHolder.taskHolder.closeAllCreateMenus();
-
-		this.openState = true;
-		_addCreateMenuHtml(Parent.HTML.menuHolder, _editing);
-		MainContent.searchOptionMenu.openWithInputField(Parent.HTML.menuHolder.children[0].children[0]);
-	}
-
 	let edit_todo = null;
 	let edit_todoHTML = null;
-	this.openEdit = function(_todoHTML, _todoId) {
-		if (this.disabled) return false;
 
-		let todo = Server.todos.get(_todoId);
-		if (!todo || !_todoHTML) return false;
-		this.open(true);
+	return {
+		openState: false,
 
-		edit_todo = todo;
-		edit_todoHTML = _todoHTML;
-		edit_todoHTML.classList.add("hide");
+		setup: function(_parent) {
+			Parent = _parent;
+			Parent.HTML.menuHolder = Parent.HTML.Self.children[2];
+
+			this.close(false);
+		},
+
+
+		open: function(_editing = false) {			
+			MainContent.menu.Main.todoHolder.taskHolder.closeAllCreateMenus();
+
+			this.openState = true;
+			addCreateMenuHtml(Parent.HTML.menuHolder, _editing);
+			MainContent.searchOptionMenu.openWithInputField(Parent.HTML.menuHolder.children[0].children[0]);
+		},
+
+
+		openEdit: function(_todoHTML, _todoId) {
+			let todo = Server.todos.get(_todoId);
+			if (!todo || !_todoHTML) return false;
+			this.open(true);
+
+			edit_todo = todo;
+			edit_todoHTML = _todoHTML;
+			edit_todoHTML.classList.add("hide");
+			
+			Parent.HTML.menuHolder.children[0].children[0].value = todo.title;
+		},
+
+
+
+		close: function(_animate) {
+			this.openState = false;
+			addButtonHtml(_animate);
+			resetEditMode();
+		},
+
+
+		createTask: function() {
+			let task 		= scrapeTodoData();
+			let project 	= Server.getProject(task.projectId);
+
+			if (!project) 	return false;
+			if (typeof task != "object") return task;
+
+			resetEditMode(true);	
+
+			task = project.todos.update(task);
+
+			let curProjectId = MainContent.menu["Main"].page.curProjectId;
+			if (curProjectId == task.projectId || !curProjectId) Parent.todo.renderTodo(task, Parent);
+			
+			this.close();
+			MainContent.searchOptionMenu.close();
+
+			return true;
+		},
+
+
+		openTagSelectMenu: function() {
+			openSelectMenu(0, "#", Server.projectList[0].tags.list);
+		},
+
+		openMemberSelectMenu: function() {
+			openSelectMenu(1, "@", Server.projectList[0].users.getList());
+		},
 		
-		Parent.HTML.menuHolder.children[0].children[0].value = todo.title;
+		openProjectSelectMenu: function() {
+			openSelectMenu(2, ".", Server.projectList);
+		}
 	}
 
 
 
-	this.close = function(_animate) {
-		this.openState = false;
-		_addButtonHtml(Parent.HTML.menuHolder, _animate);
-		resetEditMode();
-	}
+
+
 
 	function resetEditMode(_deleteTodo = false) {
 		if (edit_todoHTML) edit_todoHTML.classList.remove("hide");
@@ -128,201 +169,152 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 	}
 
 
-		function _addCreateMenuHtml(_parent, _editing = false) {
-			let newInnerHTML = '<div class="createMenuHolder hide">' + 
-									'<input class="text inputField iBoxy clickable" placeholder="Read some books...">' + 
-									'<div class="leftHand">' + 
-										'<div class="text button bDefault bBoxy" style="float: left">Create</div>' + 
-										'<div class="text button" style="float: left">Cancel</div>' + 
-									'</div>' +
-									'<div class="rightHand">' + 
-										'<img src="images/icons/tagIcon.png" class="icon tagIcon clickable">' +
-										'<img src="images/icons/memberIcon.png" class="icon clickable">' +
-										'<img src="images/icons/projectIconDark.svg" class="icon projectIcon clickable">' +
-									'</div>' +
-								'</div>';
-			
-			_parent.innerHTML = newInnerHTML;
-			let createMenu = _parent.children[0];
-
-			if (_editing) createMenu.children[1].children[0].innerHTML = "Change";
-			createMenu.children[1].children[0].onclick = function () {Parent.createMenu.createTodo();}
-			createMenu.children[1].children[1].onclick = function () {Parent.createMenu.close();}
-
-
-			createMenu.children[2].children[0].onclick = function () {Parent.createMenu.openTagSelectMenu()}
-			createMenu.children[2].children[1].onclick = function () {Parent.createMenu.openMemberSelectMenu()}
-			createMenu.children[2].children[2].onclick = function () {Parent.createMenu.openProjectSelectMenu()}
-			
-
-
-			
-
-
-			const placeholderOptions = [
-				'Read some books...',
-				'Clean your room...',
-				'Finish your project...',
-				'Be a social person for once...',
-				'Call an old friend...',
-				'Add a todo...',
-				'Make some homework...'
-			];
-
-			let placeholderText = placeholderOptions[Math.floor(Math.random() * placeholderOptions.length)];
-			createMenu.children[0].placeholder = placeholderText;
-			createMenu.children[0].focus();
-			createMenu.classList.remove("hide");
-		}
-
-
-		function _addButtonHtml(_parent, _animate = true) {
-			let id = newId();
-			let newInnerHTML = '<div class="addButtonHolder smallTextHolder clickable" onclick="MainContent.taskHolder.openCreateMenu(this.parentNode)">' + 
-									'<a class="smallText smallTextIcon">+</a>' + 
-									'<div class="smallText">Create Todo</div>' + 
-								'</div>';
-			_parent.innerHTML = newInnerHTML;
-			let createMenuButton = _parent.children[0];
-
-			createMenuButton.onclick = function () {Parent.createMenu.open();}
-
-			if (!_animate) return false;
-			createMenuButton.classList.add("hide");
-			createMenuButton.setAttribute("id", "addButtonHolder" + id);
-
-			
-			setTimeout(function () {
-				if (!$('#addButtonHolder' + id)[0]) return;
-				$('#addButtonHolder' + id)[0].classList.remove('hide');
-			}, 1);
-		}
-
-
-
-
-
-	this.createTodo = function() {
-		let task 		= _scrapeTodoData();
-		let project 	= Server.getProject(task.projectId);
-
-		if (!project) 	return false;
-		if (typeof task != "object") return task;
-
-		resetEditMode(true);	
-
-		task = project.todos.update(task);
-
-		let curProjectId = MainContent.menu["Main"].page.curProjectId;
-		if (curProjectId == task.projectId || !curProjectId) Parent.todo.renderTodo(task, Parent);
+	function addCreateMenuHtml(_parent, _editing = false) {
+		let newInnerHTML = '<div class="createMenuHolder hide">' + 
+								'<input class="text inputField iBoxy clickable" placeholder="Read some books...">' + 
+								'<div class="leftHand">' + 
+									'<div class="text button bDefault bBoxy" style="float: left">Create</div>' + 
+									'<div class="text button" style="float: left">Cancel</div>' + 
+								'</div>' +
+								'<div class="rightHand">' + 
+									'<img src="images/icons/tagIcon.png" class="icon tagIcon clickable">' +
+									'<img src="images/icons/memberIcon.png" class="icon clickable">' +
+									'<img src="images/icons/projectIconDark.svg" class="icon projectIcon clickable">' +
+								'</div>' +
+							'</div>';
 		
-		this.close();
-		MainContent.searchOptionMenu.close();
+		_parent.innerHTML = newInnerHTML;
+		
+		let createMenu = _parent.children[0];
+		if (_editing) createMenu.children[1].children[0].innerHTML = "Change";
+		createMenu.children[1].children[0].onclick = function () {Parent.createMenu.createTask();}
+		createMenu.children[1].children[1].onclick = function () {Parent.createMenu.close();}
 
-		return true;
+
+		createMenu.children[2].children[0].onclick = function () {Parent.createMenu.openTagSelectMenu()}
+		createMenu.children[2].children[1].onclick = function () {Parent.createMenu.openMemberSelectMenu()}
+		createMenu.children[2].children[2].onclick = function () {Parent.createMenu.openProjectSelectMenu()}
+		
+
+		let placeholderText = PLACEHOLDERTEXTS[Math.floor(Math.random() * PLACEHOLDERTEXTS.length)];
+		createMenu.children[0].placeholder = placeholderText;
+		createMenu.children[0].focus();
+		createMenu.classList.remove("hide");
 	}
 
 
-		function _scrapeTodoData() {
-			let createMenuItems = Parent.HTML.menuHolder.children[0].children;
-			if (!createMenuItems[0]) return false;
 
-			let task = _inputValueToData(createMenuItems[0].value);
+	function addButtonHtml(_animate = true) {
+		let id = newId();
+		let newInnerHTML = '<div class="addButtonHolder smallTextHolder clickable" onclick="MainContent.taskHolder.openCreateMenu(this.parentNode)">' + 
+								'<a class="smallText smallTextIcon">+</a>' + 
+								'<div class="smallText">Create Todo</div>' + 
+							'</div>';
+		Parent.HTML.menuHolder.innerHTML = newInnerHTML;
+		let createMenuButton = Parent.HTML.menuHolder.children[0];
 
-			if (!task.title || task.title.split(" ").join("").length < 1) return "E_InvalidTitle";
-			
-			task.groupType = "date";
-			task.groupValue = Parent.date.copy().toString();
-			if (!task.groupValue) return "E_InvalidDate";
+		createMenuButton.onclick = function () {Parent.createMenu.open();}
 
-			return task;
+		if (!_animate) return false;
+		createMenuButton.classList.add("hide");
+		createMenuButton.setAttribute("id", "addButtonHolder" + id);
+
+		
+		setTimeout(function () {
+			if (!$('#addButtonHolder' + id)[0]) return;
+			$('#addButtonHolder' + id)[0].classList.remove('hide');
+		}, 1);
+	}
+
+
+
+
+	function scrapeTodoData() {
+		let createMenuItems = Parent.HTML.menuHolder.children[0].children;
+		if (!createMenuItems[0]) return false;
+
+		let task = _inputValueToData(createMenuItems[0].value);
+
+		if (!task.title || task.title.split(" ").join("").length < 1) return "E_InvalidTitle";
+		
+		task.groupType = "date";
+		task.groupValue = Parent.date.copy().toString();
+		if (!task.groupValue) return "E_InvalidDate";
+
+		return task;
+	}
+
+	function _inputValueToData(_value) {
+		let task = {
+			assignedTo: []
+		};
+
+		if (edit_todo) task = edit_todo;
+
+		// add projectId
+		let projects = getListByValue(_value, ".");
+		task.title 	= projects.value;
+		if (projects.list[0]) 
+		{
+			task.projectId = projects.list[0].id;
+		} else if (!edit_todo) 
+		{
+			let project 	= Server.getProject(MainContent.menu.Main.page.curProjectId);
+			task.projectId 	= project ? project.id : Server.projectList[0].id;
 		}
 
-			function _inputValueToData(_value) {
-				let task = {
-					assignedTo: []
-				};
-
-				if (edit_todo) task = edit_todo;
-
-				// add projectId
-				let projects = getListByValue(_value, ".");
-				task.title 	= projects.value;
-				if (projects.list[0]) 
-				{
-					task.projectId = projects.list[0].id;
-				} else if (!edit_todo) 
-				{
-					let project 	= Server.getProject(MainContent.menu.Main.page.curProjectId);
-					task.projectId 	= project ? project.id : Server.projectList[0].id;
-				}
-
-				
-				// add tagId
-				let tags = getListByValue(task.title, "#");
-				task.title 	= tags.value;
-				if (tags.list[0]) task.tagId = tags.list[0].id;
+		
+		// add tagId
+		let tags = getListByValue(task.title, "#");
+		task.title 	= tags.value;
+		if (tags.list[0]) task.tagId = tags.list[0].id;
 
 
-				// add assignedTo-list
-				let members = getListByValue(task.title, "@");
-				task.title 	= members.value;
-				for (member of members.list)
-				{
-					task.assignedTo.push(member.id);
-				}
-
-				task.title 	= removeSpacesFromEnds(task.title);
-				return task;
-			}
-
-
-				function getListByValue(_value, _type) {
-					let items = MainContent.searchOptionMenu.getListByValue(_value, _type);
-					let found = [];
-					for (item of items)
-					{
-						if (item.score < 1) return {list: found, value: _value};
-						found.push(item.item);
-						
-						let parts = _value.split(_type + item.str);
-						_value = parts.join("");
-					}
-
-					return {list: found, value: _value};
-				}
-
-
-
-	this.openTagSelectMenu = function() {
-		openSelectMenu(0, "#", Server.projectList[0].tags.list);
-	}
-
-	this.openMemberSelectMenu = function() {
-		openSelectMenu(1, "@", Server.projectList[0].users.getList());
-	}
-	
-	this.openProjectSelectMenu = function() {
-		openSelectMenu(2, ".", Server.projectList);
-	}
-
-
-		function openSelectMenu(_iconIndex = 0, _indicator = ".", _items = []) {
-			if (!This.openState) return;
-			let item = Parent.HTML.menuHolder.children[0].children[2].children[_iconIndex];
-			MainContent.searchOptionMenu.open(item);
-			
-			for (item of _items) 
-			{
-				MainContent.searchOptionMenu.addSearchItem(
-					{
-						item: item,
-					}, 
-					_indicator
-				);
-			}
+		// add assignedTo-list
+		let members = getListByValue(task.title, "@");
+		task.title 	= members.value;
+		for (member of members.list)
+		{
+			task.assignedTo.push(member.id);
 		}
 
+		task.title 	= removeSpacesFromEnds(task.title);
+		return task;
+	}
+
+
+	function getListByValue(_value, _type) {
+		let items = MainContent.searchOptionMenu.getListByValue(_value, _type);
+		let found = [];
+		for (item of items)
+		{
+			if (item.score < 1) return {list: found, value: _value};
+			found.push(item.item);
+			
+			let parts = _value.split(_type + item.str);
+			_value = parts.join("");
+		}
+
+		return {list: found, value: _value};
+	}
+
+
+
+	function openSelectMenu(_iconIndex = 0, _indicator = ".", _items = []) {
+		if (!This.openState) return;
+		let item = Parent.HTML.menuHolder.children[0].children[2].children[_iconIndex];
+		MainContent.searchOptionMenu.open(item);
+		
+		for (item of _items) 
+		{
+			MainContent.searchOptionMenu.addSearchItem(
+				{
+					item: item,
+				}, 
+				_indicator
+			);
+		}
+	}
 }
 
 
@@ -360,6 +352,7 @@ function _MainContent_todoHolder_taskHolder_todo() {
 	}
 
 	this.renderTodo = function(_task, _location) {
+		console.log("render", _task);
 		let todos = Parent.HTML.todoHolder.children;
 		if (typeof _location != "number") _location = todos.length;
 		_task.taskHolderId = Parent.id;
@@ -509,9 +502,7 @@ function _MainContent_taskHolder() {
 		taskHolder.createMenu 	= new _MainContent_todoHolder_taskHolder_createMenu;
 		taskHolder.todo 		= new _MainContent_todoHolder_taskHolder_todo;
 
-
 		extendTaskHolder(_type, taskHolder, _preferences)
-
 
 		taskHolder.setup(_appendTo, _preferences);
 		taskHolder.createMenu.setup(taskHolder);
@@ -595,11 +586,11 @@ function _MainContent_taskHolder() {
 	}
 
 
-	this.createTodo = function() {
+	this.createTask = function() {
 		for (let i = 0; i < this.list.length; i++)
 		{
 			if (!this.list[i].createMenu.openState) continue;
-			this.list[i].createMenu.createTodo();
+			this.list[i].createMenu.createTask();
 			return true;
 		}
 		return false;

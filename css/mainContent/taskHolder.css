@@ -202,13 +202,13 @@
 
 
 
-	.taskHolder .createTodoHolder {
+	.taskHolder .createTaskHolder {
 		position: relative;
 		height: auto;
 		overflow: hidden;
 	}
 
-		.createTodoHolder .addButtonHolder {
+		.createTaskHolder .addButtonHolder {
 			height: auto;
 			overflow: hidden;
 			
@@ -217,7 +217,7 @@
 			transition: all .25s;
 		}
 
-		.createTodoHolder .addButtonHolder.hide {
+		.createTaskHolder .addButtonHolder.hide {
 			margin-top: 40px;
 			opacity: 0;
 		}
@@ -232,7 +232,7 @@
 
 
 
-		.createTodoHolder .createMenuHolder {
+		.createTaskHolder .createMenuHolder {
 			height: auto;
 			margin-top: 0;
 			padding-bottom: 0;
@@ -242,7 +242,7 @@
 		}
 
 
-		.createTodoHolder .createMenuHolder.hide {
+		.createTaskHolder .createMenuHolder.hide {
 			margin-top: -30px;
 			padding-bottom: 10px;
 			opacity: 0;

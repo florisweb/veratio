@@ -3,13 +3,6 @@
 
 
 
-const COLOR = {
-  DANGEROUS: "rgb(220, 50, 4)",
-  WARNING: "rgb(220, 135, 0)",
-  POSITIVE: "rgb(0, 190, 60)",
-}
-
-
 
 
 
@@ -78,7 +71,7 @@ function _app() {
       if (isDescendant($("#mainContentHolder .optionMenuHolder")[0], _e.target))              close = false;
       if (isDescendant($(".functionItem.optionIcon"), _e.target))                             close = false;
       if (isDescendant($("#mainContentHolder .optionMenuHolder.searchOption")[0], _e.target)) close = false;
-      if (isDescendant($(".todoItem.createTodoHolder .rightHand"), _e.target))                close = false;
+      if (isDescendant($(".todoItem.createTaskHolder .rightHand"), _e.target))                close = false;
       
       if (!close) return false;
       MainContent.optionMenu.close();

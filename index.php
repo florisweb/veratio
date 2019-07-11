@@ -125,6 +125,7 @@
 			// temporary so things don't get cached
 			let antiCache = Math.round(Math.random() * 100000000);
 			$.getScript("js/popup.js?antiCache=" 									+ antiCache, function() {});
+			$.getScript("js/constants.js?antiCache=" 								+ antiCache, function() {});
 			
 			$.getScript("js/DOMData.js?antiCache=" 									+ antiCache, function() {});
 			$.getScript("js/time.js?antiCache=" 									+ antiCache, function() {});
@@ -163,6 +164,8 @@
 
 
 			$.getScript("js/app.js?antiCache=" 										+ antiCache, function() {});
+
+
 
 		</script>
  	<!-- 

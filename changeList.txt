@@ -27,9 +27,6 @@ bDefault: rgb(120, 123, 237)
 
 
 
-
-
-
 Possible names:
 Veratio
 
@@ -38,9 +35,6 @@ Efficienty:
 push todos at the lists front, this way the most recent will be accessed earlier and it has to loop over less todos
 
 
-
-Bugs:
-+ Overdue menu won't dissapear when the last overdue-task is resolved
 
 
 Date:
@@ -52,6 +46,9 @@ Todolist for version 0.1:
 
 + create 'remove project'-UI
 + create 'edit project title'-UI
+
+
+MOVED CHANGELIST TO GITHUB
 
 
 
