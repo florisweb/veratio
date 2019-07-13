@@ -66,7 +66,7 @@ function _KeyHandler() {
       keys: ["l"], 
       event: function () {
           let item = $("#mainContentHolder .loadMoreButton")[0];
-          if (isInArray(item.classList, "hide")) return;
+          if (inArray(item.classList, "hide")) return;
           item.click();
       },
       ignoreIfInInputField: true

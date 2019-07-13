@@ -30,7 +30,7 @@ function isDescendant(parent, child) {
   }
 }
 
-function isInArray(arr, item) {
+function inArray(arr, item) {
   for (let i = 0; i < arr.length; i++)
   {
     if (arr[i] == item)

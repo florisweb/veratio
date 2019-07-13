@@ -144,7 +144,7 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 			return true;
 		},
 
-		op: openSelectMenu,
+
 		openTagSelectMenu: function() {
 			openSelectMenu(0, "#", Server.projectList[0].tags.list);
 		},
@@ -157,6 +157,8 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 			openSelectMenu(2, ".", Server.projectList);
 		}
 	}
+
+
 
 
 
@@ -276,9 +278,11 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 		task.title 	= members.value;
 		for (member of members.list)
 		{
+			if (inArray(task.assignedTo, member.id)) continue;
 			task.assignedTo.push(member.id);
 		}
 
+		
 		task.title 	= removeSpacesFromEnds(task.title);
 		return task;
 	}
