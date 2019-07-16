@@ -55,13 +55,13 @@ function _TodoRenderer() {
 
 		function _createTaskHTML(_toDoData, _taskHolder) {
 			let html = document.createElement("div");
-			html.className = "todoItem";
+			html.className = "listItem todoItem";
 			if (_toDoData.finished) html.classList.add("finished");
 
 
 			let statusCircleSVG = '<?xml version="1.0" standalone="no"?><svg class="statusCircle clickable" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="isolation:isolate" viewBox="0 0 83 83" width="83" height="83"><defs><clipPath id="_clipPath_EvyxEBqQoipdaXxIJMEjCjvXV7edc1qw"><rect width="83" height="83"/></clipPath></defs><g clip-path="url(#_clipPath_EvyxEBqQoipdaXxIJMEjCjvXV7edc1qw)"><rect x="0.729" y="42.389" width="43.308" height="20" transform="matrix(0.707,0.707,-0.707,0.707,43.601,-0.482)"/><rect x="16.22" y="30.02" width="70" height="20" transform="matrix(0.707,-0.707,0.707,0.707,-13.296,47.939)"/></g></svg>';
 			html.innerHTML = "<div class='statusCircleHitBox'>" + statusCircleSVG + "</div>" + 
-							 '<div class="titleHolder userText"></div>' + 
+							 '<div class="titleHolder text userText"></div>' + 
 							 '<div class="functionHolder">' +
 								'<img src="images/icons/optionIcon.png" onclick="MainContent.optionMenu.open(this, \'' + _toDoData.id + '\')" class="functionItem optionIcon icon clickable">' +
 								'<div class="functionItem projectHolder"></div>' +

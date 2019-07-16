@@ -17,10 +17,12 @@ function _MainContent_menu() {
 		this.pageIndex 	= 0;
 		this.page 		= new _MainContent_menuMain_page(this);
 		this.todoHolder = new _MainContent_todoHolder(this);
+
 		this.onOpen 	= function() {}
 	}
 
-	this.CreateProject = new _MainContent_menuCreateProject(this);
+	this.CreateProject 	= new _MainContent_menu_CreateProject(this);
+	this.Member 		= new _MainContent_menu_Member(this);
 
 
 
@@ -30,7 +32,8 @@ function _MainContent_menu() {
 
 
 	this.curMenu = "";
-	this.open = function(_menuName = "Main") {
+	this.curProjectId = false;
+	this.open = function(_menuName = "Main", _projectId = false) {
 		$(HTML.mainContentHolder.parentNode).animate({opacity: 0}, 50);
 		_resetPage();
 
@@ -38,15 +41,16 @@ function _MainContent_menu() {
 		if (!menu || !menu.onOpen) return console.warn("MainContent.menu.openMenu: " + _menuName + " doesn't exist.");
 
 
-		let pageIndex = menu.pageIndex;
-		this.curMenu = _menuName;
+		let pageIndex 		= menu.pageIndex;
+		this.curMenu 		= _menuName;
+		this.curProjectId 	= _projectId;
 
 		setTimeout(function () {
 			if (menu.hideHeader) HTML.mainContentHeader.classList.add("hide"); else HTML.mainContentHeader.classList.remove("hide");
 
 			_openMenuByIndex(pageIndex);
 
-			menu.onOpen();
+			menu.onOpen(_projectId);
 		}, 55);
 
 
@@ -124,13 +128,13 @@ function _MainContent_menuMain_page(_parent) {
 			let page = This.pages[_pageName];
 			if (!page) return console.warn("MainContent.menu.Main.page.open: " + _pageName + " doesn't exist.");
 			
-
 			if (page.hideLoadMoreButton) HTML.loadMoreButton.classList.add("hide"); else HTML.loadMoreButton.classList.remove("hide");
 			This.curProjectId = _projectId;
 			This.curPage = _pageName;
 
 			Parent.todoHolder.taskHolder.clear();
 			Parent.todoHolder.taskHolder.addOverdue();
+			
 			page.onOpen(_projectId);
 		}, 55);
 
@@ -214,7 +218,7 @@ function _MainContent_menuMain_page(_parent) {
 
 
 
-function _MainContent_menuCreateProject(_parent) {
+function _MainContent_menu_CreateProject(_parent) {
 	let This = this;
 	let Parent = _parent;
 	
@@ -252,6 +256,69 @@ function _MainContent_menuCreateProject(_parent) {
 			return project;
 		}
 }
+
+
+
+
+function _MainContent_menu_Member(_parent) {
+	let This = this;
+	let Parent = _parent;
+	
+	let HTML = {
+		Self: $(".mainContentMenu.memberPage")[0],
+		memberHolder: $(".mainContentMenu.memberPage .memberHolder")[0],
+	}
+
+	this.pageIndex 	= 2;
+	this.hideHeader	= false;
+
+
+	this.onOpen = function(_projectId) {
+		let project = Server.getProject(_projectId);
+		if (!project) return false;
+
+		MainContent.header.setTitle("Members - " + project.title);
+
+		this.setMemberItemsFromList(project.users.getList());
+	}
+
+
+
+	this.setMemberItemsFromList = function(_memberList) {
+		HTML.memberHolder.innerHTML = '<div class="text header">Members (' + _memberList.length + ')</div>';
+		for (member of _memberList)
+		{
+			this.addMemberItem(member);
+		}
+	}
+
+
+
+
+	this.addMemberItem = function(_member) {
+		let html = createMemberItemHtml(_member);
+		HTML.memberHolder.append(html);
+	}
+
+	function createMemberItemHtml(_member) { 
+		let html = document.createElement("div");
+		html.className = "listItem memberItem";
+		html.innerHTML = '<img class="mainIcon icon" src="images/icons/memberIcon.png">' + 
+						'<div class="titleHolder userText text">Dirk@dirkloop.com</div>' +
+						'<div class="rightHand">' + 
+							'<img src="images/icons/optionIcon.png" class="rightHandItem optionIcon onlyShowOnItemHover icon clickable">' +
+							'<div class="rightHandItem text"></div>' + 
+						'</div>';
+		setTextToElement(html.children[1], _member.name);
+		setTextToElement(html.children[2].children[1], _member.permissions);
+
+		return html;
+	}
+
+
+}
+
+
 
 
 

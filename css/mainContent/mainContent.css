@@ -310,8 +310,42 @@
 
 
 
+	#mainContentHolder .mainContentMenu.memberPage {
+	}
+
+		.mainContentMenu.memberPage .inviteMemberHolder {
+			position: relative;
+			margin: auto;
+			max-width: 650px;
+			padding-top: 40px;
+			padding-bottom: 20px;
+		}
+
+			.mainContentMenu.memberPage .inviteMemberHolder .inputField {
+				width: calc(100% - 100px);
+				margin-right: 5px;
+			}
 
 
+
+
+
+		.mainContentMenu.memberPage .memberHolder {
+			position: relative;
+			margin: auto;
+			max-width: 650px;
+			padding-top: 40px;
+		}
+
+
+			.listItem.memberItem {
+				position: relative;
+			}
+
+			.listItem.memberItem .mainIcon {
+				width: 15px;
+				height: 15px;
+			}
 
 
 

@@ -13,25 +13,3 @@ body {
 }
 
 
-
-
-
-
-
-
-
-
-
-.header {
-	/*font-family: Arial, Helvetica, sans-serif;*/
-	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-	/*font-family: Verdana, Geneva, sans-serif;*/
-}
-
-.userText {
-	overflow: hidden;
-	white-space: nowrap;
-}
-
-
-.clickable {cursor: pointer;}
