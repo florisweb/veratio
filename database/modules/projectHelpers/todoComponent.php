@@ -30,9 +30,7 @@
 
 
 		public function getAll() {
-			$todos = $this->DTTemplate->getAllData();
-			//do some permission stuff ?
-			return $todos;
+			return $this->DTTemplate->getAllData();
 		}
 
 
@@ -40,6 +38,7 @@
 			$groupValue = $this->filterGroupInfo($_groupType, $_groupValue);
 			if (!$groupValue) return false;
 			$tasks = $this->getAll();
+
 
 			$foundTasks = array();
 			for ($i = 0; $i < sizeof($tasks); $i++)
@@ -53,9 +52,11 @@
 			return $foundTasks;
 		}
 
+
 		public function getByDate($_date) {
 			return $this->getByGroup("date", $_date);
 		}
+
 
 		public function getByDateRange($_info) {
 			$_range	= (int)$_info["range"];
@@ -77,11 +78,8 @@
 
 
 
-
 		public function get($_id) {
-			$todo = $this->DTTemplate->get($_id);
-			//do some permission stuff
-			return $todo;
+			return $this->DTTemplate->get($_id);
 		}
 
 
@@ -103,14 +101,14 @@
 				if ($permissions[1] >= 1 && in_array($userId, $oldTask["assignedTo"])) 	$allowed = true;
 				if ($permissions[1] >= 2)												$allowed = true;
 
-				if ($allowed == false) return false;
+				if ($allowed == false) return "E_actionNotAllowed";
 			} else {
 				$allowed = false;
 				if ($permissions[0] >= 1 && $oldTask["creatorId"] === $userId) 			$allowed = true;
 				if ($permissions[0] >= 1 && !$oldTask) 									$allowed = true;
 				if ($permissions[0] >= 2)												$allowed = true;
 				
-				if ($allowed == false) return false;	
+				if ($allowed == false) return "E_actionNotAllowed";	
 
 				$_newTask["creatorId"]	= $userId;
 			}
@@ -125,24 +123,6 @@
 			return $this->DTTemplate->update($_newTask);
 		}
 
-			private function getDifferenceBetweenTasks($_newTask, $_oldTask, $_ignoreKeys = []) {
-				if (!$_newTask || !$_oldTask) return false;
-
-				$keys = array_keys($_oldTask);
-				$difference = [];
-
-				for ($i = 0; $i < sizeof($keys); $i++)
-				{
-					$curKey = $keys[$i];
-					if ($_newTask[$curKey] === $_oldTask[$curKey]) 	continue;
-					if (in_array($curKey, $_ignoreKeys))			continue;
-
-					array_push($difference, $curKey);
-				}
-
-				return $difference;
-			}
-			
 
 		public function remove($_id) {
 			$task 			= $this->get($_id);
@@ -162,6 +142,28 @@
 
 
 
+
+
+
+
+		private function getDifferenceBetweenTasks($_newTask, $_oldTask, $_ignoreKeys = []) {
+			if (!$_newTask || !$_oldTask) return false;
+
+			$keys = array_keys($_oldTask);
+			$difference = [];
+
+			for ($i = 0; $i < sizeof($keys); $i++)
+			{
+				$curKey = $keys[$i];
+				if ($_newTask[$curKey] === $_oldTask[$curKey]) 	continue;
+				if (in_array($curKey, $_ignoreKeys))			continue;
+
+				array_push($difference, $curKey);
+			}
+
+			return $difference;
+		}
+		
 
 
 		private function filterGroupInfo($_groupType, $_groupValue) {

@@ -16,3 +16,4 @@ const PLACEHOLDERTEXTS = [
 	'Add a task...',
 	'Make some homework...'
 ];
+

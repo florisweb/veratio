@@ -71,8 +71,8 @@
 			</div>
 
 			<div id="mainContentHolder">
-				
-				<div class="mainContentMenu doNotAlignLeft">
+
+				<div class="mainContentMenu doNotAlignLeft hide">
 					<div class="todoListHolder"></div>
 					
 					<div class='optionMenuHolder hide'>
@@ -114,6 +114,19 @@
 						<a class="button bDefault bBoxy" onclick='MainContent.menu.CreateProject.createProject()'>Create</a>
 					</div>
 				</div>
+
+				<div class="mainContentMenu memberPage">
+					<div class="inviteMemberHolder">
+						<input placeholder="Username or email" class="inputField iBoxy text">
+						<a class="button bDefault bBoxy" onclick='MainContent.menu.CreateProject.createProject()'>Invite</a>
+					</div>
+
+						
+						<br>
+						<div class="text tHeaderMedium">Members (6)</div>
+
+				</div>
+
 			</div>
 		</div>
 

@@ -104,15 +104,15 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 
 
 		openEdit: function(_todoHTML, _todoId) {
-			let todo = Server.todos.get(_todoId);
-			if (!todo || !_todoHTML) return false;
+			let task = Server.todos.get(_todoId);
+			if (!task || !_todoHTML) return false;
 			this.open(true);
 
-			edit_todo = todo;
+			edit_todo = task;
 			edit_todoHTML = _todoHTML;
 			edit_todoHTML.classList.add("hide");
-			
-			Parent.HTML.menuHolder.children[0].children[0].value = todo.title;
+
+			setEditModeData(task);
 		},
 
 
@@ -156,6 +156,27 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 		openProjectSelectMenu: function() {
 			openSelectMenu(2, ".", Server.projectList);
 		}
+	}
+
+
+
+
+
+	function setEditModeData(_task) {
+		let menuHolder = Parent.HTML.menuHolder;
+		let project = Server.getProject(_task.projectId);
+		
+		menuHolder.children[0].children[0].value = _task.title;
+		
+		// let tag = project.tags.get(_task.tagId);
+		
+		
+		// for (memberId of _task.assignedTo)
+		// {
+		// 	let member = project.users.get(memberId);
+			
+		// }
+
 	}
 
 
