@@ -33,7 +33,7 @@ function _MainContent_todoHolder_taskHolder() {
 
 		remove: function() {
 			this.HTML.Self.parentNode.removeChild(this.HTML.Self);
-			MainContent.taskPage.todoHolder.taskHolder.remove(this.id);
+			MainContent.taskPage.taskHolder.remove(this.id);
 		},
 
 
@@ -95,7 +95,7 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 
 
 		open: function(_editing = false) {			
-			MainContent.taskPage.todoHolder.taskHolder.closeAllCreateMenus();
+			MainContent.taskPage.taskHolder.closeAllCreateMenus();
 
 			this.openState = true;
 			addCreateMenuHtml(Parent.HTML.menuHolder, _editing);
@@ -383,7 +383,7 @@ function _MainContent_todoHolder_taskHolder_todo() {
 		if (typeof _location != "number") _location = todos.length;
 		_task.taskHolderId = Parent.id;
 
-		let task = MainContent.taskPage.todoHolder.renderer.renderToDo(_task, Parent, RenderPreferences.displayProjectTitle);
+		let task = MainContent.taskPage.renderer.renderToDo(_task, Parent, RenderPreferences.displayProjectTitle);
 
 		Parent.HTML.todoHolder.insertBefore(
 			task, 
@@ -488,7 +488,7 @@ function _MainContent_taskHolder() {
 			todoList = Server.todos.getByDate(new Date().moveDay(-1));
 		}
 		
-		todoList = MainContent.taskPage.todoHolder.renderSettings.applyFilter(
+		todoList = MainContent.taskPage.renderSettings.applyFilter(
 			todoList,
 			{
 				renderFinishedTodos: false,

@@ -7,7 +7,7 @@ function _KeyHandler() {
     {
       keys: ["n"], 
       event: function () {
-        let list = MainContent.taskPage.todoHolder.taskHolder.list;
+        let list = MainContent.taskPage.taskHolder.list;
         for (item of list)
         {
           if (item.createMenu.disabled) continue;
@@ -22,7 +22,7 @@ function _KeyHandler() {
       event: function () {
         if (MainContent.searchOptionMenu.openState)                         return MainContent.searchOptionMenu.hide(true);
         if (MainContent.optionMenu.openState)                               return MainContent.optionMenu.close();
-        if (MainContent.taskPage.todoHolder.taskHolder.closeAllCreateMenus()) return true;
+        if (MainContent.taskPage.taskHolder.closeAllCreateMenus()) return true;
       },
       ignoreIfInInputField: false
     },
@@ -31,7 +31,7 @@ function _KeyHandler() {
       keys: ["Enter"], 
       event: function () {
         if (MainContent.searchOptionMenu.openState) return MainContent.searchOptionMenu.chooseFirstSearchItem();
-        return MainContent.taskPage.todoHolder.taskHolder.createTask();
+        return MainContent.taskPage.taskHolder.createTask();
       },
       ignoreIfInInputField: false
     },

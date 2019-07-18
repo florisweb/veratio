@@ -97,7 +97,7 @@
 					<div class='optionMenuHolder searchOption hide'>
 					</div>
 
-					<div onclick="MainContent.taskPage.todoHolder.loadMoreDays(3)" class="smallTextHolder clickable loadMoreButton">
+					<div onclick="MainContent.taskPage.loadMoreDays(3)" class="smallTextHolder clickable loadMoreButton">
 						<a class="smallText smallTextIcon">+</a>
 						<div class="titleHolder userText smallText">Load more</div>
 					</div>
@@ -154,7 +154,6 @@
 			$.getScript("js/mainContent/todoHolder/taskHolder.js?antiCache=" 		+ antiCache, function() {});
 			$.getScript("js/mainContent/todoHolder/renderSettings.js?antiCache=" 	+ antiCache, function() {});
 			$.getScript("js/mainContent/todoHolder/renderer.js?antiCache=" 			+ antiCache, function() {});
-			$.getScript("js/mainContent/todoHolder/todoHolder.js?antiCache=" 		+ antiCache, function() {});
 
 			$.getScript("js/mainContent/mainContent.js?antiCache=" 					+ antiCache, function() {});
 
