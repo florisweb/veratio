@@ -2,12 +2,12 @@
 <html>
 	<head>
 		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0' name='viewport'/>
-		<link rel="stylesheet" type="text/css" href="css/component.css?a=19">
-		<link rel="stylesheet" type="text/css" href="css/popup.css?a=23">
-		<link rel="stylesheet" type="text/css" href="css/main.css?a=18">
-		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=19">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=26">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=26">
+		<link rel="stylesheet" type="text/css" href="css/component.css?a=20">
+		<link rel="stylesheet" type="text/css" href="css/popup.css?a=24">
+		<link rel="stylesheet" type="text/css" href="css/main.css?a=19">
+		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=20">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=27">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=27">
 
 		<script type="text/javascript" src="/JS/jQuery.js" asy nc></script>
 		<script type="text/javascript" src="/JS/request2.js" asy nc></script>
@@ -28,11 +28,11 @@
 			<img class="sideBarBackground" src="images/sideBarBackground/?type=sidebar">
 
 			<div class="navigationHolder">
-				<div class="header clickable" onclick="MainContent.menu.Main.page.open('Inbox')">
+				<div class="header clickable" onclick="MainContent.taskPage.page.open('Inbox')">
 					<img src="images/icons/weekIcon.png" class="headerIcon">
 					<div class="headerText">Inbox</div>
 				</div>
-				<div class="header clickable" onclick="MainContent.menu.Main.page.open('Today')">
+				<div class="header clickable" onclick="MainContent.taskPage.page.open('Today')">
 					<img src="images/icons/todayIcon.png" class="headerIcon">
 					<div class="headerText">Today</div>
 				</div>
@@ -46,7 +46,7 @@
 				<div class="projectList hide">
 					<div>
 					</div>
-					<div class="smallTextHolder clickable" onclick="MainContent.menu.open('CreateProject')"> 
+					<div class="smallTextHolder clickable" onclick="MainContent.createProjectPage.open()"> 
 						<a class="smallText smallTextIcon">+</a>
 						<a class="smallText">Create project</a>
 					</div>
@@ -65,14 +65,14 @@
 
 				<div class="functionHolder">
 					<img src="images/icons/optionIcon.png" class="functionItem icon clickable" style="left: -5px">
-					<a class="clickable functionItem button bDefault" onclick='MainContent.menu.open("Member", Server.projectList[0].id)'>Share</a>
+					<a class="clickable functionItem button bDefault" onclick='MainContent.memberPage.open(MainContent.curProjectId)'>Share</a>
 					<div class="functionItem memberList userText"></div>
 				</div>
 			</div>
 
 			<div id="mainContentHolder">
 
-				<div class="mainContentPage doNotAlignLeft hide">
+				<div class="mainContentPage doNotAlignLeft hi de">
 					<div class="todoListHolder"></div>
 					
 					<div class='optionMenuHolder hide'>
@@ -97,7 +97,7 @@
 					<div class='optionMenuHolder searchOption hide'>
 					</div>
 
-					<div onclick="MainContent.menu.Main.todoHolder.loadMoreDays(3)" class="smallTextHolder clickable loadMoreButton">
+					<div onclick="MainContent.taskPage.todoHolder.loadMoreDays(3)" class="smallTextHolder clickable loadMoreButton">
 						<a class="smallText smallTextIcon">+</a>
 						<div class="titleHolder userText smallText">Load more</div>
 					</div>
@@ -111,37 +111,17 @@
 						<br>
 
 						<input placeholder="Your projects title" class="inputField iBoxy text">
-						<a class="button bDefault bBoxy" onclick='MainContent.menu.CreateProject.createProject()'>Create</a>
+						<a class="button bDefault bBoxy" onclick='MainContent.createProjectPage.createProject()'>Create</a>
 					</div>
 				</div>
 
-				<div class="mainContentPage memberPage hi de">
+				<div class="mainContentPage memberPage hide">
 					<div class="inviteMemberHolder">
 						<input placeholder="Username or email" class="inputField iBoxy text">
 						<a class="button bDefault bBoxy">Invite</a>
 					</div>
 
-					<div class="memberHolder">
-						<div class="text header">Members (6)</div>
-
-						<div class="listItem memberItem">
-							<img class="mainIcon icon" src="images/icons/memberIcon.png">
-							<div class="titleHolder userText text">Dirk@dirkloop.com</div>
-							<div class="rightHand">
-								<img src="images/icons/optionIcon.png" class="rightHandItem optionIcon onlyShowOnItemHover icon clickable">
-							</div>
-						</div>
-						<div class="listItem memberItem">
-							<img class="mainIcon icon" src="images/icons/memberIcon.png">
-							<div class="titleHolder text">eelek@eelekweb.tk</div>
-							<div class="rightHand">
-								<img src="images/icons/optionIcon.png" class="rightHandItem optionIcon onlyShowOnItemHover icon clickable">
-								<div class="rightHandItem text">Admin</div>
-							</div>
-						</div>
-					</div>
-
-
+					<div class="memberHolder"></div>
 				</div>
 
 			</div>

@@ -164,7 +164,7 @@ function _MainContent_searchOptionMenu() {
 	this.open = function(_item) {
 		if (!_item) return;
 
-		let project 	= Server.getProject(MainContent.menu.Main.page.curProjectId);
+		let project 	= Server.getProject(MainContent.curProjectId);
 		let projectId 	= project ? project.id : Server.projectList[0].id;
 		curProject 		= Server.getProject(projectId);
 

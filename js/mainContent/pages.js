@@ -1,77 +1,6 @@
 
 
 
-// function _MainContent_menu() {
-// 	let This = this;
-
-// 	let HTML = {
-// 		mainContentHolder: mainContentHolder,
-// 		mainContentHeader: mainContentHeader,
-// 		menus: $("#mainContentHolder .mainContentPage"),
-// 	}
-
-
-
-// 	// the menus
-// 	this.Main = new function() {
-// 		this.pageIndex 	= 0;
-// 		this.page 		= new _MainContent_menuMain_page(this);
-// 		this.todoHolder = new _MainContent_todoHolder(this);
-
-// 		this.onOpen 	= function() {}
-// 	}
-
-// 	this.CreateProject 	= new _MainContent_menu_CreateProject(this);
-// 	this.Member 		= new _MainContent_menu_Member(this);
-
-
-
-
-	
-
-
-
-// 	this.curMenu = "";
-// 	this.curProjectId = false;
-// 	this.open = function(_menuName = "Main", _projectId = false) {
-// 		$(HTML.mainContentHolder.parentNode).animate({opacity: 0}, 50);
-// 		_resetPage();
-
-// 		let menu = This[_menuName];
-// 		if (!menu || !menu.onOpen) return console.warn("MainContent.menu.openMenu: " + _menuName + " doesn't exist.");
-
-
-// 		let pageIndex 		= menu.pageIndex;
-// 		this.curMenu 		= _menuName;
-// 		this.curProjectId 	= _projectId;
-
-// 		setTimeout(function () {
-// 			if (menu.hideHeader) HTML.mainContentHeader.classList.add("hide"); else HTML.mainContentHeader.classList.remove("hide");
-
-// 			_openMenuByIndex(pageIndex);
-
-// 			menu.onOpen(_projectId);
-// 		}, 55);
-
-
-// 		$(HTML.mainContentHolder.parentNode).delay(50).animate({opacity: 1}, 50);	
-// 	}
-
-
-// 	function _openMenuByIndex(_index) {
-// 		for (let i = 0; i < HTML.menus.length; i++) if (i != _index) HTML.menus[i].classList.add("hide");
-// 		HTML.menus[parseInt(_index)].classList.remove("hide");
-// 	}
-
-// 	function _resetPage() {
-// 		MainContent.optionMenu.close();
-// 	}
-// }
-
-
-
-
-
 function _MainContent_taskPage(_parent) {
 	this.pageSettings = {
 		pageName: "task",
@@ -79,14 +8,9 @@ function _MainContent_taskPage(_parent) {
 		onOpen: onOpen, 
 	}
 
+	function onOpen(_projectId) {
 
-
-
-	this.page 		= new _MainContent_taskPage_tabs(this);
-	this.todoHolder = new _MainContent_todoHolder(this);
-
-
-
+	}
 
 	this.open = function(_projectId) {
 		MainContent.openPage(this.pageSettings.pageName, _projectId);
@@ -94,15 +18,12 @@ function _MainContent_taskPage(_parent) {
 
 
 
-	function onOpen(_projectId) {
 
-	}
+
+	this.page 		= new _MainContent_taskPage_tabs(this);
+	this.todoHolder = new _MainContent_todoHolder(this);
+
 }
-
-
-
-
-
 
 
 
@@ -146,16 +67,16 @@ function _MainContent_taskPage_tabs(_parent) {
 		_resetPage();
 		setTimeout(function () {
 			let tab = This.tabs[_tabName];
-			if (!tab) return console.warn("MainContent.menu.Main.page.open: " + _tabName + " doesn't exist.");
+			if (!tab) return console.warn("MainContent.taskPage.tab.open: " + _tabName + " doesn't exist.");
 			
-			if (page.hideLoadMoreButton) HTML.loadMoreButton.classList.add("hide"); else HTML.loadMoreButton.classList.remove("hide");
-			This.curProjectId = _projectId;
+			if (tab.hideLoadMoreButton) HTML.loadMoreButton.classList.add("hide"); else HTML.loadMoreButton.classList.remove("hide");
+			MainContent.curProjectId = _projectId;
 			This.curTab = _tabName;
 
 			Parent.todoHolder.taskHolder.clear();
 			Parent.todoHolder.taskHolder.addOverdue();
 			
-			page.onOpen(_projectId);
+			tab.onOpen(_projectId);
 		}, 55);
 
 
@@ -171,7 +92,7 @@ function _MainContent_taskPage_tabs(_parent) {
 		MainContent.header.setTitle("Today - " + date.getDate() + " " + date.getMonths()[date.getMonth()].name);
 		MainContent.header.setMemberList([]);
 
-		let todoList = MainContent.menu.Main.todoHolder.renderSettings.applyFilter(Server.todos.getByDate(date));
+		let todoList = MainContent.taskPage.todoHolder.renderSettings.applyFilter(Server.todos.getByDate(date));
 		let taskHolder = Parent.todoHolder.taskHolder.add({displayProjectTitle: true, date: date});
 		taskHolder.todo.renderTodoList(todoList);
 	}
@@ -184,7 +105,7 @@ function _MainContent_taskPage_tabs(_parent) {
 		for (let i = 0; i < 7; i++)
 		{
 			let date = new Date().moveDay(i);
-			let todoList = MainContent.menu.Main.todoHolder.renderSettings.applyFilter(Server.todos.getByDate(date));
+			let todoList = MainContent.taskPage.todoHolder.renderSettings.applyFilter(Server.todos.getByDate(date));
 			let taskHolder = Parent.todoHolder.taskHolder.add({displayProjectTitle: true, date: date});
 			taskHolder.todo.renderTodoList(todoList);
 		}
@@ -201,7 +122,7 @@ function _MainContent_taskPage_tabs(_parent) {
 		for (let i = 0; i < 7; i++)
 		{
 			let date = new Date().moveDay(i);
-			let todoList = MainContent.menu.Main.todoHolder.renderSettings.applyFilter(project.todos.getTodosByDate(date));
+			let todoList = MainContent.taskPage.todoHolder.renderSettings.applyFilter(project.todos.getTodosByDate(date));
 			let taskHolder = Parent.todoHolder.taskHolder.add(
 				{displayProjectTitle: false, date: date}, 
 				{displayProjectTitle: false}
@@ -238,6 +159,11 @@ function _MainContent_taskPage_tabs(_parent) {
 
 
 
+
+
+
+
+
 function _MainContent_createProjectPage(_parent) {
 	let This = this;
 	let Parent = _parent;
@@ -247,35 +173,56 @@ function _MainContent_createProjectPage(_parent) {
 		titleInputField: $(".mainContentPage.createProjectPage .inputField")[0],
 	}
 
+	this.pageSettings = {
+		pageName: "createProject",
+		pageIndex: 1,
+		hideHeader: true,
+		onOpen: onOpen, 
+	}
 
+	this.open = function(_projectId) {
+		MainContent.openPage(this.pageSettings.pageName, _projectId);
+	}
 
-	this.pageIndex 	= 1;
-	this.hideHeader	= true;
-	this.onOpen 	= function() {
+	function onOpen(_projectId) {
 		HTML.titleInputField.value = null;
 		HTML.titleInputField.focus();
 	}
 
 
+
+
+
+
+
 	this.createProject = function() {
-		let project = _scrapeProjectData();
+		let project = scrapeProjectData();
 		if (typeof project != "object") return alert(project);
+
 		Server.createProject(project.title).then(function (_project) {
 			App.update();
-			Parent.open("Main");
-			Parent.Main.page.open("Project", _project.id);
+			MainContent.openPage("task");
+			MainContent.taskpage.page.open("Project", _project.id);
 		});
 	} 
 	
 
-		function _scrapeProjectData() {
-			let project = {title: HTML.titleInputField.value};
-			
-			if (!project.title || project.title.length < 2) return "E_incorrectTitle";
+	function scrapeProjectData() {
+		let project = {title: HTML.titleInputField.value};
+		
+		if (!project.title || project.title.length < 2) return "E_incorrectTitle";
 
-			return project;
-		}
+		return project;
+	}
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -290,22 +237,37 @@ function _MainContent_memberPage(_parent) {
 	let Parent = _parent;
 	
 	let HTML = {
-		Self: $(".mainContentPage.memberPage")[0],
 		memberHolder: $(".mainContentPage.memberPage .memberHolder")[0],
 	}
 
-	this.pageIndex 	= 2;
-	this.hideHeader	= false;
+	this.pageSettings = {
+		pageName: "member",
+		pageIndex: 2,
+		hideHeader: true,
+		onOpen: onOpen, 
+	}	
+
+	this.open = function(_projectId) {
+		if (!_projectId) _projectId = Server.projectList[0].id;
+		MainContent.openPage(this.pageSettings.pageName, _projectId);
+	}
 
 
-	this.onOpen = function(_projectId) {
+
+	function onOpen(_projectId) {
 		let project = Server.getProject(_projectId);
 		if (!project) return false;
 
 		MainContent.header.setTitle("Members - " + project.title);
 
-		this.setMemberItemsFromList(project.users.getList());
+		This.setMemberItemsFromList(project.users.getList());
 	}
+
+
+
+
+
+
 
 
 
@@ -318,12 +280,11 @@ function _MainContent_memberPage(_parent) {
 	}
 
 
-
-
 	this.addMemberItem = function(_member) {
 		let html = createMemberItemHtml(_member);
 		HTML.memberHolder.append(html);
 	}
+
 
 	function createMemberItemHtml(_member) { 
 		let html = document.createElement("div");
@@ -339,7 +300,6 @@ function _MainContent_memberPage(_parent) {
 
 		return html;
 	}
-
 
 }
 

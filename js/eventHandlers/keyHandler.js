@@ -7,7 +7,7 @@ function _KeyHandler() {
     {
       keys: ["n"], 
       event: function () {
-        let list = MainContent.menu.Main.todoHolder.taskHolder.list;
+        let list = MainContent.taskPage.todoHolder.taskHolder.list;
         for (item of list)
         {
           if (item.createMenu.disabled) continue;
@@ -22,7 +22,7 @@ function _KeyHandler() {
       event: function () {
         if (MainContent.searchOptionMenu.openState)                         return MainContent.searchOptionMenu.hide(true);
         if (MainContent.optionMenu.openState)                               return MainContent.optionMenu.close();
-        if (MainContent.menu.Main.todoHolder.taskHolder.closeAllCreateMenus()) return true;
+        if (MainContent.taskPage.todoHolder.taskHolder.closeAllCreateMenus()) return true;
       },
       ignoreIfInInputField: false
     },
@@ -31,7 +31,7 @@ function _KeyHandler() {
       keys: ["Enter"], 
       event: function () {
         if (MainContent.searchOptionMenu.openState) return MainContent.searchOptionMenu.chooseFirstSearchItem();
-        return MainContent.menu.Main.todoHolder.taskHolder.createTask();
+        return MainContent.taskPage.todoHolder.taskHolder.createTask();
       },
       ignoreIfInInputField: false
     },
@@ -43,14 +43,14 @@ function _KeyHandler() {
     {
       keys: ["i"], 
       event: function () {
-          MainContent.menu.Main.page.open("Inbox");
+          MainContent.taskPage.page.open("Inbox");
       },
       ignoreIfInInputField: true
     },
     {
       keys: ["t"], 
       event: function () {
-          MainContent.menu.Main.page.open("Today");
+          MainContent.taskPage.page.open("Today");
       },
       ignoreIfInInputField: true
     },

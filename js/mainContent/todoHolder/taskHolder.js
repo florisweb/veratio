@@ -33,7 +33,7 @@ function _MainContent_todoHolder_taskHolder() {
 
 		remove: function() {
 			this.HTML.Self.parentNode.removeChild(this.HTML.Self);
-			MainContent.menu["Main"].todoHolder.taskHolder.remove(this.id);
+			MainContent.taskPage.todoHolder.taskHolder.remove(this.id);
 		},
 
 
@@ -95,7 +95,7 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 
 
 		open: function(_editing = false) {			
-			MainContent.menu.Main.todoHolder.taskHolder.closeAllCreateMenus();
+			MainContent.taskPage.todoHolder.taskHolder.closeAllCreateMenus();
 
 			this.openState = true;
 			addCreateMenuHtml(Parent.HTML.menuHolder, _editing);
@@ -135,7 +135,7 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 
 			task = project.todos.update(task);
 
-			let curProjectId = MainContent.menu["Main"].page.curProjectId;
+			let curProjectId = MainContent.curProjectId;
 			if (curProjectId == task.projectId || !curProjectId) Parent.todo.renderTodo(task, Parent);
 			
 			this.close();
@@ -283,7 +283,7 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 			task.projectId = projects.list[0].id;
 		} else if (!edit_todo) 
 		{
-			let project 	= Server.getProject(MainContent.menu.Main.page.curProjectId);
+			let project 	= Server.getProject(MainContent.curProjectId);
 			task.projectId 	= project ? project.id : Server.projectList[0].id;
 		}
 
@@ -383,7 +383,7 @@ function _MainContent_todoHolder_taskHolder_todo() {
 		if (typeof _location != "number") _location = todos.length;
 		_task.taskHolderId = Parent.id;
 
-		let task = MainContent.menu["Main"].todoHolder.renderer.renderToDo(_task, Parent, RenderPreferences.displayProjectTitle);
+		let task = MainContent.taskPage.todoHolder.renderer.renderToDo(_task, Parent, RenderPreferences.displayProjectTitle);
 
 		Parent.HTML.todoHolder.insertBefore(
 			task, 
@@ -479,7 +479,7 @@ function _MainContent_taskHolder() {
 	}
 
 	this.addOverdue = function() {
-		let project = Server.getProject(MainContent.menu.Main.page.curProjectId);
+		let project = Server.getProject(MainContent.curProjectId);
 		let todoList = []; 
 		if (project) 
 		{
@@ -488,7 +488,7 @@ function _MainContent_taskHolder() {
 			todoList = Server.todos.getByDate(new Date().moveDay(-1));
 		}
 		
-		todoList = MainContent.menu.Main.todoHolder.renderSettings.applyFilter(
+		todoList = MainContent.taskPage.todoHolder.renderSettings.applyFilter(
 			todoList,
 			{
 				renderFinishedTodos: false,

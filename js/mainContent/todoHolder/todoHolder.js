@@ -12,27 +12,26 @@ function _MainContent_todoHolder() {
 
 
 
-
 	this.loadMoreDays = function(_extraDays = 1) {
 		loadExtraDay().then(
 			function () {
 				if (_extraDays <= 1) return;
-				MainContent.menu["Main"].todoHolder.loadMoreDays(_extraDays - 1)
+				MainContent.taskPage.todoHolder.loadMoreDays(_extraDays - 1)
 			}
 		);
 	}
 
 	function loadExtraDay() {
 		return new Promise(function (resolve, error) {
-			let date = _getNewDate();			
-			let project = Server.getProject(MainContent.menu.Main.page.curProjectId);
+			let date = getNewDate();			
+			let project = Server.getProject(MainContent.curProjectId);
 			let mainPromise;
 
 			
 			if (project) 
 			{
 				mainPromise = project.todos.DTTemplate.DB.getByDate(date);
-			} else mainPromise = _getAllTodosByDate(date);
+			} else mainPromise = getAllTodosByDate(date);
 
 			mainPromise.then(
 				function () {
@@ -47,8 +46,7 @@ function _MainContent_todoHolder() {
 
 
 
-
-		function _getAllTodosByDate(_date) {
+		function getAllTodosByDate(_date) {
 			return new Promise(function (resolve, error) {
 				let promises = [];
 				for (let i = 0; i < Server.projectList.length; i++) 
@@ -67,14 +65,14 @@ function _MainContent_todoHolder() {
 		}
 
 
-		function _getNewDate() {
+		function getNewDate() {
 			let taskHolders = $("#mainContentHolder .taskHolder");
 			let date = taskHolders[taskHolders.length - 1].getAttribute("date");
 			return new Date().setDateFromStr(date).moveDay(1);
 		}
 
 		function _renderExtraDay(_date) {
-			let project = Server.getProject(MainContent.menu.Main.page.curProjectId);
+			let project = Server.getProject(MainContent.curProjectId);
 			let todoList = [];
 			
 			if (project)
@@ -83,8 +81,8 @@ function _MainContent_todoHolder() {
 			} else todoList = Server.todos.getByDate(_date);
 
 
-			todoList = MainContent.menu.Main.todoHolder.renderSettings.applyFilter(todoList);
-			let taskHolder = MainContent.menu.Main.todoHolder.taskHolder.add({date: _date}, {displayProjectTitle: !project});
+			todoList = MainContent.taskPage.todoHolder.renderSettings.applyFilter(todoList);
+			let taskHolder = MainContent.taskPage.todoHolder.taskHolder.add({date: _date}, {displayProjectTitle: !project});
 			taskHolder.todo.renderTodoList(todoList);
 		}
 	}
