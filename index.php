@@ -28,11 +28,11 @@
 			<img class="sideBarBackground" src="images/sideBarBackground/?type=sidebar">
 
 			<div class="navigationHolder">
-				<div class="header clickable" onclick="MainContent.taskPage.page.open('Inbox')">
+				<div class="header clickable" onclick="MainContent.taskPage.tab.open('Inbox')">
 					<img src="images/icons/weekIcon.png" class="headerIcon">
 					<div class="headerText">Inbox</div>
 				</div>
-				<div class="header clickable" onclick="MainContent.taskPage.page.open('Today')">
+				<div class="header clickable" onclick="MainContent.taskPage.tab.open('Today')">
 					<img src="images/icons/todayIcon.png" class="headerIcon">
 					<div class="headerText">Today</div>
 				</div>

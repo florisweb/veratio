@@ -17,7 +17,7 @@ function _app() {
 	this.update = function() {
 		Server.sync().then(
 			function() {
-				MainContent.taskPage.page.reopenCurPage();
+				MainContent.taskPage.tab.reopenCurPage();
 				SideBar.projectList.fillProjectHolder();
 			}, function() {}
 		);

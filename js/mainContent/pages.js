@@ -24,7 +24,7 @@ function _MainContent_taskPage(_parent) {
 
 
 
-	this.page 		= new _MainContent_taskPage_tabs(this);
+	this.tab 		= new _MainContent_taskPage_tab(this);
 
 	this.taskHolder 	= new _MainContent_taskHolder();
 	this.renderSettings = new _MainContent_renderSettings();
@@ -112,7 +112,7 @@ function _MainContent_taskPage(_parent) {
 
 
 
-function _MainContent_taskPage_tabs(_parent) {
+function _MainContent_taskPage_tab(_parent) {
 	let Parent = _parent;
 	let This = this;
 
@@ -141,7 +141,7 @@ function _MainContent_taskPage_tabs(_parent) {
 	this.curTab = "Today";
 	
 	this.reopenCurPage = function() {
-		this.open(this.curPage, MainContent.curProjectId);
+		this.open(this.curTab, MainContent.curProjectId);
 	}
 
 
@@ -218,7 +218,6 @@ function _MainContent_taskPage_tabs(_parent) {
 
 
 
-
 	function _resetPage() {
 		MainContent.optionMenu.close();
 	}
@@ -285,7 +284,7 @@ function _MainContent_createProjectPage(_parent) {
 		Server.createProject(project.title).then(function (_project) {
 			App.update();
 			MainContent.openPage("task");
-			MainContent.taskpage.page.open("Project", _project.id);
+			MainContent.taskpage.tab.open("Project", _project.id);
 		});
 	} 
 	

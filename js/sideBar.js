@@ -56,7 +56,7 @@ function _SideBar_projectList() {
 							 '<div class="headerText userText"></div>';
 
 			setTextToElement(html.children[1], _project.title);
-			html.onclick = function() {MainContent.taskPage.page.open("Project", _project.id);}
+			html.onclick = function() {MainContent.taskPage.tab.open("Project", _project.id);}
 
 			HTML.projectsHolder.append(html);
 		}

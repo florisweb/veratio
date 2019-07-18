@@ -43,14 +43,14 @@ function _KeyHandler() {
     {
       keys: ["i"], 
       event: function () {
-          MainContent.taskPage.page.open("Inbox");
+          MainContent.taskPage.tab.open("Inbox");
       },
       ignoreIfInInputField: true
     },
     {
       keys: ["t"], 
       event: function () {
-          MainContent.taskPage.page.open("Today");
+          MainContent.taskPage.tab.open("Today");
       },
       ignoreIfInInputField: true
     },
