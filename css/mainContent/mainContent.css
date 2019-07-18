@@ -215,7 +215,7 @@
 }
 
 
-	#mainContentHolder .mainContentMenu {
+	#mainContentHolder .mainContentPage {
 		position: absolute;
 		
 		width: calc(100% - 5px * 2 - 35px);
@@ -231,25 +231,25 @@
 		transition: opacity 0.3s;
 	}
 
-	#mainContentHolder .mainContentMenu.hide {
+	#mainContentHolder .mainContentPage.hide {
 		pointer-events: none;
 		opacity: 0;
 	}
 		
-	#mainContentHolder .mainContentMenu.doNotAlignLeft {
+	#mainContentHolder .mainContentPage.doNotAlignLeft {
 		width: calc(100% - 5px * 2);
 		padding-left: 0;
 	}
 
 
 
-		.mainContentMenu .loadMoreButton {
+		.mainContentPage .loadMoreButton {
 			position: relative;
 			left: 35px;
 			margin-bottom: 20px;
 		}
 		
-		.mainContentMenu .loadMoreButton.hide {
+		.mainContentPage .loadMoreButton.hide {
 			opacity: 0;
 			pointer-events: none;
 		}
@@ -287,7 +287,7 @@
 
 
 
-	#mainContentHolder .mainContentMenu.createProjectPage {
+	#mainContentHolder .mainContentPage.createProjectPage {
 		text-align: center;
 	}
 
@@ -310,10 +310,10 @@
 
 
 
-	#mainContentHolder .mainContentMenu.memberPage {
+	#mainContentHolder .mainContentPage.memberPage {
 	}
 
-		.mainContentMenu.memberPage .inviteMemberHolder {
+		.mainContentPage.memberPage .inviteMemberHolder {
 			position: relative;
 			margin: auto;
 			max-width: 650px;
@@ -321,7 +321,7 @@
 			padding-bottom: 20px;
 		}
 
-			.mainContentMenu.memberPage .inviteMemberHolder .inputField {
+			.mainContentPage.memberPage .inviteMemberHolder .inputField {
 				width: calc(100% - 100px);
 				margin-right: 5px;
 			}
@@ -330,10 +330,10 @@
 
 
 
-		.mainContentMenu.memberPage .memberHolder {
+		.mainContentPage.memberPage .memberHolder {
 			position: relative;
-			margin: auto;
-			max-width: 650px;
+			/*margin: auto;*/
+			/*max-width: 650px;*/
 			padding-top: 40px;
 		}
 

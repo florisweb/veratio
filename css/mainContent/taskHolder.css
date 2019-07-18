@@ -1,6 +1,6 @@
 
 
-.mainContentMenu .todoListHolder .taskHolder {
+.mainContentPage .todoListHolder .taskHolder {
 	position: relative;
 	width: calc(100% - 35px);
 	height: auto;

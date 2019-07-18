@@ -2,17 +2,75 @@
 
 function _MainContent() {
 	let HTML = {
-		todoHolder: $("#mainContentHolder .todoListHolder")[0],
+		mainContent: $("#mainContent")[0],
+		pages: $("#mainContent .mainContentPage"),
 	}
+
+	this.curProjectId = "";
 
 	
 	this.header 			= new _MainContent_header();
 
-	this.menu 				= new _MainContent_menu();
-
 	this.optionMenu 		= new _MainContent_optionMenu();
 	this.searchOptionMenu 	= new _MainContent_searchOptionMenu();
-}	
+
+
+
+
+
+
+
+
+
+
+
+	// Maincontent pages
+	this.createProjectPage	= new _MainContent_createProjectPage();
+	this.memberPage 		= new _MainContent_memberPage();
+	this.taskPage	 		= new _MainContent_taskPage();
+
+
+	this.openPage = function(_pageName, _projectId) {
+		$(HTML.mainContent).animate({opacity: 0}, 50);
+		resetPage();
+
+		let page = this[_pageName + "Page"];
+		if (!page || !page.pageSettings) return console.warn("MainContent.openPage: " + _pageName + " doesn't exist.");
+
+		this.curProjectId 	= _projectId;
+
+		setTimeout(function () {
+			openMenuByIndex(page.pageSettings.pageIndex);
+			page.pageSettings.onOpen(_projectId);
+		}, 55);
+
+
+		$(HTML.mainContent).delay(50).animate({opacity: 1}, 50);
+	}
+
+
+
+	function openMenuByIndex(_index) {
+		for (let i = 0; i < HTML.pages.length; i++) if (i != _index) HTML.pages[i].classList.add("hide");
+		HTML.pages[parseInt(_index)].classList.remove("hide");
+	}
+
+	function resetPage() {
+		MainContent.optionMenu.close();
+	}
+}
+	
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -22,7 +80,7 @@ function _MainContent() {
 function _MainContent_optionMenu() {
 	let HTML = {
 		mainContentHolder: mainContentHolder,
-		contentHolder: $("#mainContentHolder .mainContentMenu")[0],
+		contentHolder: $("#mainContentHolder .mainContentPage")[0],
 		menu: $("#mainContentHolder .optionMenuHolder")[0]
 	}
 	let This = this;
@@ -95,7 +153,7 @@ function _MainContent_searchOptionMenu() {
 	let HTML = {
 		menu: $("#mainContentHolder .optionMenuHolder.searchOption")[0],
 		mainContentHolder: mainContentHolder,
-		scrollYHolder: $("#mainContentHolder .mainContentMenu")[0]
+		scrollYHolder: $("#mainContentHolder .mainContentPage")[0]
 	}
 	let This = this;
 	let curProject;

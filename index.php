@@ -6,7 +6,7 @@
 		<link rel="stylesheet" type="text/css" href="css/popup.css?a=23">
 		<link rel="stylesheet" type="text/css" href="css/main.css?a=18">
 		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=19">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=25">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=26">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=26">
 
 		<script type="text/javascript" src="/JS/jQuery.js" asy nc></script>
@@ -72,7 +72,7 @@
 
 			<div id="mainContentHolder">
 
-				<div class="mainContentMenu doNotAlignLeft hi de">
+				<div class="mainContentPage doNotAlignLeft hide">
 					<div class="todoListHolder"></div>
 					
 					<div class='optionMenuHolder hide'>
@@ -105,7 +105,7 @@
 
 
 
-				<div class="mainContentMenu hide createProjectPage">
+				<div class="mainContentPage hide createProjectPage">
 					<div class="createProjectHolder">
 						<div class="text tHeaderMedium">Create a project</div>
 						<br>
@@ -115,7 +115,7 @@
 					</div>
 				</div>
 
-				<div class="mainContentMenu memberPage hide">
+				<div class="mainContentPage memberPage hi de">
 					<div class="inviteMemberHolder">
 						<input placeholder="Username or email" class="inputField iBoxy text">
 						<a class="button bDefault bBoxy">Invite</a>
@@ -150,7 +150,6 @@
 
 
 
-
 		<script>
 			// temporary so things don't get cached
 			let antiCache = Math.round(Math.random() * 100000000);
@@ -170,9 +169,9 @@
 			
 
 
-			$.getScript("js/mainContent/navigator.js?antiCache=" 					+ antiCache, function() {});
+			$.getScript("js/mainContent/pages.js?antiCache=" 						+ antiCache, function() {});
 			
-			$.getScript("js/mainContent/todoHolder/taskHolder.js?antiCache=" 			+ antiCache, function() {});
+			$.getScript("js/mainContent/todoHolder/taskHolder.js?antiCache=" 		+ antiCache, function() {});
 			$.getScript("js/mainContent/todoHolder/renderSettings.js?antiCache=" 	+ antiCache, function() {});
 			$.getScript("js/mainContent/todoHolder/renderer.js?antiCache=" 			+ antiCache, function() {});
 			$.getScript("js/mainContent/todoHolder/todoHolder.js?antiCache=" 		+ antiCache, function() {});
@@ -198,9 +197,9 @@
 
 
 		</script>
- 	<!-- 
- 		<script type="text/javascript" src="js/mainContent/navigator.js" asy nc></script>
+ 	
 
+<!-- 
 		<script type="text/javascript" src="js/mainContent/todoHolder/taskHolder.js" asy nc></script>
 		<script type="text/javascript" src="js/mainContent/todoHolder/renderSettings.js" asy nc></script>
 		<script type="text/javascript" src="js/mainContent/todoHolder/renderer.js" asy nc></script>
@@ -219,8 +218,8 @@
 
 		<script type="text/javascript" src="js/server/server.js" asy nc></script>
 
-		<script type="text/javascript" src="js/app.js" asy nc></script>
- -->
+		<script type="text/javascript" src="js/app.js" asy nc></script> -->
+
 
 
 

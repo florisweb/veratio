@@ -1,28 +1,28 @@
 
 
 
-function _MainContent_menu() {
-	let This = this;
+// function _MainContent_menu() {
+// 	let This = this;
 
-	let HTML = {
-		mainContentHolder: mainContentHolder,
-		mainContentHeader: mainContentHeader,
-		menus: $("#mainContentHolder .mainContentMenu"),
-	}
+// 	let HTML = {
+// 		mainContentHolder: mainContentHolder,
+// 		mainContentHeader: mainContentHeader,
+// 		menus: $("#mainContentHolder .mainContentPage"),
+// 	}
 
 
 
-	// the menus
-	this.Main = new function() {
-		this.pageIndex 	= 0;
-		this.page 		= new _MainContent_menuMain_page(this);
-		this.todoHolder = new _MainContent_todoHolder(this);
+// 	// the menus
+// 	this.Main = new function() {
+// 		this.pageIndex 	= 0;
+// 		this.page 		= new _MainContent_menuMain_page(this);
+// 		this.todoHolder = new _MainContent_todoHolder(this);
 
-		this.onOpen 	= function() {}
-	}
+// 		this.onOpen 	= function() {}
+// 	}
 
-	this.CreateProject 	= new _MainContent_menu_CreateProject(this);
-	this.Member 		= new _MainContent_menu_Member(this);
+// 	this.CreateProject 	= new _MainContent_menu_CreateProject(this);
+// 	this.Member 		= new _MainContent_menu_Member(this);
 
 
 
@@ -31,40 +31,71 @@ function _MainContent_menu() {
 
 
 
-	this.curMenu = "";
-	this.curProjectId = false;
-	this.open = function(_menuName = "Main", _projectId = false) {
-		$(HTML.mainContentHolder.parentNode).animate({opacity: 0}, 50);
-		_resetPage();
+// 	this.curMenu = "";
+// 	this.curProjectId = false;
+// 	this.open = function(_menuName = "Main", _projectId = false) {
+// 		$(HTML.mainContentHolder.parentNode).animate({opacity: 0}, 50);
+// 		_resetPage();
 
-		let menu = This[_menuName];
-		if (!menu || !menu.onOpen) return console.warn("MainContent.menu.openMenu: " + _menuName + " doesn't exist.");
-
-
-		let pageIndex 		= menu.pageIndex;
-		this.curMenu 		= _menuName;
-		this.curProjectId 	= _projectId;
-
-		setTimeout(function () {
-			if (menu.hideHeader) HTML.mainContentHeader.classList.add("hide"); else HTML.mainContentHeader.classList.remove("hide");
-
-			_openMenuByIndex(pageIndex);
-
-			menu.onOpen(_projectId);
-		}, 55);
+// 		let menu = This[_menuName];
+// 		if (!menu || !menu.onOpen) return console.warn("MainContent.menu.openMenu: " + _menuName + " doesn't exist.");
 
 
-		$(HTML.mainContentHolder.parentNode).delay(50).animate({opacity: 1}, 50);	
+// 		let pageIndex 		= menu.pageIndex;
+// 		this.curMenu 		= _menuName;
+// 		this.curProjectId 	= _projectId;
+
+// 		setTimeout(function () {
+// 			if (menu.hideHeader) HTML.mainContentHeader.classList.add("hide"); else HTML.mainContentHeader.classList.remove("hide");
+
+// 			_openMenuByIndex(pageIndex);
+
+// 			menu.onOpen(_projectId);
+// 		}, 55);
+
+
+// 		$(HTML.mainContentHolder.parentNode).delay(50).animate({opacity: 1}, 50);	
+// 	}
+
+
+// 	function _openMenuByIndex(_index) {
+// 		for (let i = 0; i < HTML.menus.length; i++) if (i != _index) HTML.menus[i].classList.add("hide");
+// 		HTML.menus[parseInt(_index)].classList.remove("hide");
+// 	}
+
+// 	function _resetPage() {
+// 		MainContent.optionMenu.close();
+// 	}
+// }
+
+
+
+
+
+function _MainContent_taskPage(_parent) {
+	this.pageSettings = {
+		pageName: "task",
+		pageIndex: 0,
+		onOpen: onOpen, 
 	}
 
 
-	function _openMenuByIndex(_index) {
-		for (let i = 0; i < HTML.menus.length; i++) if (i != _index) HTML.menus[i].classList.add("hide");
-		HTML.menus[parseInt(_index)].classList.remove("hide");
+
+
+	this.page 		= new _MainContent_taskPage_tabs(this);
+	this.todoHolder = new _MainContent_todoHolder(this);
+
+
+
+
+	this.open = function(_projectId) {
+		MainContent.openPage(this.pageSettings.pageName, _projectId);
 	}
 
-	function _resetPage() {
-		MainContent.optionMenu.close();
+
+
+	function onOpen(_projectId) {
+
 	}
 }
 
@@ -77,17 +108,7 @@ function _MainContent_menu() {
 
 
 
-
-
-
-
-
-
-
-
-
-
-function _MainContent_menuMain_page(_parent) {
+function _MainContent_taskPage_tabs(_parent) {
 	let Parent = _parent;
 	let This = this;
 
@@ -98,7 +119,7 @@ function _MainContent_menuMain_page(_parent) {
 	}
 
 
-	this.pages = {
+	this.tabs = {
 		Today: {
 			hideLoadMoreButton: true,
 			onOpen: openToday
@@ -113,24 +134,23 @@ function _MainContent_menuMain_page(_parent) {
 
 
 
-	this.curPage = "Today";
-	this.curProjectId = false;
+	this.curTab = "Today";
 	
 	this.reopenCurPage = function() {
-		this.open(this.curPage, this.curProjectId);
+		this.open(this.curPage, MainContent.curProjectId);
 	}
 
 
-	this.open = function(_pageName = "Today", _projectId = false) {
+	this.open = function(_tabName = "Today", _projectId = false) {
 		$(HTML.mainContentHolder.parentNode).animate({opacity: 0}, 50);
 		_resetPage();
 		setTimeout(function () {
-			let page = This.pages[_pageName];
-			if (!page) return console.warn("MainContent.menu.Main.page.open: " + _pageName + " doesn't exist.");
+			let tab = This.tabs[_tabName];
+			if (!tab) return console.warn("MainContent.menu.Main.page.open: " + _tabName + " doesn't exist.");
 			
 			if (page.hideLoadMoreButton) HTML.loadMoreButton.classList.add("hide"); else HTML.loadMoreButton.classList.remove("hide");
 			This.curProjectId = _projectId;
-			This.curPage = _pageName;
+			This.curTab = _tabName;
 
 			Parent.todoHolder.taskHolder.clear();
 			Parent.todoHolder.taskHolder.addOverdue();
@@ -218,13 +238,13 @@ function _MainContent_menuMain_page(_parent) {
 
 
 
-function _MainContent_menu_CreateProject(_parent) {
+function _MainContent_createProjectPage(_parent) {
 	let This = this;
 	let Parent = _parent;
 	
 	let HTML = {
-		page: $(".mainContentMenu.createProjectPage"),
-		titleInputField: $(".mainContentMenu.createProjectPage .inputField")[0],
+		page: $(".mainContentPage.createProjectPage"),
+		titleInputField: $(".mainContentPage.createProjectPage .inputField")[0],
 	}
 
 
@@ -260,13 +280,18 @@ function _MainContent_menu_CreateProject(_parent) {
 
 
 
-function _MainContent_menu_Member(_parent) {
+
+
+
+
+
+function _MainContent_memberPage(_parent) {
 	let This = this;
 	let Parent = _parent;
 	
 	let HTML = {
-		Self: $(".mainContentMenu.memberPage")[0],
-		memberHolder: $(".mainContentMenu.memberPage .memberHolder")[0],
+		Self: $(".mainContentPage.memberPage")[0],
+		memberHolder: $(".mainContentPage.memberPage .memberHolder")[0],
 	}
 
 	this.pageIndex 	= 2;
