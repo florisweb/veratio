@@ -310,6 +310,10 @@
 
 
 
+
+
+
+
 	#mainContentHolder .mainContentPage.memberPage {
 	}
 
@@ -332,8 +336,8 @@
 
 		.mainContentPage.memberPage .memberHolder {
 			position: relative;
-			/*margin: auto;*/
-			/*max-width: 650px;*/
+			margin: auto;
+			max-width: 650px;
 			padding-top: 40px;
 		}
 

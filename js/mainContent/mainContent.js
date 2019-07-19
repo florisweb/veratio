@@ -324,64 +324,55 @@ function _MainContent_searchOptionMenu() {
 
 
 		this.addSearchItem = function(_item, _type = "@") {
-			let html = 	document.createElement("div");
-			html.className = "optionItem clickable";
-			html.innerHTML = "<div class='userText optionText'></div>";
+			let html 		= document.createElement("div");
+			html.className 	= "optionItem clickable";
+			html.innerHTML 	= "<div class='userText optionText'></div>";
 			HTML.menu.append(html);
 
-
-			let title = "";
-			switch (_type)
-			{
-				case "#": title = _addSearchItem_tag(html, _item); break;
-				case ".": title = _addSearchItem_project(html, _item); break;
-				default: title = _addSearchItem_member(html, _item); break;
-			}
-
+			let result = createSearchItemIconByType(_type, _item);
+			html.insertAdjacentHTML("afterbegin", result.htmlStr);
+			setTextToElement(html.children[1], result.title);
 
 			html.addEventListener("click", function() {
 				if (!inputField) return;
 				let inValue = inputField.value;
 				let partA = inValue.substr(0, _item.startAt);
 				let partB = inValue.substr(_item.startAt + _item.length, inValue.length - _item.startAt - _item.length);
-				let newStr = partA + _type + title + partB;
+				let newStr = partA + _type + result.title + partB;
 				inputField.value = newStr;
 				
 				This.hide(true, 1);
 			});
-
-
-			setTextToElement(html.children[1], title);
 		}
 
-			function _addSearchItem_tag(_html, _item) {
-				let html = "<div class='optionIcon statusCircle'></div>";
-				_html.insertAdjacentHTML("afterbegin", html);
 
-				return _item.item.title;
+		function createSearchItemIconByType(_type, _item) {
+			let title = "";
+			let htmlStr = "";
+			switch (_type)
+			{
+				case ".": 
+					htmlStr = "<img src='images/icons/projectIconDark.svg' class='optionIcon'>";
+					title = _item.item.title;
+				break;
+				case "#": 
+					htmlStr = "<div class='optionIcon statusCircle'></div>";
+					title = _item.item.title;
+				break;
+				default:
+					htmlStr = "<img src='images/icons/memberIcon.png' style='opacity: 0.3' class='optionIcon'>";
+					title = _item.item.name;
+				break;
 			}
 
-			function _addSearchItem_member(_html, _item) {
-				let html = "<img src='images/icons/memberIcon.png' style='opacity: 0.3' class='optionIcon'>";
-				_html.insertAdjacentHTML("afterbegin", html);
-
-				return _item.item.name;
-			}
-
-			function _addSearchItem_project(_html, _item) {
-				let html = "<img src='images/icons/projectIconDark.svg' class='optionIcon'>";
-				_html.insertAdjacentHTML("afterbegin", html);
-
-				return _item.item.title;
-			}
-
-
+			return {title: title, htmlStr: htmlStr}
+		}
 
 
 		function moveToItem(_item, _characterIndex = 0) {
 			if (!_item) return false;
-			let top = _item.getBoundingClientRect().top + HTML.scrollYHolder.scrollTop - 25;
-			let left = _item.getBoundingClientRect().left - HTML.scrollYHolder.getBoundingClientRect().left;
+			let top 	= _item.getBoundingClientRect().top + HTML.scrollYHolder.scrollTop - 25;
+			let left 	= _item.getBoundingClientRect().left - HTML.scrollYHolder.getBoundingClientRect().left;
 			_characterIndex -= 1;
 			left += _characterIndex * 6.2 - 10;
 
