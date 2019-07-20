@@ -6,10 +6,11 @@
 
 
 
+const OptionMenu  = new _OptionMenu();
+var App           = new _app();
+var SideBar       = new _SideBar();
+var MainContent   = new _MainContent();
 
-var App = new _app();
-var SideBar = new _SideBar();
-var MainContent = new _MainContent();
 
 
 function _app() {

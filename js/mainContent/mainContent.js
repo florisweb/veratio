@@ -8,20 +8,12 @@ function _MainContent() {
 
 	this.curProjectId = "";
 
-	
 	this.header 			= new _MainContent_header();
 
 	this.optionMenu 		= new _MainContent_optionMenu();
 	this.searchOptionMenu 	= new _MainContent_searchOptionMenu();
 
-
-
-
-
-
-
-
-
+	
 
 
 	// Maincontent pages
@@ -93,8 +85,7 @@ function _MainContent_optionMenu() {
 
 		HTML.menu.children[0].onclick = function() {
 			let data = DOMData.get(_item.parentNode.parentNode);
-			if (!data) return;
-			
+			if (!data) return;		
 			data.remove();
 			This.close();
 		};
@@ -130,7 +121,7 @@ function _MainContent_optionMenu() {
 		function moveToItem(_item, _event) {
 			if (!_item) return false;
 			let top = _item.getBoundingClientRect().top + HTML.contentHolder.scrollTop - 30;
-			let left = _event ? _event.clientX - 325 :  $("#mainContentHolder")[0].offsetWidth - 180;
+			let left = _event ? _event.clientX - 325 : $("#mainContentHolder")[0].offsetWidth - 180;
 
 			let maxLeft = $("#mainContent")[0].offsetWidth - HTML.menu.offsetWidth - 15;
 			if (left > maxLeft) left = maxLeft;
@@ -140,6 +131,7 @@ function _MainContent_optionMenu() {
 			HTML.menu.classList.remove("hide");
 		}
 }
+
 
 
 
@@ -299,7 +291,7 @@ function _MainContent_searchOptionMenu() {
 							startAt: startAt,
 							length: i + 2,
 							str: curSubString,
-							score: _compareValues(curSubString, itemTitle),
+							score: similarity(curSubString, itemTitle),
 							item: _item
 						}
 						scores.push(item);
@@ -313,11 +305,6 @@ function _MainContent_searchOptionMenu() {
 			    	return 0;
 			    })[0];
 			}
-
-				function _compareValues(_valueA, _valueB) {
-					let score = similarity(_valueB, _valueA);
-					return score;
-				}
 
 
 

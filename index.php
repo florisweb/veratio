@@ -6,7 +6,7 @@
 		<link rel="stylesheet" type="text/css" href="css/popup.css?a=25">
 		<link rel="stylesheet" type="text/css" href="css/main.css?a=20">
 		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=21">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=28">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=29">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=28">
 
 		<script type="text/javascript" src="/JS/jQuery.js" asy nc></script>
@@ -136,12 +136,14 @@
 		<script>
 			// temporary so things don't get cached
 			let antiCache = Math.round(Math.random() * 100000000);
-			$.getScript("js/popup.js?antiCache=" 									+ antiCache, function() {});
-			$.getScript("js/constants.js?antiCache=" 								+ antiCache, function() {});
-			
 			$.getScript("js/DOMData.js?antiCache=" 									+ antiCache, function() {});
 			$.getScript("js/time.js?antiCache=" 									+ antiCache, function() {});
 			$.getScript("js/extraFunctions.js?antiCache=" 							+ antiCache, function() {});
+			
+			$.getScript("js/popup.js?antiCache=" 									+ antiCache, function() {});
+			$.getScript("js/constants.js?antiCache=" 								+ antiCache, function() {});
+			$.getScript("js/optionMenu.js?antiCache=" 								+ antiCache, function() {});
+			
 
 			$.getScript("js/eventHandlers/keyHandler.js?antiCache=" 				+ antiCache, function() {});
 			$.getScript("js/eventHandlers/doubleClickHandler.js?antiCache=" 		+ antiCache, function() {});

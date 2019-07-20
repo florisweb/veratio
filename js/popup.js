@@ -1,6 +1,6 @@
 // ============== DOCUMENTATION ===================
 // Usage:
-// f: close								closes the popup
+// f: hide								closes the popup
 // f: showNotification(notification)	opens a popup containing the information given in the notification object
 // 
 // NOTIFICATION OBJECT: array
@@ -17,11 +17,11 @@
 // - inputfield 					{input: input fields placeholder, id: id for event handeling, value: the startvalue to be set} 
 // 
 // 
-// 
-// 
 
 
-var Popup = new function () {
+
+
+const Popup = new function () {
 	let HTML = {
 		notificationHolder: $("#notificationBoxHolder")[0],
 		notifcationBox: $("#notificationBox")[0]
@@ -35,7 +35,7 @@ var Popup = new function () {
 	}
 
 
-	function _show() {
+	function show() {
 		Popup.openState = true;
 		HTML.notificationHolder.classList.remove("hide");
 	}
@@ -60,7 +60,7 @@ var Popup = new function () {
 
 
 	this.showNotification = function(_builder) {
-		_show();
+		show();
 		HTML.notifcationBox.innerHTML = "";
 		for (let i = 0; i < _builder.length; i++)
 		{
@@ -113,13 +113,15 @@ var Popup = new function () {
 		let element = document.createElement("div");
 		element.className = "checkBoxHolder";
 
-		let html = 	'<div class="checkBox" onclick="if (this.classList.contains(\'checked\')) {this.classList.remove(\'checked\');this.setAttribute(\'checked\', false);} else {this.classList.add(\'checked\');this.setAttribute(\'checked\', true);}">' +
-					'</div>' + 
-					'<div class="checkBoxText text"></div>';
+		// let html = 	'<div class="checkBox" onclick="if (this.classList.contains(\'checked\')) {this.classList.remove(\'checked\');this.setAttribute(\'checked\', false);} else {this.classList.add(\'checked\');this.setAttribute(\'checked\', true);}">' +
+		// 			'</div>' + 
+		// 			'<div class="checkBoxText text"></div>';
+
+		element.append(_buildText({text: _info.checkBox}))
+		let html = '<input type="checkbox">';
 		element.innerHTML = html;
 		if (_info.id) element.children[0].setAttribute("id", _info.id);
 		if (_info.checked) element.children[0].classList.add("checked");
-		setTextToElement(element.children[1], _info.checkBox);
 
 		return element;
 	}
@@ -190,4 +192,13 @@ var Popup = new function () {
 		
 		return element;
 	}
+
+
+
+
+
+
+
+
+
 }
