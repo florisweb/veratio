@@ -111,9 +111,9 @@ function _MainContent_optionMenu() {
 						// </div>
 					
 
-	this.open = function(_item) {
+	this.open = function(_item, _event) {
 		curDOMData = DOMData.get(_item.parentNode.parentNode);
-		return Menu.open(_item, -20);
+		return Menu.open(_item, -20, _event);
 	}
 
 	this.openState 	= Menu.openState;

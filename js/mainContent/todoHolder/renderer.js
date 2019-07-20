@@ -123,7 +123,7 @@ function _TodoRenderer() {
 				});
 
 				RightClick.register(_html, function(_event, _html) {
-					MainContent.optionMenu.open(_html.children[2].children[0]);
+					MainContent.optionMenu.open(_html.children[2].children[0], _event);
 				});
 
 
