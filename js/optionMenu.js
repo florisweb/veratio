@@ -27,9 +27,9 @@ function _OptionMenu() {
 		let This = this;
 
 		this.openState = false;
-		this.open = function(_item, _event) {
+		this.open = function(_item, _relativeTop) {
 			this.openState = true;
-			moveToItem(_item, _event);		
+			moveToItem(_item, _relativeTop);		
 			HTML.Self.classList.remove("hide");
 		}
 
@@ -55,10 +55,10 @@ function _OptionMenu() {
 		}
 
 
-		function moveToItem(_item, _event) {
+		function moveToItem(_item, _relativeTop = 0) {
 			if (!_item) return false;
-			let top = _item.getBoundingClientRect().top + HTML.parent.scrollTop + 30;
-			let left = _event ? _event.clientX - 325 :  $("#mainContentHolder")[0].offsetWidth - 180;
+			let top = _item.getBoundingClientRect().top + HTML.parent.scrollTop + _relativeTop;
+			let left = $("#mainContentHolder")[0].offsetWidth - 180;
 
 			let maxLeft = $("#mainContent")[0].offsetWidth - HTML.Self.offsetWidth - 15;
 			if (left > maxLeft) left = maxLeft;

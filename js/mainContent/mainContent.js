@@ -69,6 +69,74 @@ function _MainContent() {
 
 
 
+// function _MainContent_optionMenu() {
+// 	let HTML = {
+// 		mainContentHolder: mainContentHolder,
+// 		contentHolder: $("#mainContentHolder .mainContentPage")[0],
+// 		menu: $("#mainContentHolder .optionMenuHolder")[0]
+// 	}
+// 	let This = this;
+
+// 	this.openState = false;
+// 	this.open = function(_item, _todoId, _event) {
+// 		this.openState = true;
+// 		moveToItem(_item, _event);		
+	
+
+// 		HTML.menu.children[0].onclick = function() {
+// 			let data = DOMData.get(_item.parentNode.parentNode);
+// 			if (!data) return;		
+// 			data.remove();
+// 			This.close();
+// 		};
+
+// 		HTML.menu.children[1].onclick = function() {
+// 			let data = DOMData.get(_item.parentNode.parentNode);
+// 			if (!data) return;
+
+// 			data.finish();
+// 			This.close();
+// 		};
+		
+// 		HTML.menu.children[2].onclick = function() {
+// 			let data = DOMData.get(_item.parentNode.parentNode);
+// 			if (!data) return;
+			
+// 			data.openEdit();
+// 			This.close();
+// 		}
+// 	}
+
+
+
+// 	this.close = function() {
+// 		this.openState = false;
+// 		let menu = $("#mainContentHolder .optionMenuHolder")[0];
+// 		menu.classList.add("hide");
+// 		setTimeout('$("#mainContentHolder .optionMenuHolder")[0].style.top = "-50px";', 300);
+// 	}
+
+
+
+// 		function moveToItem(_item, _event) {
+// 			if (!_item) return false;
+// 			let top = _item.getBoundingClientRect().top + HTML.contentHolder.scrollTop - 30;
+// 			let left = _event ? _event.clientX - 325 : $("#mainContentHolder")[0].offsetWidth - 180;
+
+// 			let maxLeft = $("#mainContent")[0].offsetWidth - HTML.menu.offsetWidth - 15;
+// 			if (left > maxLeft) left = maxLeft;
+			
+// 			HTML.menu.style.left = left + "px";
+// 			HTML.menu.style.top = top + "px";
+// 			HTML.menu.classList.remove("hide");
+// 		}
+// }
+
+
+
+
+
+
 function _MainContent_optionMenu() {
 	let HTML = {
 		mainContentHolder: mainContentHolder,
@@ -76,61 +144,59 @@ function _MainContent_optionMenu() {
 		menu: $("#mainContentHolder .optionMenuHolder")[0]
 	}
 	let This = this;
-
-	this.openState = false;
-	this.open = function(_item, _todoId, _event) {
-		this.openState = true;
-		moveToItem(_item, _event);		
 	
+	let curDOMData;
 
-		HTML.menu.children[0].onclick = function() {
-			let data = DOMData.get(_item.parentNode.parentNode);
-			if (!data) return;		
-			data.remove();
+	let Menu = OptionMenu.create(HTML.mainContentHolder);
+	Menu.addOption(
+		"Remove", 
+		function () {
+	
+			curDOMData.remove();
 			This.close();
-		};
-
-		HTML.menu.children[1].onclick = function() {
-			let data = DOMData.get(_item.parentNode.parentNode);
-			if (!data) return;
-
-			data.finish();
+		}, 
+		"images/icons/removeIcon.png"
+	);
+	
+	Menu.addOption(
+		"Finish", 
+		function () {
+			curDOMData.finish();
 			This.close();
-		};
-		
-		HTML.menu.children[2].onclick = function() {
-			let data = DOMData.get(_item.parentNode.parentNode);
-			if (!data) return;
-			
-			data.openEdit();
+		}, 
+		"images/icons/checkIcon.svg"
+	);
+
+	Menu.addOption(
+		"Edit", 
+		function () {
+			curDOMData.openEdit();
 			This.close();
 		}
+	);
+	Menu.addOption(
+		"Postpone", 
+		function () {
+		},
+		"images/icons/weekIcon.png"
+	);
+	
+						// <div class='optionItem clickable'>
+						// 	<img class='optionIcon' src='images/icons/checkIcon.svg' style="transform: scale(0.8)">
+						// 	<div class='header userText optionText'>Finish task</div> 
+						// </div>
+					
+
+	this.open = function(_item) {
+		curDOMData = DOMData.get(_item.parentNode.parentNode);
+		return Menu.open(_item, -20);
 	}
 
-
-
-	this.close = function() {
-		this.openState = false;
-		let menu = $("#mainContentHolder .optionMenuHolder")[0];
-		menu.classList.add("hide");
-		setTimeout('$("#mainContentHolder .optionMenuHolder")[0].style.top = "-50px";', 300);
-	}
-
-
-
-		function moveToItem(_item, _event) {
-			if (!_item) return false;
-			let top = _item.getBoundingClientRect().top + HTML.contentHolder.scrollTop - 30;
-			let left = _event ? _event.clientX - 325 : $("#mainContentHolder")[0].offsetWidth - 180;
-
-			let maxLeft = $("#mainContent")[0].offsetWidth - HTML.menu.offsetWidth - 15;
-			if (left > maxLeft) left = maxLeft;
-			
-			HTML.menu.style.left = left + "px";
-			HTML.menu.style.top = top + "px";
-			HTML.menu.classList.remove("hide");
-		}
+	this.openState 	= Menu.openState;
+	this.close 		= Menu.close;
 }
+
+
 
 
 

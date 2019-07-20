@@ -10,9 +10,7 @@ function _MainContent_header() {
 	}
 
 	this.optionMenu = new function() {
-		console.log(HTML);
-		let Menu = OptionMenu.create(HTML.mainContent);
-		
+		let Menu = OptionMenu.create(HTML.mainContent);		
 
 		Menu.addOption(
 			"Members", 
@@ -30,9 +28,8 @@ function _MainContent_header() {
 		);
 
 
-
 		this.open = function() {
-			return Menu.open(HTML.optionIcon);
+			return Menu.open(HTML.optionIcon, 45);
 		}
 
 		this.openState 	= Menu.openState;

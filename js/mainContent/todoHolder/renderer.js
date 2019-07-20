@@ -63,7 +63,7 @@ function _TodoRenderer() {
 			html.innerHTML = "<div class='statusCircleHitBox'>" + statusCircleSVG + "</div>" + 
 							 '<div class="titleHolder text userText"></div>' + 
 							 '<div class="functionHolder">' +
-								'<img src="images/icons/optionIcon.png" onclick="MainContent.optionMenu.open(this, \'' + _toDoData.id + '\')" class="functionItem optionIcon icon clickable">' +
+								'<img src="images/icons/optionIcon.png" onclick="MainContent.optionMenu.open(this)" class="functionItem optionIcon icon clickable">' +
 								'<div class="functionItem projectHolder"></div>' +
 								'<div class="functionItem memberList userText"></div>' +
 							'</div>';
@@ -123,7 +123,7 @@ function _TodoRenderer() {
 				});
 
 				RightClick.register(_html, function(_event, _html) {
-					MainContent.optionMenu.open(_html.children[2].children[0], _toDoData.id, _event);
+					MainContent.optionMenu.open(_html.children[2].children[0]);
 				});
 
 
