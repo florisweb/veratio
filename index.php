@@ -75,11 +75,7 @@
 				<div class="mainContentPage doNotAlignLeft hi de">
 					<div class="todoListHolder"></div>
 				
-					<div class='optionMenuHolder searchOption hide'>
-					</div>
-
-					
-
+					<div class='optionMenuHolder searchOption hide'></div>
 
 
 					<div onclick="MainContent.taskPage.loadMoreDays(3)" class="smallTextHolder clickable loadMoreButton">
