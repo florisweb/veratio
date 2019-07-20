@@ -29,7 +29,7 @@ function _MainContent_header() {
 
 
 		this.open = function() {
-			return Menu.open(HTML.optionIcon, 45);
+			return Menu.open(HTML.optionIcon, {top: 45});
 		}
 
 		this.openState 	= Menu.openState;

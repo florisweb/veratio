@@ -319,6 +319,7 @@ function _MainContent_memberPage(_parent) {
 	let Parent = _parent;
 	
 	let HTML = {
+		Self: $(".mainContentPage.memberPage")[0],
 		memberHolder: $(".mainContentPage.memberPage .memberHolder")[0],
 	}
 
@@ -344,6 +345,37 @@ function _MainContent_memberPage(_parent) {
 
 		This.setMemberItemsFromList(project.users.getList());
 	}
+
+
+
+
+	this.optionMenu = new function() {
+		let Menu = OptionMenu.create(HTML.Self);		
+
+		Menu.addOption(
+			"Remove user", 
+			function () {
+				// MainContent.memberPage.open(MainContent.projectId)
+			}, 
+			"images/icons/memberIcon.png"
+		);
+		Menu.addOption(
+			"Change permissions", 
+			function () {
+				// MainContent.memberPage.open(MainContent.projectId)
+			}, 
+			"images/icons/memberIcon.png"
+		);
+
+		this.open = function(_target) {
+			return Menu.open(_target, {left: -100, top: -45});
+		}
+
+		this.openState 	= Menu.openState;
+		this.close 		= Menu.close;
+	}
+
+
 
 
 
@@ -379,6 +411,9 @@ function _MainContent_memberPage(_parent) {
 						'</div>';
 		setTextToElement(html.children[1], _member.name);
 		setTextToElement(html.children[2].children[1], _member.permissions);
+		html.children[2].children[0].onclick = function () {
+			MainContent.memberPage.optionMenu.open(html.children[2].children[1]);
+		}
 
 		return html;
 	}

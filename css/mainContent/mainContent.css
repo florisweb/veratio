@@ -436,6 +436,7 @@
 					
 					width: auto;
 					line-height: 19px;
+					white-space: nowrap;
 
 					font-size: 13px;
 					color: #bbb;
