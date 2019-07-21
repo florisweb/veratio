@@ -314,6 +314,9 @@ function _MainContent_createProjectPage(_parent) {
 
 
 
+
+
+
 function _MainContent_memberPage(_parent) {
 	let This = this;
 	let Parent = _parent;
@@ -350,24 +353,33 @@ function _MainContent_memberPage(_parent) {
 
 
 	this.optionMenu = new function() {
-		let Menu = OptionMenu.create(HTML.Self);		
+		let Menu = OptionMenu.create(HTML.Self);
+		let curItem = "";		
 
 		Menu.addOption(
 			"Remove user", 
 			function () {
-				// MainContent.memberPage.open(MainContent.projectId)
+				let memberId 	= DOMData.get(curItem);
+				let project 	= Server.getProject(MainContent.curProjectId);
+				if (!project || !memberId) return false;
+
+				let removed = project.users.remove(memberId);
+				if (removed) curItem.classList.add("hide");
+
+				return removed;
 			}, 
 			"images/icons/memberIcon.png"
 		);
 		Menu.addOption(
 			"Change permissions", 
 			function () {
-				// MainContent.memberPage.open(MainContent.projectId)
+				return true;
 			}, 
 			"images/icons/memberIcon.png"
 		);
 
 		this.open = function(_target) {
+			curItem = _target.parentNode.parentNode;
 			return Menu.open(_target, {left: -100, top: -45});
 		}
 
@@ -409,11 +421,14 @@ function _MainContent_memberPage(_parent) {
 							'<img src="images/icons/optionIcon.png" class="rightHandItem optionIcon onlyShowOnItemHover icon clickable">' +
 							'<div class="rightHandItem text"></div>' + 
 						'</div>';
+		
 		setTextToElement(html.children[1], _member.name);
 		setTextToElement(html.children[2].children[1], _member.permissions);
 		html.children[2].children[0].onclick = function () {
-			MainContent.memberPage.optionMenu.open(html.children[2].children[1]);
+			MainContent.memberPage.optionMenu.open(html.children[2].children[0]);
 		}
+
+		DOMData.set(html, _member.id);
 
 		return html;
 	}

@@ -49,8 +49,14 @@ function _OptionMenu_menu(_self) {
 		setTextToElement(option.children[1], _title);
 
 		HTML.Self.append(option);
-		option.addEventListener("click", This.close)
-		option.onclick = _onclick;
+		option.onclick = function () {
+			let close;
+			try {
+				close = _onclick();
+			}
+			catch (e) {return};
+			if (close) This.close();
+		}
 	}
 
 

@@ -178,7 +178,6 @@
 		}
 
 		#mainContentHeader .functionHolder .icon {
-			
 			padding: 10px;
 			margin: -10px;
 			margin-left: 5px;
@@ -314,6 +313,9 @@
 
 
 
+
+
+
 	#mainContentHolder .mainContentPage.memberPage {
 	}
 
@@ -344,6 +346,7 @@
 
 			.listItem.memberItem {
 				position: relative;
+				transition: all 0.3s;
 			}
 
 			.listItem.memberItem .mainIcon {

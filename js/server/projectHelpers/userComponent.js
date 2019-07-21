@@ -15,13 +15,12 @@ function _Server_project_userComponent(_parent) {
   );
 
 
-  this.get = function(_id)          {return DTTemplate.get(_id);}
-  this.update = function(_newItem)  {return DTTemplate.update(_newItem);}
-  this.remove = function(_id)       {return DTTemplate.remove(_id);}
+  this.get      = function(_id)       {return DTTemplate.get(_id);}
+  this.update   = function(_newItem)  {return DTTemplate.update(_newItem);}
+  this.remove   = function(_id)       {return DTTemplate.remove(_id);}
 
-  this.getList = function ()        {return DTTemplate.list;}
-  this.sync = function()            {DTTemplate.DB.getAll();}
-
+  this.getList  = function()          {return DTTemplate.list;}
+  this.sync     = function()          {DTTemplate.DB.getAll();}
 
 
 

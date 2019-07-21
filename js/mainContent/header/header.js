@@ -15,14 +15,15 @@ function _MainContent_header() {
 		Menu.addOption(
 			"Members", 
 			function () {
-				MainContent.memberPage.open(MainContent.projectId)
+				MainContent.memberPage.open(MainContent.projectId);
+				return true;
 			}, 
 			"images/icons/memberIcon.png"
 		);
 		Menu.addOption(
 			"Leave project", 
 			function () {
-				MainContent.memberPage.open(MainContent.projectId)
+				return true;
 			}, 
 			"images/icons/memberIcon.png"
 		);

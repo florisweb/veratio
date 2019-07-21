@@ -75,9 +75,7 @@ function _MainContent_optionMenu() {
 	Menu.addOption(
 		"Remove", 
 		function () {
-	
-			curDOMData.remove();
-			This.close();
+			return curDOMData.remove();
 		}, 
 		"images/icons/removeIcon.png"
 	);
@@ -85,8 +83,7 @@ function _MainContent_optionMenu() {
 	Menu.addOption(
 		"Finish", 
 		function () {
-			curDOMData.finish();
-			This.close();
+			return curDOMData.finish();
 		}, 
 		"images/icons/checkIcon.svg"
 	);
@@ -94,21 +91,16 @@ function _MainContent_optionMenu() {
 	Menu.addOption(
 		"Edit", 
 		function () {
-			curDOMData.openEdit();
-			This.close();
+			return curDOMData.openEdit();
 		}
 	);
 	Menu.addOption(
 		"Postpone", 
 		function () {
+			return true;
 		},
 		"images/icons/weekIcon.png"
 	);
-	
-						// <div class='optionItem clickable'>
-						// 	<img class='optionIcon' src='images/icons/checkIcon.svg' style="transform: scale(0.8)">
-						// 	<div class='header userText optionText'>Finish task</div> 
-						// </div>
 					
 
 	this.open = function(_item, _event) {
