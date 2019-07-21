@@ -329,9 +329,12 @@ function _MainContent_memberPage(_parent) {
 	this.pageSettings = {
 		pageName: "member",
 		pageIndex: 2,
-		hideHeader: true,
 		onOpen: onOpen, 
-	}	
+	}
+
+	this.permissionsMenu = new _MainContent_memberPage_permissionsMenu();
+
+
 
 	this.open = function(_projectId) {
 		if (!_projectId) _projectId = Server.projectList[0].id;
@@ -373,6 +376,8 @@ function _MainContent_memberPage(_parent) {
 		Menu.addOption(
 			"Change permissions", 
 			function () {
+				let memberId = DOMData.get(curItem);
+				MainContent.memberPage.permissionsMenu.open(memberId);
 				return true;
 			}, 
 			"images/icons/memberIcon.png"
@@ -424,9 +429,14 @@ function _MainContent_memberPage(_parent) {
 		
 		setTextToElement(html.children[1], _member.name);
 		setTextToElement(html.children[2].children[1], _member.permissions);
+		DoubleClick.register(html.children[2].children[1], function () {
+			MainContent.memberPage.permissionsMenu.open(_member.id);
+		})
+
 		html.children[2].children[0].onclick = function () {
 			MainContent.memberPage.optionMenu.open(html.children[2].children[0]);
 		}
+
 
 		DOMData.set(html, _member.id);
 
@@ -434,6 +444,82 @@ function _MainContent_memberPage(_parent) {
 	}
 
 }
+
+
+
+
+function _MainContent_memberPage_permissionsMenu() {
+
+	this.open = function(_memberId) {
+		let project	= Server.getProject(MainContent.curProjectId);
+		let member 	= project.users.get(_memberId);
+
+		openPopupMenu(member);
+	}
+
+
+	function openPopupMenu(_member) {
+		let permissions = JSON.parse(_member.permissions);
+		let builder = [
+			{title: "CHANGE USER PERMISSIONS"},
+			"<br><br>",
+			{text: "Change "},
+			{text: _member.name, highlighted: true},
+			{text: _member.name.substr(_member.name.length - 1, 1).toLowerCase() == "s" ? "'" : "'s", highlighted: true},
+			{text: " permissions to:"},
+			"<br><br>",
+			{text: "Tags"},
+			{input: "Tags", value: permissions[0], id: "PERMISSIONSMENU_tags"},
+			
+			{text: "Tasks"},
+			{input: "Tasks", value: permissions[1], id: "PERMISSIONSMENU_tasks"},
+			
+			{text: "Members"},
+			{input: "Members", value: permissions[2], id: "PERMISSIONSMENU_members"},
+			
+			{text: "Project"},
+			{input: "Project", value: permissions[3], id: "PERMISSIONSMENU_project"},
+
+			"<br><br><br><br>",
+			{buttons: [
+				{button: "CANCEL", onclick: Popup.close},
+				{button: "CHANGE", onclick: 
+					function () 
+					{
+						let newPermissions = [
+							$("#PERMISSIONSMENU_tags")[0].value.substr(0, 1),
+							$("#PERMISSIONSMENU_tags")[0].value.substr(0, 2),
+						 	$("#PERMISSIONSMENU_tags")[0].value.substr(0, 2),
+							$("#PERMISSIONSMENU_tags")[0].value.substr(0, 2)
+						];
+						// permission checking
+
+						_member.permissions = JSON.stringify(newPermissions);
+						
+						let project = Server.getProject(MainContent.curProjectId);
+						if (!project) return false;
+
+						project.users.update(_member);
+						MainContent.memberPage.open(MainContent.curProjectId);
+
+						Popup.close();
+					}, 
+				important: true, color: COLOR.DANGEROUS}
+			]}
+		];
+
+		Popup.showNotification(builder);
+
+	}
+
+}
+
+
+
+
+
+
+
 
 
 
