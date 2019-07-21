@@ -113,7 +113,7 @@ function _MainContent_optionMenu() {
 
 	this.open = function(_item, _event) {
 		curDOMData = DOMData.get(_item.parentNode.parentNode);
-		return Menu.open(_item, {top: -20}, _event);
+		return Menu.open(_item, {top: -20, left: 0}, _event);
 	}
 
 	this.openState 	= Menu.openState;
