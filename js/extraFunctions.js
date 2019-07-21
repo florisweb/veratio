@@ -199,3 +199,24 @@ function dateToDisplayText(_date) {
 
   return dayTitle;
 }
+
+
+
+
+
+
+
+
+
+function optionGroup_select(_item) {
+  let group = _item.parentNode;
+  for (let i = 0; i < group.children.length; i++)
+  {
+    group.children[i].classList.remove("selected");
+    if (group.children[i] == _item) 
+    {
+      group.value = i;
+    }
+  }
+  _item.classList.add("selected");
+}

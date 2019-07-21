@@ -459,7 +459,6 @@ function _MainContent_memberPage_permissionsMenu() {
 
 
 	function openPopupMenu(_member) {
-		let permissions = JSON.parse(_member.permissions);
 		let builder = [
 			{title: "CHANGE USER PERMISSIONS"},
 			"<br><br>",
@@ -468,18 +467,59 @@ function _MainContent_memberPage_permissionsMenu() {
 			{text: _member.name.substr(_member.name.length - 1, 1).toLowerCase() == "s" ? "'" : "'s", highlighted: true},
 			{text: " permissions to:"},
 			"<br><br>",
-			{text: "Tags"},
-			{input: "Tags", value: permissions[0], id: "PERMISSIONSMENU_tags"},
-			
-			{text: "Tasks"},
-			{input: "Tasks", value: permissions[1], id: "PERMISSIONSMENU_tasks"},
-			
-			{text: "Members"},
-			{input: "Members", value: permissions[2], id: "PERMISSIONSMENU_members"},
-			
-			{text: "Project"},
-			{input: "Project", value: permissions[3], id: "PERMISSIONSMENU_project"},
+			"<select id='PERMISSIONSMENU_simplified'>" + 
+				"<option value='0'>Owner</option>" + 
+				"<option value='1'>Admin</option>" +
+				"<option value='2'>Member</option>" + 
+			"</select>",
+			"<br><br>",
 
+			"<div id='PERMISSIONMENU_advanced'>" + 
+				"<a class='text header'>ADVANCED SETTINGS</a>" + 
+				"<br>" + 			
+				"<a class='text header'>Tasks</a>" + 
+				'<br>' + 
+				"<a class='text optionGroupLabel'>Finish</a>" +
+				"<div class='optionGroup'>" + 
+					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Own</div>" + 
+					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Assigned</div>" + 
+					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>All</div>" + 
+				"</div>" + 
+				'<br><br>' + 
+				"<a class='text optionGroupLabel'>Create, change and remove</a>" + 
+				"<div class='optionGroup'>" + 
+					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Own</div>" + 
+					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Assigned</div>" + 
+					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Al</div>" + 
+				"</div>" + 
+				'<br><br><br>' + 
+				
+				"<a class='text header'>Members</a>" + 
+				'<br>' + 
+				"<a class='text optionGroupLabel'>User</a>" +
+				"<div class='optionGroup'>" + 
+					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>None</div>" + 
+					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Invite</div>" + 
+					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Remove</div>" + 
+				"</div>" +
+				'<br>' + 
+				"<a class='text optionGroupLabel'>Permissions</a>" + 
+				'<br>' + 
+				"<div class='optionGroup'>" + 
+					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>None</div>" + 
+					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Change</div>" + 
+				"</div>" +
+				"<br><br>" + 
+
+				"<a class='text header optionGroupLabel'>Project</a>" +
+				'<br>' + 
+				"<div class='optionGroup'>" + 
+					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>None</div>" + 
+					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Rename</div>" + 
+					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Remove</div>" + 
+				"</div>" + 
+			"</div>",
+	
 			"<br><br><br><br>",
 			{buttons: [
 				{button: "CANCEL", onclick: Popup.close},
@@ -509,6 +549,27 @@ function _MainContent_memberPage_permissionsMenu() {
 		];
 
 		Popup.showNotification(builder);
+
+		let permissions = JSON.parse(_member.permissions);
+		let optionGroups = $("#PERMISSIONMENU_advanced .optionGroup");
+		let optionGroupIndex = 0;
+		
+		for (let p = 0; p < permissions.length; p++)
+		{
+			let options = permissions[p].split("");
+			for (let o = 0; o < options.length; o++)
+			{
+				console.log(optionGroupIndex, options[o]);
+				optionGroup_select(
+					optionGroups[optionGroupIndex].children[
+						parseInt(options[o])
+					]
+				);
+				
+				optionGroupIndex++;
+			}
+		}
+
 
 	}
 
