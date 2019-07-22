@@ -33,50 +33,44 @@
 		}
 
 
-		public function update($_updatedUser) {
-			$ownPermissions_user	= $this->getPermissions("users");
+		public function update($_newUser) {
+			$oldUser 				= $this->get($_newUser["id"]);
 			$ownPermissions 		= $this->getPermissions();
+			$ownPermissions_users 	= $this->getPermissions("users");
 
-			$originalUser 			= $this->get($_updatedUser["id"]);
-			$originalUserPerm 		= json_decode($originalUser["permissions"], true);
-
-			if (!$originalUser && $ownPermissions_user[0] < 2) return "E_actionNotAllowed"; // invite / new user
-			if ($ownPermissions_user[0] < 1) return "E_actionNotAllowed"; // not allowed to change permissions
-
-			
-			$_updatedUser["permissions"] = json_decode($_updatedUser["permissions"], true);
-			if (!$_updatedUser["permissions"]) $_updatedUser["permissions"] = [];
-
-			
+			$newUserPermissions = json_decode($_newUser["permissions"], true);
 
 
-			for ($i = 0; $i < sizeof($ownPermissions); $i++)
+			for ($pt = 0; $pt < sizeof($ownPermissions); $pt++)
 			{
-				if (!$_updatedUser["permissions"][$i]) $_updatedUser["permissions"][$i] = "";
-
-				if ($originalUser) // update user
+				$curPermission = str_split($ownPermissions[$pt]);
+				for ($cp = 0; $cp < sizeof($curPermission); $cp++)
 				{
-					if ($_updatedUser["permissions"][$i] === $originalUserPerm[$i]) continue;
-				}
+					if ($newUserPermissions[$pt][$cp] <= $curPermission[$cp]) continue;
+					
+					if ($oldUser &&
+						$newUserPermissions[$pt][$cp] == json_decode($oldUser["permissions"], true)[$pt][$cp]
+					) continue;
 
-				$permSubItems_own = str_split($ownPermissions[$i]);
-				for ($s = 0; $s < sizeof($permSubItems_own); $s++)
-				{
-					$userPermItem = (int)$_updatedUser["permissions"][$i][$s];
-					if (!$userPermItem) $_updatedUser["permissions"][$i][$s] = 0;
-
-					if ($userPermItem <= (int)$permSubItems_own[$s]) continue;
-					$_updatedUser["permissions"][$i][$s] = (int)$permSubItems_own[$s];
+					$newUserPermissions[$pt][$cp] = $curPermission[$cp];
 				}
 			}
 
-			$_updatedUser["permissions"] = json_encode($_updatedUser["permissions"]);
-			return $this->DTTemplate->update($_updatedUser);
+			$_newUser["permissions"] = json_encode($newUserPermissions);
+
+			if (!$oldUser && $ownPermissions_users[0] < 1) return "E_actionNotAllowed_notAllowedToInvite";
+
+			$successfullyUpdated = $this->DTTemplate->update($_newUser);
+			if (!$successfullyUpdated) return "E_unexpectedError";
+			return $this->get($_newUser["id"]);
 		}
+
+
 
 
 		public function remove($_id) {
 			$permissions = $this->getPermissions("users");
+
 			if ($permissions[0] < 2 && 
 				$GLOBALS["App"]->userId != (string)$_id // if the user wants to leave, he should be able to remove himself
 			) return "E_actionNotAllowed";
@@ -93,16 +87,17 @@
 		public function getPermissionsByUser($_userId, $_type = false) {
 			$user = $this->get($_userId);
 			if (!$user) return false;
+
 			$permissions = json_decode($user["permissions"], true);
 			if (!$permissions) return false;
 			
 			$permArr = [];
 			switch ($_type) 
 			{
-				case "project": $permArr = str_split($permissions[0]); break;
-				case "users": 	$permArr = str_split($permissions[1]); break;
-				case "tasks":	$permArr = str_split($permissions[2]); break;
-				case "tags":	$permArr = str_split($permissions[3]); break;
+				case "tags":	$permArr = str_split($permissions[0]); break;
+				case "tasks":	$permArr = str_split($permissions[1]); break;
+				case "users": 	$permArr = str_split($permissions[2]); break;
+				case "project": $permArr = str_split($permissions[3]); break;
 				default: return $permissions; break;
 			}
 

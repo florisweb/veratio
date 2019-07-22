@@ -8,6 +8,7 @@ function _Server_project_dataTypeTemplate(_projectId, _dataTypeTemplate) {
   let projectId = String(_projectId);
   let This = this;
   this.list = [];
+  
 
 
 
@@ -60,6 +61,8 @@ function _Server_project_dataTypeTemplate(_projectId, _dataTypeTemplate) {
        REQUEST.send("database/project/simpleOperation.php", parameters).then(
         function (_result) {
           console.warn("UPDATE: ", _newItem, _result);
+          if (typeof _result != "object") return;
+          This.update(_result, false);
         }
       ).catch(function () {});
     }
