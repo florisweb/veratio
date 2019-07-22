@@ -34,8 +34,7 @@
 
 
 			$user = $this->users->get($GLOBALS["App"]->userId);
-			if (!$user) return $this->errorOnCreation = "E_userNotInProject";
-
+			if (!$user || $user["id"] != $GLOBALS["App"]->userId) return $this->errorOnCreation = "E_userNotInProject";
 
 			$this->title = $projectData["title"];
 			$this->errorOnCreation = false;

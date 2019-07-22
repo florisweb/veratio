@@ -9,12 +9,13 @@ function _Server_project_userComponent(_parent) {
       users: {
         id: "String",
         name: "String",
-        permissions: "String"
+        permissions: "String",
+        Self: "Boolean"
       }
     }
   );
   this.DTTemplate = DTTemplate;
-  
+
 
   this.get      = function(_id)       {return DTTemplate.get(_id);}
   this.update   = function(_newItem)  {return DTTemplate.update(_newItem);}

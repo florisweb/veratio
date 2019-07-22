@@ -25,11 +25,21 @@
 
 
 		public function getAll() {
-			return $this->DTTemplate->getAllData();
+			$users = $this->DTTemplate->getAllData();
+			for ($i = 0; $i < sizeof($users); $i++)
+			{
+				if ($users[$i]["id"] != $GLOBALS["App"]->userId) continue;
+				$users[$i]["Self"] = true;
+				break;
+			}
+
+			return $users;
 		}
 
 		public function get($_id) {
-			return $this->DTTemplate->get($_id);
+			$user = $this->DTTemplate->get($_id);
+			if ($user["id"] == $GLOBALS["App"]->userId) $user["Self"] = true;
+			return $user;
 		}
 
 
