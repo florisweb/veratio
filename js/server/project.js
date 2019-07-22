@@ -8,8 +8,18 @@ function _Server_project(_projectId, _projectTitle) {
   this.tags   = new _Server_project_tagComponent(this);
 
 
-  this.remove = function() {
 
+
+
+
+  this.leave = function() {
+    let users = this.users.getList();
+    for (user of users)
+    {
+      if (!user.Self) continue;
+      Server.removeProject(this.id);
+      return this.users.remove(user.id);
+    }
   }
 
 

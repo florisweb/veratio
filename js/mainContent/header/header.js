@@ -23,6 +23,10 @@ function _MainContent_header() {
 		Menu.addOption(
 			"Leave project", 
 			function () {
+				let project = Server.getProject(MainContent.curProjectId);
+				project.leave();
+				MainContent.taskPage.tab.open("Inbox");
+				App.update();
 				return true;
 			}, 
 			"images/icons/memberIcon.png"

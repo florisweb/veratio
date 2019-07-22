@@ -26,6 +26,7 @@ function _Server_project_userComponent(_parent) {
 
 
 
+
   // custom functions
   DTTemplate.DB.getAll = function() {
     if (typeof _date == "object") _date = _date.toString();

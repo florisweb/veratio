@@ -4,9 +4,18 @@ function _Server() {
   let This = this;
   this.projectList = [];
       
-  this.createProject = function (_title) {
+  this.createProject = function(_title) {
     return Server.DB.createProject(_title);
   };
+
+  this.removeProject = function(_id) {
+    for (let i = 0; i < this.projectList.length; i++)
+    {
+      if (this.projectList[i].id != _id) continue;
+      this.projectList.splice(i, 1);
+    }
+    return false;
+  }
 
 
   this.getProject = function(_id) {
@@ -17,6 +26,8 @@ function _Server() {
     }
     return false;
   }
+
+
 
 
 

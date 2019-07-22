@@ -146,6 +146,8 @@ function _MainContent_taskPage_tab(_parent) {
 
 
 	this.open = function(_tabName = "Today", _projectId = false) {
+		MainContent.taskPage.open(_projectId);
+
 		$(HTML.mainContentHolder.parentNode).animate({opacity: 0}, 50);
 		_resetPage();
 		setTimeout(function () {
