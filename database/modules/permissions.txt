@@ -19,6 +19,17 @@ PERMISSIONS
 
 
 RANKS:
-- Owner: ["2","22","21","2"]
+	- Owner: ["2","22","21","2"]
 - Admin: ["2","22","21","1"]
 - Member:["2","22","00","0"]	- DEFAULT
+
+
+
+
+Create and finish tasks: 		Own, 	Assigned To, 	All
+Invite and remove users: 		None, 	Invite, 		Remove
+User Permissions: 				None, 	Can change
+Rename and remove this project: None, 	rename, 		remove
+
+
+

@@ -210,14 +210,23 @@
 
 
 
+div.HR {
+	position: relative;
+	width: 100%;
+	height: 1px;
+
+	margin-top: 15px;
+	margin-bottom: 10px;
+
+	background: #eaeaea;
+}
 
 
 
 
 
 
-
-.optionGroup {
+div.optionGroup {
 	position: relative;
 	float: right;
 	right: 0;
@@ -227,7 +236,7 @@
 	border-radius: 5px;
 	background: rgba(0, 0, 0, 0.05);
 }
-	.optionGroup .optionItem {
+	.optionGroup div.optionItem {
 		position: relative;
 		height: 25px;
 		
@@ -243,10 +252,14 @@
 		transition: all 0.2s;
 	}
 
-	.optionGroup .optionItem.selected {
+	.optionGroup div.optionItem.selected {
 		background: rgba(0, 0, 0, 0.1);
 		border-radius: 3px;
 	}
 
 
+
+.optionGroupLabel {
+	float: left;
+}
 

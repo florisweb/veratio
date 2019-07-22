@@ -466,58 +466,36 @@ function _MainContent_memberPage_permissionsMenu() {
 			{text: _member.name, highlighted: true},
 			{text: _member.name.substr(_member.name.length - 1, 1).toLowerCase() == "s" ? "'" : "'s", highlighted: true},
 			{text: " permissions to:"},
-			"<br><br>",
-			"<select id='PERMISSIONSMENU_simplified'>" + 
-				"<option value='0'>Owner</option>" + 
-				"<option value='1'>Admin</option>" +
-				"<option value='2'>Member</option>" + 
-			"</select>",
-			"<br><br>",
-
-			"<div id='PERMISSIONMENU_advanced'>" + 
-				"<a class='text header'>ADVANCED SETTINGS</a>" + 
-				"<br>" + 			
-				"<a class='text header'>Tasks</a>" + 
-				'<br>' + 
-				"<a class='text optionGroupLabel'>Finish</a>" +
+			"<br><br><br>",
+			"<div id='PERMISSIONMENU'>" + 
+				"<a class='text optionGroupLabel'>Create and finish tasks</a>" +
 				"<div class='optionGroup'>" + 
 					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Own</div>" + 
-					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Assigned</div>" + 
+					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Assigned to</div>" + 
 					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>All</div>" + 
 				"</div>" + 
-				'<br><br>' + 
-				"<a class='text optionGroupLabel'>Create, change and remove</a>" + 
+				'<br><div class="HR"></div>' + 
+				"<a class='text optionGroupLabel'>Invite and remove users</a>" + 
 				"<div class='optionGroup'>" + 
-					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Own</div>" + 
-					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Assigned</div>" + 
-					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Al</div>" + 
+					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>None</div>" + 
+					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Can invite</div>" + 
+					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Can remove</div>" + 
 				"</div>" + 
-				'<br><br><br>' + 
+				'<br><div class="HR"></div>' + 
 				
-				"<a class='text header'>Members</a>" + 
-				'<br>' + 
-				"<a class='text optionGroupLabel'>User</a>" +
+				"<a class='text optionGroupLabel'>User permissions</a>" +
 				"<div class='optionGroup'>" + 
 					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>None</div>" + 
-					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Invite</div>" + 
-					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Remove</div>" + 
+					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>can change</div>" + 
 				"</div>" +
-				'<br>' + 
-				"<a class='text optionGroupLabel'>Permissions</a>" + 
-				'<br>' + 
-				"<div class='optionGroup'>" + 
-					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>None</div>" + 
-					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Change</div>" + 
-				"</div>" +
-				"<br><br>" + 
+				'<br><div class="HR"></div>' + 
 
-				"<a class='text header optionGroupLabel'>Project</a>" +
-				'<br>' + 
+				"<a class='text optionGroupLabel'>Rename and remove this project</a>" + 
 				"<div class='optionGroup'>" + 
 					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>None</div>" + 
 					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Rename</div>" + 
 					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Remove</div>" + 
-				"</div>" + 
+				"</div>" +
 			"</div>",
 	
 			"<br><br><br><br>",
@@ -526,13 +504,16 @@ function _MainContent_memberPage_permissionsMenu() {
 				{button: "CHANGE", onclick: 
 					function () 
 					{
+						let optionGroup = $("#PERMISSIONMENU .optionGroup");
 						let newPermissions = [
-							$("#PERMISSIONSMENU_tags")[0].value.substr(0, 1),
-							$("#PERMISSIONSMENU_tags")[0].value.substr(0, 2),
-						 	$("#PERMISSIONSMENU_tags")[0].value.substr(0, 2),
-							$("#PERMISSIONSMENU_tags")[0].value.substr(0, 2)
+							"2",
+							String(optionGroup[0].value),
+							String(optionGroup[1].value) + String(optionGroup[2].value),
+							String(optionGroup[3].value)
 						];
-						// permission checking
+
+						newPermissions[1] += optionGroup[0].value > 0 ? optionGroup[0].value : 1;
+						// Check if permissions are actually allowed to be given
 
 						_member.permissions = JSON.stringify(newPermissions);
 						
@@ -551,26 +532,30 @@ function _MainContent_memberPage_permissionsMenu() {
 		Popup.showNotification(builder);
 
 		let permissions = JSON.parse(_member.permissions);
-		let optionGroups = $("#PERMISSIONMENU_advanced .optionGroup");
-		let optionGroupIndex = 0;
+		let optionGroup = $("#PERMISSIONMENU .optionGroup");
+
+		optionGroup_select(
+			optionGroup[0].children[
+				parseInt(permissions[1][0])
+			]
+		);
+		optionGroup_select(
+			optionGroup[1].children[
+				parseInt(permissions[2][0])
+			]
+		);
 		
-		for (let p = 0; p < permissions.length; p++)
-		{
-			let options = permissions[p].split("");
-			for (let o = 0; o < options.length; o++)
-			{
-				console.log(optionGroupIndex, options[o]);
-				optionGroup_select(
-					optionGroups[optionGroupIndex].children[
-						parseInt(options[o])
-					]
-				);
-				
-				optionGroupIndex++;
-			}
-		}
+		optionGroup_select(
+			optionGroup[2].children[
+				parseInt(permissions[2][1])
+			]
+		);
 
-
+		optionGroup_select(
+			optionGroup[3].children[
+				parseInt(permissions[3])
+			]
+		);
 	}
 
 }
