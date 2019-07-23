@@ -349,7 +349,7 @@ function _MainContent_settingsPage(_parent) {
 		let project = Server.getProject(_projectId);
 		if (!project) return false;
 
-		MainContent.header.setTitle("Members - " + project.title);
+		MainContent.header.setTitle("Settings - " + project.title);
 
 		This.setMemberItemsFromList(project.users.getList());
 	}

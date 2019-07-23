@@ -13,7 +13,7 @@ function _MainContent_header() {
 		let Menu = OptionMenu.create(HTML.mainContent);		
 
 		Menu.addOption(
-			"Members", 
+			"Settings", 
 			function () {
 				MainContent.settingsPage.open(MainContent.projectId);
 				return true;

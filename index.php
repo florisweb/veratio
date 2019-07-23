@@ -66,7 +66,7 @@
 				<div class="functionHolder">
 					<img src="images/icons/optionIcon.png" class="functionItem icon clickable" style="left: -5px">
 					<a class="clickable functionItem button bDefault" onclick='MainContent.settingsPage.open(MainContent.curProjectId)'>Share</a>
-					<div class="functionItem memberList userText"></div>
+					<div class="functionItem memberList userText" onclick='MainContent.settingsPage.open(MainContent.curProjectId)'></div>
 				</div>
 			</div>
 
