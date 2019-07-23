@@ -30,7 +30,7 @@ function _MainContent() {
 
 	// Maincontent pages
 	this.createProjectPage	= new _MainContent_createProjectPage();
-	this.memberPage 		= new _MainContent_memberPage();
+	this.settingsPage 		= new _MainContent_settingsPage();
 	this.taskPage	 		= new _MainContent_taskPage();
 
 

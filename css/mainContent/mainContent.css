@@ -316,10 +316,10 @@
 
 
 
-	#mainContentHolder .mainContentPage.memberPage {
+	#mainContentHolder .mainContentPage.settingsPage {
 	}
 
-		.mainContentPage.memberPage .inviteMemberHolder {
+		.mainContentPage.settingsPage .inviteMemberHolder {
 			position: relative;
 			margin: auto;
 			max-width: 650px;
@@ -327,7 +327,7 @@
 			padding-bottom: 20px;
 		}
 
-			.mainContentPage.memberPage .inviteMemberHolder .inputField {
+			.mainContentPage.settingsPage .inviteMemberHolder .inputField {
 				width: calc(100% - 100px);
 				margin-right: 5px;
 			}
@@ -336,7 +336,7 @@
 
 
 
-		.mainContentPage.memberPage .memberHolder {
+		.mainContentPage.settingsPage .memberHolder {
 			position: relative;
 			margin: auto;
 			max-width: 650px;
@@ -355,7 +355,7 @@
 			}
 
 
-		.mainContentPage.memberPage div.leaveButton {
+		.mainContentPage.settingsPage div.leaveButton {
 			position: relative;
 			top: 8px;
 			left: 4px;
@@ -367,7 +367,7 @@
 			color: #f00;
 		}
 
-		.mainContentPage.memberPage div.leaveButton img {
+		.mainContentPage.settingsPage div.leaveButton img {
 			position: relative;
 			top: 1px;
 			height: 12px;

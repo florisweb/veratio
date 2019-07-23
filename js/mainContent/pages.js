@@ -319,22 +319,22 @@ function _MainContent_createProjectPage(_parent) {
 
 
 
-function _MainContent_memberPage(_parent) {
+function _MainContent_settingsPage(_parent) {
 	let This = this;
 	let Parent = _parent;
 	
 	let HTML = {
-		Self: $(".mainContentPage.memberPage")[0],
-		memberHolder: $(".mainContentPage.memberPage .memberHolder")[0],
+		Self: $(".mainContentPage.settingsPage")[0],
+		memberHolder: $(".mainContentPage.settingsPage .memberHolder")[0],
 	}
 
 	this.pageSettings = {
-		pageName: "member",
+		pageName: "settings",
 		pageIndex: 2,
 		onOpen: onOpen, 
 	}
 
-	this.permissionsMenu = new _MainContent_memberPage_permissionsMenu();
+	this.permissionsMenu = new _MainContent_settingsPage_permissionsMenu();
 
 
 
@@ -379,7 +379,7 @@ function _MainContent_memberPage(_parent) {
 			"Change permissions", 
 			function () {
 				let memberId = DOMData.get(curItem);
-				MainContent.memberPage.permissionsMenu.open(memberId);
+				MainContent.settingsPage.permissionsMenu.open(memberId);
 				return true;
 			}, 
 			"images/icons/memberIcon.png"
@@ -432,11 +432,11 @@ function _MainContent_memberPage(_parent) {
 		setTextToElement(html.children[1], _member.name);
 		setTextToElement(html.children[2].children[1], _member.permissions);
 		DoubleClick.register(html.children[2].children[1], function () {
-			MainContent.memberPage.permissionsMenu.open(_member.id);
+			MainContent.settingsPage.permissionsMenu.open(_member.id);
 		})
 
 		html.children[2].children[0].onclick = function () {
-			MainContent.memberPage.optionMenu.open(html.children[2].children[0]);
+			MainContent.settingsPage.optionMenu.open(html.children[2].children[0]);
 		}
 
 
@@ -450,7 +450,7 @@ function _MainContent_memberPage(_parent) {
 
 
 
-function _MainContent_memberPage_permissionsMenu() {
+function _MainContent_settingsPage_permissionsMenu() {
 
 	this.open = function(_memberId) {
 		let project	= Server.getProject(MainContent.curProjectId);
@@ -523,7 +523,7 @@ function _MainContent_memberPage_permissionsMenu() {
 						if (!project) return false;
 
 						project.users.update(_member);
-						MainContent.memberPage.open(MainContent.curProjectId);
+						MainContent.settingsPage.open(MainContent.curProjectId);
 
 						Popup.close();
 					}, 

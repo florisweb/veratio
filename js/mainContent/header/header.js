@@ -15,7 +15,7 @@ function _MainContent_header() {
 		Menu.addOption(
 			"Members", 
 			function () {
-				MainContent.memberPage.open(MainContent.projectId);
+				MainContent.settingsPage.open(MainContent.projectId);
 				return true;
 			}, 
 			"images/icons/memberIcon.png"

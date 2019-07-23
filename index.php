@@ -6,7 +6,7 @@
 		<link rel="stylesheet" type="text/css" href="css/popup.css?a=28">
 		<link rel="stylesheet" type="text/css" href="css/main.css?a=21">
 		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=22">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=35">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=36">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=29">
 
 		<script type="text/javascript" src="/JS/jQuery.js" asy nc></script>
@@ -65,7 +65,7 @@
 
 				<div class="functionHolder">
 					<img src="images/icons/optionIcon.png" class="functionItem icon clickable" style="left: -5px">
-					<a class="clickable functionItem button bDefault" onclick='MainContent.memberPage.open(MainContent.curProjectId)'>Share</a>
+					<a class="clickable functionItem button bDefault" onclick='MainContent.settingsPage.open(MainContent.curProjectId)'>Share</a>
 					<div class="functionItem memberList userText"></div>
 				</div>
 			</div>
@@ -97,7 +97,7 @@
 				</div>
 
 
-				<div class="mainContentPage memberPage hide">
+				<div class="mainContentPage settingsPage hide">
 					<div class="inviteMemberHolder">
 						<input placeholder="Username or email" class="inputField iBoxy text">
 						<a class="button bDefault bBoxy">Invite</a>
