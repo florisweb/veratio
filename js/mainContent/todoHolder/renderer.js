@@ -14,8 +14,8 @@ function _TodoRenderer() {
 			taskHolderId: _todo.taskHolderId,
 			finished: _todo.finished,
 			
-			assignedToMe: inArray(_todo.assignedTo, project.users.ownId),
-			isMyTask: _todo.creatorId == project.users.ownId,
+			assignedToMe: inArray(_todo.assignedTo, project.users.Self.id),
+			isMyTask: _todo.creatorId == project.users.Self.id,
 
 			memberText: _createMemberTextByUserIdList(_todo.assignedTo, project),
 		}

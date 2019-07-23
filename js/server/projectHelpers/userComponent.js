@@ -19,7 +19,7 @@ function _Server_project_userComponent(_parent) {
 
   this.DTTemplate = DTTemplate;
 
-  this.ownId    = "";
+  this.Self     = false;
 
   this.get      = function(_id)       {return DTTemplate.get(_id);}
   this.update   = function(_newItem)  {return DTTemplate.update(_newItem);}
@@ -42,7 +42,7 @@ function _Server_project_userComponent(_parent) {
         DTTemplate.list = [];
         for (let i = 0; i < _results.length; i++)
         {
-          if (_results[i].Self) This.ownId = _results[i].id;
+          if (_results[i].Self) This.Self = _results[i];
           DTTemplate.update(_results[i], false);
         }
       }
