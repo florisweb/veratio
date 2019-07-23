@@ -6,7 +6,7 @@
 		<link rel="stylesheet" type="text/css" href="css/popup.css?a=28">
 		<link rel="stylesheet" type="text/css" href="css/main.css?a=21">
 		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=22">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=33">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=35">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=29">
 
 		<script type="text/javascript" src="/JS/jQuery.js" asy nc></script>
@@ -96,6 +96,7 @@
 					</div>
 				</div>
 
+
 				<div class="mainContentPage memberPage hide">
 					<div class="inviteMemberHolder">
 						<input placeholder="Username or email" class="inputField iBoxy text">
@@ -103,6 +104,12 @@
 					</div>
 
 					<div class="memberHolder"></div>
+
+					<div class="HR" style="max-width: 650px; margin: auto"></div>
+					<div class='text leaveButton clickable'onclick="MainContent.leaveCurrentProject()">
+						<img src="images/icons/leaveIconRed.png">
+						Leave Project
+					</div>
 				</div>
 
 			</div>

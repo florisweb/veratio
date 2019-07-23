@@ -16,6 +16,18 @@ function _MainContent() {
 	
 
 
+	this.leaveCurrentProject = function() {
+		let project = Server.getProject(this.curProjectId);
+		if (!project) return false;
+		project.leave();
+		this.taskPage.tab.open("Inbox");
+		App.update();
+	}
+
+
+
+
+
 	// Maincontent pages
 	this.createProjectPage	= new _MainContent_createProjectPage();
 	this.memberPage 		= new _MainContent_memberPage();

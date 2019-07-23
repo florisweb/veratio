@@ -355,6 +355,24 @@
 			}
 
 
+		.mainContentPage.memberPage div.leaveButton {
+			position: relative;
+			top: 8px;
+			left: 4px;
+			margin: auto;
+			height: 20px;
+			max-width: 650px;
+
+			line-height: 20px;
+			color: #f00;
+		}
+
+		.mainContentPage.memberPage div.leaveButton img {
+			position: relative;
+			top: 1px;
+			height: 12px;
+			width: auto;
+		}
 
 
 
