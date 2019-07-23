@@ -77,7 +77,7 @@
 			}
 
 			$_newUser["permissions"] = json_encode($newUserPermissions);
-			if ($_newUser["isOwner"]) $_newUser["permissions"] = $GLOBALS["App"]->ownerPermissions;
+			if ($_newUser["isOwner"]) $_newUser["permissions"] = json_encode($GLOBALS["App"]->ownerPermissions);
 
 
 			$successfullyUpdated = $this->DTTemplate->update($_newUser);

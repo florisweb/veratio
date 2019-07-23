@@ -21,7 +21,7 @@
 
 		public function createProject($_ownerId) {
 			$this->projectId 	= $this->createId();
-			$projectOwner 		= '{"id": "' . (string)$_ownerId . '", "permissions": "' . $GLOBALS["App"]->ownerPermissions . '", "isOwner": true}';
+			$projectOwner 		= '{"id": "' . (string)$_ownerId . '", "permissions": "[\"0\", \"22\", \"21\", \"2\"]", "isOwner": true}';
 
 			$DBResult = $this->DB->execute(
 				"INSERT INTO projectList (id, users) VALUES (?, ?)", 

@@ -9,7 +9,7 @@
 		public $userId;
 		
 		// App settings
-		public $ownerPermissions = '[\"2\",\"22\",\"21\",\"2\"]'; // HAS TO HAVE SINGLE QUOTES AROUND IT OTHERWISE THE ESCAPED TEXT GETS LOST
+		public $ownerPermissions = ["2", "22", "21", "2"]; // HAS TO HAVE SINGLE QUOTES AROUND IT OTHERWISE THE ESCAPED TEXT GETS LOST
 
 		
 		public function __construct() {
@@ -51,6 +51,11 @@
 			
 			$project 			= $this->getProject($projectId);
 			if (!$project || is_string($project)) return "E_projectNotCreated" . $project;
+
+
+			$user = $project->users->get($this->userId);
+			$user->permissions = json_encode($this->ownerPermissions);
+			$project->users->update($user);
 
 			$titleChanged 		= $project->changeTitle($_title);
 			if (!$titleChanged) return false;
