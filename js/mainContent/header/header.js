@@ -15,7 +15,7 @@ function _MainContent_header() {
 		Menu.addOption(
 			"Settings", 
 			function () {
-				MainContent.settingsPage.open(MainContent.projectId);
+				MainContent.settingsPage.open(MainContent.curProjectId);
 				return true;
 			}, 
 			"images/icons/memberIcon.png"
@@ -24,6 +24,13 @@ function _MainContent_header() {
 			"Leave project", 
 			function () {
 				MainContent.leaveCurrentProject();
+				return true;
+			}, 
+			"images/icons/memberIcon.png"
+		);
+		Menu.addOption(
+			"Remove project", 
+			function () {
 				return true;
 			}, 
 			"images/icons/memberIcon.png"

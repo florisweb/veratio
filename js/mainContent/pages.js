@@ -359,34 +359,44 @@ function _MainContent_settingsPage(_parent) {
 
 	this.optionMenu = new function() {
 		let Menu = OptionMenu.create(HTML.Self);
-		let curItem = "";		
+		let curItem = "";
+		let curMemberId = "";	
 
 		Menu.addOption(
 			"Remove user", 
 			function () {
-				let memberId 	= DOMData.get(curItem);
 				let project 	= Server.getProject(MainContent.curProjectId);
-				if (!project || !memberId) return false;
+				if (!project || !curMemberId) return false;
 
-				let removed = project.users.remove(memberId);
+				let removed = project.users.remove(curMemberId);
 				if (removed) curItem.classList.add("hide");
 
 				return removed;
 			}, 
 			"images/icons/memberIcon.png"
 		);
+
 		Menu.addOption(
 			"Change permissions", 
 			function () {
-				let memberId = DOMData.get(curItem);
-				MainContent.settingsPage.permissionsMenu.open(memberId);
+				MainContent.settingsPage.permissionsMenu.open(curMemberId);
 				return true;
 			}, 
 			"images/icons/memberIcon.png"
 		);
 
 		this.open = function(_target) {
-			curItem = _target.parentNode.parentNode;
+			curItem 		= _target.parentNode.parentNode;
+			curMemberId 	= DOMData.get(curItem);
+
+			let project = Server.getProject(MainContent.curProjectId);
+			let member = project.users.get(curMemberId);
+			if (!member || !project) return false;
+
+			Menu.enableAllOptions();
+			if (!project.users.Self.userActionAllowed("remove", member)) Menu.options[0].disable();
+			if (!project.users.Self.userActionAllowed("update", member)) Menu.options[1].disable();
+
 			return Menu.open(_target, {left: -100, top: -45});
 		}
 
@@ -434,6 +444,9 @@ function _MainContent_settingsPage(_parent) {
 		setTextToElement(html.children[1], _member.name);
 		setTextToElement(html.children[2].children[1], _member.permissions);
 		DoubleClick.register(html.children[2].children[1], function () {
+			let project = Server.getProject(MainContent.curProjectId);
+			if (!project.users.Self.userActionAllowed("update", member)) return false;
+
 			MainContent.settingsPage.permissionsMenu.open(_member.id);
 		})
 

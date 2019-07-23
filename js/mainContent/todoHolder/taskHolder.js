@@ -378,7 +378,6 @@ function _MainContent_todoHolder_taskHolder_todo() {
 	}
 
 	this.renderTodo = function(_task, _location) {
-		console.log("render", _task);
 		let todos = Parent.HTML.todoHolder.children;
 		if (typeof _location != "number") _location = todos.length;
 		_task.taskHolderId = Parent.id;

@@ -122,11 +122,22 @@ function _TodoRenderer() {
 
 			function _assignEventHandlers(_html, _toDoData, _taskHolder) {
 				_html.children[1].onclick = function() {
-					DOMData.get(_html).finish();
+					let data 	= DOMData.get(_html);
+					let project = Server.getProject(data.projectId);
+					let task 	= project.todos.get(data.taskId);
+					
+					if (!project.users.Self.taskActionAllowed("finish", task)) return false;
+					
+					data.finish();
 				}
 
 				DoubleClick.register(_html, function() {
-					DOMData.get(_html).openEdit();
+					let data 	= DOMData.get(_html);
+					let project = Server.getProject(data.projectId);
+					let task 	= project.todos.get(data.taskId);
+					
+					if (!project.users.Self.taskActionAllowed("update", task)) return false;
+					data.openEdit();
 				});
 
 				RightClick.register(_html, function(_event, _html) {

@@ -248,7 +248,7 @@
 
 		.createTaskHolder .createMenuHolder {
 			height: auto;
-			margin-top: 0;
+			margin-top: 5px;
 			padding-bottom: 0;
 
 			overflow: hidden;

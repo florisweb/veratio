@@ -24,6 +24,8 @@ function _OptionMenu_menu(_self) {
 		parent: _self.parentNode
 	}
 	let This = this;
+	this.options = [];
+
 
 	this.openState = false;
 	this.open = function(_item, _relativePosition, _event) {
@@ -37,6 +39,13 @@ function _OptionMenu_menu(_self) {
 		this.openState = false;
 		HTML.Self.classList.add("hide");
 		setTimeout(function (_item) {_item.style.top = "-50px"}, 300, HTML.Self);
+	}
+
+	this.enableAllOptions = function() {
+		for (option of this.options)
+		{
+			option.enable();
+		}
 	}
 
 
@@ -57,6 +66,18 @@ function _OptionMenu_menu(_self) {
 			catch (e) {return};
 			if (close) This.close();
 		}
+
+		this.options.push(new function() {
+			this.html = option;
+			this.disable = function() {
+				this.html.classList.add("disabled");
+			}
+
+			this.enable = function() {
+				this.html.classList.remove("disabled");
+			}
+		});
+
 	}
 
 

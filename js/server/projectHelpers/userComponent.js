@@ -42,13 +42,67 @@ function _Server_project_userComponent(_parent) {
         DTTemplate.list = [];
         for (let i = 0; i < _results.length; i++)
         {
-          if (_results[i].Self) This.Self = _results[i];
+          if (_results[i].Self) This.Self = new _Server_project_userComponent_Self(_results[i]);
           DTTemplate.update(_results[i], false);
         }
       }
     ).catch(function () {});
   }
 }
+
+
+
+function _Server_project_userComponent_Self(_user) {
+  this.id           = _user.id;
+  this.name         = _user.name;
+  let isOwner       = _user.isOwner;
+  let Permissions   = JSON.parse(_user.permissions);
+
+
+  this.taskActionAllowed = function(_action, _task) {
+    switch (String(_action).toLowerCase())
+    {
+      case "remove":
+        if (Permissions[1][1] >= 2)                                         return true;
+        if (Permissions[1][1] >= 1 && _task.creatorId == this.id)           return true;
+      break;
+      case "update": 
+        if (Permissions[1][1] >= 2)                                         return true;
+        if (Permissions[1][1] >= 1 && _task.creatorId == this.id)           return true;
+      break;
+      case "finish": 
+        if (Permissions[1][0] >= 2) return true;
+        if (Permissions[1][0] >= 1 && inArray(_task.assignedTo, this.id))   return true;
+        if (Permissions[1][0] >= 0 && _task.creatorId == this.id)           return true;
+      break; //finish
+      default: 
+        console.error("Server.project.users.Self.taskActionAllowed: Action ", _action, " was not found.");
+      break;
+    }
+
+    return false;
+  }
+
+  this.userActionAllowed = function(_action, _user) {
+    switch (String(_action).toLowerCase())
+    {
+      case "remove":
+        if (Permissions[2][0] >= 2 && (!_user.isOwner || isOwner)) return true;
+      break;
+      case "update": 
+        if (Permissions[2][1] >= 1 && (!_user.isOwner || isOwner)) return true;
+      break;
+      default: 
+        console.error("Server.project.users.Self.userActionAllowed: Action ", _action, " was not found.");
+      break;
+    }
+
+    return false;
+  }
+}
+
+
+
 
 
 

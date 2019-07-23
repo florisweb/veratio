@@ -106,17 +106,19 @@ function _MainContent_optionMenu() {
 			return curDOMData.openEdit();
 		}
 	);
-	Menu.addOption(
-		"Postpone", 
-		function () {
-			return true;
-		},
-		"images/icons/weekIcon.png"
-	);
-					
+		
 
 	this.open = function(_item, _event) {
-		curDOMData = DOMData.get(_item.parentNode.parentNode);
+		curDOMData 	= DOMData.get(_item.parentNode.parentNode);
+		let project = Server.getProject(curDOMData.projectId);
+		let task 	= project.todos.get(curDOMData.taskId);
+
+		Menu.enableAllOptions();
+		if (!project.users.Self.taskActionAllowed("remove", task)) Menu.options[0].disable();
+		if (!project.users.Self.taskActionAllowed("finish", task)) Menu.options[1].disable();
+		if (!project.users.Self.taskActionAllowed("update", task)) Menu.options[2].disable();
+
+
 		return Menu.open(_item, {top: -20, left: 0}, _event);
 	}
 
