@@ -67,6 +67,7 @@
 
 		public function get($_id) {
 			$data = $this->getAllData();
+			
 			for ($i = 0; $i < sizeof($data); $i++)
 			{
 				$curDataItem = $data[$i];

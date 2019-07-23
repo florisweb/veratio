@@ -40,6 +40,8 @@
 
 		public function get($_id) {
 			$user = $this->DTTemplate->get($_id);
+			if (!$user) return false;
+			
 			$user["Self"] = false;
 			if ($user["id"] == $GLOBALS["App"]->userId) $user["Self"] = true;
 			return $user;

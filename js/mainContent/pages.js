@@ -286,7 +286,7 @@ function _MainContent_createProjectPage(_parent) {
 		Server.createProject(project.title).then(function (_project) {
 			App.update();
 			MainContent.openPage("task");
-			MainContent.taskpage.tab.open("Project", _project.id);
+			MainContent.taskPage.tab.open("Project", _project.id);
 		});
 	} 
 	

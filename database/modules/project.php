@@ -43,7 +43,8 @@
 
 		public function changeTitle($_newTitle) {
 			// do some permission checks
-			return $DBResult = $this->DB->writeProjectData("title", (string)$_newTitle);
+			$DBResult = $this->DB->writeProjectData("title", (string)$_newTitle);
+			return $DBResult;
 		}
 	}
 

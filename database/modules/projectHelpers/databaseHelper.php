@@ -27,6 +27,7 @@
 				"INSERT INTO projectList (id, users) VALUES (?, ?)", 
 				array($this->projectId, "[" . $projectOwner . "]")
 			);
+
 			if (!$DBResult) return false;
 			return $this->projectId;
 		}
@@ -49,7 +50,7 @@
 		public function getProjectData() {
 			$data = $this->getAllProjectData();
 			if (!$data[0]) return false;
-			
+
 			$project = $data[0];
 			$project["users"] 	= json_decode($project["users"], true);
 			$project["todos"] 	= json_decode($project["todos"], true);
