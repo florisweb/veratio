@@ -65,6 +65,14 @@
 		.todoItem.listItem.finished {
 			opacity: 0.4;
 		}
+		#mainContentHolder:not(.renderFinishedTodos) .todoListHolder .todoItem.finished {
+			opacity: 0;
+			pointer-events: none;
+			margin-bottom: -35px;
+		}
+
+		
+
 
 
 		.todoItem.listItem .isMyTaskIndicator {
@@ -91,17 +99,7 @@
 
 
 		
-		#mainContentHolder:not(.renderFinishedTodos) .todoListHolder .todoItem.finished {
-			opacity: 0;
-			pointer-events: none;
-			margin-bottom: -35px;
-		}
-
-		.todoItem.hide {
-			opacity: 0;
-			pointer-events: none;
-			margin-bottom: -38px;
-		}
+	
 
 
 
