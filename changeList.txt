@@ -23,6 +23,8 @@ rgb(180, 175, 255)
 rgb(128, 204, 228)
 bDefault: rgb(120, 123, 237)
 
+OwnColor: rgb(255, 200, 0) // aka represents the user
+
 
 
 

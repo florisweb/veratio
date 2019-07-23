@@ -13,13 +13,17 @@ function _TodoRenderer() {
 			title: _todo.title,
 			taskHolderId: _todo.taskHolderId,
 			finished: _todo.finished,
+			
+			assignedToMe: inArray(_todo.assignedTo, project.users.ownId),
+			isMyTask: _todo.creatorId == project.users.ownId,
+
 			memberText: _createMemberTextByUserIdList(_todo.assignedTo, project),
 		}
 
 		if (_displayProjectTitle !== false) todoRenderData.projectTitle = project.title;
 		if (tag) todoRenderData.tagColour = tag.colour;
 		
-		let html = _createTaskHTML(todoRenderData, _taskHolder);
+		let html = createTaskHTML(todoRenderData, _taskHolder);
 
 		
 
@@ -53,28 +57,31 @@ function _TodoRenderer() {
 
 
 
-		function _createTaskHTML(_toDoData, _taskHolder) {
+		function createTaskHTML(_toDoData, _taskHolder) {
 			let html = document.createElement("div");
 			html.className = "listItem todoItem";
 			if (_toDoData.finished) html.classList.add("finished");
+			if (_toDoData.assignedToMe) html.classList.add("isSelf");
+			if (_toDoData.isMyTask) html.classList.add("isMyTask");
 
 
 			let statusCircleSVG = '<?xml version="1.0" standalone="no"?><svg class="statusCircle clickable" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="isolation:isolate" viewBox="0 0 83 83" width="83" height="83"><defs><clipPath id="_clipPath_EvyxEBqQoipdaXxIJMEjCjvXV7edc1qw"><rect width="83" height="83"/></clipPath></defs><g clip-path="url(#_clipPath_EvyxEBqQoipdaXxIJMEjCjvXV7edc1qw)"><rect x="0.729" y="42.389" width="43.308" height="20" transform="matrix(0.707,0.707,-0.707,0.707,43.601,-0.482)"/><rect x="16.22" y="30.02" width="70" height="20" transform="matrix(0.707,-0.707,0.707,0.707,-13.296,47.939)"/></g></svg>';
-			html.innerHTML = "<div class='statusCircleHitBox'>" + statusCircleSVG + "</div>" + 
-							 '<div class="titleHolder text userText"></div>' + 
-							 '<div class="functionHolder">' +
-								'<img src="images/icons/optionIcon.png" onclick="MainContent.optionMenu.open(this)" class="functionItem optionIcon icon clickable">' +
-								'<div class="functionItem projectHolder"></div>' +
-								'<div class="functionItem memberList userText"></div>' +
-							'</div>';
+			html.innerHTML = 	"<div class='isMyTaskIndicator'></div>" + 
+								"<div class='statusCircleHitBox'>" + statusCircleSVG + "</div>" + 
+								'<div class="titleHolder text userText"></div>' + 
+							 	'<div class="functionHolder">' +
+									'<img src="images/icons/optionIcon.png" onclick="MainContent.optionMenu.open(this)" class="functionItem optionIcon icon clickable">' +
+									'<div class="functionItem projectHolder"></div>' +
+									'<div class="functionItem memberList userText"></div>' +
+								'</div>';
 
 
-			setTextToElement(html.children[1], _toDoData.title);
-			if (_toDoData.memberText) setTextToElement(html.children[2].children[2], _toDoData.memberText);
+			setTextToElement(html.children[2], _toDoData.title);
+			if (_toDoData.memberText) setTextToElement(html.children[3].children[2], _toDoData.memberText);
 
 			if (_toDoData.projectTitle) 
 			{
-				let projectTitleHolder = html.children[2].children[1]
+				let projectTitleHolder = html.children[3].children[1];
 				let projectTitleHtml =  '<img src="images/icons/projectIconDark.svg" class="functionItem projectIcon">' +
 										'<div class="functionItem projectTitle userText"></div>';
 				projectTitleHolder.innerHTML = projectTitleHtml;
@@ -85,7 +92,7 @@ function _TodoRenderer() {
 			if (_toDoData.tagColour)
 			{
 				let tagColour = stringToColour(_toDoData.tagColour);
-				let colorTarget = html.children[0].children[0]; 
+				let colorTarget = html.children[1].children[0]; 
 				colorTarget.style.backgroundColor = colourToString(
 					mergeColours(
 						tagColour,
@@ -114,7 +121,7 @@ function _TodoRenderer() {
 		}
 
 			function _assignEventHandlers(_html, _toDoData, _taskHolder) {
-				_html.children[0].onclick = function() {
+				_html.children[1].onclick = function() {
 					DOMData.get(_html).finish();
 				}
 

@@ -126,14 +126,17 @@
 	position: relative;
 	width: 100%;
 	height: 20px;
-	padding-top: 3px;
-	padding-bottom: 15px;
+	padding-top: 6px;
+	padding-bottom: 6px;
+	/*padding-bottom: 30px;*/
+	margin-bottom: 6px;
 	overflow: hidden;
 }
+
 .listItem.hide {
 	opacity: 0;
 	pointer-events: none;
-	margin-bottom: -38px;
+	margin-bottom: -32px;
 }
 
 	.listItem .mainIcon {
@@ -156,6 +159,12 @@
 
 		line-height: 20px;
 	}
+
+
+
+.listItem.isSelf {
+	background: linear-gradient(to right, rgba(255, 200, 0, 0.05), rgba(255, 200, 0, 0));
+}		
 
 
 

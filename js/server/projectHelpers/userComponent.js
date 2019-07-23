@@ -2,6 +2,7 @@
 
 function _Server_project_userComponent(_parent) {
   let Parent = _parent;
+  let This = this;
 
   let DTTemplate = new _Server_project_dataTypeTemplate( 
     Parent.id,
@@ -11,12 +12,14 @@ function _Server_project_userComponent(_parent) {
         name: "String",
         permissions: "String",
         Self: "Boolean",
-        isOwner: "Boolean",
+        isOwner: "Boolean"
       }
     }
   );
+
   this.DTTemplate = DTTemplate;
 
+  this.ownId    = "";
 
   this.get      = function(_id)       {return DTTemplate.get(_id);}
   this.update   = function(_newItem)  {return DTTemplate.update(_newItem);}
@@ -37,7 +40,11 @@ function _Server_project_userComponent(_parent) {
       function (_results) {
         if (typeof _results != "object") return false;
         DTTemplate.list = [];
-        for (let i = 0; i < _results.length; i++) DTTemplate.update(_results[i], false);
+        for (let i = 0; i < _results.length; i++)
+        {
+          if (_results[i].Self) This.ownId = _results[i].id;
+          DTTemplate.update(_results[i], false);
+        }
       }
     ).catch(function () {});
   }

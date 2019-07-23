@@ -422,6 +422,8 @@ function _MainContent_settingsPage(_parent) {
 	function createMemberItemHtml(_member) { 
 		let html = document.createElement("div");
 		html.className = "listItem memberItem";
+		if (_member.Self) html.classList.add("isSelf");
+		
 		html.innerHTML = '<img class="mainIcon icon" src="images/icons/memberIcon.png">' + 
 						'<div class="titleHolder userText text">Dirk@dirkloop.com</div>' +
 						'<div class="rightHand">' + 

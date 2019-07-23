@@ -5,7 +5,7 @@
 	width: calc(100% - 35px);
 	height: auto;
 
-	margin-left: 35px;
+	/*margin-left: 35px;*/
 	margin-top: 20px;
 	margin-bottom: 25px;
 }
@@ -29,12 +29,14 @@
 
 
 	.taskHolder .dateHolder {
+		margin-left: 35px;
 		color: #666;
 		font-weight: bold;
 	}
 
 	.taskHolder .todoHolder {
 		position: relative;
+
 		width: calc(100% - 2px);
 		height: auto;
 
@@ -48,20 +50,46 @@
 	
 
 
-		.todoItem {
+		.todoItem.listItem {
 			position: relative;
+
 			width: 100%;
 			height: 20px;
-			padding-top: 3px;
-			padding-bottom: 15px;
 
+			padding-left: 35px;
 			overflow: hidden;
 
 			transition: all 0.3s;
 		}
-		.todoItem.finished {
+
+		.todoItem.listItem.finished {
 			opacity: 0.4;
 		}
+
+
+		.todoItem.listItem .isMyTaskIndicator {
+			position: relative;
+			float: left;
+
+			left: -15px;
+			top: calc((20px - 7px) / 2);
+
+			width: 7px;
+			height: 7px;
+
+			margin-right: -7px;
+
+			border-radius: 5px;
+			background: rgb(175, 107, 237);
+			opacity: 0;
+		}
+
+		.todoItem.listItem.isMyTask .isMyTaskIndicator {
+			opacity: .4;
+		}
+
+
+
 		
 		#mainContentHolder:not(.renderFinishedTodos) .todoListHolder .todoItem.finished {
 			opacity: 0;
@@ -188,7 +216,11 @@
 
 	.taskHolder .createTaskHolder {
 		position: relative;
+		left: 35px;
+
+		width: calc(100% - 25px);
 		height: auto;
+		
 		overflow: hidden;
 	}
 

@@ -2,12 +2,12 @@
 <html>
 	<head>
 		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0' name='viewport'/>
-		<link rel="stylesheet" type="text/css" href="css/component.css?a=27">
+		<link rel="stylesheet" type="text/css" href="css/component.css?a=30">
 		<link rel="stylesheet" type="text/css" href="css/popup.css?a=28">
 		<link rel="stylesheet" type="text/css" href="css/main.css?a=21">
 		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=22">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=36">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=29">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=31">
 
 		<script type="text/javascript" src="/JS/jQuery.js" asy nc></script>
 		<script type="text/javascript" src="/JS/request2.js" asy nc></script>
