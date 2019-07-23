@@ -10,7 +10,8 @@ function _Server_project_userComponent(_parent) {
         id: "String",
         name: "String",
         permissions: "String",
-        Self: "Boolean"
+        Self: "Boolean",
+        isOwner: "Boolean",
       }
     }
   );

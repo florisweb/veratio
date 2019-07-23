@@ -8,6 +8,10 @@
 	class _App {
 		public $userId;
 		
+		// App settings
+		public $ownerPermissions = "[\"2\",\"22\",\"21\",\"2\"]";
+
+		
 		public function __construct() {
 			$this->userId = (string)$GLOBALS["SESSION"]->get("userId");
 			if (!$this->userId) die("E_nonAuth");

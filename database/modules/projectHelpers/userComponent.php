@@ -18,7 +18,8 @@
 				array("users" => [
 					"id" 			=> "String",
 					"name" 			=> "String",
-					"permissions" 	=> "String"
+					"permissions" 	=> "String",
+					"isOwner" 		=> "Boolean",
 				]
 			));
 		}
@@ -28,6 +29,7 @@
 			$users = $this->DTTemplate->getAllData();
 			for ($i = 0; $i < sizeof($users); $i++)
 			{
+				$users[$i]["Self"] = false;
 				if ($users[$i]["id"] != $GLOBALS["App"]->userId) continue;
 				$users[$i]["Self"] = true;
 				break;
@@ -38,6 +40,7 @@
 
 		public function get($_id) {
 			$user = $this->DTTemplate->get($_id);
+			$user["Self"] = false;
 			if ($user["id"] == $GLOBALS["App"]->userId) $user["Self"] = true;
 			return $user;
 		}
@@ -48,7 +51,12 @@
 			$ownPermissions 		= $this->getPermissions();
 			$ownPermissions_users 	= $this->getPermissions("users");
 
-			$newUserPermissions = json_decode($_newUser["permissions"], true);
+			$newUserPermissions 	= json_decode($_newUser["permissions"], true);
+			
+			if (!$oldUser && $ownPermissions_users[0] < 1) 	return "E_actionNotAllowed_notAllowedToInvite";
+			if ($ownPermissions_users[1] < 1)				return "E_actionNotAllowed_notAllowedToChangeUserPermissions";
+			$_newUser["isOwner"] = $oldUser && $oldUser["isOwner"];
+
 
 
 			for ($pt = 0; $pt < sizeof($ownPermissions); $pt++)
@@ -67,8 +75,8 @@
 			}
 
 			$_newUser["permissions"] = json_encode($newUserPermissions);
+			if ($_newUser["isOwner"]) $_newUser["permissions"] = $GLOBALS["App"]->ownerPermissions;
 
-			if (!$oldUser && $ownPermissions_users[0] < 1) return "E_actionNotAllowed_notAllowedToInvite";
 
 			$successfullyUpdated = $this->DTTemplate->update($_newUser);
 			if (!$successfullyUpdated) return "E_unexpectedError";
@@ -80,10 +88,15 @@
 
 		public function remove($_id) {
 			$permissions = $this->getPermissions("users");
+			$user = $this->get($_id);
+			if (!$user) return "E_userDoesnotExist";
 
-			if ($permissions[0] < 2 && 
-				$GLOBALS["App"]->userId != (string)$_id // if the user wants to leave, he should be able to remove himself
-			) return "E_actionNotAllowed";
+			if (!$user->Self) // if the user wants to leave, he should be able to remove himself
+			{
+				if ($permissions[0] < 2 ||
+					$user["isOwner"]
+				) return "E_actionNotAllowed";
+			}
 
 			return $this->DTTemplate->remove($_id);
 		}

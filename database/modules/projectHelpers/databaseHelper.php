@@ -11,6 +11,7 @@
 		private $DB;
 		private $projectId;
 
+
 		public function __construct($_projectId) {
 			$this->DB = $GLOBALS["DB"]->connect($this->DBName);
 			if (!$this->DB) die("databaseHelper.php: DB doesn't exist");
@@ -20,7 +21,7 @@
 
 		public function createProject($_ownerId) {
 			$this->projectId 	= $this->createId();
-			$projectOwner 		= '{"id": "' . (string)$_ownerId . '", "permissions": "[\"2\",\"2\",\"22\",\"2\"]"}';
+			$projectOwner 		= '{"id": "' . (string)$_ownerId . '", "permissions": "' . $GLOBALS["App"]->ownerPermissions . '", "isOwner": true}';
 
 			$DBResult = $this->DB->execute(
 				"INSERT INTO projectList (id, users) VALUES (?, ?)", 
