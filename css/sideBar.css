@@ -132,5 +132,13 @@
 @media screen and (max-width: 600px) {
 	#sideBar {
 		left: -300px;
+		box-shadow: none;
 	}
 }
+
+
+
+
+
+
+

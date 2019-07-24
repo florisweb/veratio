@@ -2,11 +2,14 @@
 <html>
 	<head>
 		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0' name='viewport'/>
+		<meta name="theme-color" content="#636ad5">
+		<link rel="manifest" href="manifest.json">
+
 		<link rel="stylesheet" type="text/css" href="css/component.css?a=34">
 		<link rel="stylesheet" type="text/css" href="css/popup.css?a=29">
 		<link rel="stylesheet" type="text/css" href="css/main.css?a=22">
-		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=23">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=39">
+		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=24">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=40">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=34">
 
 		<script type="text/javascript" src="/JS/jQuery.js" asy nc></script>

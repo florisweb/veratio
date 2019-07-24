@@ -1,0 +1,16 @@
+{
+  "short_name": "Veratio",
+  "name": "Florisweb - Veratio",
+  "icons": [
+    {
+      "src": "/pictures/logo.png",
+      "type": "image/png",
+      "sizes": "100x100"
+    }
+  ],
+  "start_url": "/git/todo",
+  "background_color": "#636ad5",
+  "display": "standalone",
+  "scope": "/git/todo",
+  "theme_color": "#636ad5"
+}
