@@ -54,18 +54,13 @@
 
 
 			$user = $project->users->get($this->userId);
-			$user->permissions = json_encode($this->ownerPermissions);
+			$user["permissions"] = json_encode($this->ownerPermissions);
 			$project->users->update($user);
 
 			$titleChanged 		= $project->changeTitle($_title);
 			if (!$titleChanged) return false;
 
 			return $projectId;
-		}
-
-
-		public function removeProject($_id) {
-			
 		}
 	}
 

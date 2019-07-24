@@ -59,6 +59,8 @@ function _Server_project_userComponent_Self(_user) {
   let Permissions   = JSON.parse(_user.permissions);
 
 
+
+
   this.taskActionAllowed = function(_action, _task) {
     switch (String(_action).toLowerCase())
     {
@@ -94,6 +96,23 @@ function _Server_project_userComponent_Self(_user) {
       break;
       default: 
         console.error("Server.project.users.Self.userActionAllowed: Action ", _action, " was not found.");
+      break;
+    }
+
+    return false;
+  }
+
+   this.projectActionAllowed = function(_action) {
+    switch (String(_action).toLowerCase())
+    {
+      case "remove":
+        if (Permissions[3][0] >= 2) return true;
+      break;
+      case "changeTitle": 
+        if (Permissions[3][0] >= 1) return true;
+      break;
+      default: 
+        console.error("Server.project.users.Self.projectActionAllowed: Action ", _action, " was not found.");
       break;
     }
 

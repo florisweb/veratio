@@ -358,7 +358,7 @@
 		.mainContentPage.settingsPage div.leaveButton {
 			position: relative;
 			top: 8px;
-			left: 4px;
+			left: 2px;
 			margin: auto;
 			height: 20px;
 			max-width: 650px;
@@ -369,8 +369,8 @@
 
 		.mainContentPage.settingsPage div.leaveButton img {
 			position: relative;
-			top: 1px;
-			height: 12px;
+			top: 3px;
+			height: 16px;
 			width: auto;
 		}
 

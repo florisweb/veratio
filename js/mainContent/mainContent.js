@@ -24,6 +24,14 @@ function _MainContent() {
 		App.update();
 	}
 
+	this.removeCurrentProject = function() {
+		let project = Server.getProject(this.curProjectId);
+		if (!project) return false;
+		project.remove();
+		this.taskPage.tab.open("Inbox");
+		App.update();
+	}
+
 
 
 

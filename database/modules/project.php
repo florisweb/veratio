@@ -41,10 +41,26 @@
 		}
 
 
-		public function changeTitle($_newTitle) {
-			// do some permission checks
-			$DBResult = $this->DB->writeProjectData("title", (string)$_newTitle);
-			return $DBResult;
+		public function changeTitle($_newTitle = "Titleless") {
+			$user = $this->users->get($GLOBALS["App"]->userId);
+			if (!$user) return "E_userNotInProject";
+
+			$userPermissions = json_decode($user["permissions"], true);
+			if ($userPermissions[3] < 1) return "E_actionNotAllowed";
+
+			return $this->DB->writeProjectData("title", (string)$_newTitle);
+		}
+
+
+
+		public function remove() {
+			$user = $this->users->get($GLOBALS["App"]->userId);
+			if (!$user) return "E_userNotInProject";
+
+			$userPermissions = json_decode($user["permissions"], true);
+			if ($userPermissions[3] < 2) return "E_actionNotAllowed";
+
+			return $this->DB->removeProject();			
 		}
 	}
 

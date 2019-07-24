@@ -26,18 +26,30 @@ function _MainContent_header() {
 				MainContent.leaveCurrentProject();
 				return true;
 			}, 
-			"images/icons/memberIcon.png"
+			"images/icons/leaveIconDark.png"
 		);
+		// let leaveIcon = Menu.options[1].html.children[0];
+		// leaveIcon.style.left = "2px";
+		// leaveIcon.style.top = "3px";
+		// leaveIcon.style.height = "13px";
+
+
 		Menu.addOption(
 			"Remove project", 
 			function () {
+				MainContent.removeCurrentProject()
 				return true;
 			}, 
-			"images/icons/memberIcon.png"
+			"images/icons/removeIcon.png"
 		);
 
 
 		this.open = function() {
+			let project = Server.getProject(MainContent.curProjectId);
+			
+			Menu.enableAllOptions();
+			if (!project.users.Self.projectActionAllowed("remove")) Menu.options[2].disable();
+
 			return Menu.open(HTML.optionIcon, {top: 45});
 		}
 

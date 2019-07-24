@@ -80,6 +80,14 @@
 					sha1(uniqid(mt_rand(), true)) . 
 					sha1(uniqid(mt_rand(), true));
 		}
+
+
+		public function removeProject() {
+			return $this->DB->execute(
+				"DELETE FROM $this->DBTableName WHERE id=? LIMIT 1", 
+				array($this->projectId)
+			);
+		}
 	}
 
 ?>
