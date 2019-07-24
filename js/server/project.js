@@ -22,10 +22,13 @@ function _Server_project(_projectId, _projectTitle) {
   }
 
 
-  this.updateTitle = function(_newTitle) {
+  this.changeTitle = function(_newTitle) {
     if (!_newTitle) return false;
-    // this.title = String(_newTitle);
-    // this.DB.updateTitle(_newTitle);
+    this.DB.changeTitle(_newTitle).then(function () {
+      this.title = _newTitle;
+    }).catch(function (_error) {
+      console.warn(_error);
+    });
   }
 
 
@@ -37,7 +40,7 @@ function _Server_project(_projectId, _projectTitle) {
 
     }).catch(function (_error) {
       console.warn(_error);
-    })
+    });
   }
 
 
@@ -51,25 +54,27 @@ function _Server_project(_projectId, _projectTitle) {
 
 
   this.DB = new function() {
-    this.updateTitle = function(_newTitle) {
-      // REQUEST.send("database/group/changeTitle.php", "groupId=" + This.id + "&newTitle=" + _newTitle).then(
-      //   function (_x) {console.warn(_x);}
-      // ).catch(function () {});
+    this.changeTitle = function(_newTitle) {
+      return new Promise(function (resolve, error) {
+        REQUEST.send("database/project/changeProjectTitle.php", "projectId=" + This.id + "&newTitle=" + Encoder.encodeString(_newTitle)).then(
+          function (_response) {
+            if (_response === 1) resolve();
+            error(_response);
+          }
+        );
+      });
     }
 
     this.remove = function() {
       return new Promise(function (resolve, error) {
-
         REQUEST.send("database/project/removeProject.php", "projectId=" + This.id).then(
           function (_response) {
             if (_response === 1) resolve();
             error(_response);
           }
         );
-
       });
     }
-
 
   }
 }

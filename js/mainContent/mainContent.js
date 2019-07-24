@@ -28,11 +28,10 @@ function _MainContent() {
 		let project = Server.getProject(this.curProjectId);
 		if (!project) return false;
 		project.remove();
+		
 		this.taskPage.tab.open("Inbox");
 		App.update();
 	}
-
-
 
 
 

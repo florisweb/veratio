@@ -7,6 +7,9 @@ const Encoder = new function() {
       return encodeURIComponent(jsonStr);
     }
 
+    this.encodeString = encodeURIComponent;
+
+
     this.decodeObj = function(_jsonObj) {
       let jsonStr = JSON.stringify(_jsonObj);
       jsonStr = jsonStr.replace(/<plusSign>/g, "+");

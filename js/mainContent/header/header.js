@@ -27,12 +27,7 @@ function _MainContent_header() {
 				return true;
 			}, 
 			"images/icons/leaveIconDark.png"
-		);
-		// let leaveIcon = Menu.options[1].html.children[0];
-		// leaveIcon.style.left = "2px";
-		// leaveIcon.style.top = "3px";
-		// leaveIcon.style.height = "13px";
-
+		);	
 
 		Menu.addOption(
 			"Remove project", 
