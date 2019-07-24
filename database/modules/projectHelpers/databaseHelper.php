@@ -1,8 +1,8 @@
 <?php
 	$root = realpath($_SERVER["DOCUMENT_ROOT"]);
 	require_once "$root/PHPV2/PacketManager.php";
-	$PM->includePacket("DB", "1.0");
 
+	$GLOBALS["PM"]->includePacket("DB", "1.0");
 
 	class _databaseHelper {
 		private $DBName = "eelekweb_todo";
