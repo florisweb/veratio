@@ -10,7 +10,7 @@ function _KeyHandler() {
         let list = MainContent.taskPage.taskHolder.list;
         for (item of list)
         {
-          if (item.createMenu.disabled) continue;
+          if (!item.createMenu.enabled) continue;
           return item.createMenu.open();
         }
       },

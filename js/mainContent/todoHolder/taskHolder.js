@@ -83,6 +83,7 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 
 	return {
 		openState: false,
+		enabled: true,
 
 		setup: function(_parent) {
 			This = this;
@@ -94,7 +95,9 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 		},
 
 
-		open: function(_editing = false) {			
+		open: function(_editing = false) {
+			if (!this.enabled) return;	
+
 			MainContent.taskPage.taskHolder.closeAllCreateMenus();
 
 			this.openState = true;
@@ -104,6 +107,8 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 
 
 		openEdit: function(_todoHTML, _todoId) {
+			if (!this.enabled) return;
+
 			let task = Server.todos.get(_todoId);
 			if (!task || !_todoHTML) return false;
 			this.open(true);
@@ -124,7 +129,20 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 		},
 
 
+		disable: function() {
+			this.enabled = false;
+			Parent.HTML.menuHolder.innerHTML = "";
+		},
+
+
+
+
+
+
+
 		createTask: function() {
+			if (!this.enabled) return;
+
 			let task 		= scrapeTodoData();
 			let project 	= Server.getProject(task.projectId);
 
@@ -498,6 +516,7 @@ function _MainContent_taskHolder() {
 
 
 		let item = this.add({}, {}, "overdue");
+		item.createMenu.disable();
 		item.todo.renderTodoList(todoList);
 	}
 
