@@ -151,9 +151,10 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 
 			resetEditMode(true);	
 
-			project.todos.update(task);			
-			let curProjectId = MainContent.curProjectId;
-			if (curProjectId == project.id || !curProjectId) Parent.todo.renderTodo(task, Parent);
+			project.todos.update(task);
+			
+			task.projectId = project.id;
+			if (!MainContent.curProjectId || MainContent.curProjectId == project.id || !curProjectId) Parent.todo.renderTodo(task, Parent);
 			
 			this.close();
 			MainContent.searchOptionMenu.close();
