@@ -30,7 +30,7 @@ function _Server_project_todoComponent(_parent) {
   this.update = function(_newItem, _updateServer = true) {
     _newItem.projectId = Parent.id;
 
-    // search if the task has been moved to another project, and if so, remove the previous one
+    // search if the task will be moved from another project, and if so, remove the previous one
     let foundTask = Server.todos.get(_newItem.id);
     if (foundTask && foundTask.projectId != Parent.id)
     {
