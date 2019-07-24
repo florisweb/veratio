@@ -111,7 +111,8 @@ function _MainContent_optionMenu() {
 		"Edit", 
 		function () {
 			return curDOMData.openEdit();
-		}
+		},
+		"images/icons/changeIconDark.png"
 	);
 		
 

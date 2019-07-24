@@ -373,7 +373,7 @@ function _MainContent_settingsPage(_parent) {
 
 				return removed;
 			}, 
-			"images/icons/memberIcon.png"
+			"images/icons/removeIcon.png"
 		);
 
 		Menu.addOption(
@@ -382,7 +382,7 @@ function _MainContent_settingsPage(_parent) {
 				MainContent.settingsPage.permissionsMenu.open(curMemberId);
 				return true;
 			}, 
-			"images/icons/memberIcon.png"
+			"images/icons/changeIconDark.png"
 		);
 
 		this.open = function(_target) {

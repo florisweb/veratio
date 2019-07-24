@@ -513,8 +513,6 @@ function _MainContent_taskHolder() {
 		);
 		if (!todoList.length) return false;
 
-
-
 		let item = this.add(
 			{}, 
 			{

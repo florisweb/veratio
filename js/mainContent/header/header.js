@@ -37,13 +37,22 @@ function _MainContent_header() {
 			}, 
 			"images/icons/removeIcon.png"
 		);
+		Menu.addOption(
+			"Rename project", 
+			function () {
+				
+				return true;
+			}, 
+			"images/icons/changeIconDark.png"
+		);
 
 
 		this.open = function() {
 			let project = Server.getProject(MainContent.curProjectId);
 			
 			Menu.enableAllOptions();
-			if (!project.users.Self.projectActionAllowed("remove")) Menu.options[2].disable();
+			if (!project.users.Self.projectActionAllowed("remove")) 		Menu.options[2].disable();
+			if (!project.users.Self.projectActionAllowed("changeTitle"))	Menu.options[3].disable();
 
 			return Menu.open(HTML.optionIcon, {top: 45});
 		}

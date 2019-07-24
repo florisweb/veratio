@@ -108,7 +108,7 @@ function _Server_project_userComponent_Self(_user) {
       case "remove":
         if (Permissions[3][0] >= 2) return true;
       break;
-      case "changeTitle": 
+      case "changetitle": 
         if (Permissions[3][0] >= 1) return true;
       break;
       default: 
