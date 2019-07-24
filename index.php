@@ -7,7 +7,7 @@
 		<link rel="stylesheet" type="text/css" href="css/main.css?a=22">
 		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=23">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=39">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=33">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=34">
 
 		<script type="text/javascript" src="/JS/jQuery.js" asy nc></script>
 		<script type="text/javascript" src="/JS/request2.js" asy nc></script>
