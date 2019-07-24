@@ -515,7 +515,14 @@ function _MainContent_taskHolder() {
 
 
 
-		let item = this.add({}, {}, "overdue");
+		let item = this.add(
+			{}, 
+			{
+				displayProjectTitle: !MainContent.curProjectId
+			}, 
+			"overdue"
+		);
+
 		item.createMenu.disable();
 		item.todo.renderTodoList(todoList);
 	}
