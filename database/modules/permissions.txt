@@ -33,3 +33,34 @@ Rename and remove this project: None, 	rename, 		remove
 
 
 
+
+
+
+
+
+
+
+User object:
+{
+	userId,
+	name,
+	permissions: /\
+	type: "invite", "member"
+}
+
+
+Invite user(_email)
+- create userAccount: 
+	{
+		userId: random-string,
+		name: eMail,
+		permissions: /\
+		type: "invite"
+	}
+	
+- send Mail to eMail 
+	- link with userId in it (inviteId)
+	- user signs in
+	- overwrite userId with actual Id, set type "member" and set name: userName
+
+

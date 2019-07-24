@@ -8,11 +8,12 @@ function _Server_project_userComponent(_parent) {
     Parent.id,
     {
       users: {
-        id: "String",
-        name: "String",
-        permissions: "String",
-        Self: "Boolean",
-        isOwner: "Boolean"
+        id:           "String",
+        name:         "String",
+        permissions:  "String",
+        Self:         "Boolean",
+        isOwner:      "Boolean",
+        type:         "String"
       }
     }
   );
