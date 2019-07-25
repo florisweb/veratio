@@ -1,19 +1,13 @@
 <?php
 	$type = (String)$_GET["type"];
-	$mainPath = "/*.*";
+	$mainPath = "*.png";
 
 	switch ($type)
 	{
-		case "landscape": $mainPath = "landscape" . $mainPath; break;
-		default: $mainPath = "sideBar" . $mainPath; break;
+		case "landscape": $mainPath = "landscape/" . $mainPath; break;
+		default: $mainPath = "sidebar/" . $mainPath; break;
 	}
-
-	$filePaths = array();
-	foreach (glob("backgrounds/" . $mainPath) as $file) 
-	{
-		array_push($filePaths, $file);
-	}
-
+	$filePaths = glob("backgrounds/" . $mainPath);
 	$fileIndex = rand(0, sizeof($filePaths) - 1);
 	$filePath = $filePaths[$fileIndex];
 	$file = fopen($filePath, "r");
