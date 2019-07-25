@@ -14,7 +14,7 @@
 				background-image: url("../images/sideBarBackground/backgrounds/fullScreen.png");
 			}
 
-			#inviteMenu {
+			.inviteMenu {
 				position: relative;
 				top: calc(50vh - 200px);
 				margin: auto;
@@ -22,8 +22,6 @@
 
 				width: calc(90vw - 40px * 2);
 				max-width: 400px;
-				height: auto;
-
 
 				padding: 40px;
 				padding-bottom: 20px;
@@ -31,10 +29,23 @@
 
 				border-radius: 3px;
 				box-shadow: 5px 5px 15px 15px rgba(0, 0, 0, 0.01);
+				transition: top 0.3s;
+			}
+
+			.inviteMenu.hide {
+				top: 100vh;
+			}
+
+
+			#menu_linkNotFound.inviteMenu {
+				padding-bottom: 40px;
+				top: calc(-50vh + 200px);
+			}
+			#menu_linkNotFound.inviteMenu.hide {
+				top: 100vh;
 			}
 
 			.text {
-				/*float: left;*/
 				line-height: 25px;
 			}
 			.text.tHeaderLarge {
@@ -44,7 +55,6 @@
 			.text.highlight {
 				font-weight: bold;
 			}
-
 
 			.button {
 				text-align: center;
@@ -56,7 +66,7 @@
 
 	<body>
 
-		<div id="inviteMenu">
+		<div class="inviteMenu hide" id="menu_linkFound">
 			<div id="projectTitleHolder" class='text tHeaderLarge'></div>
 			<br>
 			<br>
@@ -81,12 +91,15 @@
 			<div class="button bBoxy text" style="font-size: 12px">Join as guest</div>
 		</div>
 
-
-
-
-
-
-
+		<div class="inviteMenu" id="menu_linkNotFound">
+			<div class='text tHeaderLarge'>Oops, something went wrong</div>
+			<br>
+			<br>
+			<div class='text highlight'>We couldn't find your invitation.</div>
+			<div class='text'>
+				Please ask your projects' owner to resend your invite.
+			</div>
+		</div>
 
 
 
@@ -103,7 +116,8 @@
 				element.append(a);
 			}
 
-			let inviteData = JSON.parse('<?php
+
+			let rawInviteData = '<?php
 				try {
 					$root = realpath($_SERVER["DOCUMENT_ROOT"]);
 					require_once "$root/git/todo/database/modules/app.php";
@@ -115,12 +129,11 @@
 				$App = new _App($_inviteLink);
 				
 				$projects = $App->getAllProjects();
-				if (sizeof($projects) == 0) die("E_projectNotFound");
+				if (sizeof($projects) == 0) die("E_invalidLink");
 				$project = $projects[0];
 
 				$user = $project->users->get($_inviteLink);
-				if (!$user || $user["type"] != "invite") die("E_userNotFound");
-				
+				if (!$user || $user["type"] != "invite") die("E_invalidLink");
 
 				$returnData = array(
 					"inviterName" 		=> urlencode($user["name"]),
@@ -129,31 +142,42 @@
 				);
 
 				echo json_encode($returnData);
-			?>');
+			?>';
+	
+			if (rawInviteData != "E_invalidLink") setup();
 
-			inviteData.projectTitle = decodeURIComponent((inviteData.projectTitle + '').replace(/\+/g, '%20'));
-			inviteData.inviterName 	= decodeURIComponent((inviteData.inviterName + '').replace(/\+/g, '%20'));
-			inviteData.inviteLink 	= decodeURIComponent((inviteData.inviteLink + '').replace(/\+/g, '%20'));
 
-			inviteData.projectTitle = "NLT - melkwegstelsels";
-			inviteData.inviterName = "floris@florisweb.tk";
+
+
 
 			function setup() {
-				setTextToElement(projectTitleHolder, 		inviteData.projectTitle);
-				setTextToElement(projectTitleHolder_small, 	inviteData.projectTitle);
-				setTextToElement(inviterNameHolder, 		inviteData.inviterName);
+				let inviteData 		= JSON.parse(rawInviteData);
+
+				let projectTitle 	= decodeURIComponent((inviteData.projectTitle + '').replace(/\+/g, '%20'));
+				let inviterName 	= decodeURIComponent((inviteData.inviterName + '').replace(/\+/g, '%20'));
+				let inviteLink 		= decodeURIComponent((inviteData.inviteLink + '').replace(/\+/g, '%20'));
+
+
+				projectTitle = "NLT - melkwegstelsels";
+				inviterName = "floris@florisweb.tk";
+
+
+
+				menu_linkFound.classList.remove("hide");
+				menu_linkNotFound.classList.add("hide");
+
+				setTextToElement(projectTitleHolder, 		projectTitle);
+				setTextToElement(projectTitleHolder_small, 	projectTitle);
+				setTextToElement(inviterNameHolder, 		inviterName);
 
 				document.getElementsByClassName("button")[0].onclick = function() {
-					window.location.replace("join.php?type=signedIn&link=" + inviteData.inviteLink);
+					window.location.replace("join.php?type=signedIn&link=" + inviteLink);
 				}
 				document.getElementsByClassName("button")[1].onclick = function() {
-					window.location.replace("join.php?type=guest&link=" + inviteData.inviteLink);
+					window.location.replace("join.php?type=guest&link=" + inviteLink);
 				}
 			}
-			setup();
 
 		</script>
-
-
 	</body>
 </html>	
