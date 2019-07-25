@@ -102,8 +102,8 @@
 
 				<div class="mainContentPage settingsPage hide">
 					<div class="inviteMemberHolder">
-						<input placeholder="Username or email" class="inputField iBoxy text">
-						<a class="button bDefault bBoxy">Invite</a>
+						<input placeholder="Username or email" class="inputField iBoxy text" id="inviteMemberInput">
+						<a class="button bDefault bBoxy" onclick="MainContent.settingsPage.inviteUser()">Invite</a>
 					</div>
 
 					<div class="memberHolder"></div>

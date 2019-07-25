@@ -31,9 +31,10 @@ function _Server_project_userComponent(_parent) {
 
 
   this.inviteUserByEmail = function(_email) {
-    if (_email.length < 5) return false;
-    if (_email.split("@").length == 1) return false;
-    if (_email.split(".").length == 1) return false;
+    _email = String(_email);
+    if (_email.length < 5)              return "E_emailTooShort";
+    if (_email.split("@").length == 1)  return "E_invalidEmail";
+    if (_email.split(".").length == 1)  return "E_invalidEmail";
 
     return DTTemplate.DB.inviteUserByEmail(_email);
   }

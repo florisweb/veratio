@@ -154,12 +154,6 @@
 				let inviterName 	= decodeURIComponent((inviteData.inviterName + '').replace(/\+/g, '%20'));
 				let inviteLink 		= decodeURIComponent((inviteData.inviteLink + '').replace(/\+/g, '%20'));
 
-
-				projectTitle = "NLT - melkwegstelsels";
-				inviterName = "floris@florisweb.tk";
-
-
-
 				menu_linkFound.classList.remove("hide");
 				menu_linkNotFound.classList.add("hide");
 

@@ -326,6 +326,7 @@ function _MainContent_settingsPage(_parent) {
 	let HTML = {
 		Self: $(".mainContentPage.settingsPage")[0],
 		memberHolder: $(".mainContentPage.settingsPage .memberHolder")[0],
+		inviteMemberInput: $("#inviteMemberInput")[0]
 	}
 
 	this.pageSettings = {
@@ -409,6 +410,19 @@ function _MainContent_settingsPage(_parent) {
 
 
 
+
+
+	this.inviteUser = function() {
+		let email = HTML.inviteMemberInput.value;
+		let project = Server.getProject(MainContent.curProjectId);
+		let promise = project.users.inviteUserByEmail(email);
+		if (!isPromise(promise)) return alert(promise);
+		promise.then(function () {
+			This.open(MainContent.curProjectId);
+		}, function (_error) {
+			alert(_error);
+		});
+	}
 
 
 
