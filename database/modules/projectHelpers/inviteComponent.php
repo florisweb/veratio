@@ -105,7 +105,7 @@
 			$inviteLink = "https://florisweb.tk/git/todo/invite?id=" . $_inviteId;
 		    $html = "<html><head></head><body style='background-color: #eee; text-align: center'>Hey there $inviteLink</body></html>";
 		
-			$headers =  "From: veratio@localhost" . "\r\n" . 
+			$headers =  "From: veratio@florisweb.tk" . "\r\n" . 
            				"MIME-Version: 1.0" . "\r\n" . 
 			           	"Content-type: text/html; charset=UTF-8" . "\r\n";
 			mail($_emailAdress, "You've been invited to " . $this->Project->title . " by " . $senderName, $html, $headers);
