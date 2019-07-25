@@ -345,7 +345,8 @@ function _MainContent_settingsPage(_parent) {
 		MainContent.openPage(this.pageSettings.pageName, _projectId);
 
 		let project = Server.getProject(_projectId);
-
+		enableAllButtons();
+		
 		if (!project.users.Self.userActionAllowed("invite")) HTML.inviteMemberHolder.hide();
 	}
 
