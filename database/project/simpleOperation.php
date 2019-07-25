@@ -21,7 +21,7 @@
 		case "tags":  $target = $project->tags;  break;
 		default: die("E_invalidDataType"); break;
 	}
-	if (!$target) die("E_invalidDataType");
+	if (!$target) die("E_projectNotFound");
 
 	
 	$firstMethods = get_class_methods($target);

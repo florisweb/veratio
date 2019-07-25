@@ -41,15 +41,18 @@
 				"type"			=> "invite"
 			);
 
+			$messageSend = $this->sendMail($emailAdress, $inviteId);
+			if (!$messageSend) return false;
+
 			$newUser = $this->Parent->update($user);
 			if (is_string($newUser)) return $newUser;
 
- 			return $this->sendMail($emailAdress, $inviteId);
+			return true; 			
 		}
 
 
 		public function joinByInviteId($_inviteId) {
-			$userId = $this->getUserId();
+			$userId = $this->getUserId($_inviteId);
 			$userName = "not yet to be set";
 
 			$newUser = array(
@@ -59,9 +62,13 @@
 				"type" => "member"
 			);
 
-			$success = $this->DTTemplate->update($newUser);
-			if (!$success) return false;
 			$success = $this->DTTemplate->remove($_inviteId);
+			if (!$success) return false;
+
+			$userAlreadyExists = $this->DTTemplate->get($newUser["id"]);
+			if ($userAlreadyExists) return true;
+			
+			$success = $this->DTTemplate->update($newUser);
 			return $success;
 		}
 
@@ -80,21 +87,21 @@
 			$senderName = $this->Parent->get(
 				$GLOBALS["App"]->userId
 			)["name"];
-			if (!$senderName) return false;
+			if (!is_string($senderName)) return false;
 
-
-		    $html = "Blablabla here's your <a href='https://localhost/git/todo/invite?id=" . $_inviteId . "'>link</a>.";
+			$inviteLink = "https://florisweb.tk/git/todo/invite?id=" . $_inviteId;
+		    $html = "<html><head></head><body style='background-color: #eee; text-align: center'>Hey there $inviteLink</body></html>";
 		
 			$headers =  "From: veratio@localhost" . "\r\n" . 
            				"MIME-Version: 1.0" . "\r\n" . 
 			           	"Content-type: text/html; charset=UTF-8" . "\r\n";
-			mail($_emailAdress, "You've been invited to " . $this->Project->title . " by " . $senderName, $_html, $headers);
+			mail($_emailAdress, "You've been invited to " . $this->Project->title . " by " . $senderName, $html, $headers);
 			return true;
 		}
 
 
 
-		private function getUserId() {
+		private function getUserId($_inviteLink) {
 			$userId = $GLOBALS["SESSION"]->get("userId");
 			if (!$userId)
 			{
@@ -103,7 +110,7 @@
 
 			if (!$userId) 
 			{
-				$redirectLink = "/git/todo/invite/join.php?type=signedIn&link=" . $_inviteLink;
+				$redirectLink = urlencode("/git/todo/invite/join.php?type=signedIn&link=" . $_inviteLink);
 				header("Location: /user/login.php?redirect=" . $redirectLink);
 				die("User not signed in");
 			}

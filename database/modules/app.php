@@ -2,6 +2,7 @@
 	$root = realpath($_SERVER["DOCUMENT_ROOT"]);
 	require_once "$root/PHPV2/PacketManager.php";
 	$GLOBALS["PM"]->includePacket("SESSION", "1.0");
+
 	
 	require_once "$root/git/todo/database/modules/project.php";
 
@@ -16,7 +17,7 @@
 		
 		// App settings
 		public $ownerPermissions = ["2", "22", "21", "2"]; // HAS TO HAVE SINGLE QUOTES AROUND IT OTHERWISE THE ESCAPED TEXT GETS LOST
-
+		
 		
 		public function __construct($_customUserId = false) {
 			$this->userId = (string)$GLOBALS["SESSION"]->get("userId");
@@ -25,14 +26,20 @@
 				$this->userId = $_SESSION["userId"];
 			}
 
-			if (!$this->userId && !$_customUserId) throw new Exception("E_nonAuth", 1);
-			$this->userId = sha1($this->userId);
+			if ($this->userId || $_customUserId)
+			{
+				$this->userId = sha1($this->userId);
 
-			if ($_customUserId) $this->userId = (string)$_customUserId;
+				if ($_customUserId) $this->userId = (string)$_customUserId;
+			} else {
+				$this->userId = false;
+			}
 		}
 
 
 		public function getProject($_id) {
+			if (!$this->userId) return "E_nonAuth";
+
 			$project = new _Project($_id);
 			
 			$projectError = $project->errorOnCreation;
@@ -43,6 +50,8 @@
 		}
 
 		public function getAllProjects() {
+			if (!$this->userId) return "E_nonAuth";
+
 			$DBHelper = new _databaseHelper(null);
 			$projectIds = $DBHelper->getAllProjectIds();
 			$projects = array();
@@ -59,6 +68,8 @@
 
 
 		public function createProject($_title) {
+			if (!$this->userId) return "E_nonAuth";
+
 			$DBHelper 			= new _databaseHelper(null);
 			$projectId 			= $DBHelper->createProject($this->userId);
 			if (!$projectId) 	return false;
@@ -77,7 +88,6 @@
 			return $projectId;
 		}
 	}
-
 
 
 	global $App;

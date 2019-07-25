@@ -118,11 +118,8 @@
 
 
 			let rawInviteData = '<?php
-				try {
-					$root = realpath($_SERVER["DOCUMENT_ROOT"]);
-					require_once "$root/git/todo/database/modules/app.php";
-				}
-				catch (Exception $e) {}
+				$root = realpath($_SERVER["DOCUMENT_ROOT"]);
+				require_once "$root/git/todo/database/modules/app.php";
 
 				$_inviteLink = (string)$_GET["id"];
 				if (!$_inviteLink || strlen($_inviteLink) > 50) die("E_invalidLink");

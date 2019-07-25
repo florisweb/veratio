@@ -1,7 +1,7 @@
 <?php
 	$root = realpath($_SERVER["DOCUMENT_ROOT"]);
 	require_once "$root/git/todo/database/modules/app.php";
-	
+
 	$projects = $App->getAllProjects();
 	$returnProjects = array();
 	for ($i = 0; $i < sizeof($projects); $i++)
