@@ -11,9 +11,6 @@
 		private $InviteComponent;
 		
 		public function __construct($_parent, $_projectId) {
-			$this->InviteComponent 	= new _project_user_inviteComponent($this);
-			$this->Parent 			= $_parent;
-
 			$this->DTTemplate = new _project_dataTypeTemplate(
 				(string)$_projectId, 
 				array("users" => [
@@ -24,6 +21,9 @@
 					"type"			=> "String",
 				]
 			));
+
+			$this->InviteComponent 	= new _project_user_inviteComponent($this, $_parent);
+			$this->Parent 			= $_parent;
 		}
 
 		public function inviteByEmail($_emailAdress) { // permissions will be checked in the inviteComponent

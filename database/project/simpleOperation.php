@@ -6,7 +6,7 @@
 	$_dataType 		= (String)$_POST["dataType"];
 	$_method 		= (String)$_POST["method"];
 	$_parameter 	= urldecode((String)$_POST["parameter"]);
-
+	
 	if (!$_projectId || !$_dataType || !$_method) die("Invalid request");
 
 	$project = $App->getProject($_projectId);
