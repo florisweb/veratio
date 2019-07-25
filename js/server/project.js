@@ -24,10 +24,11 @@ function _Server_project(_projectId, _projectTitle) {
 
   this.changeTitle = function(_newTitle) {
     if (!_newTitle) return false;
-    this.DB.changeTitle(_newTitle).then(function () {
-      this.title = _newTitle;
-    }).catch(function (_error) {
-      console.warn(_error);
+    return new Promise(function (resolve, error) {
+      This.DB.changeTitle(_newTitle).then(function () {
+        this.title = _newTitle;
+        resolve();
+      });
     });
   }
 

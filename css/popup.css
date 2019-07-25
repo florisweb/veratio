@@ -142,17 +142,14 @@
 #notificationBox .buttonBar .boxButton.important {
 	color: rgba(255, 255, 255, .9);
 }
-/*
-#notificationBox .inputField {
-	position: relative;
-	padding: 5px;
-	background: transparent;
-	border: 1px solid #aaa;
-	width: 100%;
 
-	color: #aaa;
-	font-size: 14px;
-}*/
+#notificationBox .inputField {
+	width: calc(100% - 10px);
+	
+	border-radius: 3px;
+
+	border: 2px solid #eaeaea;
+}
 
 
 

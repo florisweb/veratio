@@ -33,6 +33,39 @@ function _MainContent() {
 		App.update();
 	}
 
+	this.openRenameProjectMenu = function() {
+		let project = Server.getProject(MainContent.curProjectId);
+		if (!project) return false;
+		let builder = [
+			{title: "RENAME PROJECT"},
+			"<br><br>",
+			{text: "Rename "},
+			{text: project.title, highlighted: true},
+			{text: " to:"},
+			"<br><br>",
+			{input: "Project title", value: project.title, id: "RENAMEPROJECTValueHolder", focus: true, customClass: "text"},
+			"<br><br>",
+			"<br><br>",
+			"<br>",
+			{buttons: [
+				{button: "CANCEL", onclick: Popup.close},
+				{button: "RENAME", onclick: 
+					function () 
+					{
+						let newTitle = $("#RENAMEPROJECTValueHolder")[0].value;
+						if (!newTitle || newTitle.length < 3) return false;
+						project.changeTitle(newTitle).then(function () {
+							Popup.close();
+							App.update();
+						});
+					}, 
+				important: true, color: COLOR.DANGEROUS}
+			]}
+		];
+
+		Popup.showNotification(builder);
+	}
+
 
 
 	// Maincontent pages

@@ -81,7 +81,8 @@ const Popup = new function () {
 		if ("buttons" in _item) 		element = _buildButtons(_item.buttons);
 		if ("input" in _item) 			element = _buildInput(_item);
 		if ("options" in _item) 		element = _buildOptionHolder(_item);
-		if (_item.onclick) element.onclick = _item.onclick;
+		if (_item.onclick) 				element.onclick = _item.onclick;
+		if (_item.customClass) 			element.classList.add(_item.customClass);
 		return element;
 	}
 

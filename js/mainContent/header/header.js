@@ -40,7 +40,7 @@ function _MainContent_header() {
 		Menu.addOption(
 			"Rename project", 
 			function () {
-				
+				MainContent.openRenameProjectMenu();
 				return true;
 			}, 
 			"images/icons/changeIconDark.png"

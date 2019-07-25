@@ -90,8 +90,8 @@
 
 		private function filterEmailAdress($_emailAdress) {
 			$parts = explode("@", $_emailAdress);
-			if (sizeof($parts) < 2) 				return false;
-			if (sizeof(explode(".", $parts[1]) < 2) return false;
+			if (sizeof($parts) < 2) 					return false;
+			if (sizeof(explode(".", $parts[1])) < 2) 	return false;
 
 			return preg_replace("/[^0-9,^a-z,^A-Z,.,@,,]/", "", $_emailAdress);;
 		}
