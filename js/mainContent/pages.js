@@ -326,7 +326,8 @@ function _MainContent_settingsPage(_parent) {
 	let HTML = {
 		Self: $(".mainContentPage.settingsPage")[0],
 		memberHolder: $(".mainContentPage.settingsPage .memberHolder")[0],
-		inviteMemberInput: $("#inviteMemberInput")[0]
+		inviteMemberInput: $("#inviteMemberInput")[0],
+		inviteMemberHolder: $(".inviteMemberHolder")
 	}
 
 	this.pageSettings = {
@@ -342,6 +343,14 @@ function _MainContent_settingsPage(_parent) {
 	this.open = function(_projectId) {
 		if (!_projectId) _projectId = Server.projectList[0].id;
 		MainContent.openPage(this.pageSettings.pageName, _projectId);
+
+		let project = Server.getProject(_projectId);
+
+		if (!project.users.Self.userActionAllowed("invite")) HTML.inviteMemberHolder.hide();
+	}
+
+	function enableAllButtons() {
+		HTML.inviteMemberHolder.show();
 	}
 
 

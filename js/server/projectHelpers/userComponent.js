@@ -107,6 +107,9 @@ function _Server_project_userComponent_Self(_user) {
       case "update": 
         if (Permissions[2][1] >= 1 && (!_user.isOwner || isOwner)) return true;
       break;
+      case "invite": 
+        if (Permissions[2][0] >= 1) return true;
+      break;
       default: 
         console.error("Server.project.users.Self.userActionAllowed: Action ", _action, " was not found.");
       break;
