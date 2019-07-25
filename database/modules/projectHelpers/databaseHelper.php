@@ -19,6 +19,10 @@
 			$this->projectId = (string)$_projectId;
 		}
 
+
+
+
+
 		public function createProject($_ownerId) {
 			$this->projectId 	= $this->createId();
 			$projectOwner 		= '{"id": "' . (string)$_ownerId . '", "permissions": "[\"0\", \"22\", \"21\", \"2\"]", "isOwner": true}';

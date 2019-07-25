@@ -8,7 +8,7 @@
 		private $Parent;
 
 		private $DTTemplate;
-		private $InviteComponent;
+		public $InviteComponent;
 		
 		public function __construct($_parent, $_projectId) {
 			$this->DTTemplate = new _project_dataTypeTemplate(
@@ -59,6 +59,7 @@
 			$oldUser 				= $this->get($_newUser["id"]);
 			$ownPermissions 		= $this->getPermissions();
 			$ownPermissions_users 	= $this->getPermissions("users");
+
 
 			$newUserPermissions 	= json_decode($_newUser["permissions"], true);
 			

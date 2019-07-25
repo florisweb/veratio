@@ -5,6 +5,12 @@
 	
 	require_once "$root/git/todo/database/modules/project.php";
 
+	// backwards compatability
+	$sessionName = session_name("user");
+	session_set_cookie_params(60 * 60 * 24 * 365.25, '/', '.florisweb.tk', TRUE, FALSE);
+	session_start();
+
+
 	class _App {
 		public $userId;
 		
@@ -12,9 +18,17 @@
 		public $ownerPermissions = ["2", "22", "21", "2"]; // HAS TO HAVE SINGLE QUOTES AROUND IT OTHERWISE THE ESCAPED TEXT GETS LOST
 
 		
-		public function __construct() {
+		public function __construct($_customUserId = false) {
 			$this->userId = (string)$GLOBALS["SESSION"]->get("userId");
-			if (!$this->userId) die("E_nonAuth");
+			if (!$this->userId)
+			{
+				$this->userId = $_SESSION["userId"];
+			}
+
+			if (!$this->userId && !$_customUserId) throw new Exception("E_nonAuth", 1);
+			$this->userId = sha1($this->userId);
+
+			if ($_customUserId) $this->userId = (string)$_customUserId;
 		}
 
 

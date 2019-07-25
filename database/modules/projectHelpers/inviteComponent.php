@@ -1,12 +1,32 @@
 <?php
+	$GLOBALS["PM"]->includePacket("SESSION", "1.0");
+
+	// backwards compatability
+	$sessionName = session_name("user");
+	session_set_cookie_params(60 * 60 * 24 * 365.25, '/', '.florisweb.tk', TRUE, FALSE);
+	session_start();
+
+
 	class _project_user_inviteComponent {
 		private $Parent;
 		private $Project;
+		private $DTTemplate;
+
 
 	
 		public function __construct($_parent, $_project) {
 			$this->Parent = $_parent;
 			$this->Project = $_project;
+			$this->DTTemplate = new _project_dataTypeTemplate(
+				(string)$_project->id, 
+				array("users" => [
+					"id" 			=> "String",
+					"name" 			=> "String",
+					"permissions" 	=> "String",
+					"isOwner" 		=> "Boolean",
+					"type"			=> "String",
+				]
+			));
 		}
 
 		public function inviteByEmail($_emailAdress) {
@@ -24,9 +44,32 @@
 			$newUser = $this->Parent->update($user);
 			if (is_string($newUser)) return $newUser;
 
- 			$mailSuccessfullySend = $this->sendMail($emailAdress, $inviteId);
- 			var_dump($mailSuccessfullySend);
+ 			return $this->sendMail($emailAdress, $inviteId);
 		}
+
+
+		public function joinByInviteId($_inviteId) {
+			$userId = $this->getUserId();
+			$userName = "not yet to be set";
+
+			$newUser = array(
+				"id" => sha1($userId),
+				"name" => $userName,
+				"permissions" => $inviteUserObj["permissions"],
+				"type" => "member"
+			);
+
+			$success = $this->DTTemplate->update($newUser);
+			if (!$success) return false;
+			$success = $this->DTTemplate->remove($_inviteId);
+			return $success;
+		}
+
+
+
+
+
+
 
 		private function filterEmailAdress($_emailAdress) {
 			// filter the email TODO
@@ -47,6 +90,25 @@
 			           	"Content-type: text/html; charset=UTF-8" . "\r\n";
 			mail($_emailAdress, "You've been invited to " . $this->Project->title . " by " . $senderName, $_html, $headers);
 			return true;
+		}
+
+
+
+		private function getUserId() {
+			$userId = $GLOBALS["SESSION"]->get("userId");
+			if (!$userId)
+			{
+				$userId = $_SESSION["userId"];
+			}
+
+			if (!$userId) 
+			{
+				$redirectLink = "/git/todo/invite/join.php?type=signedIn&link=" . $_inviteLink;
+				header("Location: /user/login.php?redirect=" . $redirectLink);
+				die("User not signed in");
+			}
+
+			return $userId;
 		}
 	}
 	

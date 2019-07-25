@@ -9,10 +9,10 @@
 		private $DBHelper;
 		
 		public function __construct($_projectId, $_dataTypeTemplate) {
-			$this->dataType = (string)array_keys($_dataTypeTemplate)[0];
+			$this->dataType 		= (string)array_keys($_dataTypeTemplate)[0];
 			$this->dataTypeTemplate = (array)$_dataTypeTemplate[$this->dataType];
 			
-			$this->DBHelper = new _databaseHelper($_projectId);
+			$this->DBHelper 		= new _databaseHelper($_projectId);
 		}
 
 		public function getAllData() {
