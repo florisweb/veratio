@@ -5,7 +5,7 @@
 		<meta name="theme-color" content="#636ad5">
 		<link rel="manifest" href="manifest.json">
 
-		<link rel="stylesheet" type="text/css" href="css/component.css?a=34">
+		<link rel="stylesheet" type="text/css" href="css/component.css?a=35">
 		<link rel="stylesheet" type="text/css" href="css/popup.css?a=29">
 		<link rel="stylesheet" type="text/css" href="css/main.css?a=22">
 		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=24">

@@ -143,8 +143,8 @@
 		position: relative;
 		float: left;
 
-		width: 13px;
 		height: 13px;
+		width: auto;
 
 		margin: 0 5px;
 	}

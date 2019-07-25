@@ -457,6 +457,9 @@ function _MainContent_settingsPage(_parent) {
 							'<img src="images/icons/optionIcon.png" class="rightHandItem optionIcon onlyShowOnItemHover icon clickable">' +
 							'<div class="rightHandItem text"></div>' + 
 						'</div>';
+
+		if (_member.type == "invite") html.children[0].setAttribute("src", "images/icons/inviteIconDark.png");
+
 		
 		setTextToElement(html.children[1], _member.name);
 		setTextToElement(html.children[2].children[1], _member.permissions);
@@ -473,11 +476,13 @@ function _MainContent_settingsPage(_parent) {
 
 
 		DOMData.set(html, _member.id);
-
 		return html;
 	}
 
 }
+
+
+
 
 
 
@@ -591,7 +596,6 @@ function _MainContent_settingsPage_permissionsMenu() {
 			]
 		);
 	}
-
 }
 
 
