@@ -24,7 +24,7 @@
 
 	if ($_joinType == "signedIn")
 	{
-		$status = $project->users->InviteComponent->joinByInviteId($_inviteLink, $inviteUserObj["name"]);		
+		$status = $project->users->InviteComponent->joinByInviteId($_inviteLink, $inviteUserObj);		
 
 		header("Location: /git/todo");
 		die("Redirect user");

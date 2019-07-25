@@ -419,6 +419,7 @@ function _MainContent_settingsPage(_parent) {
 		if (!isPromise(promise)) return alert(promise);
 		promise.then(function () {
 			This.open(MainContent.curProjectId);
+			HTML.inviteMemberInput.value = null;
 		}, function (_error) {
 			alert(_error);
 		});
