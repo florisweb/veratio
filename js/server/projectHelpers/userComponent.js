@@ -30,7 +30,13 @@ function _Server_project_userComponent(_parent) {
   this.sync     = function()          {DTTemplate.DB.getAll();}
 
 
+  this.inviteUserByEmail = function(_email) {
+    if (_email.length < 5) return false;
+    if (_email.split("@").length == 1) return false;
+    if (_email.split(".").length == 1) return false;
 
+    return DTTemplate.DB.inviteUserByEmail(_email);
+  }
 
   // custom functions
   DTTemplate.DB.getAll = function() {
@@ -48,6 +54,11 @@ function _Server_project_userComponent(_parent) {
         }
       }
     ).catch(function () {});
+  }
+  DTTemplate.DB.inviteUserByEmail = function(_email) {
+    return REQUEST.send("/git/todo/database/project/simpleOperation.php", 
+      "projectId=" + Parent.id + "&dataType=users&method=inviteByEmail&parameter=" + Encoder.encodeString(_email)
+    );
   }
 }
 

@@ -27,6 +27,8 @@
 		}
 
 		public function inviteByEmail($_emailAdress) { // permissions will be checked in the inviteComponent
+			$ownPermissions 	= $this->getPermissions("users");
+			if ($ownPermissions[0] < 1) return "E_notAllowedToInvite";
 			return $this->InviteComponent->inviteByEmail($_emailAdress);
 		}
 
@@ -110,7 +112,7 @@
 			$user = $this->get($_id);
 			if (!$user) return "E_userDoesnotExist";
 
-			if (!$user->Self) // if the user wants to leave, he should be able to remove himself
+			if (!$user["Self"]) // if the user wants to leave, he should be able to remove himself
 			{
 				if ($permissions[0] < 2 ||
 					$user["isOwner"]
