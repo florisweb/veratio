@@ -418,7 +418,9 @@ function _MainContent_settingsPage(_parent) {
 		let promise = project.users.inviteUserByEmail(email);
 		if (!isPromise(promise)) return alert(promise);
 		promise.then(function () {
-			This.open(MainContent.curProjectId);
+			project.users.sync().then(function () {
+				This.open(MainContent.curProjectId);
+			});
 			HTML.inviteMemberInput.value = null;
 		}, function (_error) {
 			alert(_error);

@@ -27,7 +27,7 @@ function _Server_project_userComponent(_parent) {
   this.remove   = function(_id)       {return DTTemplate.remove(_id);}
 
   this.getList  = function()          {return DTTemplate.list;}
-  this.sync     = function()          {DTTemplate.DB.getAll();}
+  this.sync     = function()          {return DTTemplate.DB.getAll();}
 
 
   this.inviteUserByEmail = function(_email) {
