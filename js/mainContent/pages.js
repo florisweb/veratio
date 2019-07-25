@@ -458,7 +458,8 @@ function _MainContent_settingsPage(_parent) {
 							'<div class="rightHandItem text"></div>' + 
 						'</div>';
 
-		if (_member.type == "invite") html.children[0].setAttribute("src", "images/icons/inviteIconDark.png");
+		if (_member.type == "invite") 	html.children[0].setAttribute("src", "images/icons/inviteIconDark.png");
+		if (_member.isOwner)			html.children[0].setAttribute("src", "images/icons/ownerIconDark.png");
 
 		
 		setTextToElement(html.children[1], _member.name);
