@@ -32,7 +32,9 @@
 		public function inviteByEmail($_emailAdress) {
 			$inviteId = sha1(uniqid(mt_rand(), true));
 			$emailAdress = $this->filterEmailAdress($_emailAdress);
-			if (!$emailAdress) return $emailAdress;
+			$emailExists = $this->checkIfEmailAdressAlreadyExists($emailAdress);
+			if ($emailExists) 	return "E_emailAlreadyInvited";
+			if (!$emailAdress) 	return "E_invalidEmail";
 
 			$user = array(
 				"id" 			=> $inviteId,
@@ -74,13 +76,24 @@
 
 
 
-
-
-
+		private function checkIfEmailAdressAlreadyExists($_emailAdress) {
+			$users = $this->Parent->getAll();
+			foreach ($users as $user)
+			{
+				if ($user["type"] != "invite") continue;
+				if ($user["Self"]) continue;
+				if ($user["name"] !== $_emailAdress) continue;
+				return true;
+			}
+			return false;
+		}
 
 		private function filterEmailAdress($_emailAdress) {
-			// filter the email TODO
-			return $_emailAdress;
+			$parts = explode("@", $_emailAdress);
+			if (sizeof($parts) < 2) 				return false;
+			if (sizeof(explode(".", $parts[1]) < 2) return false;
+
+			return preg_replace("/[^0-9,^a-z,^A-Z,.,@,,]/", "", $_emailAdress);;
 		}
 
 		private function sendMail($_emailAdress, $_inviteId) {
