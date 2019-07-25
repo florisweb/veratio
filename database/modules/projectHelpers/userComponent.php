@@ -64,6 +64,7 @@
 
 
 			$newUserPermissions 	= json_decode($_newUser["permissions"], true);
+			if (!$newUserPermissions) $newUserPermissions = array();
 			
 			if (!$oldUser && $ownPermissions_users[0] < 1) 	return "E_actionNotAllowed_notAllowedToInvite";
 			if ($ownPermissions_users[1] < 1)				return "E_actionNotAllowed_notAllowedToChangeUserPermissions";
@@ -74,8 +75,11 @@
 			for ($pt = 0; $pt < sizeof($ownPermissions); $pt++)
 			{
 				$curPermission = str_split($ownPermissions[$pt]);
+				if (!$newUserPermissions[$pt]) $newUserPermissions[$pt] = "0";
+
 				for ($cp = 0; $cp < sizeof($curPermission); $cp++)
 				{
+					if (!$newUserPermissions[$pt][$cp]) $newUserPermissions[$pt][$cp] = "0";
 					if ($newUserPermissions[$pt][$cp] <= $curPermission[$cp]) continue;
 					
 					if ($oldUser &&
@@ -87,8 +91,8 @@
 			}
 
 
-			$_newUser["type"] = $this->filterUserType($_newUser["type"]);
-			$_newUser["permissions"] = json_encode($newUserPermissions);
+			$_newUser["type"] 			= $this->filterUserType($_newUser["type"]);
+			$_newUser["permissions"] 	= json_encode($newUserPermissions);
 			if ($_newUser["isOwner"]) $_newUser["permissions"] = json_encode($GLOBALS["App"]->ownerPermissions);
 
 			$successfullyUpdated = $this->DTTemplate->update($_newUser);

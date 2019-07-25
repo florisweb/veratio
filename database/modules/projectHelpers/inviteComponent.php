@@ -51,9 +51,9 @@
 		}
 
 
-		public function joinByInviteId($_inviteId) {
+		public function joinByInviteId($_inviteId, $_email) {
 			$userId = $this->getUserId($_inviteId);
-			$userName = "not yet to be set";
+			$userName = $_email; //"not yet to be set";
 
 			$newUser = array(
 				"id" => sha1($userId),
