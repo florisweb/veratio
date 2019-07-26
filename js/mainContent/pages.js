@@ -469,6 +469,7 @@ function _MainContent_settingsPage(_parent) {
 						'</div>';
 
 		if (_member.type == "invite") 	html.children[0].setAttribute("src", "images/icons/inviteIconDark.png");
+		if (_member.type == "link") 	html.children[0].setAttribute("src", "images/icons/linkIconDark.png");
 		if (_member.isOwner)			html.children[0].setAttribute("src", "images/icons/ownerIconDark.png");
 
 		

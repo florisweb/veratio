@@ -103,8 +103,9 @@
 		private function filterUserType($_type) {
 			switch ((string)$_type)
 			{
-				case "member": return "member"; break;
-				default: return "invite"; break;
+				case "member":	return "member"; 	break;
+				case "link":	return "link"; 		break;
+				default: 		return "invite"; 	break;
 			}
 		}
 
