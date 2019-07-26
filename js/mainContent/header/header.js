@@ -6,7 +6,8 @@ function _MainContent_header() {
 		Self: $("#mainContentHeader .header")[0],
 		titleHolder: $("#mainContentHeader .header.titleHolder")[0],
 		memberList: $("#mainContentHeader .functionHolder .memberList")[0],
-		optionIcon: $("#mainContentHeader .functionItem.icon.clickable")[0]
+		optionIcon: $("#mainContentHeader .functionItem.icon.clickable")[0],
+		functionItems: $("#mainContentHeader .functionHolder > .functionItem"),
 	}
 
 	this.optionMenu = new function() {
@@ -65,12 +66,35 @@ function _MainContent_header() {
 
 
 
+
+
 	this.hide = function() {
 		HTML.Self.classList.add("hide");
 	}
 	
 	this.show = function() {
 		HTML.Self.classList.remove("hide");
+	}
+
+
+
+	this.showItemsByPage = function(_pageName) {
+		hideAllFunctionItems();
+		switch (_pageName.toLowerCase()) 
+		{
+			case "settings":
+				HTML.functionItems[0].classList.remove("hide");
+				HTML.functionItems[1].classList.remove("hide");
+			break;
+			case "createproject":
+				HTML.functionItems[1].classList.remove("hide");
+			break;
+			default: //taskPage
+				HTML.functionItems[0].classList.remove("hide");
+				HTML.functionItems[2].classList.remove("hide");
+				HTML.functionItems[3].classList.remove("hide");
+			break;
+		}
 	}
 
 
@@ -86,5 +110,10 @@ function _MainContent_header() {
 	}
 
 
-
+	function hideAllFunctionItems() {
+		for (item of HTML.functionItems)
+		{
+			item.classList.add("hide");
+		}
+	}
 }

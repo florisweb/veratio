@@ -54,11 +54,13 @@
 		<link rel="manifest" href="manifest.json">
 
 		<link rel="stylesheet" type="text/css" href="css/component.css?a=37">
+
 		<link rel="stylesheet" type="text/css" href="css/popup.css?a=30">
 		<link rel="stylesheet" type="text/css" href="css/main.css?a=22">
 		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=24">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=43">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=34">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/header.css?a=0">
 
 		<script type="text/javascript" src="/JS/jQuery.js" asy nc></script>
 		<script type="text/javascript" src="/JS/request2.js" asy nc></script>
@@ -89,7 +91,7 @@
 			<br>
 			<div class="projectListHolder hide">
 				<div class="header clickable" onclick="SideBar.projectList.toggleOpenState()">
-					<img src="images/icons/dropDown.png" class="headerIcon dropDownButton close">
+					<img src="images/icons/dropDownIcon.png" class="headerIcon dropDownButton close">
 					<div class="headerText">Projects</div>
 				</div>
 				<div class="projectList hide">
@@ -114,7 +116,15 @@
 
 				<div class="functionHolder">
 					<img src="images/icons/optionIcon.png" class="functionItem icon clickable" style="left: -5px">
-					<a class="clickable functionItem button bDefault" onclick='MainContent.settingsPage.open(MainContent.curProjectId)'>Share</a>
+					<div class="functionItem backButton clickable hide" onclick='MainContent.taskPage.tab.reopenCurTab()'>
+						<img src="images/icons/dropDownIconDark.png" class="functionItem icon">
+						<a class="functionItem button text">
+							Back
+						</a>
+					</div>
+					<a class="clickable functionItem button bDefault" onclick='MainContent.settingsPage.open(MainContent.curProjectId)'>
+						Share
+					</a>
 					<div class="functionItem memberList userText" onclick='MainContent.settingsPage.open(MainContent.curProjectId)'></div>
 				</div>
 			</div>

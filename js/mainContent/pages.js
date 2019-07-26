@@ -14,7 +14,7 @@ function _MainContent_taskPage(_parent) {
 	}
 
 	function onOpen(_projectId) {
-
+		MainContent.taskPage.tab.reopenCurTab();
 	}
 
 
@@ -24,7 +24,7 @@ function _MainContent_taskPage(_parent) {
 
 
 
-	this.tab 		= new _MainContent_taskPage_tab(this);
+	this.tab 			= new _MainContent_taskPage_tab(this);
 
 	this.taskHolder 	= new _MainContent_taskHolder();
 	this.renderSettings = new _MainContent_renderSettings();
@@ -112,6 +112,8 @@ function _MainContent_taskPage(_parent) {
 
 
 
+
+
 function _MainContent_taskPage_tab(_parent) {
 	let Parent = _parent;
 	let This = this;
@@ -140,13 +142,13 @@ function _MainContent_taskPage_tab(_parent) {
 
 	this.curTab = "Today";
 	
-	this.reopenCurPage = function() {
+	this.reopenCurTab = function() {
 		this.open(this.curTab, MainContent.curProjectId);
 	}
 
 
 	this.open = function(_tabName = "Today", _projectId = false) {
-		MainContent.taskPage.open(_projectId);
+		if (MainContent.curPageName != "task") MainContent.taskPage.open(_projectId);
 
 		$(HTML.mainContentHolder.parentNode).animate({opacity: 0}, 50);
 		_resetPage();
@@ -271,6 +273,7 @@ function _MainContent_createProjectPage(_parent) {
 	function onOpen(_projectId) {
 		HTML.titleInputField.value = null;
 		HTML.titleInputField.focus();
+		MainContent.header.setTitle("Create Project");
 	}
 
 

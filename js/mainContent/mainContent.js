@@ -69,6 +69,7 @@ function _MainContent() {
 
 
 	// Maincontent pages
+	this.curPage			= false;
 	this.createProjectPage	= new _MainContent_createProjectPage();
 	this.settingsPage 		= new _MainContent_settingsPage();
 	this.taskPage	 		= new _MainContent_taskPage();
@@ -82,8 +83,10 @@ function _MainContent() {
 		if (!page || !page.pageSettings) return console.warn("MainContent.openPage: " + _pageName + " doesn't exist.");
 
 		this.curProjectId 	= _projectId;
+		this.curPageName 	= page.pageSettings.pageName;
 
 		setTimeout(function () {
+			MainContent.header.showItemsByPage(page.pageSettings.pageName);
 			openMenuByIndex(page.pageSettings.pageIndex);
 			page.pageSettings.onOpen(_projectId);
 		}, 55);
