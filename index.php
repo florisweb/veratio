@@ -14,7 +14,6 @@
 
 
 	function setLink() {
-
 		$_link = (string)$_GET["link"];
 		if (!$_link || sizeof($_link) > 100) return "false";
 		$linkId = "LINKUSER_" . sha1($_link);

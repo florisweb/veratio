@@ -52,25 +52,42 @@
 			return true; 			
 		}
 
-
-		public function joinByInviteId($_inviteId, $_inviteUserObj) {
-			$userId = $this->getUserId($_inviteId);
-			$userName = $_inviteUserObj["name"]; //"not yet to be set";
-
-			$newUser = array(
-				"id" => sha1($userId),
-				"name" => $userName,
-				"permissions" => $_inviteUserObj["permissions"],
-				"type" => "member"
+		public function joinAsLink($_inviteId, $_inviteUserObj) {
+			$userName 	= "LINK: " . $_inviteUserObj["name"];
+			$linkId 	= $this->createLinkId($_inviteId);
+			$newUser 	= array(
+				"id" 			=> $linkId,
+				"name" 			=> $userName,
+				"permissions" 	=> $_inviteUserObj["permissions"],
+				"type" 			=> "link"
 			);
 
+			$this->joinByInviteId($_inviteId, $newUser);
+		}
+
+		public function joinAsMember($_inviteId, $_inviteUserObj) {
+			$userName 	= $_inviteUserObj["name"];
+			$userId 	= $this->getUserId($_inviteId);
+			$newUser 	= array(
+				"id" 			=> sha1($userId),
+				"name" 			=> $userName,
+				"permissions" 	=> $_inviteUserObj["permissions"],
+				"type" 			=> "member"
+			);
+
+			$this->joinByInviteId($_inviteId, $newUser);
+			
+		}
+
+
+		private function joinByInviteId($_inviteId, $_newUser) {
 			$success = $this->DTTemplate->remove($_inviteId);
 			if (!$success) return false;
 
-			$userAlreadyExists = $this->DTTemplate->get($newUser["id"]);
+			$userAlreadyExists = $this->DTTemplate->get($_newUser["id"]);
 			if ($userAlreadyExists) return true;
 			
-			$success = $this->DTTemplate->update($newUser);
+			$success = $this->DTTemplate->update($_newUser);
 			return $success;
 		}
 
@@ -129,6 +146,10 @@
 			}
 
 			return $userId;
+		}
+
+		private function createLinkId($_inviteLink) {
+			return "LINKUSER_" . sha1($_inviteLink);;
 		}
 	}
 	

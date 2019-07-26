@@ -1,11 +1,7 @@
 <?php
 	$root = realpath($_SERVER["DOCUMENT_ROOT"]);
-	try {
-		require_once "$root/git/todo/database/modules/app.php";
-	}
-	catch (Exception $e) {}
-
-
+	require_once "$root/git/todo/database/modules/app.php";
+	
 
 	$_inviteLink = (string)$_GET["link"];
 	$_joinType = (string)$_GET["type"];
@@ -24,9 +20,12 @@
 
 	if ($_joinType == "signedIn")
 	{
-		$status = $project->users->InviteComponent->joinByInviteId($_inviteLink, $inviteUserObj);		
-
+		$project->users->InviteComponent->joinAsMember($_inviteLink, $inviteUserObj);
 		header("Location: /git/todo");
-		die("Redirect user");
+	} else {
+		$project->users->InviteComponent->joinAsLink($_inviteLink, $inviteUserObj);
+		header("Location: /git/todo?link=" . $_inviteLink);
 	}
+	
+	die("Redirect user");
 ?>
