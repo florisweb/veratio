@@ -37,7 +37,7 @@
 			if (!$emailAdress) 	return "E_invalidEmail";
 
 			$user = array(
-				"id" 			=> $inviteId,
+				"id" 			=> sha1($inviteId),
 				"name"			=> $emailAdress,
 				"permissions" 	=> "", // will be autoset to the minimum
 				"type"			=> "invite"

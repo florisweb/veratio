@@ -12,6 +12,8 @@
 				margin: 0;
 				padding: 0;
 				background-image: url("../images/sideBarBackground/backgrounds/fullScreen.png");
+				height: 100vh;
+				overflow: hidden;
 			}
 
 			.inviteMenu {
@@ -71,8 +73,7 @@
 			<br>
 			<br>
 			<div class='text'>
-				<a id="inviterNameHolder" class='text highlight'></a>
-				has invited you to join 
+				You have been invited you to join 
 				<a id="projectTitleHolder_small" class='text highlight'></a>.
 			</div>
 			
@@ -87,8 +88,8 @@
 			</div>
 			<br>
 
-			<div class="button bBoxy bDefault text">Continue</div>
-			<div class="button bBoxy text" style="font-size: 12px">Join as guest</div>
+			<div class="button bBoxy bDefault text">Join as member</div>
+			<div class="button bBoxy text" style="font-size: 14px">Join as guest</div>
 		</div>
 
 		<div class="inviteMenu" id="menu_linkNotFound">
@@ -122,18 +123,18 @@
 				require_once "$root/git/todo/database/modules/app.php";
 
 				$_inviteLink = (string)$_GET["id"];
-				if (!$_inviteLink || strlen($_inviteLink) > 50) die("E_invalidLink");
-				$App = new _App($_inviteLink);
+				if (!$_inviteLink || strlen($_inviteLink) > 100) die("E_invalidLink");
+				$_inviteLinkEnc = sha1($_inviteLink);
+				$App = new _App($_inviteLinkEnc);
 				
 				$projects = $App->getAllProjects();
 				if (sizeof($projects) == 0) die("E_invalidLink");
 				$project = $projects[0];
 
-				$user = $project->users->get($_inviteLink);
+				$user = $project->users->get($_inviteLinkEnc);
 				if (!$user || $user["type"] != "invite") die("E_invalidLink");
 
 				$returnData = array(
-					"inviterName" 		=> urlencode($user["name"]),
 					"projectTitle" 		=> urlencode($project->title),
 					"inviteLink"		=> urlencode($_inviteLink),
 				);
@@ -151,7 +152,6 @@
 				let inviteData 		= JSON.parse(rawInviteData);
 
 				let projectTitle 	= decodeURIComponent((inviteData.projectTitle + '').replace(/\+/g, '%20'));
-				let inviterName 	= decodeURIComponent((inviteData.inviterName + '').replace(/\+/g, '%20'));
 				let inviteLink 		= decodeURIComponent((inviteData.inviteLink + '').replace(/\+/g, '%20'));
 
 				menu_linkFound.classList.remove("hide");
@@ -159,7 +159,6 @@
 
 				setTextToElement(projectTitleHolder, 		projectTitle);
 				setTextToElement(projectTitleHolder_small, 	projectTitle);
-				setTextToElement(inviterNameHolder, 		inviterName);
 
 				document.getElementsByClassName("button")[0].onclick = function() {
 					window.location.replace("join.php?type=signedIn&link=" + inviteLink);

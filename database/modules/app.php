@@ -20,6 +20,12 @@
 		
 		
 		public function __construct($_customUserId = false) {
+			if ($_customUserId)
+			{
+				$this->userId = (string)$_customUserId;
+				return;
+			}
+
 			$linkId = $GLOBALS["SESSION"]->get("veratio_userLink");
 			if ($linkId) 
 			{
@@ -31,12 +37,8 @@
 			$this->userId = (string)$GLOBALS["SESSION"]->get("userId");
 			if (!$this->userId) $this->userId = $_SESSION["userId"];
 
-			if ($this->userId || $_customUserId)
-			{
-				$this->userId = sha1($this->userId);
-
-				if ($_customUserId) $this->userId = (string)$_customUserId;
-			}
+			if (!$this->userId) return;
+			$this->userId = sha1($this->userId);
 		}
 
 

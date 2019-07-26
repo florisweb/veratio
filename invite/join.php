@@ -3,7 +3,7 @@
 	require_once "$root/git/todo/database/modules/app.php";
 	
 
-	$_inviteLink = (string)$_GET["link"];
+	$_inviteLink = sha1((string)$_GET["link"]);
 	$_joinType = (string)$_GET["type"];
 	if (!$_inviteLink || strlen($_inviteLink) > 50 || !$_joinType) die("E_invalidLink");
 	
