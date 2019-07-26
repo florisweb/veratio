@@ -101,7 +101,6 @@
 					</div>
 				</div>
 				
-				
 			</div>
 		</div>
 		
@@ -156,7 +155,7 @@
 
 				<div class="mainContentPage settingsPage hide">
 					<div class="inviteMemberHolder">
-						<input placeholder="Username or email" class="inputField iBoxy text" id="inviteMemberInput">
+						<input placeholder="E-mail-adress" class="inputField iBoxy text" id="inviteMemberInput">
 						<a class="button bDefault bBoxy" onclick="MainContent.settingsPage.inviteUser()">Invite</a>
 					</div>
 
@@ -245,8 +244,6 @@
 		<script type="text/javascript" src="js/server/server.js" asy nc></script>
 
 		<script type="text/javascript" src="js/app.js" asy nc></script> -->
-
-
 
 
 	</body>

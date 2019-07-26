@@ -148,17 +148,16 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 
 			if (!project) 	return false;
 			if (typeof task != "object") return task;
-
-			resetEditMode(true);	
+			resetEditMode(true);
 
 			project.todos.update(task);
 			
 			task.projectId = project.id;
-			if (!MainContent.curProjectId || MainContent.curProjectId == project.id || !curProjectId) Parent.todo.renderTodo(task, Parent);
+			if (!MainContent.curProjectId || MainContent.curProjectId == project.id) Parent.todo.renderTodo(task, Parent);
 			
 			this.close();
 			MainContent.searchOptionMenu.close();
-
+			
 			return true;
 		},
 
@@ -185,16 +184,6 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 		let project = Server.getProject(_task.projectId);
 		
 		menuHolder.children[0].children[0].value = _task.title;
-		
-		// let tag = project.tags.get(_task.tagId);
-		
-		
-		// for (memberId of _task.assignedTo)
-		// {
-		// 	let member = project.users.get(memberId);
-			
-		// }
-
 	}
 
 
@@ -205,6 +194,7 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 
 	function resetEditMode(_deleteTodo = false) {
 		if (edit_todoHTML) edit_todoHTML.classList.remove("hide");
+		console.log(edit_todoHTML, _deleteTodo);
 		if (edit_todoHTML && _deleteTodo) edit_todoHTML.parentNode.removeChild(edit_todoHTML);
 		edit_todoHTML = null;
 		edit_todo = "";

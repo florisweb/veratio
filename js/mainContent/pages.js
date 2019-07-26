@@ -144,6 +144,7 @@ function _MainContent_taskPage_tab(_parent) {
 	this.curTab = "Today";
 	
 	this.reopenCurTab = function() {
+		if (this.curTab == "project" && !MainContent.curProjectId) this.curTab = "Today";
 		this.open(this.curTab, MainContent.curProjectId);
 	}
 

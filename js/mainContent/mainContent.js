@@ -49,22 +49,27 @@ function _MainContent() {
 			"<br>",
 			{buttons: [
 				{button: "CANCEL", onclick: Popup.close},
-				{button: "RENAME", onclick: 
-					function () 
-					{
-						let newTitle = $("#RENAMEPROJECTValueHolder")[0].value;
-						if (!newTitle || newTitle.length < 3) return false;
-						project.rename(newTitle).then(function () {
-							Popup.close();
-							App.update();
-						});
-					}, 
+				{button: "RENAME", onclick: MainContent.renameProjectFromPopup,
 				important: true, color: COLOR.DANGEROUS}
 			]}
 		];
 
 		Popup.showNotification(builder);
 	}
+
+	this.renameProjectFromPopup = function() {
+		let project = Server.getProject(MainContent.curProjectId);
+		if (!project) return false;
+
+		let newTitle = $("#RENAMEPROJECTValueHolder")[0].value;
+		if (!newTitle || newTitle.length < 3) return false;
+
+		project.rename(newTitle).then(function () {
+			Popup.close();
+			App.update();
+		});
+	}
+
 
 
 
@@ -362,11 +367,13 @@ function _MainContent_searchOptionMenu() {
 
 			html.addEventListener("click", function() {
 				if (!inputField) return;
-				let inValue = inputField.value;
-				let partA = inValue.substr(0, _item.startAt);
-				let partB = inValue.substr(_item.startAt + _item.length, inValue.length - _item.startAt - _item.length);
-				let newStr = partA + _type + result.title + partB;
+				let inValue 	= inputField.value;
+				let partA 		= inValue.substr(0, _item.startAt);
+				let partB 		= inValue.substr(_item.startAt + _item.length, inValue.length - _item.startAt - _item.length);
+				let newStr 		= partA + _type + result.title + partB;
 				inputField.value = newStr;
+
+				if (_type == ".") curProject = _item.item;
 				
 				This.hide(true, 1);
 			});

@@ -22,15 +22,20 @@ function _KeyHandler() {
       event: function () {
         if (MainContent.searchOptionMenu.openState)                         return MainContent.searchOptionMenu.hide(true);
         if (MainContent.optionMenu.openState)                               return MainContent.optionMenu.close();
-        if (MainContent.taskPage.taskHolder.closeAllCreateMenus()) return true;
+        if (MainContent.taskPage.taskHolder.closeAllCreateMenus())          return true;
       },
       ignoreIfInInputField: false
     },
 
     {
       keys: ["Enter"], 
-      event: function () {
-        if (MainContent.searchOptionMenu.openState) return MainContent.searchOptionMenu.chooseFirstSearchItem();
+      event: function (_e) {
+        if (MainContent.searchOptionMenu.openState)         return MainContent.searchOptionMenu.chooseFirstSearchItem();
+        if (MainContent.curPageName == "createProject")     return MainContent.createProjectPage.createProject();
+        
+        if (_e.target == $("#RENAMEPROJECTValueHolder")[0]) return MainContent.renameProjectFromPopup();
+        
+        if (_e.target == inviteMemberInput)                 return MainContent.settingsPage.inviteUser();
         return MainContent.taskPage.taskHolder.createTask();
       },
       ignoreIfInInputField: false
@@ -96,8 +101,8 @@ function _KeyHandler() {
       _event.target.blur();
 
       let status = false;
-      try {status = curShortcut.event();}
-      catch (e) {};
+      try {status = curShortcut.event(_event);}
+      catch (e) {console.warn(e)};
       KEYS = {};
       return true;
     }

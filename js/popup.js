@@ -46,19 +46,6 @@ const Popup = new function () {
 	}
 
 
-
-	this.show = function(_title, _builder) {
-		_builder.splice(0, 0, "<div class='landscapeImage background'></div>");
-		_builder.splice(1, 0, "<img class='landscapeImage' src='images/sideBarBackground/?type=landscape'>");
-		_builder.splice(2, 0, "<div class='header text highlighted landscapeTitle'><div><br><br><br>");
-		_builder.splice(3, 0, "<br><br><br><br>");
-
-		let html = this.showNotification(_builder);
-		setTextToElement(html.children[2].children[0], _title);
-		return html;
-	}
-
-
 	this.showNotification = function(_builder) {
 		show();
 		HTML.notifcationBox.innerHTML = "";
