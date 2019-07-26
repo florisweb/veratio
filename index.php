@@ -14,13 +14,18 @@
 
 
 	function setLink() {
-		$GLOBALS["SESSION"]->clear("veratio_userLink");
 
 		$_link = (string)$_GET["link"];
 		if (!$_link || sizeof($_link) > 100) return "false";
+		$linkId = "LINKUSER_" . sha1($_link);
+		$GLOBALS["SESSION"]->set("veratio_userLink", $linkId);
+		
+		$GLOBALS["App"] = new _App();
+		$projects = $GLOBALS["App"]->getAllProjects();
+		if (sizeof($projects) > 0) return "true";
 
-		$GLOBALS["SESSION"]->set("veratio_userLink", "LINKUSER_" . sha1($_link));
-		return "true";
+		$GLOBALS["SESSION"]->clear("veratio_userLink");
+		return "false";
 	}
 
 

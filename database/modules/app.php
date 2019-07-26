@@ -29,10 +29,7 @@
 			}
 
 			$this->userId = (string)$GLOBALS["SESSION"]->get("userId");
-			if (!$this->userId)
-			{
-				$this->userId = $_SESSION["userId"];
-			}
+			if (!$this->userId) $this->userId = $_SESSION["userId"];
 
 			if ($this->userId || $_customUserId)
 			{
@@ -51,6 +48,7 @@
 			$projectError = $project->errorOnCreation;
 			if ($projectError === true)  return false;
 			if ($projectError !== false) return $projectError;
+			if ($this->isLinkUser && $project->users->get($this->userId)["type"] != "link") return "E_userIsNotOfTypeLink";
 
 			return $project;
 		}

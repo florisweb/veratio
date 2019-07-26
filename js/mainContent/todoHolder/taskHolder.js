@@ -250,7 +250,7 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 		let id = newId();
 		let newInnerHTML = '<div class="addButtonHolder smallTextHolder clickable" onclick="MainContent.taskHolder.openCreateMenu(this.parentNode)">' + 
 								'<a class="smallText smallTextIcon">+</a>' + 
-								'<div class="smallText">Create Todo</div>' + 
+								'<div class="smallText">Create Task</div>' + 
 							'</div>';
 		Parent.HTML.menuHolder.innerHTML = newInnerHTML;
 		let createMenuButton = Parent.HTML.menuHolder.children[0];
