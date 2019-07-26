@@ -11,6 +11,7 @@ function _MainContent_taskPage(_parent) {
 		pageName: "task",
 		pageIndex: 0,
 		onOpen: onOpen, 
+		customHeaderSetting: true
 	}
 
 	function onOpen(_projectId) {
@@ -162,6 +163,8 @@ function _MainContent_taskPage_tab(_parent) {
 
 			Parent.taskHolder.clear();
 			Parent.taskHolder.addOverdue();
+
+			MainContent.header.showItemsByPage("taskpage - " + _tabName)
 			
 			tab.onOpen(_projectId);
 		}, 55);

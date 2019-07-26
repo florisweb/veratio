@@ -86,7 +86,7 @@ function _MainContent() {
 		this.curPageName 	= page.pageSettings.pageName;
 
 		setTimeout(function () {
-			MainContent.header.showItemsByPage(page.pageSettings.pageName);
+			if (!page.pageSettings.customHeaderSetting) MainContent.header.showItemsByPage(page.pageSettings.pageName);
 			openMenuByIndex(page.pageSettings.pageIndex);
 			page.pageSettings.onOpen(_projectId);
 		}, 55);

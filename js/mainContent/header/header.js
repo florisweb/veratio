@@ -89,7 +89,11 @@ function _MainContent_header() {
 			case "createproject":
 				HTML.functionItems[1].classList.remove("hide");
 			break;
-			default: //taskPage
+			case "taskpage - today": //taskPage
+			break;
+			case "taskpage - inbox": //taskPage
+			break;
+			default: //taskPage - project
 				HTML.functionItems[0].classList.remove("hide");
 				HTML.functionItems[2].classList.remove("hide");
 				HTML.functionItems[3].classList.remove("hide");
