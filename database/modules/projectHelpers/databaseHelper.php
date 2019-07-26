@@ -3,20 +3,38 @@
 	require_once "$root/PHPV2/PacketManager.php";
 
 	$GLOBALS["PM"]->includePacket("DB", "1.0");
+	
+	global $DBHelper;
+	$DBHelper = new _databaseHelper;
+
 
 	class _databaseHelper {
 		private $DBName = "eelekweb_todo";
+
+		private $DB;
+
+		public function __construct() {
+			$this->DB 		= $GLOBALS["DB"]->connect($this->DBName);
+			if (!$this->DB) die("databaseHelper.php: DB doesn't exist");
+		}
+
+		public function getDBInstance($_projectId) {
+			return new _databaseHelper_DBInstance($this->DB, $_projectId);
+		}
+	}
+
+
+
+	class _databaseHelper_DBInstance {
 		private $DBTableName = "projectList";
 
 		private $DB;
 		private $projectId;
 
 
-		public function __construct($_projectId) {
-			$this->DB = $GLOBALS["DB"]->connect($this->DBName);
-			if (!$this->DB) die("databaseHelper.php: DB doesn't exist");
-
-			$this->projectId = (string)$_projectId;
+		public function __construct($_DB, $_projectId) {
+			$this->DB 			= $_DB;
+			$this->projectId 	= (string)$_projectId;
 		}
 
 

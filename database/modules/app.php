@@ -58,7 +58,7 @@
 		public function getAllProjects() {
 			if (!$this->userId) return "E_nonAuth";
 
-			$DBHelper = new _databaseHelper(null);
+			$DBHelper = $GLOBALS["DBHelper"]->getDBInstance(null);
 			$projectIds = $DBHelper->getAllProjectIds();
 			$projects = array();
 			
@@ -76,7 +76,7 @@
 		public function createProject($_title) {
 			if (!$this->userId) return "E_nonAuth";
 
-			$DBHelper 			= new _databaseHelper(null);
+			$DBHelper 			= $GLOBALS["DBHelper"]->getDBInstance(null);
 			$projectId 			= $DBHelper->createProject($this->userId);
 			if (!$projectId) 	return false;
 			

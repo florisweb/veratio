@@ -27,7 +27,7 @@
 			$this->todos = new _project_todoComponent($this, $this->id);
 			$this->tags  = new _project_tagComponent($this, $this->id);
 
-			$this->DB 	 = new _databaseHelper($this->id);
+			$this->DB 	 = $GLOBALS["DBHelper"]->getDBInstance($this->id);
 
 			$projectData = $this->DB->getProjectData();
 			if (!$projectData) return $this->errorOnCreation = "E_projectNotFound";

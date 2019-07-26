@@ -12,7 +12,7 @@
 			$this->dataType 		= (string)array_keys($_dataTypeTemplate)[0];
 			$this->dataTypeTemplate = (array)$_dataTypeTemplate[$this->dataType];
 			
-			$this->DBHelper 		= new _databaseHelper($_projectId);
+			$this->DBHelper 		= $GLOBALS["DBHelper"]->getDBInstance($_projectId);
 		}
 
 		public function getAllData() {
