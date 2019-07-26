@@ -11,7 +11,7 @@
 			body {
 				margin: 0;
 				padding: 0;
-				background-image: url("../images/sideBarBackground/backgrounds/fullScreen.png");
+				background-image: url("../images/sideBarBackground/backgrounds/fullScreen.jpg");
 				height: 100vh;
 				overflow: hidden;
 			}
@@ -143,9 +143,6 @@
 			?>';
 	
 			if (rawInviteData != "E_invalidLink") setup();
-
-
-
 
 
 			function setup() {
