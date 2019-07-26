@@ -53,7 +53,7 @@
 		}
 
 		public function joinAsLink($_inviteId, $_inviteUserObj) {
-			$userName 	= "LINK: " . $_inviteUserObj["name"];
+			$userName 	= $_inviteUserObj["name"];
 			$linkId 	= $this->createLinkId($_inviteId);
 			$newUser 	= array(
 				"id" 			=> $linkId,
