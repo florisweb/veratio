@@ -30,23 +30,23 @@
 		}
 
 		public function inviteByEmail($_emailAdress) {
-			$inviteId = sha1(uniqid(mt_rand(), true));
-			$emailAdress = $this->filterEmailAdress($_emailAdress);
-			$emailExists = $this->checkIfEmailAdressAlreadyExists($emailAdress);
-			if ($emailExists) 	return "E_emailAlreadyInvited";
+			$inviteId 			= sha1(uniqid(mt_rand(), true));
+			$emailAdress 		= $this->filterEmailAdress($_emailAdress);
 			if (!$emailAdress) 	return "E_invalidEmail";
+			$emailExists 		= $this->checkIfEmailAdressAlreadyExists($emailAdress);
+			if ($emailExists) 	return "E_emailAlreadyInvited";
 
 			$user = array(
 				"id" 			=> sha1($inviteId),
 				"name"			=> $emailAdress,
-				"permissions" 	=> "", // will be autoset to the minimum
+				"permissions" 	=> '["0", "00", "00", 0]',
 				"type"			=> "invite"
 			);
 
 			$messageSend = $this->sendMail($emailAdress, $inviteId);
 			if (!$messageSend) return false;
 
-			$newUser = $this->Parent->update($user);
+			$newUser = $this->DTTemplate->update($user);
 			if (is_string($newUser)) return $newUser;
 
 			return true; 			

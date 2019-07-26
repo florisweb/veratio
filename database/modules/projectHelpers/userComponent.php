@@ -69,7 +69,8 @@
 			if (!$oldUser && $ownPermissions_users[0] < 1) 	return "E_actionNotAllowed_notAllowedToInvite";
 			if ($ownPermissions_users[1] < 1)				return "E_actionNotAllowed_notAllowedToChangeUserPermissions";
 			$_newUser["isOwner"] 	= $oldUser && $oldUser["isOwner"];
-			$_newUser["type"] 		= $this->filterUserType($_newUser["type"]);
+			$_newUser["type"] = "testType";
+			if ($oldUser) $_newUser["type"] = $oldUser["type"];
 
 
 			for ($pt = 0; $pt < sizeof($ownPermissions); $pt++)
@@ -90,23 +91,12 @@
 				}
 			}
 
-
-			$_newUser["type"] 			= $this->filterUserType($_newUser["type"]);
 			$_newUser["permissions"] 	= json_encode($newUserPermissions);
 			if ($_newUser["isOwner"]) $_newUser["permissions"] = json_encode($GLOBALS["App"]->ownerPermissions);
 
 			$successfullyUpdated = $this->DTTemplate->update($_newUser);
 			if (!$successfullyUpdated) return "E_unexpectedError";
 			return $this->get($_newUser["id"]);
-		}
-
-		private function filterUserType($_type) {
-			switch ((string)$_type)
-			{
-				case "member":	return "member"; 	break;
-				case "link":	return "link"; 		break;
-				default: 		return "invite"; 	break;
-			}
 		}
 
 
