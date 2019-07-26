@@ -297,7 +297,7 @@
 			height: 80px;
 		}
 			.createProjectHolder .inputField {
-				width: calc(100% - 90px);
+				width: calc(100% - 50px);
 				max-width: 400px;
 			}
 

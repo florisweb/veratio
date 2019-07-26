@@ -1,3 +1,47 @@
+<?php
+	$root = realpath($_SERVER["DOCUMENT_ROOT"]);	
+	require_once "$root/git/todo/database/modules/app.php";
+
+
+
+	$isLinkUser = setLink();
+	if ($isLinkUser == "false" && userNeedsRedirect())
+	{
+		header("Location: /user/login.php?redirect=/git/todo");
+		die("Redirect user");
+	}
+
+
+
+	function setLink() {
+		$GLOBALS["SESSION"]->clear("veratio_userLink");
+
+		$_link = (string)$_GET["link"];
+		if (!$_link || sizeof($_link) > 100) return "false";
+
+		$GLOBALS["SESSION"]->set("veratio_userLink", "LINKUSER_" . sha1($_link));
+		return "true";
+	}
+
+
+	function userNeedsRedirect() {
+		$userId = (string)$GLOBALS["SESSION"]->get("userId");
+		if (!$userId)
+		{
+			$userId = $_SESSION["userId"];
+		}
+		return !$userId;
+	}
+	
+
+
+	
+	echo "<script>const IsLinkUser = " . $isLinkUser . "</script>";
+?>
+
+
+
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -5,19 +49,17 @@
 		<meta name="theme-color" content="#636ad5">
 		<link rel="manifest" href="manifest.json">
 
-		<link rel="stylesheet" type="text/css" href="css/component.css?a=35">
+		<link rel="stylesheet" type="text/css" href="css/component.css?a=37">
 		<link rel="stylesheet" type="text/css" href="css/popup.css?a=30">
 		<link rel="stylesheet" type="text/css" href="css/main.css?a=22">
 		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=24">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=40">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=42">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=34">
 
 		<script type="text/javascript" src="/JS/jQuery.js" asy nc></script>
 		<script type="text/javascript" src="/JS/request2.js" asy nc></script>
 		<title>Veratio - Florisweb.tk</title>
 	</head>	
-	
-
 	<body>
 
 		

@@ -3,7 +3,6 @@
 	require_once "$root/PHPV2/PacketManager.php";
 	$GLOBALS["PM"]->includePacket("SESSION", "1.0");
 
-	
 	require_once "$root/git/todo/database/modules/project.php";
 
 	// backwards compatability
@@ -13,13 +12,22 @@
 
 
 	class _App {
-		public $userId;
-		
+		public $userId 		= false;
+		public $isLinkUser 	= false;
+
 		// App settings
 		public $ownerPermissions = ["2", "22", "21", "2"]; // HAS TO HAVE SINGLE QUOTES AROUND IT OTHERWISE THE ESCAPED TEXT GETS LOST
 		
 		
 		public function __construct($_customUserId = false) {
+			$linkId = $GLOBALS["SESSION"]->get("veratio_userLink");
+			if ($linkId) 
+			{
+				$this->userId 		= (string)$linkId;
+				$this->isLinkUser 	= true;
+				return;
+			}
+
 			$this->userId = (string)$GLOBALS["SESSION"]->get("userId");
 			if (!$this->userId)
 			{
@@ -31,8 +39,6 @@
 				$this->userId = sha1($this->userId);
 
 				if ($_customUserId) $this->userId = (string)$_customUserId;
-			} else {
-				$this->userId = false;
 			}
 		}
 
