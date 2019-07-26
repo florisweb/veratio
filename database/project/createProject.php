@@ -12,10 +12,11 @@
 	$project = $App->getProject($projectId);
 	if (!$project) die("E_projectNotCreated");
 
-	unset($project->errorOnCreation);
-	unset($project->users);
-	unset($project->todos);
-	unset($project->tags);
+
+	$projectReturnObj = array(
+		"title" => urlencode($project->title),
+		"id" 	=> $project->id,
+	);
 	
-	echo json_encode($project);
+	echo json_encode($projectReturnObj);
 ?>

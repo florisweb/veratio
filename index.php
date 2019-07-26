@@ -5,6 +5,7 @@
 
 
 	$isLinkUser = setLink();
+	if ($isLinkUser == "false") $GLOBALS["SESSION"]->clear("veratio_userLink");
 	if ($isLinkUser == "false" && userNeedsRedirect())
 	{
 		header("Location: /user/login.php?redirect=/git/todo");
@@ -16,14 +17,13 @@
 	function setLink() {
 		$_link = (string)$_GET["link"];
 		if (!$_link || sizeof($_link) > 100) return "false";
+
 		$linkId = "LINKUSER_" . sha1($_link);
 		$GLOBALS["SESSION"]->set("veratio_userLink", $linkId);
 		
 		$GLOBALS["App"] = new _App();
 		$projects = $GLOBALS["App"]->getAllProjects();
 		if (sizeof($projects) > 0) return "true";
-
-		$GLOBALS["SESSION"]->clear("veratio_userLink");
 		return "false";
 	}
 
@@ -37,8 +37,6 @@
 		return !$userId;
 	}
 	
-
-
 	
 	echo "<script>const IsLinkUser = " . $isLinkUser . "</script>";
 ?>
