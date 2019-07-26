@@ -10,5 +10,5 @@
 	if (!$project) 				die("E_projectNotFound");
 	if (is_string($project)) 	die($project);
 
-	echo $project->changeTitle($_newTitle);
+	echo $project->rename($_newTitle);
 ?>

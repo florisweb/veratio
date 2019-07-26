@@ -54,7 +54,7 @@ function _MainContent() {
 					{
 						let newTitle = $("#RENAMEPROJECTValueHolder")[0].value;
 						if (!newTitle || newTitle.length < 3) return false;
-						project.changeTitle(newTitle).then(function () {
+						project.rename(newTitle).then(function () {
 							Popup.close();
 							App.update();
 						});

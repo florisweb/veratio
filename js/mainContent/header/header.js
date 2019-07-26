@@ -52,7 +52,7 @@ function _MainContent_header() {
 			
 			Menu.enableAllOptions();
 			if (!project.users.Self.projectActionAllowed("remove")) 		Menu.options[2].disable();
-			if (!project.users.Self.projectActionAllowed("changeTitle"))	Menu.options[3].disable();
+			if (!project.users.Self.projectActionAllowed("rename"))	Menu.options[3].disable();
 
 			return Menu.open(HTML.optionIcon, {top: 45});
 		}

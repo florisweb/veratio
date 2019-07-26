@@ -41,7 +41,7 @@
 		}
 
 
-		public function changeTitle($_newTitle = "Titleless") {
+		public function rename($_newTitle = "Titleless") {
 			$user = $this->users->get($GLOBALS["App"]->userId);
 			if (!$user) return "E_userNotInProject";
 

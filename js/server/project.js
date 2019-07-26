@@ -22,10 +22,10 @@ function _Server_project(_projectId, _projectTitle) {
   }
 
 
-  this.changeTitle = function(_newTitle) {
+  this.rename = function(_newTitle) {
     if (!_newTitle) return false;
     return new Promise(function (resolve, error) {
-      This.DB.changeTitle(_newTitle).then(function () {
+      This.DB.rename(_newTitle).then(function () {
         this.title = _newTitle;
         resolve();
       });
@@ -55,7 +55,7 @@ function _Server_project(_projectId, _projectTitle) {
 
 
   this.DB = new function() {
-    this.changeTitle = function(_newTitle) {
+    this.rename = function(_newTitle) {
       return new Promise(function (resolve, error) {
         REQUEST.send("database/project/changeProjectTitle.php", "projectId=" + This.id + "&newTitle=" + Encoder.encodeString(_newTitle)).then(
           function (_response) {

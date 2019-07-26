@@ -88,7 +88,7 @@
 			$user["permissions"] = json_encode($this->ownerPermissions);
 			$project->users->update($user);
 
-			$titleChanged 		= $project->changeTitle($_title);
+			$titleChanged 		= $project->rename($_title);
 			if (!$titleChanged) return false;
 
 			return $projectId;
