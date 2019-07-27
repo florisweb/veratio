@@ -11,42 +11,122 @@
 			body {
 				margin: 0;
 				padding: 0;
-				background-image: url("../images/sideBarBackground/backgrounds/fullScreen.jpg");
 				height: 100vh;
 				overflow: hidden;
+				background: linear-gradient(to bottom right, rgb(221, 157, 255), rgb(154, 191, 240));
 			}
+
+			#backgroundImage {
+				position: fixed;
+				left: 0;
+				top: 0;
+				width: 100vw;
+				height: auto;
+
+
+				animation: backgroundImage_popIn 1s 1;
+			    animation-delay: 0s;
+			    animation-fill-mode: forwards;
+
+			    animation: backgroundImage_passive 5s 10000;
+			}
+
+			@media (max-aspect-ratio: 7/4) {
+			  #backgroundImage {
+				width: auto;
+				height: 100vh;
+			  }
+			}
+
+			
+			@keyframes backgroundImage_popIn {
+			    0% {
+			    	opacity: 0;
+			    }
+			   
+			    100% {
+			    	opacity: 1;
+			    	transform: scale(1.1);
+			    }
+			}
+			@keyframes backgroundImage_passive {
+			    0% {
+			    	opacity: .5;
+			    }
+			    
+			    50% {
+			    	opacity: 1;
+			    	transform: scale(1.05);
+			    }
+			   
+			    100% {
+			    	opacity: .5;
+			    }
+			}
+
+
+
+
+
+
+
+			#menuHolder {
+				position: relative;
+				margin: auto;
+				width: calc(90vw);
+				max-width: 480px;
+				height: 100vh;
+			}
+
+
 
 			.inviteMenu {
-				position: relative;
-				top: calc(50vh - 200px);
-				margin: auto;
+				position: absolute;
+				top: calc(50vh - 150px);
 
-
-				width: calc(90vw - 40px * 2);
-				max-width: 400px;
+				width: calc(100% - 40px * 2);
 
 				padding: 40px;
-				padding-bottom: 20px;
+								
 				background: #fff;
-
 				border-radius: 3px;
 				box-shadow: 5px 5px 15px 15px rgba(0, 0, 0, 0.01);
+				
 				transition: top 0.3s;
-			}
 
+				animation: inviteMenu_popIn .7s 1;
+			    animation-delay: .1s;
+
+			    animation-fill-mode: forwards;
+			    transform: scale(0);
+			    opacity: 0;
+			   	margin-top: 20vh;
+			}
+			
 			.inviteMenu.hide {
 				top: 100vh;
 			}
 
+			@keyframes inviteMenu_popIn {
+			    0% {
+			    	transform: scale(0);
+			    	opacity: 0;
+			    	margin-top: 20vh;
+			    }
 
-			#menu_linkNotFound.inviteMenu {
-				padding-bottom: 40px;
-				top: calc(-50vh + 200px);
-			}
-			#menu_linkNotFound.inviteMenu.hide {
-				top: 100vh;
+			    100% {
+			    	margin-top: 0;
+			    	opacity: 1;
+			    	transform: scale(1);
+			    }
 			}
 
+
+
+
+
+
+			
 			.text {
 				line-height: 25px;
 			}
@@ -61,48 +141,51 @@
 			.button {
 				text-align: center;
 			}
-		</style>
-		
-		<title>Veratio - Florisweb.tk</title>
+
+		</style>		
+		<title>Join Veratio - Florisweb.tk</title>
 	</head>	
 
 	<body>
 
-		<div class="inviteMenu hide" id="menu_linkFound">
-			<div id="projectTitleHolder" class='text tHeaderLarge'></div>
-			<br>
-			<br>
-			<div class='text'>
-				You have been invited you to join 
-				<a id="projectTitleHolder_small" class='text highlight'></a>.
-			</div>
-			
-			<br>
-			<br>
-			<br>
-			<div class='text' style="opacity: 0.7">
-				By using 
-				<a class='text highlight'>veratio</a>
-				you agree to our  
-				<a class='text highlight'>terms of service</a>.
-			</div>
-			<br>
+		<img src="../images/sideBarBackground/backgrounds/fullScreen.jpg" id="backgroundImage">
 
-			<div class="button bBoxy bDefault text">Join as member</div>
-			<div class="button bBoxy text" style="font-size: 14px">Join as guest</div>
+		<div id="menuHolder">
+			<div class="inviteMenu hide" id="menu_linkFound">
+				<div id="projectTitleHolder" class='text tHeaderLarge'></div>
+				<br>
+				<br>
+				<div class='text'>
+					You have been invited to join 
+					<a id="projectTitleHolder_small" class='text highlight'></a>.
+				</div>
+				
+				<br>
+				<br>
+				<br>
+				<div class='text' style="opacity: 0.7">
+					By using 
+					<a class='text highlight'>veratio</a>
+					you agree to our  
+					<a class='text highlight'>terms of service</a>.
+				</div>
+				<br>
+
+				<div class="button bBoxy bDefault text">Join as member</div>
+				<div class="button bBoxy text" style="font-size: 14px">Join as guest</div>
+			</div>
+
+			<div class="inviteMenu hi de" id="menu_linkNotFound">
+				<div class='text tHeaderLarge'>Oops, something went wrong</div>
+				<br>
+				<br>
+				<div class='text highlight'>We couldn't find your invitation.</div>
+				<div class='text'>
+					Please ask your projects' owner to resend your invite.
+				</div>
+			</div>
+
 		</div>
-
-		<div class="inviteMenu" id="menu_linkNotFound">
-			<div class='text tHeaderLarge'>Oops, something went wrong</div>
-			<br>
-			<br>
-			<div class='text highlight'>We couldn't find your invitation.</div>
-			<div class='text'>
-				Please ask your projects' owner to resend your invite.
-			</div>
-		</div>
-
-
 
 
 
