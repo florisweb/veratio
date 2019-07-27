@@ -111,7 +111,6 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 
 		openEdit: function(_todoHTML, _todoId) {
 			if (!this.enabled) return;
-			console.log(arguments);
 
 			let task = Server.todos.get(_todoId);
 			if (!task || !_todoHTML) return false;
@@ -273,14 +272,14 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 		task.groupValue = Parent.date.copy().toString();
 		if (!task.groupValue) return "E_InvalidDate";
 
-		task.id = newId();
 
 		return task;
 	}
 
 	function _inputValueToData(_value) {
 		let task = {
-			assignedTo: []
+			assignedTo: [],
+			id: newId()
 		};
 
 		if (edit_todo) task = edit_todo;

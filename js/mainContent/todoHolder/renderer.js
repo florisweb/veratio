@@ -14,10 +14,10 @@ function _TodoRenderer() {
 			taskHolderId: 	_task.taskHolderId,
 			finished: 		_task.finished,
 			
-			assignedToMe: inArray(_task.assignedTo, project.users.Self.id),
-			isMyTask: _task.creatorId == project.users.Self.id,
+			assignedToMe: 	inArray(_task.assignedTo, project.users.Self.id),
+			isMyTask: 		_task.creatorId == project.users.Self.id,
 
-			memberText: _createMemberTextByUserIdList(_task.assignedTo, project),
+			memberText: 	_createMemberTextByUserIdList(_task.assignedTo, project),
 		}
 
 		if (_displayProjectTitle !== false) todoRenderData.projectTitle = project.title;
