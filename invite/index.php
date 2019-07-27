@@ -102,10 +102,7 @@
 			    opacity: 0;
 			   	margin-top: 20vh;
 			}
-			
-			.inviteMenu.hide {
-				top: 100vh;
-			}
+		
 
 			@keyframes inviteMenu_popIn {
 			    0% {
@@ -120,10 +117,51 @@
 			    	transform: scale(1);
 			    }
 			}
+			
+
+			#menu_linkFound {
+				top: calc(50vh - 200px);
+				padding-bottom: 20px;
+			}
+
+			body.userSignedIn #menu_linkFound {
+				padding-bottom: 30px;
+			}
 
 
 
 
+			#menu_linkFound .joinAsMemberButton::after {
+				content: "Join as member";
+			}
+
+			body.userSignedIn #menu_linkFound .joinAsMemberButton::after {
+				content: "Continue";
+			}
+
+
+
+			#menu_linkFound .joinAsGuestButton::after {
+				content: "Join as guest";
+			}
+
+			#menu_linkFound .joinAsGuestButton {
+				font-size: 14px; 
+			}
+
+			body.userSignedIn #menu_linkFound .joinAsGuestButton {
+				display: none;
+			}
+
+
+
+
+
+
+
+			.inviteMenu.hide {
+				top: 100vh !important;
+			}
 
 
 			
@@ -145,13 +183,11 @@
 		</style>		
 		<title>Join Veratio - Florisweb.tk</title>
 	</head>	
-
 	<body>
-
 		<img src="../images/sideBarBackground/backgrounds/fullScreen.jpg" id="backgroundImage">
 
 		<div id="menuHolder">
-			<div class="inviteMenu hide" id="menu_linkFound">
+			<div class="inviteMenu hi de" id="menu_linkFound">
 				<div id="projectTitleHolder" class='text tHeaderLarge'></div>
 				<br>
 				<br>
@@ -171,11 +207,11 @@
 				</div>
 				<br>
 
-				<div class="button bBoxy bDefault text">Join as member</div>
-				<div class="button bBoxy text" style="font-size: 14px">Join as guest</div>
+				<div class="button bBoxy bDefault text joinAsMemberButton"></div>
+				<div class="button bBoxy text joinAsGuestButton"></div>
 			</div>
 
-			<div class="inviteMenu hi de" id="menu_linkNotFound">
+			<div class="inviteMenu hide" id="menu_linkNotFound">
 				<div class='text tHeaderLarge'>Oops, something went wrong</div>
 				<br>
 				<br>
@@ -205,6 +241,8 @@
 				$root = realpath($_SERVER["DOCUMENT_ROOT"]);
 				require_once "$root/git/todo/database/modules/app.php";
 
+				$userNeedsSignIn = !$GLOBALS["App"]->userId;
+
 				$_inviteLink = (string)$_GET["id"];
 				if (!$_inviteLink || strlen($_inviteLink) > 100) die("E_invalidLink");
 				$_inviteLinkEnc = sha1($_inviteLink);
@@ -220,12 +258,14 @@
 				$returnData = array(
 					"projectTitle" 		=> urlencode($project->title),
 					"inviteLink"		=> urlencode($_inviteLink),
+					"userSignedIn"		=> !$userNeedsSignIn
 				);
 
 				echo json_encode($returnData);
 			?>';
 	
 			if (rawInviteData != "E_invalidLink") setup();
+
 
 
 			function setup() {
@@ -240,10 +280,15 @@
 				setTextToElement(projectTitleHolder, 		projectTitle);
 				setTextToElement(projectTitleHolder_small, 	projectTitle);
 
-				document.getElementsByClassName("button")[0].onclick = function() {
+				let memberButton = document.getElementsByClassName("button")[0];
+				memberButton.onclick = function() {
 					window.location.replace("join.php?type=signedIn&link=" + inviteLink);
 				}
-				document.getElementsByClassName("button")[1].onclick = function() {
+
+				if (inviteData.userSignedIn) return document.body.classList.add("userSignedIn");
+
+				let guestButton = document.getElementsByClassName("button")[1];
+				guestButton.onclick = function() {
 					window.location.replace("join.php?type=guest&link=" + inviteLink);
 				}
 			}
