@@ -44,13 +44,13 @@
 
 
 
-		public function update($_newTodo) {
+		public function update($_newTag) {
 			//do some permission stuff
 
 
-			$_newTodo["creatorId"] = $GLOBALS["App"]->userId;
+			$_newTag["creatorId"] = $GLOBALS["App"]->userId;
 
-			return $this->DTTemplate->update($_newTodo);
+			return $this->DTTemplate->update($_newTag);
 		}
 
 

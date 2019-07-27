@@ -58,9 +58,8 @@ function _Server_project_dataTypeTemplate(_projectId, _dataTypeTemplate) {
   this.DB = new function() {
     this.update = function(_newItem) {
       let parameters = "projectId=" + projectId + "&dataType=" + This.DataType + "&method=update&parameter=" + Encoder.objToString(_newItem);
-       REQUEST.send("database/project/simpleOperation.php", parameters).then(
+      return REQUEST.send("database/project/simpleOperation.php", parameters).then(
         function (_result) {
-          console.warn("UPDATE: ", _newItem, _result);
           if (typeof _result != "object") return;
           This.update(_result, false);
         }

@@ -37,6 +37,8 @@ function _Server_project_todoComponent(_parent) {
       Server.getProject(foundTask.projectId).todos.remove(foundTask.id);
     }
 
+    if (!_newItem.creatorId) _newItem.creatorId = Parent.users.Self.id;
+
     return DTTemplate.update(_newItem, _updateServer);
   }
 

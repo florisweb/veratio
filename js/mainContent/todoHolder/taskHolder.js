@@ -108,6 +108,7 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 
 		openEdit: function(_todoHTML, _todoId) {
 			if (!this.enabled) return;
+			console.log(arguments);
 
 			let task = Server.todos.get(_todoId);
 			if (!task || !_todoHTML) return false;
@@ -143,7 +144,7 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 		createTask: function() {
 			if (!this.enabled) return;
 
-			let task 		= scrapeTodoData();
+			let task 		= scrapeTaskData();
 			let project 	= Server.getProject(task.projectId);
 
 			if (!project) 	return false;
@@ -194,7 +195,6 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 
 	function resetEditMode(_deleteTodo = false) {
 		if (edit_todoHTML) edit_todoHTML.classList.remove("hide");
-		console.log(edit_todoHTML, _deleteTodo);
 		if (edit_todoHTML && _deleteTodo) edit_todoHTML.parentNode.removeChild(edit_todoHTML);
 		edit_todoHTML = null;
 		edit_todo = "";
@@ -237,7 +237,6 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 
 
 	function addButtonHtml(_animate = true) {
-		let id = newId();
 		let newInnerHTML = '<div class="addButtonHolder smallTextHolder clickable" onclick="MainContent.taskHolder.openCreateMenu(this.parentNode)">' + 
 								'<a class="smallText smallTextIcon">+</a>' + 
 								'<div class="smallText">Create Task</div>' + 
@@ -249,19 +248,17 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 
 		if (!_animate) return false;
 		createMenuButton.classList.add("hide");
-		createMenuButton.setAttribute("id", "addButtonHolder" + id);
 
 		
 		setTimeout(function () {
-			if (!$('#addButtonHolder' + id)[0]) return;
-			$('#addButtonHolder' + id)[0].classList.remove('hide');
+			createMenuButton.classList.remove("hide");
 		}, 1);
 	}
 
 
 
 
-	function scrapeTodoData() {
+	function scrapeTaskData() {
 		let createMenuItems = Parent.HTML.menuHolder.children[0].children;
 		if (!createMenuItems[0]) return false;
 
@@ -272,6 +269,8 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 		task.groupType = "date";
 		task.groupValue = Parent.date.copy().toString();
 		if (!task.groupValue) return "E_InvalidDate";
+
+		task.id = newId();
 
 		return task;
 	}
@@ -370,7 +369,6 @@ function _MainContent_todoHolder_taskHolder_todo() {
 	
 
 	this.taskList = [];
-
 
 	this.renderTodoList = function(_todoList, _location) {
 		for (let i = 0; i < _todoList.length; i++)

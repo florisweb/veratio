@@ -134,9 +134,9 @@
 					$data[$i] = $newData;
 					return $this->_writeData(json_encode($data));
 				}
-
 				return false;
 			}
+
 			public function _createDataItem($newData) {
 				$data = $this->getAllData();			
 				array_push($data, $newData);

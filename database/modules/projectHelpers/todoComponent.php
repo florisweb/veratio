@@ -113,14 +113,14 @@
 				$_newTask["creatorId"]	= $userId;
 			}
 
-
 			if ($_newTask["groupType"] != "date") return $this->DTTemplate->update($_newTask);
 			
 			$date = $this->_filterDate($_newTask["groupValue"]);
 			if (!$date) return false;
 			$_newTask["groupValue"] = $date;
 
-			return $this->DTTemplate->update($_newTask);
+			$this->DTTemplate->update($_newTask);
+			return $this->get($_newTask["id"]);
 		}
 
 

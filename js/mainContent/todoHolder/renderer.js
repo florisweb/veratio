@@ -3,21 +3,21 @@ function _TodoRenderer() {
 	let This = this;
 
 
-	this.renderToDo = function(_todo, _taskHolder, _displayProjectTitle) {
-		if (!_todo) return false;
-		let project = Server.getProject(_todo.projectId);
-		let tag = project.tags.get(_todo.tagId);
+	this.renderToDo = function(_task, _taskHolder, _displayProjectTitle) {
+		if (!_task) return false;
+		let project = Server.getProject(_task.projectId);
+		let tag 	= project.tags.get(_task.tagId);
 
 		let todoRenderData = {
-			id: _todo.id,
-			title: _todo.title,
-			taskHolderId: _todo.taskHolderId,
-			finished: _todo.finished,
+			id: 			_task.id,
+			title: 			_task.title,
+			taskHolderId: 	_task.taskHolderId,
+			finished: 		_task.finished,
 			
-			assignedToMe: inArray(_todo.assignedTo, project.users.Self.id),
-			isMyTask: _todo.creatorId == project.users.Self.id,
+			assignedToMe: inArray(_task.assignedTo, project.users.Self.id),
+			isMyTask: _task.creatorId == project.users.Self.id,
 
-			memberText: _createMemberTextByUserIdList(_todo.assignedTo, project),
+			memberText: _createMemberTextByUserIdList(_task.assignedTo, project),
 		}
 
 		if (_displayProjectTitle !== false) todoRenderData.projectTitle = project.title;
@@ -27,11 +27,11 @@ function _TodoRenderer() {
 
 		
 
-		_setDOMData(html, _todo, _taskHolder);
+		setDOMData(html, _task, _taskHolder);
 		return html;
 	}
 
-		function _setDOMData(_element, _task, _taskHolder) {
+		function setDOMData(_element, _task, _taskHolder) {
 			let data = new taskConstructor(_element, _task, _taskHolder);
 
 			DOMData.set(_element, data);
@@ -153,9 +153,10 @@ function _TodoRenderer() {
 
 
 function taskConstructor(_element, _task, _taskHolder) {
+	console.log("constructor:", arguments);
 	this.taskId 		= _task.id;
 	this.projectId 		= _task.projectId;
-	this.html 		= _element;
+	this.html 			= _element;
 
 	this.taskHolder = _taskHolder;
 
