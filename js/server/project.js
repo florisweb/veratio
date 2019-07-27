@@ -50,7 +50,7 @@ function _Server_project(_projectId, _projectTitle) {
   this.sync = function() {
     this.users.sync();
     this.todos.sync();
-    this.tags.sync();
+    // this.tags.sync();
   }
 
 

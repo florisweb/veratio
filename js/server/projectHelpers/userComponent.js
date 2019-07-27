@@ -18,8 +18,6 @@ function _Server_project_userComponent(_parent) {
     }
   );
 
-  this.DTTemplate = DTTemplate;
-
   this.Self     = false;
 
   this.get      = function(_id)       {return DTTemplate.get(_id);}

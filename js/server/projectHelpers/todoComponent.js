@@ -93,7 +93,7 @@ function _Server_project_todoComponent(_parent) {
         for (let i = 0; i < _results.length; i++) 
         {
           _results[i].projectId = Parent.id;
-          This.DTTemplate.update(_results[i], false);
+          DTTemplate.update(_results[i], false);
         }
       }
     ).catch(function () {});

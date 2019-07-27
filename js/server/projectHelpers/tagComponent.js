@@ -23,12 +23,7 @@ function _Server_project_tagComponent(_parent) {
   this.remove = function(_id)           {return DTTemplate.remove(_id);}
 
 
-
-
   this.sync = function() {
     DTTemplate.DB.getAll();
   }
 }
-
-
-
