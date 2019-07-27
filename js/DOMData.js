@@ -4,6 +4,7 @@
 const DOMData = new function () {
 	let Data = [];
 
+
 	return {
 		get: function(_element) {
 			for (e of Data) 

@@ -126,9 +126,7 @@
 					background: rgba(0, 0, 0, 0.02);
 				}
 					.todoItem:not(.finished) .statusCircleHitBox .statusCircle rect {
-						y: 100;
-						x: 100;
-						clip-path: polygon(0% 0%);
+						fill-opacity: 0;
 					}
 					
 

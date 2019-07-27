@@ -100,6 +100,7 @@ function _TodoRenderer() {
 						.15
 					)
 				);
+				
 				colorTarget.style.borderColor = colourToString(
 					mergeColours(
 						tagColour,
@@ -107,10 +108,12 @@ function _TodoRenderer() {
 						.2
 					)
 				);
+
+
 				colorTarget.style.fill = colourToString(
 					mergeColours(
 						tagColour,
-						{r: 120, g: 120, b: 120}, 
+						{r: 130, g: 130, b: 130}, 
 						.2
 					)
 				);
