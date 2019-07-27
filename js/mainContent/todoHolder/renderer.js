@@ -153,7 +153,6 @@ function _TodoRenderer() {
 
 
 function taskConstructor(_element, _task, _taskHolder) {
-	console.log("constructor:", arguments);
 	this.taskId 		= _task.id;
 	this.projectId 		= _task.projectId;
 	this.html 			= _element;

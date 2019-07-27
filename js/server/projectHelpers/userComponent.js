@@ -83,6 +83,7 @@ function _Server_project_userComponent_Self(_user) {
       break;
       case "update": 
         if (Permissions[1][1] >= 2)                                         return true;
+        if (Permissions[1][1] >= 1 && !_task)                               return true;
         if (Permissions[1][1] >= 1 && _task.creatorId == this.id)           return true;
       break;
       case "finish": 

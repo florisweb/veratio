@@ -90,8 +90,11 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 			Parent = _parent;
 			Parent.HTML.menuHolder = Parent.HTML.Self.children[2];
 
-
 			this.close(false);
+
+			let project = Server.getProject(MainContent.curProjectId);
+			if (!project) project = Server.projectList[0];
+			if (!project.users.Self.taskActionAllowed("update")) this.disable();
 		},
 
 
