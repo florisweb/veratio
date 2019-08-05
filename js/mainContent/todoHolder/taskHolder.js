@@ -93,7 +93,7 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 			this.close(false);
 
 			let project = Server.getProject(MainContent.curProjectId);
-			if (!project) return;
+			if (!project || !project.users.Self) return;
 			if (!project.users.Self.taskActionAllowed("update")) this.disable();
 		},
 

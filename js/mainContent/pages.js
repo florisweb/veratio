@@ -1,11 +1,9 @@
 
 
-
 function _MainContent_taskPage(_parent) {
 	let HTML = {
 		todoHolder: $("#mainContentHolder .todoListHolder")[0],
 	}
-
 
 	this.pageSettings = {
 		pageName: "task",
@@ -15,18 +13,16 @@ function _MainContent_taskPage(_parent) {
 	}
 
 	function onOpen(_projectId) {
-		MainContent.taskPage.tab.reopenCurTab();
+		if (!_projectId) return MainContent.taskPage.tab.reopenCurTab();
+		MainContent.taskPage.tab.open("Project", _projectId);
 	}
-
 
 	this.open = function(_projectId) {
 		MainContent.openPage(this.pageSettings.pageName, _projectId);
 	}
 
 
-
 	this.tab 			= new _MainContent_taskPage_tab(this);
-
 	this.taskHolder 	= new _MainContent_taskHolder();
 	this.renderer 		= new _TaskRenderer(HTML.todoHolder);
 
@@ -43,7 +39,7 @@ function _MainContent_taskPage(_parent) {
 
 	function loadExtraDay() {
 		return new Promise(function (resolve, error) {
-			let date = getNewDate();			
+			let date 	= getNewDate();			
 			let project = Server.getProject(MainContent.curProjectId);
 			let mainPromise;
 
@@ -60,9 +56,7 @@ function _MainContent_taskPage(_parent) {
 				}, 
 				function() {error()}
 			);
-
 		});
-
 
 
 
@@ -74,7 +68,6 @@ function _MainContent_taskPage(_parent) {
 					let project = Server.projectList[i];
 					promises.push(project.todos.DTTemplate.DB.getByDate(_date));
 				}
-
 
 				Promise.all(promises).then(function() {
 					resolve();
@@ -303,15 +296,14 @@ function _MainContent_createProjectPage(_parent) {
 
 
 
-
 	this.createProject = function() {
 		let project = scrapeProjectData();
 		if (typeof project != "object") return alert(project);
 
 		Server.createProject(project.title).then(function (_project) {
-			App.update();
-			MainContent.openPage("task");
-			MainContent.taskPage.tab.open("Project", _project.id);
+			Server.getProject(_project.id).sync();
+			SideBar.projectList.fillProjectHolder();
+			MainContent.openPage("task", _project.id);
 		});
 	} 
 	

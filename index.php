@@ -3,7 +3,6 @@
 	require_once "$root/git/todo/database/modules/app.php";
 
 
-
 	$isLinkUser = setLink();
 	if ($isLinkUser == "false") $GLOBALS["SESSION"]->clear("veratio_userLink");
 	if ($isLinkUser == "false" && userNeedsRedirect())
@@ -11,7 +10,7 @@
 		header("Location: /user/login.php?redirect=/git/todo");
 		die("Redirect user");
 	}
-
+	echo "<script>const IsLinkUser = " . $isLinkUser . "</script>";
 
 
 	function setLink() {
@@ -27,7 +26,6 @@
 		return "false";
 	}
 
-
 	function userNeedsRedirect() {
 		$userId = (string)$GLOBALS["SESSION"]->get("userId");
 		if (!$userId)
@@ -36,13 +34,7 @@
 		}
 		return !$userId;
 	}
-	
-	
-	echo "<script>const IsLinkUser = " . $isLinkUser . "</script>";
 ?>
-
-
-
 
 <!DOCTYPE html>
 <html>
