@@ -1,6 +1,6 @@
 
 
-function _MainContent_renderSettings() {
+function _TaskRenderer_settings() {
 	let HTML = {
 		mainContentHolder: mainContentHolder,
 	}

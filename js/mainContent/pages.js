@@ -28,8 +28,7 @@ function _MainContent_taskPage(_parent) {
 	this.tab 			= new _MainContent_taskPage_tab(this);
 
 	this.taskHolder 	= new _MainContent_taskHolder();
-	this.renderSettings = new _MainContent_renderSettings();
-	this.renderer 		= new _TodoRenderer(HTML.todoHolder);
+	this.renderer 		= new _TaskRenderer(HTML.todoHolder);
 
 
 	this.loadMoreDays = function(_extraDays = 1) {
@@ -102,7 +101,7 @@ function _MainContent_taskPage(_parent) {
 			} else todoList = Server.todos.getByDate(_date);
 
 
-			todoList = MainContent.taskPage.renderSettings.applyFilter(todoList);
+			todoList = MainContent.taskPage.renderer.settings.applyFilter(todoList);
 			let taskHolder = MainContent.taskPage.taskHolder.add({date: _date}, {displayProjectTitle: !project});
 			taskHolder.todo.renderTodoList(todoList);
 		}
@@ -183,8 +182,8 @@ function _MainContent_taskPage_tab(_parent) {
 		MainContent.header.setTitle("Today - " + date.getDate() + " " + date.getMonths()[date.getMonth()].name);
 		MainContent.header.setMemberList([]);
 
-		let todoList = MainContent.taskPage.renderSettings.applyFilter(Server.todos.getByDate(date));
-		let taskHolder = Parent.taskHolder.add({displayProjectTitle: true, date: date});
+		let todoList 	= MainContent.taskPage.renderer.settings.applyFilter(Server.todos.getByDate(date));
+		let taskHolder 	= Parent.taskHolder.add({displayProjectTitle: true, date: date});
 		taskHolder.todo.renderTodoList(todoList);
 	}
 
@@ -196,7 +195,7 @@ function _MainContent_taskPage_tab(_parent) {
 		for (let i = 0; i < 7; i++)
 		{
 			let date = new Date().moveDay(i);
-			let todoList = MainContent.taskPage.renderSettings.applyFilter(Server.todos.getByDate(date));
+			let todoList = MainContent.taskPage.renderer.settings.applyFilter(Server.todos.getByDate(date));
 			let taskHolder = Parent.taskHolder.add({displayProjectTitle: true, date: date});
 			taskHolder.todo.renderTodoList(todoList);
 		}
@@ -213,7 +212,7 @@ function _MainContent_taskPage_tab(_parent) {
 		for (let i = 0; i < 7; i++)
 		{
 			let date = new Date().moveDay(i);
-			let todoList = MainContent.taskPage.renderSettings.applyFilter(project.todos.getTodosByDate(date));
+			let todoList = MainContent.taskPage.renderer.settings.applyFilter(project.todos.getTodosByDate(date));
 			let taskHolder = Parent.taskHolder.add(
 				{displayProjectTitle: false, date: date}, 
 				{displayProjectTitle: false}
@@ -507,7 +506,6 @@ function _MainContent_settingsPage(_parent) {
 
 
 function _MainContent_settingsPage_permissionsMenu() {
-
 	this.open = function(_memberId) {
 		let project	= Server.getProject(MainContent.curProjectId);
 		let member 	= project.users.get(_memberId);
@@ -616,14 +614,6 @@ function _MainContent_settingsPage_permissionsMenu() {
 		);
 	}
 }
-
-
-
-
-
-
-
-
 
 
 

@@ -1,6 +1,8 @@
 
-function _TodoRenderer() {
+function _TaskRenderer() {
 	let This = this;
+
+	this.settings = new _TaskRenderer_settings();
 
 
 	this.renderToDo = function(_task, _taskHolder, _displayProjectTitle) {

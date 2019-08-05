@@ -495,7 +495,7 @@ function _MainContent_taskHolder() {
 			todoList = Server.todos.getByDate(new Date().moveDay(-1));
 		}
 		
-		todoList = MainContent.taskPage.renderSettings.applyFilter(
+		todoList = MainContent.taskPage.renderer.settings.applyFilter(
 			todoList,
 			{
 				renderFinishedTodos: false,
