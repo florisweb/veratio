@@ -29,15 +29,21 @@
 		}
 
 
-		public function getAll() {
+		private function getAll() {
 			return $this->DTTemplate->getAllData();
 		}
 
 
+		public function get($_id) {
+			$task 				= $this->DTTemplate->get($_id);
+			$task["projectId"] 	= $this->projectId;
+			return $task;
+		}
+
 		public function getByGroup($_groupType, $_groupValue) {
-			$groupValue = $this->filterGroupInfo($_groupType, $_groupValue);
-			if (!$groupValue) return false;
-			$tasks = $this->getAll();
+			$groupValue 		= $this->filterGroupInfo($_groupType, $_groupValue);
+			if (!$groupValue) 	return false;
+			$tasks 				= $this->getAll();
 
 
 			$foundTasks = array();
@@ -47,6 +53,7 @@
 				if ($curTask["groupType"] != (String)$_groupType) continue;
 				if ($curTask["groupValue"] != (String)$groupValue) continue;
 				
+				$curTask["projectId"] = $this->projectId;
 				array_push($foundTasks, $curTask);
 			}
 			return $foundTasks;
@@ -76,11 +83,6 @@
 		}
 
 
-
-
-		public function get($_id) {
-			return $this->DTTemplate->get($_id);
-		}
 
 
 

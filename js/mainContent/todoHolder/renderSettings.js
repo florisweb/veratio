@@ -45,10 +45,11 @@ function _TaskRenderer_settings() {
 			{
 				let item = _list[i];
 				let project = Server.getProject(item.projectId);
-
-				if (item.finished 									!= _filter.finished 	&& _filter.finished 	!= undefined) continue;
-				if (inArray(item.assignedTo, project.users.Self.id) != _filter.assignedTo 	&& _filter.assignedTo 	!= undefined) continue;
-				if ((item.creatorId == project.users.Self.id)		!= _filter.ownTask		&& _filter.ownTask 		!= undefined) continue;
+				let userId = project.users.Self.id;
+				
+				if (item.finished 						!= _filter.finished 	&& _filter.finished 	!= undefined) continue;
+				if (inArray(item.assignedTo, userId)	!= _filter.assignedTo 	&& _filter.assignedTo 	!= undefined) continue;
+				if ((item.creatorId == userId)			!= _filter.ownTask		&& _filter.ownTask 		!= undefined) continue;
 				
 				_list.splice(i, 1);
 			}

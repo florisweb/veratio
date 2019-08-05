@@ -8,15 +8,15 @@ function _Server_project_todoComponent(_parent) {
     Parent.id,
     {
       todos: {
-        id: "String",
-        title: "String",
-        groupType: "String",
+        id:         "String",
+        title:      "String",
+        groupType:  "String",
         groupValue: "String",
-        projectId: "String",
-        tagId: "String",
-        assignedTo:  "Array",
-        creatorId: "String",
-        finished: "Boolean"
+        projectId:  "String",
+        tagId:      "String",
+        assignedTo: "Array",
+        creatorId:  "String",
+        finished:   "Boolean"
       }
     }
   );
@@ -29,6 +29,8 @@ function _Server_project_todoComponent(_parent) {
 
   this.update = function(_newItem, _updateServer = true) {
     _newItem.projectId = Parent.id;
+    if (!_newItem.creatorId) _newItem.creatorId = Parent.users.Self.id;
+    console.warn(Parent, Parent.id, _newItem);
 
     // search if the task will be moved from another project, and if so, remove the previous one
     let foundTask = Server.todos.get(_newItem.id);
@@ -36,8 +38,6 @@ function _Server_project_todoComponent(_parent) {
     {
       Server.getProject(foundTask.projectId).todos.remove(foundTask.id);
     }
-
-    if (!_newItem.creatorId) _newItem.creatorId = Parent.users.Self.id;
 
     return DTTemplate.update(_newItem, _updateServer);
   }
