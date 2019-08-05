@@ -495,12 +495,12 @@ function _MainContent_taskHolder() {
 			todoList = Server.todos.getByDate(new Date().moveDay(-1));
 		}
 		
-		todoList = MainContent.taskPage.renderer.settings.applyFilter(
-			todoList,
-			{
-				renderFinishedTodos: false,
-			}
-		);
+		
+		todoList 	= MainContent.taskPage.renderer.settings.filter(todoList, {
+			finished: true
+		});
+		todoList 	= MainContent.taskPage.renderer.settings.sort(todoList, []);
+		
 		if (!todoList.length) return false;
 
 		let item = this.add(

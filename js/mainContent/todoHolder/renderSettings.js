@@ -1,99 +1,150 @@
 
+// renderer.settings.filter(_taskList, {
+// 	finished: false,
+// 	others: false,
+// 	assignedToOthers: false,
+// })
+
+
+// renderer.settings.sort(_taskList, [
+// 	"alpha",
+// 	"tag",
+// 	"finished",
+// 	"assignment",
+// ])
+
+
+
 
 function _TaskRenderer_settings() {
 	let HTML = {
 		mainContentHolder: mainContentHolder,
 	}
+	const sortOptions = [ // already sorted on priority (higher is more important)
+		"finished",
+		"assignment",
+		"ownership",
+		"alpha"
+	];
 
-	this.settings = {
-		renderFinishedTodos: true,
-		sortMethod: "Tag"
-	};
+	return {
+		sort: function(_taskList, _settings = []) {
+			let settings = createSortPriorityList(_settings);
 
-	this.update = function(_newSettings) {
-		switch (_newSettings.renderFinishedTodos) {
-			case true: 	HTML.mainContentHolder.classList.add("renderFinishedTodos"); break;
-			default: 	HTML.mainContentHolder.classList.remove("renderFinishedTodos"); break
+			for (let s = settings.length - 1; s >= 0; s--)
+			{
+				_taskList = sortByType(_taskList, settings[s]);
+			}
+
+			return _taskList;
+		},
+
+
+		filter: function(_list, _filter = {}) {  // removes all items that matches ALL criteria
+			for (let i = _list.length - 1; i >= 0; i--)
+			{
+				let item = _list[i];
+				let project = Server.getProject(item.projectId);
+
+				if (item.finished 									!= _filter.finished 	&& _filter.finished 	!= undefined) continue;
+				if (inArray(item.assignedTo, project.users.Self.id) != _filter.assignedTo 	&& _filter.assignedTo 	!= undefined) continue;
+				if ((item.creatorId == project.users.Self.id)		!= _filter.ownTask		&& _filter.ownTask 		!= undefined) continue;
+				
+				_list.splice(i, 1);
+			}
+			return _list;
 		}
-
-		this.settings = _newSettings;
-	}	
-
-
-	this.applyFilter = function(_todoList, _customRenderSettings) {
-		let newTodoList = [];
-		
-		let startRenderSettings = Object.assign({}, this.settings);
-		if (_customRenderSettings) this.settings = _customRenderSettings;
-
-		for (let i = 0; i < _todoList.length; i++)
-		{
-			let curTodo = _todoList[i];
-			if (curTodo.finished && !this.settings.renderFinishedTodos) continue;
-
-			newTodoList.push(curTodo);
-		}
-
-		newTodoList = _sort(newTodoList, "Alpha"); // Always order by alphabeth first
-		newTodoList = _sort(newTodoList, this.settings.sortMethod);
-		newTodoList = _sort(newTodoList, "Finished");
-
-		if (_customRenderSettings) this.settings = startRenderSettings;
-		return newTodoList;
 	}
 
 
 
-	function _sort(_list, _type = "Alpha") {
+
+
+	function createSortPriorityList(_settings) {
+		let newSettings = Object.assign([], sortOptions);
+		newSettings = newSettings.filter(
+			function(el) {
+		  		return !_settings.includes(el);
+			}
+		);
+
+		return _settings.concat(newSettings);
+	}
+
+
+
+
+	function sortByType(_list, _type = "alpha") {
 		switch (_type)
 		{
-			case "Finished": 	return _sortByFinished(_list); 	break;
-			case "Project": 	return _sortByProject(_list); 	break;
-			case "Tag": 		return _sortByTag(_list); 		break;
-			default: 			return _sortByAlphabet(_list); 	break;
+			case "alpha": 		return _sortByProperty(_list, "title"); 	break;
+			case "finished": 	return _sortByProperty(_list, "finished"); 	break;
+			case "project": 	return _sortByProject(_list); 				break;
+			case "tag": 		return _sortByTag(_list); 					break;
+			case "assignment": 	return _sortByAssignment(_list);			break;
+			case "ownership": 	return _sortByOwnership(_list);				break;
+			default: console.error("renderSettings.js: Sorttype " +  _type + " doesn't exist."); break;
 		}
 	}
-		function _sortByAlphabet(_list) {
-			_list.sort(function(a, b){
-		     	if (a.title < b.title) return -1;
-		    	if (a.title > b.title) return 1;
+		function _sortByProperty(_list, _property) {
+			return _list.sort(function(a, b){
+		     	if (a[_property] < b[_property]) return -1;
+		    	if (a[_property] > b[_property]) return 1;
 		    	return 0;
 		    });
-		    return _list;
 		}
-		function _sortByFinished(_list) {
-			_list.sort(function(a, b){
-		     	if (a.finished < b.finished) return -1;
-		    	if (a.finished > b.finished) return 1;
-		     	return 0;
-		    });
-		    return _list;
-		}
+
 		function _sortByProject(_list) {
-			_list.sort(function(a, b) {
+			return _list.sort(function(a, b) {
 				let projectTitleA = Server.getProject(a.projectId).title;
 				let projectTitleB = Server.getProject(b.projectId).title;
 				if (projectTitleA < projectTitleB) return -1;
 				if (projectTitleA > projectTitleB) return 1;
 				return 0;
 		    });
-		    return _list;
 		}
+
 		function _sortByTag(_list) {
-			_list.sort(function(a, b) {
+			return _list.sort(function(a, b) {
 				let projectA = Server.getProject(a.projectId);
 				let projectB = Server.getProject(b.projectId);
+				
 				let tagTitleA = projectA.tags.get(a.tagId, false) ? projectA.tags.get(a.tagId, false).title : "ZZZZZ";
 				let tagTitleB = projectB.tags.get(b.tagId, false) ? projectB.tags.get(b.tagId, false).title : "ZZZZZ";
+				
 				if (tagTitleA < tagTitleB) return -1;
 				if (tagTitleA > tagTitleB) return 1;
 				return 0;
 		    });
-		    return _list;
+		}
+
+		function _sortByAssignment(_list) {
+			return _list.sort(function(a, b) {
+				let projectA = Server.getProject(a.projectId);
+				let projectB = Server.getProject(b.projectId);
+
+				let assignedA = inArray(a.assignedTo, projectA.users.Self.id);
+				let assignedB = inArray(b.assignedTo, projectB.users.Self.id);
+
+				if (assignedA) return -1;
+				if (assignedB) return 1;
+				return 0;
+		    });
 		}
 
 
-	this.update(this.settings);
-}
+		function _sortByOwnership(_list) {
+			return _list.sort(function(a, b) {
+				let projectA = Server.getProject(a.projectId);
+				let projectB = Server.getProject(b.projectId);
 
+				let ownershipA = a.creatorId == projectA.users.Self.id;
+				let ownershipB = b.creatorId == projectB.users.Self.id;
+
+				if (ownershipA) return 1;
+				if (ownershipB) return -1;
+				return 0;
+		    });
+		}
+}
 

@@ -101,8 +101,8 @@ function _MainContent_taskPage(_parent) {
 			} else todoList = Server.todos.getByDate(_date);
 
 
-			todoList = MainContent.taskPage.renderer.settings.applyFilter(todoList);
-			let taskHolder = MainContent.taskPage.taskHolder.add({date: _date}, {displayProjectTitle: !project});
+			let taskHolder 	= MainContent.taskPage.taskHolder.add({date: _date}, {displayProjectTitle: !project});
+			todoList 		= MainContent.taskPage.renderer.settings.sort(todoList);
 			taskHolder.todo.renderTodoList(todoList);
 		}
 	}
@@ -182,7 +182,17 @@ function _MainContent_taskPage_tab(_parent) {
 		MainContent.header.setTitle("Today - " + date.getDate() + " " + date.getMonths()[date.getMonth()].name);
 		MainContent.header.setMemberList([]);
 
-		let todoList 	= MainContent.taskPage.renderer.settings.applyFilter(Server.todos.getByDate(date));
+		let todoList 	= Server.todos.getByDate(date);
+		todoList 		= MainContent.taskPage.renderer.settings.filter(todoList, {
+			finished: 	true
+		});
+		todoList 		= MainContent.taskPage.renderer.settings.filter(todoList, {
+			ownTask: 	false,
+			assignedTo: false
+		});
+		
+		todoList 		= MainContent.taskPage.renderer.settings.sort(todoList, []);
+
 		let taskHolder 	= Parent.taskHolder.add({displayProjectTitle: true, date: date});
 		taskHolder.todo.renderTodoList(todoList);
 	}
@@ -194,9 +204,16 @@ function _MainContent_taskPage_tab(_parent) {
 
 		for (let i = 0; i < 7; i++)
 		{
-			let date = new Date().moveDay(i);
-			let todoList = MainContent.taskPage.renderer.settings.applyFilter(Server.todos.getByDate(date));
-			let taskHolder = Parent.taskHolder.add({displayProjectTitle: true, date: date});
+			let date 		= new Date().moveDay(i);
+			let todoList 	= Server.todos.getByDate(date);
+			
+			todoList 		= MainContent.taskPage.renderer.settings.filter(todoList, {
+				ownTask: false, 
+				assignedTo: false
+			});
+			todoList 		= MainContent.taskPage.renderer.settings.sort(todoList, []);
+
+			let taskHolder 	= Parent.taskHolder.add({displayProjectTitle: true, date: date});
 			taskHolder.todo.renderTodoList(todoList);
 		}
 	}
@@ -211,8 +228,10 @@ function _MainContent_taskPage_tab(_parent) {
 
 		for (let i = 0; i < 7; i++)
 		{
-			let date = new Date().moveDay(i);
-			let todoList = MainContent.taskPage.renderer.settings.applyFilter(project.todos.getTodosByDate(date));
+			let date 		= new Date().moveDay(i);
+			let todoList 	= project.todos.getTodosByDate(date);
+			todoList 		= MainContent.taskPage.renderer.settings.sort(todoList, []);
+			
 			let taskHolder = Parent.taskHolder.add(
 				{displayProjectTitle: false, date: date}, 
 				{displayProjectTitle: false}
