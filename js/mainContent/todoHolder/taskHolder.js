@@ -474,16 +474,15 @@ function _MainContent_taskHolder() {
 	}
 	this.list = [];
 
-	this.add = function(_preferences = {customAttributes: []}, _todoRenderPreferences = {}, _type = "day") {
+	this.add = function(_preferences = {customAttributes: []}, _taskRenderPreferences = {}, _type = "day") {
 		let taskHolder = buildDayItem(
 			HTML.todoHolder,
 			_preferences,
-			_todoRenderPreferences,
+			_taskRenderPreferences,
 			_type
 		);
 
 		this.list.push(taskHolder);
-
 		return taskHolder;
 	}
 
@@ -496,7 +495,6 @@ function _MainContent_taskHolder() {
 		} else {
 			todoList = Server.todos.getByDate(new Date().moveDay(-1));
 		}
-		
 		
 		todoList 	= MainContent.taskPage.renderer.settings.filter(todoList, {
 			finished: true
@@ -516,21 +514,6 @@ function _MainContent_taskHolder() {
 		item.createMenu.disable();
 		item.todo.renderTodoList(todoList);
 	}
-
-
-	this.addList = function(_listName = "List") {
-		let item = this.add( 
-			{
-				title: _listName, 
-				class: "list", 
-			},
-			{},
-			"list"
-		);
-
-		item.todo.renderTodoList(todoList);
-	}
-
 
 
 
@@ -557,6 +540,7 @@ function _MainContent_taskHolder() {
 		switch (_type)
 		{
 			case "overdue": extendOverdue(taskHolder, _preferences); break;
+			case "list": 	extendListItem(taskHolder, _preferences); break;
 			default: 		extendDayItem(taskHolder, _preferences); break;
 		}
 	}
@@ -590,6 +574,9 @@ function _MainContent_taskHolder() {
 				value: _preferences.date.toString()
 			}
 		);
+	}
+
+	function extendListItem(taskHolder, _preferences) {
 	}
 
 

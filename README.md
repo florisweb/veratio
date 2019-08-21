@@ -12,7 +12,12 @@
 
 
 
-
+DayItems:
+- type
+	- dayItem 		[day]
+	- overdue 		[overdue]
+	- listItem 		[list]
+	
 
 
 

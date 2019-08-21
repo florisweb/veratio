@@ -219,19 +219,30 @@ function _MainContent_taskPage_tab(_parent) {
 		MainContent.header.setTitle(project.title);
 		MainContent.header.setMemberList(project.users.getList());
 
-		for (let i = 0; i < 7; i++)
-		{
-			let date 		= new Date().moveDay(i);
-			let todoList 	= project.todos.getTodosByDate(date);
-			todoList 		= MainContent.taskPage.renderer.settings.sort(todoList, []);
+		let taskList 	= project.todos.getTasksByGroup("default");
+		taskList 		= MainContent.taskPage.renderer.settings.sort(taskList, []);
+		
+		let taskHolder = Parent.taskHolder.add(
+			{title: ""}, 
+			{displayProjectTitle: false},
+			"list"
+		);
+		taskHolder.todo.renderTodoList(taskList);
+
+
+		// for (let i = 0; i < 7; i++)
+		// {
+		// 	let date 		= new Date().moveDay(i);
+		// 	todoList 		= project.todos.getTodosByDate(date);
+		// 	todoList 		= MainContent.taskPage.renderer.settings.sort(todoList, []);
 			
-			let taskHolder = Parent.taskHolder.add(
-				{displayProjectTitle: false, date: date}, 
-				{displayProjectTitle: false}
-			);
+		// 	taskHolder = Parent.taskHolder.add(
+		// 		{date: date}, 
+		// 		{displayProjectTitle: false}
+		// 	);
 			
-			taskHolder.todo.renderTodoList(todoList);
-		}
+		// 	taskHolder.todo.renderTodoList(todoList);
+		// }
 	}
 
 

@@ -43,7 +43,7 @@ function _Server_project_todoComponent(_parent) {
   }
 
 
-  this.getTasksByGroup = function(_type, _value, _askServer) {
+  this.getTasksByGroup = function(_type = "", _value = "", _askServer) {
     let tasksOnDate = [];
 
     if (_askServer) DTTemplate.DB.getByGroup(_type, _value);
