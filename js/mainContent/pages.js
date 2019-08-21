@@ -127,6 +127,7 @@ function _MainContent_taskPage_tab(_parent) {
 			onOpen: openInbox
 		},
 		Project: {
+			hideLoadMoreButton: true,
 			onOpen: openProject
 		}
 	}

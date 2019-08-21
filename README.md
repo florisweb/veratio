@@ -17,7 +17,16 @@ DayItems:
 	- dayItem 		[day]
 	- overdue 		[overdue]
 	- listItem 		[list]
-	
+- OnCreation:
+	preferences: {
+		title: "customTitle",
+		class: "customClass",
+		customAttributes: [{key: "click", value: function}]
+	}
+
+
+
+
 
 
 

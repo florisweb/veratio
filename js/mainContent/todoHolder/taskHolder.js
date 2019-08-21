@@ -1,20 +1,11 @@
 
-/*
-	preferences: {
-		title: "customTitle",
-		class: "customClass",
-		customAttributes: [{key: "click", value: function}]
-	}
-*/
-
-
-
 
 function _MainContent_todoHolder_taskHolder() {
 	return {
-		setup: function(_appendTo, _preferences = {}) {
+		setup: function(_appendTo, _preferences = {}, _type) {
 			this.id = newId();
 			this.preferences = _preferences;
+			this.type = _type;
 
 			this.HTML = {
 				Parent: _appendTo,
@@ -268,12 +259,18 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 
 		if (!task.title || task.title.split(" ").join("").length < 1) return "E_InvalidTitle";
 		
-		// task.groupType = "date";
-		// task.groupValue = Parent.date.copy().toString();
-		task.groupType = "default";
-		task.groupValue = "";
-		// if (!task.groupValue) return "E_InvalidDate";
-
+		switch (Parent.type)
+		{
+			case "list": 
+				task.groupType = "default";
+				task.groupValue = "";
+			break;
+			default: 
+				task.groupType = "date";
+				task.groupValue = Parent.date.copy().toString();
+				if (!task.groupValue) return "E_InvalidDate";
+			break;
+		}
 
 		return task;
 	}
@@ -528,7 +525,7 @@ function _MainContent_taskHolder() {
 
 		extendTaskHolder(_type, taskHolder, _preferences)
 
-		taskHolder.setup(_appendTo, _preferences);
+		taskHolder.setup(_appendTo, _preferences, _type);
 		taskHolder.createMenu.setup(taskHolder);
 		taskHolder.todo.setup(taskHolder, _todoRenderPreferences);
 
