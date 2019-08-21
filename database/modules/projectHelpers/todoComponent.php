@@ -40,9 +40,9 @@
 			return $task;
 		}
 
-		public function getByGroup($_groupType, $_groupValue) {
-			$groupValue 		= $this->filterGroupInfo($_groupType, $_groupValue);
-			if (!$groupValue) 	return false;
+		public function getByGroup($_info) {
+			$groupValue 		= $this->filterGroupInfo($_info["type"], $_info["value"]);
+			if ($groupValue === false) return false;
 			$tasks 				= $this->getAll();
 
 
@@ -50,7 +50,7 @@
 			for ($i = 0; $i < sizeof($tasks); $i++)
 			{
 				$curTask = $tasks[$i];
-				if ($curTask["groupType"] != (String)$_groupType) continue;
+				if ($curTask["groupType"] != (String)$_info["type"]) continue;
 				if ($curTask["groupValue"] != (String)$groupValue) continue;
 				
 				$curTask["projectId"] = $this->projectId;
@@ -61,7 +61,7 @@
 
 
 		public function getByDate($_date) {
-			return $this->getByGroup("date", $_date);
+			return $this->getByGroup(["type" => "date", "value" => $_date]);
 		}
 
 
@@ -115,11 +115,14 @@
 				$_newTask["creatorId"]	= $userId;
 			}
 
-			if ($_newTask["groupType"] != "date") return $this->DTTemplate->update($_newTask);
-			
-			$date = $this->_filterDate($_newTask["groupValue"]);
-			if (!$date) return false;
-			$_newTask["groupValue"] = $date;
+			if (!in_array($_newTask["groupType"], ["date", "default"])) return "E_groupTypeDoesNotExist";
+
+			if ($_newTask["groupType"] == "date") 
+			{				
+				$date = $this->_filterDate($_newTask["groupValue"]);
+				if (!$date) return false;
+				$_newTask["groupValue"] = $date;
+			}
 
 			$this->DTTemplate->update($_newTask);
 			return $this->get($_newTask["id"]);
@@ -171,8 +174,9 @@
 		private function filterGroupInfo($_groupType, $_groupValue) {
 			switch ($_groupType) 
 			{
-				case "date": return $this->_filterDate($_groupValue); break;
-				default: return false; break;
+				case "date":		return $this->_filterDate($_groupValue); break;
+				case "default": 	return (String)$_groupValue; break;
+				default: 			return false; break;
 			}
 		}
 

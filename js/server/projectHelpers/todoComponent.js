@@ -43,6 +43,20 @@ function _Server_project_todoComponent(_parent) {
   }
 
 
+  this.getTasksByGroup = function(_type, _value, _askServer) {
+    let tasksOnDate = [];
+
+    if (_askServer) DTTemplate.DB.getByGroup(_type, _value);
+
+    for (let i = 0; i < DTTemplate.list.length; i++)
+    {
+      let curItem = DTTemplate.list[i];
+      if (curItem.groupType != _type) continue;
+      if (curItem.groupValue != _value) continue;
+      tasksOnDate.push(curItem);
+    }
+    return tasksOnDate;
+  }
 
   this.getTodosByDate = function(_date, _askServer) {
     let todosOnDate = [];
@@ -64,6 +78,7 @@ function _Server_project_todoComponent(_parent) {
 
   this.sync = function() {
     DTTemplate.DB.getByDateRange(new Date().moveDay(-1), 8);
+    DTTemplate.DB.getByGroup("default", "");
   }
 
 
@@ -77,6 +92,21 @@ function _Server_project_todoComponent(_parent) {
 
   // custom functions
   DTTemplate.DB.getAll = null;
+  DTTemplate.DB.getByGroup = function(_groupName, _groupValue) {
+    let parameters = "projectId=" + Parent.id + "&dataType=" + DTTemplate.DataType + "&method=getByGroup&parameter=" + JSON.stringify({type: _groupName, value: _groupValue});
+    return REQUEST.send("database/project/simpleOperation.php", parameters).then(
+      function (_results) {
+        if (typeof _results != "object") return false;
+        
+        for (let i = 0; i < _results.length; i++) 
+        {
+          _results[i].projectId = Parent.id;
+          DTTemplate.update(_results[i], false);
+        }
+      }
+    ).catch(function () {});
+  }
+
   DTTemplate.DB.getByDate = function(_date) {
     return DTTemplate.DB.getByDateRange(_date, 1);
   }

@@ -155,7 +155,7 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 
 			project.todos.update(task);
 			
-			task.projectId = project.id;
+			task.projectId = project.id; 
 			if (!MainContent.curProjectId || MainContent.curProjectId == project.id) Parent.todo.renderTodo(task, Parent);
 			
 			this.close();
@@ -268,9 +268,11 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 
 		if (!task.title || task.title.split(" ").join("").length < 1) return "E_InvalidTitle";
 		
-		task.groupType = "date";
-		task.groupValue = Parent.date.copy().toString();
-		if (!task.groupValue) return "E_InvalidDate";
+		// task.groupType = "date";
+		// task.groupValue = Parent.date.copy().toString();
+		task.groupType = "default";
+		task.groupValue = "";
+		// if (!task.groupValue) return "E_InvalidDate";
 
 
 		return task;
