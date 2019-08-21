@@ -47,12 +47,12 @@ function _MainContent_todoHolder_taskHolder() {
 
 		html.setAttribute("taskHolderId", This.id);
 
-
 		html.innerHTML = 	'<div class="header dateHolder"></div>' + 
 							'<div class="todoHolder"></div>' + 
 							'<div class="todoItem createTaskHolder">' + 
 							'</div>';
 
+		if (!This.preferences.title) html.style.marginTop = "0";
 		setTextToElement(html.children[0], This.preferences.title);
 
 		return html;
@@ -247,7 +247,6 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 			createMenuButton.classList.remove("hide");
 		}, 1);
 	}
-
 
 
 
