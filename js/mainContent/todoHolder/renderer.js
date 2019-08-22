@@ -16,7 +16,7 @@ function _TaskRenderer() {
 			taskHolderId: 	_task.taskHolderId,
 			finished: 		_task.finished,
 			
-			assignedToMe: 	inArray(_task.assignedTo, project.users.Self.id),
+			assignedToMe: 	_task.assignedTo.includes(project.users.Self.id),
 			isMyTask: 		_task.creatorId == project.users.Self.id,
 
 			memberText: 	_createMemberTextByUserIdList(_task.assignedTo, project),

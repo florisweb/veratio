@@ -37,7 +37,7 @@ function _MainContent_taskPage(_parent) {
 	}
 
 
-	function loadExtraDay() {
+	function loadExtraDay() { // depricated
 		return new Promise(function (resolve, error) {
 			let date 	= getNewDate();			
 			let project = Server.getProject(MainContent.curProjectId);
@@ -229,21 +229,6 @@ function _MainContent_taskPage_tab(_parent) {
 			"list"
 		);
 		taskHolder.todo.renderTodoList(taskList);
-
-
-		// for (let i = 0; i < 7; i++)
-		// {
-		// 	let date 		= new Date().moveDay(i);
-		// 	todoList 		= project.todos.getTodosByDate(date);
-		// 	todoList 		= MainContent.taskPage.renderer.settings.sort(todoList, []);
-			
-		// 	taskHolder = Parent.taskHolder.add(
-		// 		{date: date}, 
-		// 		{displayProjectTitle: false}
-		// 	);
-			
-		// 	taskHolder.todo.renderTodoList(todoList);
-		// }
 	}
 
 
@@ -302,7 +287,6 @@ function _MainContent_createProjectPage(_parent) {
 		HTML.titleInputField.focus();
 		MainContent.header.setTitle("Create Project");
 	}
-
 
 
 

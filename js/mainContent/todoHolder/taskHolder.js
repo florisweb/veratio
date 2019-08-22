@@ -1,61 +1,120 @@
 
 
-function _MainContent_todoHolder_taskHolder() {
-	return {
-		setup: function(_appendTo, _preferences = {}, _type) {
-			this.id = newId();
-			this.preferences = _preferences;
-			this.type = _type;
-
-			this.HTML = {
-				Parent: _appendTo,
-				Self: renderDayItem(this),
-			}
-			this.HTML.Parent.append(this.HTML.Self);
-
-			
-			if (!this.preferences.customAttributes) return;
-			for (attribute of this.preferences.customAttributes) 
-			{
-				this.HTML.Self.setAttribute(attribute.key, attribute.value);
-			}
-		},
 
 
-		remove: function() {
-			this.HTML.Self.parentNode.removeChild(this.HTML.Self);
-			MainContent.taskPage.taskHolder.remove(this.id);
-		},
 
 
-		onTaskFinish: function(_task) {
-			console.warn("FINISH", _task);
-		},
+function _MainContent_taskHolder() {
+	let HTML = {
+		todoHolder: $("#mainContentHolder .todoListHolder")[0],
+	}
+	
+	this.list = [];
+	this.add = function(_preferences = {customAttributes: []}, _taskRenderPreferences = {}, _type = "day") {
+		let taskHolder = buildDayItem(
+			HTML.todoHolder,
+			_preferences,
+			_taskRenderPreferences,
+			_type
+		);
 
-		onTaskRemove: function(_taskId) {
-			console.warn("REMOVE", _taskId);
-			this.todo.removeTask(_taskId);
+		this.list.push(taskHolder);
+		return taskHolder;
+	}
+
+	this.addOverdue = function() {
+		let project = Server.getProject(MainContent.curProjectId);
+		let todoList = []; 
+		if (project) 
+		{
+			todoList = project.todos.getTodosByDate(new Date().moveDay(-1));
+		} else {
+			todoList = Server.todos.getByDate(new Date().moveDay(-1));
 		}
+		
+		todoList 	= MainContent.taskPage.renderer.settings.filter(todoList, {
+			finished: true
+		});
+		todoList 	= MainContent.taskPage.renderer.settings.sort(todoList, []);
+		
+		if (!todoList.length) return false;
+
+		let item = this.add(
+			{}, 
+			{
+				displayProjectTitle: !MainContent.curProjectId
+			}, 
+			"overdue"
+		);
+
+		item.createMenu.disable();
+		item.todo.renderTodoList(todoList);
 	}
 
 
-	function renderDayItem(This) {
-		let html = document.createElement("div");
-		html.className = "taskHolder";
 
-		if (This.preferences.class) html.classList.add(This.preferences.class);
+	function buildDayItem(_appendTo, _preferences, _taskRenderPreferences, _type) {
+		let constructor = _taskHolder_day;
 
-		html.setAttribute("taskHolderId", This.id);
+		switch (_type)
+		{
+			case "overdue": constructor = _taskHolder_overdue; break;
+			case "list": 	constructor = _taskHolder_list; break;
+		}
 
-		html.innerHTML = 	'<div class="header dateHolder"></div>' + 
-							'<div class="todoHolder"></div>' + 
-							'<div class="todoItem createTaskHolder">' + 
-							'</div>';
+		return new constructor(_appendTo, _preferences, _taskRenderPreferences);
+	}
 
-		if (!This.preferences.title) html.style.marginTop = "0";
-		setTextToElement(html.children[0], This.preferences.title);
 
-		return html;
+
+
+
+	this.get = function(_id) {
+		for (let i = 0; i < this.list.length; i++)
+		{
+			if (this.list[i].id != _id) continue;
+			return this.list[i];
+		}
+		return false;
+	}
+
+	this.remove = function(_id) {
+		for (let i = 0; i < this.list.length; i++)
+		{
+			if (this.list[i].id != _id) continue;
+			this.list.splice(i, 1);
+			return true;
+		}
+		return false;
+	}
+
+
+	this.clear = function() {
+		HTML.todoHolder.innerHTML = "";
+		this.list = [];
+	}
+
+
+	this.createTask = function() {
+		for (let i = 0; i < this.list.length; i++)
+		{
+			if (!this.list[i].createMenu.openState) continue;
+			this.list[i].createMenu.createTask();
+			return true;
+		}
+		return false;
+	}
+
+
+	this.closeAllCreateMenus = function() {
+		let found = false;
+		for (let i = 0; i < this.list.length; i++)
+		{
+			if (!this.list[i].createMenu.openState) continue;
+			this.list[i].createMenu.close();
+			found = true;
+		}
+		return found;
 	}
 }
 
@@ -65,120 +124,234 @@ function _MainContent_todoHolder_taskHolder() {
 
 
 
-function _MainContent_todoHolder_taskHolder_createMenu() {
-	let Parent;
-	let This;
+
+
+
+
+
+
+
+function _taskHolder(_appendTo, _preferences, _renderPreferences, _type) {
+	let This = this;
+	this.id 			= newId();
+	this.preferences 	= _preferences;
+	this.type 			= _type;
+
+	this.HTML = {
+		Parent: _appendTo,
+	}
+	this.HTML.Self = renderDayItem(this),
+
+	this.createMenu 	= new _taskHolder_createMenu(this);
+	this.todo 			= new _taskHolder_task(this, _renderPreferences);
+
+
+	this.remove = function() {
+		this.HTML.Self.parentNode.removeChild(this.HTML.Self);
+		MainContent.taskPage.taskHolder.remove(this.id);
+	}
+
+	this.onTaskFinish = function(_task) {
+		console.warn("FINISH", _task);
+	}
+
+	this.onTaskRemove = function(_taskId) {
+		console.warn("REMOVE", _taskId);
+		this.todo.removeTask(_taskId);
+	}
+
+	function renderDayItem() {
+		let html = document.createElement("div");
+		html.className = "taskHolder";
+
+		html.innerHTML = 	'<div class="header dateHolder"></div>' + 
+							'<div class="todoHolder"></div>' + 
+							'<div class="todoItem createTaskHolder close">' + 
+								'<div class="createMenuHolder">' + 
+									'<input class="text inputField iBoxy clickable" placeholder="Read some books...">' + 
+									'<div class="leftHand">' + 
+										'<div class="text button bDefault bBoxy" style="float: left">Create</div>' + 
+										'<div class="text button" style="float: left">Cancel</div>' + 
+									'</div>' +
+									'<div class="rightHand">' + 
+										'<img src="images/icons/tagIcon.png" class="icon tagIcon clickable">' +
+										'<img src="images/icons/memberIcon.png" class="icon clickable">' +
+										'<img src="images/icons/projectIconDark.svg" class="icon projectIcon clickable">' +
+									'</div>' +
+								'</div>' + 
+								'<div class="addButtonHolder smallTextHolder clickable" onclick="MainContent.taskHolder.openCreateMenu(this.parentNode)">' + 
+									'<a class="smallText smallTextIcon">+</a>' + 
+									'<div class="smallText">Create Task</div>' + 
+								'</div>' +
+							'</div>';
+
+		This.HTML.createMenu = html.children[2];
+
+
+		if (!This.preferences.title) html.style.marginTop = "0";
+		setTextToElement(html.children[0], This.preferences.title);
+
+
+
+
+		// if (_editing) createMenu.children[1].children[0].innerHTML = "Change";
+		let createMenu = html.children[2].children[0];
+		createMenu.children[1].children[0].onclick = function () {This.createMenu.createTask();}
+		createMenu.children[1].children[1].onclick = function () {This.createMenu.close();}
+
+
+		createMenu.children[2].children[0].onclick = function () {This.createMenu.openTagSelectMenu()}
+		createMenu.children[2].children[1].onclick = function () {This.createMenu.openMemberSelectMenu()}
+		createMenu.children[2].children[2].onclick = function () {This.createMenu.openProjectSelectMenu()}
+		
+
+		createMenu.children[0].placeholder = PLACEHOLDERTEXTS.randomItem();
+		This.HTML.createMenu.children[1].onclick = function () {This.createMenu.open();}
+
+
+
+
+
+		This.HTML.Parent.append(html);
+		return html;
+	}
+}
+
+
+
+
+function _taskHolder_createMenu(_Parent) {
+	let Parent = _Parent;
+	let This = this;
 
 	let edit_todo = null;
 	let edit_todoHTML = null;
 
-	return {
-		openState: false,
-		enabled: true,
 
-		setup: function(_parent) {
-			This = this;
-			Parent = _parent;
-			Parent.HTML.menuHolder = Parent.HTML.Self.children[2];
+	this.openState = false;
+	this.enabled = true;
 
-			this.close(false);
+	function setup() {
+		This.close(false);
 
-			let project = Server.getProject(MainContent.curProjectId);
-			if (!project || !project.users.Self) return;
-			if (!project.users.Self.taskActionAllowed("update")) this.disable();
-		},
-
-
-		open: function(_editing = false) {
-			if (!this.enabled) return;	
-
-			MainContent.taskPage.taskHolder.closeAllCreateMenus();
-
-			this.openState = true;
-			addCreateMenuHtml(Parent.HTML.menuHolder, _editing);
-			MainContent.searchOptionMenu.openWithInputField(Parent.HTML.menuHolder.children[0].children[0]);
-		},
-
-
-		openEdit: function(_todoHTML, _todoId) {
-			if (!this.enabled) return;
-
-			let task = Server.todos.get(_todoId);
-			if (!task || !_todoHTML) return false;
-			this.open(true);
-
-			edit_todo = task;
-			edit_todoHTML = _todoHTML;
-			edit_todoHTML.classList.add("hide");
-
-			setEditModeData(task);
-		},
+		let project = Server.getProject(MainContent.curProjectId);
+		if (!project || !project.users.Self) return;
+		if (!project.users.Self.taskActionAllowed("update")) This.disable();
+	};
 
 
 
-		close: function(_animate) {
-			this.openState = false;
-			addButtonHtml(_animate);
-			resetEditMode();
-		},
+	this.open = function(_editing = false) {
+		if (!this.enabled) return;	
 
+		MainContent.taskPage.taskHolder.closeAllCreateMenus();
 
-		disable: function() {
-			this.enabled = false;
-			Parent.HTML.menuHolder.innerHTML = "";
-		},
+		this.openState = true;
+		Parent.HTML.createMenu.classList.remove("close");
+		Parent.HTML.createMenu.children[0].children[0].focus();
 
 
 
+		let buttonTitle = "Create";
+		if (_editing) buttonTitle = "Change";
+		Parent.HTML.createMenu.children[0].children[1].children[0].innerHTML = buttonTitle;
+
+		MainContent.searchOptionMenu.openWithInputField(Parent.HTML.createMenu.children[0].children[0]);
+	}
 
 
+	this.openEdit = function(_todoHTML, _todoId) {
+		if (!this.enabled) return;
 
+		let task = Server.todos.get(_todoId);
+		if (!task || !_todoHTML) return false;
+		this.open(true);
 
-		createTask: function() {
-			if (!this.enabled) return;
+		edit_todo = task;
+		edit_todoHTML = _todoHTML;
+		edit_todoHTML.classList.add("hide");
 
-			let task 		= scrapeTaskData();
-			let project 	= Server.getProject(task.projectId);
+		setEditModeData(task);
+	}
 
-			if (!project) 	return false;
-			if (typeof task != "object") return task;
-			resetEditMode(true);
-
-			project.todos.update(task);
-			
-			task.projectId = project.id; 
-			if (!MainContent.curProjectId || MainContent.curProjectId == project.id) Parent.todo.renderTodo(task, Parent);
-			
-			this.close();
-			MainContent.searchOptionMenu.close();
-			
-			return true;
-		},
-
-
-		openTagSelectMenu: function() {
-			openSelectMenu(0, "#", Server.projectList[0].tags.list);
-		},
-
-		openMemberSelectMenu: function() {
-			openSelectMenu(1, "@", Server.projectList[0].users.getList());
-		},
+	function setEditModeData(_task) {
+		let createMenu = Parent.HTML.createMenu;
+		let project = Server.getProject(_task.projectId);
 		
-		openProjectSelectMenu: function() {
-			openSelectMenu(2, ".", Server.projectList);
+		createMenu.children[0].children[0].value = _task.title;
+	}
+
+
+
+	this.close = function() {
+		this.openState = false;
+		Parent.HTML.createMenu.classList.add("close");
+		resetEditMode();
+	}
+
+
+
+
+	this.disable = function() {
+		this.enabled = false;
+		Parent.HTML.createMenu.innerHTML = "";
+	}
+
+
+
+
+
+
+	this.createTask = function() {
+		if (!this.enabled) return;
+
+		let task 		= scrapeTaskData();
+		let project 	= Server.getProject(task.projectId);
+
+		if (!project) 	return false;
+		if (typeof task != "object") return task;
+		resetEditMode(true);
+
+		project.todos.update(task);
+		
+		task.projectId = project.id; 
+		if (!MainContent.curProjectId || MainContent.curProjectId == project.id) Parent.todo.renderTodo(task, Parent);
+		
+		this.close();
+		MainContent.searchOptionMenu.close();
+		
+		return true;
+	}
+
+
+	this.openTagSelectMenu = function() {
+		openSelectMenu(0, "#", Server.projectList[0].tags.list);
+	}
+
+	this.openMemberSelectMenu = function() {
+		openSelectMenu(1, "@", Server.projectList[0].users.getList());
+	}
+		
+	this.openProjectSelectMenu = function() {
+		openSelectMenu(2, ".", Server.projectList);
+	}
+
+	function openSelectMenu(_iconIndex = 0, _indicator = ".", _items = []) {
+		if (!This.openState) return false;
+		let item = Parent.HTML.createMenu.children[0].children[2].children[_iconIndex];
+		MainContent.searchOptionMenu.open(item);
+		
+		for (item of _items) 
+		{
+			MainContent.searchOptionMenu.addSearchItem(
+				{item: item}, 
+				_indicator
+			);
 		}
 	}
 
 
 
-
-
-	function setEditModeData(_task) {
-		let menuHolder = Parent.HTML.menuHolder;
-		let project = Server.getProject(_task.projectId);
-		
-		menuHolder.children[0].children[0].value = _task.title;
-	}
 
 
 
@@ -194,64 +367,10 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 	}
 
 
-	function addCreateMenuHtml(_parent, _editing = false) {
-		let newInnerHTML = '<div class="createMenuHolder hide">' + 
-								'<input class="text inputField iBoxy clickable" placeholder="Read some books...">' + 
-								'<div class="leftHand">' + 
-									'<div class="text button bDefault bBoxy" style="float: left">Create</div>' + 
-									'<div class="text button" style="float: left">Cancel</div>' + 
-								'</div>' +
-								'<div class="rightHand">' + 
-									'<img src="images/icons/tagIcon.png" class="icon tagIcon clickable">' +
-									'<img src="images/icons/memberIcon.png" class="icon clickable">' +
-									'<img src="images/icons/projectIconDark.svg" class="icon projectIcon clickable">' +
-								'</div>' +
-							'</div>';
-		
-		_parent.innerHTML = newInnerHTML;
-		
-		let createMenu = _parent.children[0];
-		if (_editing) createMenu.children[1].children[0].innerHTML = "Change";
-		createMenu.children[1].children[0].onclick = function () {Parent.createMenu.createTask();}
-		createMenu.children[1].children[1].onclick = function () {Parent.createMenu.close();}
-
-
-		createMenu.children[2].children[0].onclick = function () {Parent.createMenu.openTagSelectMenu()}
-		createMenu.children[2].children[1].onclick = function () {Parent.createMenu.openMemberSelectMenu()}
-		createMenu.children[2].children[2].onclick = function () {Parent.createMenu.openProjectSelectMenu()}
-		
-
-		let placeholderText = PLACEHOLDERTEXTS[Math.floor(Math.random() * PLACEHOLDERTEXTS.length)];
-		createMenu.children[0].placeholder = placeholderText;
-		createMenu.children[0].focus();
-		createMenu.classList.remove("hide");
-	}
-
-
-
-	function addButtonHtml(_animate = true) {
-		let newInnerHTML = '<div class="addButtonHolder smallTextHolder clickable" onclick="MainContent.taskHolder.openCreateMenu(this.parentNode)">' + 
-								'<a class="smallText smallTextIcon">+</a>' + 
-								'<div class="smallText">Create Task</div>' + 
-							'</div>';
-		Parent.HTML.menuHolder.innerHTML = newInnerHTML;
-		let createMenuButton = Parent.HTML.menuHolder.children[0];
-
-		createMenuButton.onclick = function () {Parent.createMenu.open();}
-
-		if (!_animate) return false;
-		createMenuButton.classList.add("hide");
-
-		
-		setTimeout(function () {
-			createMenuButton.classList.remove("hide");
-		}, 1);
-	}
-
 
 
 	function scrapeTaskData() {
-		let createMenuItems = Parent.HTML.menuHolder.children[0].children;
+		let createMenuItems = Parent.HTML.createMenu.children[0].children;
 		if (!createMenuItems[0]) return false;
 
 		let task = _inputValueToData(createMenuItems[0].value);
@@ -306,7 +425,7 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 		task.title 	= members.value;
 		for (member of members.list)
 		{
-			if (inArray(task.assignedTo, member.id)) continue;
+			if (task.assignedTo.includes(member.id)) continue;
 			task.assignedTo.push(member.id);
 		}
 
@@ -331,41 +450,16 @@ function _MainContent_todoHolder_taskHolder_createMenu() {
 		return {list: found, value: _value};
 	}
 
-
-
-	function openSelectMenu(_iconIndex = 0, _indicator = ".", _items = []) {
-		if (!This.openState) return false;
-		let item = Parent.HTML.menuHolder.children[0].children[2].children[_iconIndex];
-		MainContent.searchOptionMenu.open(item);
-		
-		for (item of _items) 
-		{
-			MainContent.searchOptionMenu.addSearchItem(
-				{
-					item: item,
-				}, 
-				_indicator
-			);
-		}
-	}
+	setup();
 }
 
 
-
-
-
-
-
-function _MainContent_todoHolder_taskHolder_todo() {
-	let Parent;
-	let RenderPreferences;
-
-	this.setup = function(_parent, _renderPreferences) {
-		Parent = _parent;
-		RenderPreferences = _renderPreferences;
-		
-		Parent.HTML.todoHolder = Parent.HTML.Self.children[1];
-	}
+function _taskHolder_task(_parent, _renderPreferences) {
+	let Parent = _parent;
+	let RenderPreferences = _renderPreferences;
+	
+	Parent.HTML.todoHolder = Parent.HTML.Self.children[1];
+	
 	
 
 	this.taskList = [];
@@ -437,212 +531,34 @@ function _MainContent_todoHolder_taskHolder_todo() {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function _MainContent_taskHolder() {
-	let HTML = {
-		todoHolder: $("#mainContentHolder .todoListHolder")[0],
-	}
-	this.list = [];
-
-	this.add = function(_preferences = {customAttributes: []}, _taskRenderPreferences = {}, _type = "day") {
-		let taskHolder = buildDayItem(
-			HTML.todoHolder,
-			_preferences,
-			_taskRenderPreferences,
-			_type
-		);
-
-		this.list.push(taskHolder);
-		return taskHolder;
-	}
-
-	this.addOverdue = function() {
-		let project = Server.getProject(MainContent.curProjectId);
-		let todoList = []; 
-		if (project) 
-		{
-			todoList = project.todos.getTodosByDate(new Date().moveDay(-1));
-		} else {
-			todoList = Server.todos.getByDate(new Date().moveDay(-1));
-		}
-		
-		todoList 	= MainContent.taskPage.renderer.settings.filter(todoList, {
-			finished: true
-		});
-		todoList 	= MainContent.taskPage.renderer.settings.sort(todoList, []);
-		
-		if (!todoList.length) return false;
-
-		let item = this.add(
-			{}, 
-			{
-				displayProjectTitle: !MainContent.curProjectId
-			}, 
-			"overdue"
-		);
-
-		item.createMenu.disable();
-		item.todo.renderTodoList(todoList);
-	}
-
-
-
-
-
-
-
-	function buildDayItem(_appendTo, _preferences, _todoRenderPreferences, _type) {
-		let taskHolder 			= new _MainContent_todoHolder_taskHolder;
-		taskHolder.createMenu 	= new _MainContent_todoHolder_taskHolder_createMenu;
-		taskHolder.todo 		= new _MainContent_todoHolder_taskHolder_todo;
-
-		extendTaskHolder(_type, taskHolder, _preferences)
-
-		taskHolder.setup(_appendTo, _preferences, _type);
-		taskHolder.createMenu.setup(taskHolder);
-		taskHolder.todo.setup(taskHolder, _todoRenderPreferences);
-
-		return taskHolder;
-	}
-
-
-	function extendTaskHolder(_type, taskHolder, _preferences) {
-		switch (_type)
-		{
-			case "overdue": extendOverdue(taskHolder, _preferences); break;
-			case "list": 	extendListItem(taskHolder, _preferences); break;
-			default: 		extendDayItem(taskHolder, _preferences); break;
-		}
-	}
-
-
-	function extendOverdue(taskHolder, _preferences) {
-		_preferences.class = "overdue";
-		_preferences.title = "Overdue";
-
-		// taskHolder.createMenu.disable(); no longer supported
-
-		taskHolder.onTaskFinish = function(_task) {
-			let taskId = _task.id ? _task.id : _task;
-			this.todo.removeTask(taskId);
-			if (this.todo.taskList.length > 0) return;
-			this.remove();
-		}
-
-		taskHolder.onTaskRemove = taskHolder.onTaskFinish;
-	}
-
-
-	function extendDayItem(taskHolder, _preferences) {		
-		_preferences.title 	= dateToDisplayText(_preferences.date);
-		taskHolder.date 	= _preferences.date;
-		
-		if (typeof _preferences.customAttributes != "object") _preferences.customAttributes = [];
-		_preferences.customAttributes.push(
-			{
-				key: "date", 
-				value: _preferences.date.toString()
-			}
-		);
-	}
-
-	function extendListItem(taskHolder, _preferences) {
-	}
-
-
-
-
-
-
-
-
-
-
-	this.get = function(_id) {
-		for (let i = 0; i < this.list.length; i++)
-		{
-			if (this.list[i].id != _id) continue;
-			return this.list[i];
-		}
-		return false;
-	}
-
-	this.remove = function(_id) {
-		for (let i = 0; i < this.list.length; i++)
-		{
-			if (this.list[i].id != _id) continue;
-			this.list.splice(i, 1);
-			return true;
-		}
-		return false;
-	}
-
-
-	this.clear = function() {
-		HTML.todoHolder.innerHTML = "";
-		this.list = [];
-	}
-
-
-	this.createTask = function() {
-		for (let i = 0; i < this.list.length; i++)
-		{
-			if (!this.list[i].createMenu.openState) continue;
-			this.list[i].createMenu.createTask();
-			return true;
-		}
-		return false;
-	}
-
-
-	this.closeAllCreateMenus = function() {
-		let found = false;
-		for (let i = 0; i < this.list.length; i++)
-		{
-			if (!this.list[i].createMenu.openState) continue;
-			this.list[i].createMenu.close();
-			found = true;
-		}
-		return found;
-	}
+function _taskHolder_day(_appendTo, _preferences, _renderPreferences) {
+	_preferences.title = dateToDisplayText(_preferences.date);
+	this.date = _preferences.date;
+	_taskHolder.call(this, _appendTo, _preferences, _renderPreferences, "day");
 }
 
 
+function _taskHolder_list(_appendTo, _preferences, _renderPreferences) {
+	_preferences.title = "";
+	_taskHolder.call(this, _appendTo, _preferences, _renderPreferences, "list");
+}
 
 
+function _taskHolder_overdue(_appendTo, _preferences, _renderPreferences) {
+	_preferences.title = "Overdue";
+	_taskHolder.call(this, _appendTo, _preferences, _renderPreferences, "overdue");
 
-
-
-
-
-
-
+	// make overdue alterations
+	this.HTML.Self.classList.add("overdue");
+	
+	this.onTaskRemove = this.onTaskFinish;
+	this.onTaskFinish = function(_task) {
+		let taskId = _task.id ? _task.id : _task;
+		this.todo.removeTask(taskId);
+		if (this.todo.taskList.length > 0) return;
+		this.remove();
+	}
+}
 
 
 

@@ -229,7 +229,6 @@ function _MainContent_searchOptionMenu() {
 	}
 
 
-
 	this.hide = function(_reFocusTextElement = false, _setTimeOut = 5) {
 		this.openState = false;
 		if (!inputField) return;

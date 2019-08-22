@@ -30,6 +30,7 @@ function isDescendant(parent, child) {
   }
 }
 
+
 function inArray(arr, item) {
   for (let i = 0; i < arr.length; i++)
   {
@@ -39,6 +40,11 @@ function inArray(arr, item) {
     }
   }
   return false;
+}
+
+
+Array.prototype.randomItem = function() {
+  return this[Math.round((this.length - 1) * Math.random())];
 }
 
 

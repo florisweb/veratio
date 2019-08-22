@@ -86,7 +86,7 @@ function _Server_project_userComponent_Self(_user) {
       break;
       case "finish": 
         if (Permissions[1][0] >= 2) return true;
-        if (Permissions[1][0] >= 1 && inArray(_task.assignedTo, this.id))   return true;
+        if (Permissions[1][0] >= 1 && _task.assignedT.includes(this.id))    return true;
         if (Permissions[1][0] >= 0 && _task.creatorId == this.id)           return true;
       break; //finish
       default: 

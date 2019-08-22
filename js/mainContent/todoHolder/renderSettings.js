@@ -48,7 +48,7 @@ function _TaskRenderer_settings() {
 				let userId = project.users.Self.id;
 				
 				if (item.finished 						!= _filter.finished 	&& _filter.finished 	!= undefined) continue;
-				if (inArray(item.assignedTo, userId)	!= _filter.assignedTo 	&& _filter.assignedTo 	!= undefined) continue;
+				if (item.assignedTo.includes(userId)	!= _filter.assignedTo 	&& _filter.assignedTo 	!= undefined) continue;
 				if ((item.creatorId == userId)			!= _filter.ownTask		&& _filter.ownTask 		!= undefined) continue;
 				
 				_list.splice(i, 1);
@@ -124,8 +124,8 @@ function _TaskRenderer_settings() {
 				let projectA = Server.getProject(a.projectId);
 				let projectB = Server.getProject(b.projectId);
 
-				let assignedA = inArray(a.assignedTo, projectA.users.Self.id);
-				let assignedB = inArray(b.assignedTo, projectB.users.Self.id);
+				let assignedA = a.assignedTo.includes(projectA.users.Self.id);
+				let assignedB = b.assignedTo.includes(projectB.users.Self.id);
 
 				if (assignedA) return -1;
 				if (assignedB) return 1;

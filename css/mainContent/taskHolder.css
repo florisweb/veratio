@@ -227,14 +227,15 @@
 			height: auto;
 			overflow: hidden;
 			
-			opacity: 0.5;
-
+			opacity: 0;
+			pointer-events: none;
 			transition: all .25s;
 		}
 
-		.createTaskHolder .addButtonHolder.hide {
-			margin-top: 40px;
-			opacity: 0;
+		.createTaskHolder.close .addButtonHolder {
+			pointer-events: all;
+			opacity: 0.5;
+			padding-bottom: 20px;
 		}
 
 
@@ -257,12 +258,11 @@
 		}
 
 
-		.createTaskHolder .createMenuHolder.hide {
-			margin-top: -30px;
-			padding-bottom: 10px;
+		.createTaskHolder.close .createMenuHolder {
+			margin-top: -75px;
 			opacity: 0;
+			pointer-events: none;
 		}
-
 
 			.createMenuHolder .inputField {
 				width: calc(100% - 15px - 15px);
