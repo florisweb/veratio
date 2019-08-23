@@ -131,6 +131,11 @@ function _MainContent_taskHolder() {
 
 
 
+
+
+
+
+
 function _taskHolder(_appendTo, _preferences, _renderPreferences, _type) {
 	let This = this;
 	this.id 			= newId();
@@ -144,6 +149,8 @@ function _taskHolder(_appendTo, _preferences, _renderPreferences, _type) {
 
 	this.createMenu 	= new _taskHolder_createMenu(this);
 	this.todo 			= new _taskHolder_task(this, _renderPreferences);
+
+
 
 
 	this.remove = function() {
@@ -168,7 +175,8 @@ function _taskHolder(_appendTo, _preferences, _renderPreferences, _type) {
 							'<div class="todoHolder"></div>' + 
 							'<div class="todoItem createTaskHolder close">' + 
 								'<div class="createMenuHolder">' + 
-									'<input class="text inputField iBoxy clickable" placeholder="Read some books...">' + 
+									'<input class="text inputField iBoxy clickable taskTitle">' + 
+									'<input class="text inputField iBoxy clickable taskDate" placeholder="Date">' + 
 									'<div class="leftHand">' + 
 										'<div class="text button bDefault bBoxy" style="float: left">Create</div>' + 
 										'<div class="text button" style="float: left">Cancel</div>' + 
@@ -193,21 +201,18 @@ function _taskHolder(_appendTo, _preferences, _renderPreferences, _type) {
 
 
 
-
-		// if (_editing) createMenu.children[1].children[0].innerHTML = "Change";
-		let createMenu = html.children[2].children[0];
-		createMenu.children[1].children[0].onclick = function () {This.createMenu.createTask();}
-		createMenu.children[1].children[1].onclick = function () {This.createMenu.close();}
+		let createMenu = This.HTML.createMenu.children[0];
+		createMenu.children[2].children[0].onclick = function () {This.createMenu.createTask();}
+		createMenu.children[2].children[1].onclick = function () {This.createMenu.close();}
 
 
-		createMenu.children[2].children[0].onclick = function () {This.createMenu.openTagSelectMenu()}
-		createMenu.children[2].children[1].onclick = function () {This.createMenu.openMemberSelectMenu()}
-		createMenu.children[2].children[2].onclick = function () {This.createMenu.openProjectSelectMenu()}
+		createMenu.children[3].children[0].onclick = function () {This.createMenu.openTagSelectMenu()}
+		createMenu.children[3].children[1].onclick = function () {This.createMenu.openMemberSelectMenu()}
+		createMenu.children[3].children[2].onclick = function () {This.createMenu.openProjectSelectMenu()}
 		
 
 		createMenu.children[0].placeholder = PLACEHOLDERTEXTS.randomItem();
 		This.HTML.createMenu.children[1].onclick = function () {This.createMenu.open();}
-
 
 
 
@@ -258,7 +263,7 @@ function _taskHolder_createMenu(_Parent) {
 
 		let buttonTitle = "Create";
 		if (_editing) buttonTitle = "Change";
-		Parent.HTML.createMenu.children[0].children[1].children[0].innerHTML = buttonTitle;
+		Parent.HTML.createMenu.children[0].children[2].children[0].innerHTML = buttonTitle;
 
 		MainContent.searchOptionMenu.openWithInputField(Parent.HTML.createMenu.children[0].children[0]);
 	}
