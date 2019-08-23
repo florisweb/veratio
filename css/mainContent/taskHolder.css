@@ -7,20 +7,15 @@
 
 	margin-top: 25px;
 }
-.mainContentPage .todoListHolder .taskHolder:nth-child(1) {
-	margin-top: 0;
-}
+
 
 	.taskHolder.overdue {
 		left: -30px;
-		/*top: -20px;*/
 		padding: 10px 0;
 		padding-left: 30px;
 		padding-top: 20px;
 
 		background: linear-gradient(100deg, rgba(255, 0, 0, 0.05), rgba(255, 0, 0, 0));
-		/*background: linear-gradient(90deg, rgba(255, 0, 0, 0.05), rgba(255, 0, 0, 0));*/
-		/*border-left: 3px solid #f00;*/
 		color: #f00;
 	}
 
@@ -227,6 +222,7 @@
 			height: auto;
 			overflow: hidden;
 			
+			margin-top: -20px;
 			opacity: 0;
 			pointer-events: none;
 			transition: all .25s;
@@ -234,8 +230,8 @@
 
 		.createTaskHolder.close .addButtonHolder {
 			pointer-events: all;
-			opacity: 0.5;
-			padding-bottom: 20px;
+			margin-top: 0;
+			opacity: .5;
 		}
 
 

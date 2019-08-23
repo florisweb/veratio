@@ -223,6 +223,9 @@ function _taskHolder(_appendTo, _preferences, _renderPreferences, _type) {
 function _taskHolder_createMenu(_Parent) {
 	let Parent = _Parent;
 	let This = this;
+	let HTML = {
+		inputField: Parent.HTML.createMenu.children[0].children[0]
+	}
 
 	let edit_todo = null;
 	let edit_todoHTML = null;
@@ -248,7 +251,8 @@ function _taskHolder_createMenu(_Parent) {
 
 		this.openState = true;
 		Parent.HTML.createMenu.classList.remove("close");
-		Parent.HTML.createMenu.children[0].children[0].focus();
+		HTML.inputField.focus();
+		HTML.inputField.value = null;
 
 
 
