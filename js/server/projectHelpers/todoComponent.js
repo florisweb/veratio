@@ -24,13 +24,12 @@ function _Server_project_todoComponent(_parent) {
   //temporarily
 
   this.list   = DTTemplate.list;
-  this.get    = function(_id, _askServer) {return DTTemplate.get(_id, _askServer);}
+  this.get    = function(_id, _askServer = false) {return DTTemplate.get(_id, _askServer);}
   this.remove = function(_id) {return DTTemplate.remove(_id);}
 
   this.update = function(_newItem, _updateServer = true) {
     _newItem.projectId = Parent.id;
     if (!_newItem.creatorId) _newItem.creatorId = Parent.users.Self.id;
-    console.warn(Parent, Parent.id, _newItem);
 
     // search if the task will be moved from another project, and if so, remove the previous one
     let foundTask = Server.todos.get(_newItem.id);

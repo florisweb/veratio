@@ -18,7 +18,7 @@ function _Server_project_tagComponent(_parent) {
   this.list = DTTemplate.list;
 
 
-  this.get = function(_id, _askServer)  {return DTTemplate.get(_id, _askServer);}
+  this.get = function(_id, _askServer = false)  {return DTTemplate.get(_id, _askServer);}
   this.update = function(_newItem)      {return DTTemplate.update(_newItem);}
   this.remove = function(_id)           {return DTTemplate.remove(_id);}
 
