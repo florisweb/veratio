@@ -5,7 +5,7 @@ function _TaskRenderer() {
 	this.settings = new _TaskRenderer_settings();
 
 
-	this.renderToDo = function(_task, _taskHolder, _displayProjectTitle) {
+	this.renderToDo = function(_task, _taskHolder, _renderSettings) {
 		if (!_task) return false;
 		let project = Server.getProject(_task.projectId);
 		let tag 	= project.tags.get(_task.tagId);
@@ -21,8 +21,15 @@ function _TaskRenderer() {
 
 			memberText: 	_createMemberTextByUserIdList(_task.assignedTo, project),
 		}
+		if (_task.groupType == "date" && _renderSettings.displayDate !== false)
+		{
+			todoRenderData.deadLineText = DateNames.toString(
+				new Date().setDateFromStr(_task.groupValue),
+				true
+			);
+		} 
 
-		if (_displayProjectTitle !== false) todoRenderData.projectTitle = project.title;
+		if (_renderSettings.displayProjectTitle !== false) todoRenderData.projectTitle = project.title;
 		if (tag) todoRenderData.tagColour = tag.colour;
 		
 		let html = createTaskHTML(todoRenderData, _taskHolder);
@@ -67,20 +74,21 @@ function _TaskRenderer() {
 			if (_toDoData.isMyTask) html.classList.add("isMyTask");
 
 
-			let statusCircleSVG = '<?xml version="1.0" standalone="no"?><svg class="statusCircle clickable" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="isolation:isolate" viewBox="0 0 83 83" width="83" height="83"><defs><clipPath id="_clipPath_EvyxEBqQoipdaXxIJMEjCjvXV7edc1qw"><rect width="83" height="83"/></clipPath></defs><g clip-path="url(#_clipPath_EvyxEBqQoipdaXxIJMEjCjvXV7edc1qw)"><rect x="0.729" y="42.389" width="43.308" height="20" transform="matrix(0.707,0.707,-0.707,0.707,43.601,-0.482)"/><rect x="16.22" y="30.02" width="70" height="20" transform="matrix(0.707,-0.707,0.707,0.707,-13.296,47.939)"/></g></svg>';
+			const statusCircleSVG = '<?xml version="1.0" standalone="no"?><svg class="statusCircle clickable" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="isolation:isolate" viewBox="0 0 83 83" width="83" height="83"><defs><clipPath id="_clipPath_EvyxEBqQoipdaXxIJMEjCjvXV7edc1qw"><rect width="83" height="83"/></clipPath></defs><g clip-path="url(#_clipPath_EvyxEBqQoipdaXxIJMEjCjvXV7edc1qw)"><rect x="0.729" y="42.389" width="43.308" height="20" transform="matrix(0.707,0.707,-0.707,0.707,43.601,-0.482)"/><rect x="16.22" y="30.02" width="70" height="20" transform="matrix(0.707,-0.707,0.707,0.707,-13.296,47.939)"/></g></svg>';
 			html.innerHTML = 	"<div class='isMyTaskIndicator'></div>" + 
 								"<div class='statusCircleHitBox'>" + statusCircleSVG + "</div>" + 
 								'<div class="titleHolder text userText"></div>' + 
 							 	'<div class="functionHolder">' +
 									'<img src="images/icons/optionIcon.png" onclick="MainContent.optionMenu.open(this)" class="functionItem optionIcon icon clickable">' +
 									'<div class="functionItem projectHolder"></div>' +
+									'<div class="functionItem deadLineHolder userText"></div>' +
 									'<div class="functionItem memberList userText"></div>' +
 								'</div>';
 
 
 			setTextToElement(html.children[2], _toDoData.title);
-			if (_toDoData.memberText) setTextToElement(html.children[3].children[2], _toDoData.memberText);
-
+			if (_toDoData.memberText) setTextToElement(html.children[3].children[3], _toDoData.memberText);
+			if (_toDoData.deadLineText) setTextToElement(html.children[3].children[2], _toDoData.deadLineText);
 			if (_toDoData.projectTitle) 
 			{
 				let projectTitleHolder = html.children[3].children[1];

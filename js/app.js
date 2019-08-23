@@ -27,6 +27,7 @@ function _app() {
 
 
 
+
   this.delimitMemberText = function(_members, _delimiter = 20) {
     if (!_members || !_members.length) return "";
     let defaultMemberText = _members[0].name;

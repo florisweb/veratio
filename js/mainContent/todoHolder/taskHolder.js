@@ -176,7 +176,7 @@ function _taskHolder(_appendTo, _preferences, _renderPreferences, _type) {
 							'<div class="todoItem createTaskHolder close">' + 
 								'<div class="createMenuHolder">' + 
 									'<input class="text inputField iBoxy clickable taskTitle">' + 
-									'<input class="text inputField iBoxy clickable taskDate" placeholder="Date">' + 
+									'<input class="text inputField iBoxy clickable taskDeadLine" placeholder="Deadline">' + 
 									'<div class="leftHand">' + 
 										'<div class="text button bDefault bBoxy" style="float: left">Create</div>' + 
 										'<div class="text button" style="float: left">Cancel</div>' + 
@@ -225,11 +225,15 @@ function _taskHolder(_appendTo, _preferences, _renderPreferences, _type) {
 
 
 
+
+
+
 function _taskHolder_createMenu(_Parent) {
 	let Parent = _Parent;
 	let This = this;
 	let HTML = {
-		inputField: Parent.HTML.createMenu.children[0].children[0]
+		inputField: Parent.HTML.createMenu.children[0].children[0],
+		deadLineField: Parent.HTML.createMenu.children[0].children[1],
 	}
 
 	let edit_todo = null;
@@ -258,6 +262,8 @@ function _taskHolder_createMenu(_Parent) {
 		Parent.HTML.createMenu.classList.remove("close");
 		HTML.inputField.focus();
 		HTML.inputField.value = null;
+		HTML.deadLineField.value = null;
+		if (Parent.date) HTML.deadLineField.value = DateNames.toString(Parent.date);
 
 
 
@@ -288,6 +294,7 @@ function _taskHolder_createMenu(_Parent) {
 		let project = Server.getProject(_task.projectId);
 		
 		createMenu.children[0].children[0].value = _task.title;
+		if (_task.groupType == "date") createMenu.children[0].children[1].value = _task.groupValue;
 	}
 
 
@@ -383,6 +390,7 @@ function _taskHolder_createMenu(_Parent) {
 		if (!createMenuItems[0]) return false;
 
 		let task = _inputValueToData(createMenuItems[0].value);
+		let date = filterDate(createMenuItems[1].value);
 
 		if (!task.title || task.title.split(" ").join("").length < 1) return "E_InvalidTitle";
 		
@@ -393,10 +401,16 @@ function _taskHolder_createMenu(_Parent) {
 				task.groupValue = "";
 			break;
 			default: 
-				task.groupType = "date";
-				task.groupValue = Parent.date.copy().toString();
-				if (!task.groupValue) return "E_InvalidDate";
+				if (date) break;
+				date = Parent.date.copy().toString();
 			break;
+		}
+
+		if (date) 
+		{
+			task.groupType = "date";
+			task.groupValue = date;
+			if (!task.groupValue) return "E_InvalidDate";
 		}
 
 		return task;
@@ -459,6 +473,12 @@ function _taskHolder_createMenu(_Parent) {
 		return {list: found, value: _value};
 	}
 
+	function filterDate(_strDate) {
+		let date = DateNames.toDate(_strDate);
+		if (date && date.getDateInDays()) return date.toString();
+		return false;
+	}
+
 	setup();
 }
 
@@ -491,7 +511,7 @@ function _taskHolder_task(_parent, _renderPreferences) {
 		if (typeof _location != "number") _location = todos.length;
 		_task.taskHolderId = Parent.id;
 
-		let task = MainContent.taskPage.renderer.renderToDo(_task, Parent, RenderPreferences.displayProjectTitle);
+		let task = MainContent.taskPage.renderer.renderToDo(_task, Parent, RenderPreferences);
 
 		Parent.HTML.todoHolder.insertBefore(
 			task, 
@@ -541,7 +561,7 @@ function _taskHolder_task(_parent, _renderPreferences) {
 
 
 function _taskHolder_day(_appendTo, _preferences, _renderPreferences) {
-	_preferences.title = dateToDisplayText(_preferences.date);
+	_preferences.title = DateNames.toString(_preferences.date, false);
 	this.date = _preferences.date;
 	_taskHolder.call(this, _appendTo, _preferences, _renderPreferences, "day");
 }

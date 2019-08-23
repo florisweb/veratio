@@ -57,6 +57,26 @@ function _Server_project_todoComponent(_parent) {
     return tasksOnDate;
   }
 
+  this.getTasksByDateRange = function(_date, _range, _askServer) {
+    let tasksOnDate = [];
+    let minDate = new Date().setDateFromStr(_date);
+    let maxDate = minDate.copy().moveDay(_range);
+
+    if (_askServer) DTTemplate.DB.getByDateRange(_date, _range);
+
+    for (let i = 0; i < DTTemplate.list.length; i++)
+    {
+      let curItem = DTTemplate.list[i];
+      if (curItem.groupType != "date") continue;
+      let curItemsDate = new Date().setDateFromStr(curItem.groupValue);
+      
+      if (!curItemsDate.dateIsBetween(minDate, maxDate)) continue;
+      tasksOnDate.push(curItem);
+    }
+    return tasksOnDate;
+  }
+
+
   this.getTodosByDate = function(_date, _askServer) {
     let todosOnDate = [];
     let targetDate = new Date().setDateFromStr(_date);

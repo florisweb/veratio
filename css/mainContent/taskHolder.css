@@ -177,8 +177,10 @@
 				
 				
 
-				.todoItem .functionHolder .memberList {
-					font-size: 14px;
+
+				.todoItem .functionHolder .deadLineHolder {
+					color: #ccc;
+					font-size: 13px;
 				}
 
 
@@ -266,16 +268,16 @@
 				float: left;
 				width: calc(100% + 5px);
 			}
-			.createMenuHolder .inputField.taskDate {
+			.createMenuHolder .inputField.taskDeadLine {
 				top: -32px;
 				float: right;
 				right: -5px;
 
 				width: 90px;
 
-				opacity: 0.5;
+				opacity: 0.8;
 				text-align: center;
-				font-size: 13px;
+				font-size: 12px;
 			}
 
 			.createMenuHolder .leftHand {

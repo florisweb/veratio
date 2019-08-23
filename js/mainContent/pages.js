@@ -187,7 +187,12 @@ function _MainContent_taskPage_tab(_parent) {
 		
 		todoList 		= MainContent.taskPage.renderer.settings.sort(todoList, []);
 
-		let taskHolder 	= Parent.taskHolder.add({displayProjectTitle: true, date: date});
+		let taskHolder 	= Parent.taskHolder.add({
+			displayProjectTitle: true, 
+			date: date
+		}, {
+			displayDate: false
+		});
 		taskHolder.todo.renderTodoList(todoList);
 	}
 
@@ -207,7 +212,12 @@ function _MainContent_taskPage_tab(_parent) {
 			});
 			todoList 		= MainContent.taskPage.renderer.settings.sort(todoList, []);
 
-			let taskHolder 	= Parent.taskHolder.add({displayProjectTitle: true, date: date});
+			let taskHolder 	= Parent.taskHolder.add({
+				displayProjectTitle: true, 
+				date: date
+			}, {
+				displayDate: false
+			});
 			taskHolder.todo.renderTodoList(todoList);
 		}
 	}
@@ -221,6 +231,7 @@ function _MainContent_taskPage_tab(_parent) {
 		MainContent.header.setMemberList(project.users.getList());
 
 		let taskList 	= project.todos.getTasksByGroup("default");
+		taskList 		= taskList.concat(project.todos.getTasksByDateRange(new Date(), 1000));
 		taskList 		= MainContent.taskPage.renderer.settings.sort(taskList, []);
 		
 		let taskHolder = Parent.taskHolder.add(

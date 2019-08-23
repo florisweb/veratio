@@ -159,3 +159,68 @@ Date.prototype.moveMinutes = function(_minutes = 0) {
 
 
 
+
+
+
+
+
+
+const DateNames = function() {
+    const dateNames = [
+      {name: "Yesterday",   date: new Date().moveDay(-1)},
+      {name: "Today",       date: new Date()},
+      {name: "Tomorrow",    date: new Date().moveDay(1)},
+      {name: "Next week",   date: new Date().moveDay(7)}
+    ];
+
+    return {
+    	dateNames: dateNames,
+     	toString: toString,
+     	toDate: toDate
+    }
+
+    function getDateStrFromDateNames(_date) {
+      for (obj of dateNames)
+      {
+        if (!obj.date.compareDate(_date)) continue;
+        return obj.name;
+      }
+      return "";
+    }
+
+    function getDateFromDateNames(_str) {
+      for (obj of dateNames)
+      {
+        if (obj.name.toLowerCase() != _str.toLowerCase()) continue;
+        return obj.date;
+      }
+      return false;
+    }
+
+
+    function toString(_date, _compact) {
+      let dateName = getDateStrFromDateNames(_date);
+      if (dateName) return dateName;
+
+      dateName = _date.getDayName();
+      let monthName = _date.getMonths()[_date.getMonth()].name;
+      if (_compact)
+      {
+        dateName += " " + _date.getDate() + " " + monthName.substr(0, 3);
+      } else dateName += " - " + _date.getDate() + " " + monthName;
+
+      if (_date.getFullYear() != new Date().getFullYear()) dateName += " " + _date.getFullYear();
+
+      return dateName;
+    }
+
+
+    function toDate(_str) {
+      let date = getDateFromDateNames(_str);
+      if (date) return date;
+      date = new Date().setDateFromStr(_str);
+      if (date) return date;
+      return false;
+    }
+
+}();
