@@ -43,6 +43,8 @@
 		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0' name='viewport'/>
 		<meta name="theme-color" content="#636ad5">
 		<link rel="manifest" href="manifest.json">
+		<link rel="shortcut icon" href="images/pressSet/favicon.ico">
+
 
 		<link rel="stylesheet" type="text/css" href="css/component.css?a=37">
 		<link rel="stylesheet" type="text/css" href="css/popup.css?a=30">
@@ -54,11 +56,9 @@
 
 		<script type="text/javascript" src="/JS/jQuery.js" asy nc></script>
 		<script type="text/javascript" src="/JS/request2.js" asy nc></script>
-		
+	
 	</head>	
 	<body>
-
-		
 		<div id="notificationBoxHolder" class="hide">
 			<div id="notificationBox">
 			</div>
@@ -67,7 +67,6 @@
 
 		<div id="sideBar">
 			<img class="sideBarBackground" src="images/sideBarBackground/?type=sidebar">
-
 			<div class="navigationHolder">
 				<div class="header clickable" onclick="MainContent.taskPage.tab.open('Today')">
 					<img src="images/icons/todayIcon.png" class="headerIcon">

@@ -6,6 +6,7 @@
 		<meta name="theme-color" content="#636ad5">
 		<link rel="manifest" href="../manifest.json">
 		<link rel="stylesheet" type="text/css" href="../css/component.css?a=34">
+		<link rel="shortcut icon" href="https://florisweb.tk/git/todo/images/pressSet/favicon.ico">
 
 		<style>
 			body {
@@ -73,7 +74,7 @@
 			#menuHolder {
 				position: relative;
 				margin: auto;
-				width: calc(90vw);
+				width: 90vw;
 				max-width: 480px;
 				height: 100vh;
 			}
@@ -82,7 +83,7 @@
 
 			.inviteMenu {
 				position: absolute;
-				top: calc(50vh - 150px);
+				top: calc(50vh - 170px);
 
 				width: calc(100% - 40px * 2);
 
@@ -98,9 +99,6 @@
 			    animation-delay: .1s;
 
 			    animation-fill-mode: forwards;
-			    transform: scale(0);
-			    opacity: 0;
-			   	margin-top: 20vh;
 			}
 		
 
@@ -120,7 +118,7 @@
 			
 
 			#menu_linkFound {
-				top: calc(50vh - 200px);
+				top: calc(50vh - 210px);
 				padding-bottom: 20px;
 			}
 
@@ -180,13 +178,25 @@
 				text-align: center;
 			}
 
+
+			#logo { 
+				position: relative;
+				top: 40px;
+				left: calc(50vw - 90px / 2);
+				width: 90px;				
+				opacity: 0.8;
+			}
 		</style>		
-		<title>Join Veratio - Florisweb.tk</title>
+		<title>Join Project - Veratio</title>
 	</head>	
 	<body>
+		
 		<img src="../images/sideBarBackground/backgrounds/fullScreen.jpg" id="backgroundImage">
+		<img src="../images/pressSet/banner.png" id="logo">
+
 
 		<div id="menuHolder">
+			
 			<div class="inviteMenu hi de" id="menu_linkFound">
 				<div id="projectTitleHolder" class='text tHeaderLarge'></div>
 				<br>
@@ -220,7 +230,6 @@
 					Please ask your projects' owner to resend your invite.
 				</div>
 			</div>
-
 		</div>
 
 
@@ -277,6 +286,7 @@
 				menu_linkFound.classList.remove("hide");
 				menu_linkNotFound.classList.add("hide");
 
+				document.title = "Join " + projectTitle.substr(0, 20) + " - Veratio";
 				setTextToElement(projectTitleHolder, 		projectTitle);
 				setTextToElement(projectTitleHolder_small, 	projectTitle);
 

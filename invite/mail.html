@@ -3,9 +3,8 @@
 <html>
 	<head>
 		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0' name='viewport'/>
-		<style>
-
-
+		<link rel="shortcut icon" href="https://florisweb.tk/git/todo/images/favicon.ico">
+		<style>	
 			body {
 				margin: 0;
 				padding: 0;
@@ -20,13 +19,6 @@
 				top: 0;
 				width: 100vw;
 				height: auto;
-
-
-				animation: backgroundImage_popIn 1s 1;
-			    animation-delay: 0s;
-			    animation-fill-mode: forwards;
-
-			    animation: backgroundImage_passive 5s 10000;
 			}
 
 			@media (max-aspect-ratio: 7/4) {
@@ -35,36 +27,6 @@
 				height: 100vh;
 			  }
 			}
-
-			
-			@keyframes backgroundImage_popIn {
-			    0% {
-			    	opacity: 0;
-			    }
-			   
-			    100% {
-			    	opacity: 1;
-			    	transform: scale(1.1);
-			    }
-			}
-			@keyframes backgroundImage_passive {
-			    0% {
-			    	opacity: .5;
-			    }
-			    
-			    50% {
-			    	opacity: 1;
-			    	transform: scale(1.05);
-			    }
-			   
-			    100% {
-			    	opacity: .5;
-			    }
-			}
-
-
-
-
 
 
 
@@ -91,32 +53,10 @@
 				box-shadow: 5px 5px 15px 15px rgba(0, 0, 0, 0.01);
 				
 				transition: top 0.3s;
-
-				animation: inviteMenu_popIn .7s 1;
-			    animation-delay: .1s;
-
-			    animation-fill-mode: forwards;
-			    transform: scale(0);
-			    opacity: 0;
-			   	margin-top: 20vh;
 			}
 		
 
-			@keyframes inviteMenu_popIn {
-			    0% {
-			    	transform: scale(0);
-			    	opacity: 0;
-			    	margin-top: 20vh;
-			    }
-
-			    100% {
-			    	margin-top: 0;
-			    	opacity: 1;
-			    	transform: scale(1);
-			    }
-			}
 			
-
 			#menu_linkFound {
 				top: calc(50vh - 200px);
 				padding-bottom: 20px;
@@ -157,10 +97,19 @@
 				color: #fff;
 				text-align: center;
 			}
+
+			#logo { 
+				position: relative;
+				top: 40px;
+				left: calc(50vw - 90px / 2);
+				width: 90px;				
+				opacity: 0.8;
+			}
 		</style>		
 	</head>	
 	<body>
 		<img src="https://florisweb.tk/git/todo/images/sideBarBackground/backgrounds/fullScreen.jpg" id="backgroundImage">
+		<img src="../images/pressSet/banner.png" id="logo">
 
 		<div id="menuHolder">
 			<div class="inviteMenu" id="menu_linkFound">
