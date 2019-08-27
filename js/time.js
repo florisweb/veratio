@@ -8,6 +8,7 @@
 
 Date.prototype.copy = function() {return new Date().setDateFromStr(this.toString(true));}
 
+
 Date.prototype.setDateFromStr = function(_str) {
 	if (typeof _str != "string" || !_str) return _str;
 	let dateTime = _str.split(" ");
@@ -25,6 +26,8 @@ Date.prototype.setDateFromStr = function(_str) {
 	
 	return this;
 }
+Date.prototype.setFromStr = Date.prototype.setDateFromStr;
+
 
 Date.prototype.toString = function(_addTime = false) {
 	let dateStr = this.getDate() + "-" + (this.getMonth() + 1) + "-" + this.getFullYear();
@@ -176,7 +179,7 @@ const DateNames = function() {
     return {
     	dateNames: dateNames,
      	toString: toString,
-     	toDate: toDate
+     	toDate: strToDate,
     }
 
     function getDateStrFromDateNames(_date) {
@@ -188,21 +191,14 @@ const DateNames = function() {
       return "";
     }
 
-    function getDateFromDateNames(_str) {
-      for (obj of dateNames)
-      {
-        if (obj.name.toLowerCase() != _str.toLowerCase()) continue;
-        return obj.date;
-      }
-      return false;
-    }
-
-
     function toString(_date, _compact) {
       let dateName = getDateStrFromDateNames(_date);
       if (dateName) return dateName;
 
       dateName = _date.getDayName();
+      if (!dateName) return false;
+      if (_compact) dateName = dateName.substr(0, 3);
+
       let monthName = _date.getMonths()[_date.getMonth()].name;
       if (_compact)
       {
@@ -215,12 +211,94 @@ const DateNames = function() {
     }
 
 
-    function toDate(_str) {
-      let date = getDateFromDateNames(_str);
-      if (date) return date;
-      date = new Date().setDateFromStr(_str);
-      if (date) return date;
-      return false;
-    }
+	function strToDate(_str) {
+		// short date: 15-08-2019
+		let date = new Date().setFromStr(_str);
+		if (!isNaN(date)) return date;
+
+		// relative date: Today, Tomorrow
+		date = relativeStrToDate(_str)
+		if (date) return date.date;
+
+		// spelled date: 15 august 2019
+		date = spelledStrToDate(_str)
+		if (date) return date;
+
+		return false;
+	}
+
+
+	function relativeStrToDate(_str) {
+		let options = []; 
+		for (dateObj of dateNames)
+		{
+			dateObj.score = similarity(_str, dateObj.name);
+			if (dateObj.score < 0.8) continue;
+			options.push(dateObj);
+		}
+
+		return options.sort(function(a, b){
+	     	if (a.score < b.score) return 1;
+	    	if (a.score > b.score) return -1;
+	    	return 0;
+		})[0];
+	}
+
+
+	function spelledStrToDate(_str) {
+		let parts = _str.split(" ");
+		if (parts.length < 2) return false;
+
+		let date = new Date();
+		let day = parseInt(parts[0].replace(/[^0-9]+/g, ''));
+		if (isNaN(day)) return false;
+		date.setDate(day);
+
+		if (!parts[1]) return date;
+		let month = getMonthFromStr(parts[1].replace(/[^a-z^A-Z]+/g, ''));
+		if (typeof month == "number") date.setMonth(month);
+
+		if (!parts[2]) return date;
+		let year = getYearFromStr(parts[2].replace(/[^0-9]+/g, ''));
+		if (year) date.setYear(year);
+
+		return date;
+	}
+
+
+	function getMonthFromStr(_str) {
+		let curMonth = false;
+		let curMonthScore = 0;
+
+		let months = new Date().getMonths();
+		for (let m = 0; m < months.length; m++)
+		{
+			let monthName = months[m].name;
+			let fullScore = similarity(monthName, _str);
+			let shortScore = similarity(monthName.substr(0, 3), _str);
+			let score = fullScore > shortScore ? fullScore : shortScore;
+			if (score < curMonthScore) continue;
+			curMonthScore = score;
+			curMonth = m;
+		}
+
+		if (curMonthScore <= .5) return false;
+		return curMonth;
+	}
+
+	function getYearFromStr(_str) {					
+		if (!_str) 						return false;
+		let year = parseInt(_str);
+		if (isNaN(year)) 				return false;
+		if (String(year).length != 4) 	return false;
+		return year;
+	}
+
+
+
+
 
 }();
+
+
+

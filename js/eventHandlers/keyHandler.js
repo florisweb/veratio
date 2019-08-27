@@ -30,12 +30,13 @@ function _KeyHandler() {
     {
       keys: ["Enter"], 
       event: function (_e) {
-        if (MainContent.searchOptionMenu.openState)         return MainContent.searchOptionMenu.chooseFirstSearchItem();
-        if (MainContent.curPageName == "createProject")     return MainContent.createProjectPage.createProject();
+        if (MainContent.taskPage.taskHolder.deadLineOptionMenu.openState)  return MainContent.taskPage.taskHolder.deadLineOptionMenu.clickFirstOption();
+        if (MainContent.searchOptionMenu.openState)                        return MainContent.searchOptionMenu.chooseFirstSearchItem();
+        if (MainContent.curPageName == "createProject")                    return MainContent.createProjectPage.createProject();
         
-        if (_e.target == $("#RENAMEPROJECTValueHolder")[0]) return MainContent.renameProjectFromPopup();
+        if (_e.target == $("#RENAMEPROJECTValueHolder")[0])                return MainContent.renameProjectFromPopup();
         
-        if (_e.target == inviteMemberInput)                 return MainContent.settingsPage.inviteUser();
+        if (_e.target == inviteMemberInput)                                return MainContent.settingsPage.inviteUser();
         return MainContent.taskPage.taskHolder.createTask();
       },
       ignoreIfInInputField: false

@@ -45,7 +45,6 @@
 		<link rel="manifest" href="manifest.json">
 		<link rel="shortcut icon" href="images/pressSet/favicon.ico">
 
-
 		<link rel="stylesheet" type="text/css" href="css/component.css?a=37">
 		<link rel="stylesheet" type="text/css" href="css/popup.css?a=30">
 		<link rel="stylesheet" type="text/css" href="css/main.css?a=22">

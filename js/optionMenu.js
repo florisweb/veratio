@@ -4,6 +4,7 @@ function _OptionMenu() {
 		let html = document.createElement("div");
 		html.className = "optionMenuHolder hide";
 		_parent.append(html);
+
 		let Menu = new _OptionMenu_menu(html);
 
 
@@ -13,10 +14,11 @@ function _OptionMenu() {
 			Menu.close();
 	    });
 
-
 		return Menu;
 	}
 }
+
+
 
 function _OptionMenu_menu(_self) {
 	let HTML = {
@@ -30,6 +32,7 @@ function _OptionMenu_menu(_self) {
 	this.openState = false;
 	this.open = function(_item, _relativePosition, _event) {
 		this.openState = true;
+		console.warn(this.openState, MainContent.taskPage.taskHolder.deadLineOptionMenu.openState);
 		moveToItem(_item, _relativePosition, _event);		
 		HTML.Self.classList.remove("hide");
 	}
@@ -42,10 +45,26 @@ function _OptionMenu_menu(_self) {
 	}
 
 	this.enableAllOptions = function() {
-		for (option of this.options)
+		for (option of this.options) option.enable();
+	}
+
+	this.clickFirstOption = function() {
+		let option = this.options[0];
+		if (!option) return;
+		option.html.click();
+		This.close();
+	}
+
+
+
+	function removeOption(_option) {
+		for (let i = 0; i < This.options.length; i++)
 		{
-			option.enable();
+			if (_option != This.options[i]) continue;
+			This.options.splice(i, 1);
+			return true;
 		}
+		return false;
 	}
 
 
@@ -68,7 +87,14 @@ function _OptionMenu_menu(_self) {
 		}
 
 		this.options.push(new function() {
+			this.title = _title;
 			this.html = option;
+
+			this.remove = function() {
+				removeOption(this);
+				this.html.parentNode.removeChild(this.html);
+			}
+
 			this.disable = function() {
 				this.html.classList.add("disabled");
 			}
@@ -76,8 +102,17 @@ function _OptionMenu_menu(_self) {
 			this.enable = function() {
 				this.html.classList.remove("disabled");
 			}
-		});
 
+			this.hide = function() {
+				this.html.style.display = "none";
+			}
+
+			this.show = function() {
+				this.html.style.display = "block";
+			}
+
+
+		});
 	}
 
 
@@ -95,7 +130,5 @@ function _OptionMenu_menu(_self) {
 		HTML.Self.style.top	 = top + "px";
 	}
 }
-
-
 
 

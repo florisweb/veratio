@@ -3,12 +3,54 @@
 
 
 
-
 function _MainContent_taskHolder() {
 	let HTML = {
 		todoHolder: $("#mainContentHolder .todoListHolder")[0],
+		taskPage: $(".mainContentPage")[0]
 	}
 	
+
+	this.deadLineOptionMenu = function() {
+		let Menu = OptionMenu.create(HTML.taskPage, true);
+	
+		Menu.removeAllOptions = function() {
+			for (option of Menu.options)Menu.options[0].remove();
+		}
+
+		let menu_open = Menu.open;
+		Menu.open = function(_item, _relativePosition, _event) {
+			menu_open(_item, _relativePosition, _event);
+			console.log(Menu, Menu.openState)
+			if (_item.tagName != "INPUT") return;
+			
+			_item.onkeyup = function(_e) {
+				menu_open(_item);
+				Menu.removeAllOptions();
+
+				let optionDate = DateNames.toDate(_item.value);
+				if (!optionDate) return Menu.close();
+
+				Menu.addOption(optionDate.toString(), function () {
+					_item.value = optionDate.toString();
+					Menu.close();
+				}, "");
+			
+			}
+		}
+
+
+		Menu.x = function () {return Menu.openState;}
+
+
+
+		return Menu;
+	}();
+
+
+
+
+
+
 	this.list = [];
 	this.add = function(_preferences = {customAttributes: []}, _taskRenderPreferences = {}, _type = "day") {
 		let taskHolder = buildDayItem(
@@ -195,7 +237,6 @@ function _taskHolder(_appendTo, _preferences, _renderPreferences, _type) {
 
 		This.HTML.createMenu = html.children[2];
 
-
 		if (!This.preferences.title) html.style.marginTop = "0";
 		setTextToElement(html.children[0], This.preferences.title);
 
@@ -210,6 +251,13 @@ function _taskHolder(_appendTo, _preferences, _renderPreferences, _type) {
 		createMenu.children[3].children[1].onclick = function () {This.createMenu.openMemberSelectMenu()}
 		createMenu.children[3].children[2].onclick = function () {This.createMenu.openProjectSelectMenu()}
 		
+		let deadLineField = This.HTML.createMenu.children[0].children[1];
+		deadLineField.onfocus = function() {
+			MainContent.taskPage.taskHolder.deadLineOptionMenu.open(deadLineField);
+		}
+		
+
+
 
 		createMenu.children[0].placeholder = PLACEHOLDERTEXTS.randomItem();
 		This.HTML.createMenu.children[1].onclick = function () {This.createMenu.open();}
