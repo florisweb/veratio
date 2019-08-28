@@ -620,6 +620,14 @@ function _taskHolder_task(_parent, _renderPreferences) {
 			case "default": 
 				if (Parent.type != "list") renderTask = false;
 			break;
+			case "overdue": 
+				if (new Date().setFromStr(_task.groupValue) >= new Date()) renderTask = false;
+			break;	
+		}
+
+		if (Parent.type == "overdue") // temporary code, until the backendSystem works
+		{
+			if (new Date().setFromStr(_task.groupValue) >= new Date()) renderTask = false;
 		}
 
 		if (MainContent.curProjectId && MainContent.curProjectId != _task.projectId) renderTask = false;

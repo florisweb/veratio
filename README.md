@@ -35,6 +35,7 @@ Tasks:
 * groupType
 	- 'default' 	- A projects item without date
 	- 'date'
+		- 'overdue'
 * groupValue
 
 
