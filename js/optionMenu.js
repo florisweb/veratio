@@ -19,7 +19,6 @@ function _OptionMenu() {
 }
 
 
-
 function _OptionMenu_menu(_self) {
 	let HTML = {
 		Self: _self,
@@ -32,7 +31,6 @@ function _OptionMenu_menu(_self) {
 	this.openState = false;
 	this.open = function(_item, _relativePosition, _event) {
 		this.openState = true;
-		console.warn(this.openState, MainContent.taskPage.taskHolder.deadLineOptionMenu.openState);
 		moveToItem(_item, _relativePosition, _event);		
 		HTML.Self.classList.remove("hide");
 	}
@@ -41,7 +39,7 @@ function _OptionMenu_menu(_self) {
 	this.close = function() {
 		this.openState = false;
 		HTML.Self.classList.add("hide");
-		setTimeout(function (_item) {_item.style.top = "-50px"}, 300, HTML.Self);
+		// setTimeout(function (_item) {_item.style.top = "-50px"}, 300, HTML.Self);
 	}
 
 	this.enableAllOptions = function() {
@@ -110,8 +108,6 @@ function _OptionMenu_menu(_self) {
 			this.show = function() {
 				this.html.style.display = "block";
 			}
-
-
 		});
 	}
 
@@ -130,5 +126,3 @@ function _OptionMenu_menu(_self) {
 		HTML.Self.style.top	 = top + "px";
 	}
 }
-
-

@@ -14,34 +14,29 @@ function _MainContent_taskHolder() {
 		let Menu = OptionMenu.create(HTML.taskPage, true);
 	
 		Menu.removeAllOptions = function() {
-			for (option of Menu.options)Menu.options[0].remove();
+			for (option of Menu.options) this.options[0].remove();
 		}
 
 		let menu_open = Menu.open;
-		Menu.open = function(_item, _relativePosition, _event) {
-			menu_open(_item, _relativePosition, _event);
-			console.log(Menu, Menu.openState)
+		Menu.open = function(_item, _event) {
+			menu_open(_item, {left: 0, top: -20}, _event);
 			if (_item.tagName != "INPUT") return;
 			
 			_item.onkeyup = function(_e) {
-				menu_open(_item);
+				menu_open(_item, {left: 0, top: -20});
+				Menu.openState = true;
 				Menu.removeAllOptions();
 
 				let optionDate = DateNames.toDate(_item.value);
 				if (!optionDate) return Menu.close();
 
-				Menu.addOption(optionDate.toString(), function () {
+				Menu.addOption(DateNames.toString(optionDate), function () {
 					_item.value = optionDate.toString();
 					Menu.close();
 				}, "");
 			
 			}
 		}
-
-
-		Menu.x = function () {return Menu.openState;}
-
-
 
 		return Menu;
 	}();
@@ -252,8 +247,11 @@ function _taskHolder(_appendTo, _preferences, _renderPreferences, _type) {
 		createMenu.children[3].children[2].onclick = function () {This.createMenu.openProjectSelectMenu()}
 		
 		let deadLineField = This.HTML.createMenu.children[0].children[1];
-		deadLineField.onfocus = function() {
+		deadLineField.onfocusin = function() {
 			MainContent.taskPage.taskHolder.deadLineOptionMenu.open(deadLineField);
+		}
+		deadLineField.onfocusout = function() {
+			This.HTML.createMenu.children[0].children[0].focus();
 		}
 		
 
