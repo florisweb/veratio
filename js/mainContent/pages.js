@@ -4,6 +4,7 @@ function _MainContent_taskPage(_parent) {
 	let HTML = {
 		todoHolder: $("#mainContentHolder .todoListHolder")[0],
 	}
+	let This = this;
 
 	this.pageSettings = {
 		pageName: "task",
@@ -25,80 +26,6 @@ function _MainContent_taskPage(_parent) {
 	this.tab 			= new _MainContent_taskPage_tab(this);
 	this.taskHolder 	= new _MainContent_taskHolder();
 	this.renderer 		= new _TaskRenderer(HTML.todoHolder);
-
-
-	this.loadMoreDays = function(_extraDays = 1) {
-		loadExtraDay().then(
-			function () {
-				if (_extraDays <= 1) return;
-				MainContent.taskPage.loadMoreDays(_extraDays - 1)
-			}
-		);
-	}
-
-
-	function loadExtraDay() { // depricated
-		return new Promise(function (resolve, error) {
-			let date 	= getNewDate();			
-			let project = Server.getProject(MainContent.curProjectId);
-			let mainPromise;
-
-			
-			if (project) 
-			{
-				mainPromise = project.todos.DTTemplate.DB.getByDate(date);
-			} else mainPromise = getAllTodosByDate(date);
-
-			mainPromise.then(
-				function () {
-					_renderExtraDay(date);
-					resolve();
-				}, 
-				function() {error()}
-			);
-		});
-
-
-
-		function getAllTodosByDate(_date) {
-			return new Promise(function (resolve, error) {
-				let promises = [];
-				for (let i = 0; i < Server.projectList.length; i++) 
-				{
-					let project = Server.projectList[i];
-					promises.push(project.todos.DTTemplate.DB.getByDate(_date));
-				}
-
-				Promise.all(promises).then(function() {
-					resolve();
-				}, function() {
-					error();
-				});
-			});
-		}
-
-
-		function getNewDate() {
-			let taskHolders = $("#mainContentHolder .taskHolder");
-			let date = taskHolders[taskHolders.length - 1].getAttribute("date");
-			return new Date().setDateFromStr(date).moveDay(1);
-		}
-
-		function _renderExtraDay(_date) {
-			let project = Server.getProject(MainContent.curProjectId);
-			let todoList = [];
-			
-			if (project)
-			{
-				todoList = project.todos.getTodosByDate(_date);
-			} else todoList = Server.todos.getByDate(_date);
-
-
-			let taskHolder 	= MainContent.taskPage.taskHolder.add({date: _date}, {displayProjectTitle: !project});
-			todoList 		= MainContent.taskPage.renderer.settings.sort(todoList);
-			taskHolder.todo.renderTaskList(todoList);
-		}
-	}
 }
 
 
@@ -124,7 +51,8 @@ function _MainContent_taskPage_tab(_parent) {
 			onOpen: openToday
 		},
 		Inbox: {
-			onOpen: openInbox
+			onOpen: openInbox,
+			loadMoreDays: loadMoreDays,
 		},
 		Project: {
 			hideLoadMoreButton: true,
@@ -135,7 +63,6 @@ function _MainContent_taskPage_tab(_parent) {
 
 
 	this.curTab = "Today";
-	
 	this.reopenCurTab = function() {
 		if (this.curTab == "project" && !MainContent.curProjectId) this.curTab = "Today";
 		this.open(this.curTab, MainContent.curProjectId);
@@ -203,24 +130,56 @@ function _MainContent_taskPage_tab(_parent) {
 
 		for (let i = 0; i < 7; i++)
 		{
-			let date 		= new Date().moveDay(i);
-			let todoList 	= Server.todos.getByDate(date);
-			
-			todoList 		= MainContent.taskPage.renderer.settings.filter(todoList, {
-				ownTask: false, 
-				assignedTo: false
-			});
-			todoList 		= MainContent.taskPage.renderer.settings.sort(todoList, []);
-
-			let taskHolder 	= Parent.taskHolder.add({
-				displayProjectTitle: true, 
-				date: date
-			}, {
-				displayDate: false
-			});
-			taskHolder.todo.renderTaskList(todoList);
+			let date = new Date().moveDay(i);
+			inbox_addTaskHolder(date);
 		}
 	}
+
+	function inbox_addTaskHolder(_date) {
+		let taskHolder 	= Parent.taskHolder.add({
+			displayProjectTitle: true, 
+			date: _date
+		}, {
+			displayDate: false
+		});
+
+		let taskList 	= Server.todos.getByDate(_date);
+		taskList 		= MainContent.taskPage.renderer.settings.filter(taskList, {
+			ownTask: false, 
+			assignedTo: false
+		});
+		taskList 		= MainContent.taskPage.renderer.settings.sort(taskList, []);
+		taskHolder.todo.renderTaskList(taskList);
+	}
+
+
+	async function loadMoreDays(_days = 1) {
+		let startDate = getNewDate();
+		
+		let promises = [];
+		for (project of Server.projectList)
+		{
+			promises.push(
+				project.todos.DTTemplate.DB.getByDateRange(startDate.copy().moveDay(1), _days)
+			);
+		}
+
+		Promise.all(promises).then(function () {
+			for (let i = 1; i < _days + 1; i++)
+			{
+				let date = startDate.copy().moveDay(i);
+				inbox_addTaskHolder(date);
+			}
+		});
+	}
+
+	function getNewDate() {
+		let lastTaskHolder = MainContent.taskPage.taskHolder.list.lastItem();
+		if (lastTaskHolder.type != "day") return false;
+		return lastTaskHolder.date;
+	}
+
+
 
 
 	function openProject(_projectId) {

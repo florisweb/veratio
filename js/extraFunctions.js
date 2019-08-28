@@ -46,6 +46,10 @@ function inArray(arr, item) {
 Array.prototype.randomItem = function() {
   return this[Math.round((this.length - 1) * Math.random())];
 }
+Array.prototype.lastItem = function() {
+  return this[this.length - 1];
+}
+
 
 
 function isPromise(_promise) {
