@@ -85,7 +85,7 @@ function _MainContent_taskHolder() {
 		);
 
 		item.createMenu.disable();
-		item.todo.renderTodoList(todoList);
+		item.todo.renderTaskList(todoList);
 	}
 
 
@@ -131,6 +131,16 @@ function _MainContent_taskHolder() {
 		this.list = [];
 	}
 
+
+
+
+	this.renderTask = function(_task) {
+		for (createMenu of this.list) 
+		{
+			if (!createMenu.todo.shouldRenderTask(_task)) continue;
+			createMenu.todo.renderTask(_task);
+		}
+	}
 
 	this.createTask = function() {
 		for (let i = 0; i < this.list.length; i++)
@@ -256,10 +266,8 @@ function _taskHolder(_appendTo, _preferences, _renderPreferences, _type) {
 		
 
 
-
 		createMenu.children[0].placeholder = PLACEHOLDERTEXTS.randomItem();
 		This.HTML.createMenu.children[1].onclick = function () {This.createMenu.open();}
-
 
 
 
@@ -267,6 +275,8 @@ function _taskHolder(_appendTo, _preferences, _renderPreferences, _type) {
 		return html;
 	}
 }
+
+
 
 
 
@@ -360,10 +370,6 @@ function _taskHolder_createMenu(_Parent) {
 	}
 
 
-
-
-
-
 	this.createTask = function() {
 		if (!this.enabled) return;
 
@@ -374,10 +380,10 @@ function _taskHolder_createMenu(_Parent) {
 		if (typeof task != "object") return task;
 		resetEditMode(true);
 
-		project.todos.update(task);
-		
+		project.todos.update(task);		
 		task.projectId = project.id; 
-		if (!MainContent.curProjectId || MainContent.curProjectId == project.id) Parent.todo.renderTodo(task, Parent);
+
+		MainContent.taskPage.taskHolder.renderTask(task);
 		
 		this.close();
 		MainContent.searchOptionMenu.close();
@@ -529,6 +535,12 @@ function _taskHolder_createMenu(_Parent) {
 }
 
 
+
+
+
+
+
+
 function _taskHolder_task(_parent, _renderPreferences) {
 	let Parent = _parent;
 	let RenderPreferences = _renderPreferences;
@@ -538,26 +550,25 @@ function _taskHolder_task(_parent, _renderPreferences) {
 	
 
 	this.taskList = [];
-
-	this.renderTodoList = function(_todoList, _location) {
+	this.renderTaskList = function(_todoList, _location) {
 		for (let i = 0; i < _todoList.length; i++)
 		{
 			if (location)
 			{
-				this.renderTodo(_todoList[i], _location + i);
+				this.renderTask(_todoList[i], _location + i);
 				continue;
 			}
 
-			this.renderTodo(_todoList[i]);
+			this.renderTask(_todoList[i]);
 		}
 	}
 
-	this.renderTodo = function(_task, _location) {
+	this.renderTask = function(_task, _location) {
 		let todos = Parent.HTML.todoHolder.children;
 		if (typeof _location != "number") _location = todos.length;
 		_task.taskHolderId = Parent.id;
 
-		let task = MainContent.taskPage.renderer.renderToDo(_task, Parent, RenderPreferences);
+		let task = MainContent.taskPage.renderer.renderTask(_task, Parent, RenderPreferences);
 
 		Parent.HTML.todoHolder.insertBefore(
 			task, 
@@ -593,6 +604,26 @@ function _taskHolder_task(_parent, _renderPreferences) {
 		}
 
 		return false;
+	}
+
+
+
+	this.shouldRenderTask = function(_task) {
+		let renderTask = true;
+		switch (_task.groupType)
+		{
+			case "date": 
+				if (Parent.type == "day" && 
+					!Parent.date.compareDate(new Date().setFromStr(_task.groupValue))
+				) renderTask = false;
+			break;
+			case "default": 
+				if (Parent.type != "list") renderTask = false;
+			break;
+		}
+
+		if (MainContent.curProjectId && MainContent.curProjectId != _task.projectId) renderTask = false;
+		return renderTask;
 	}
 }
 

@@ -5,7 +5,7 @@ function _TaskRenderer() {
 	this.settings = new _TaskRenderer_settings();
 
 
-	this.renderToDo = function(_task, _taskHolder, _renderSettings) {
+	this.renderTask = function(_task, _taskHolder, _renderSettings) {
 		if (!_task) return false;
 		let project = Server.getProject(_task.projectId);
 		let tag 	= project.tags.get(_task.tagId);

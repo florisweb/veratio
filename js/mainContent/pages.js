@@ -96,7 +96,7 @@ function _MainContent_taskPage(_parent) {
 
 			let taskHolder 	= MainContent.taskPage.taskHolder.add({date: _date}, {displayProjectTitle: !project});
 			todoList 		= MainContent.taskPage.renderer.settings.sort(todoList);
-			taskHolder.todo.renderTodoList(todoList);
+			taskHolder.todo.renderTaskList(todoList);
 		}
 	}
 }
@@ -193,7 +193,7 @@ function _MainContent_taskPage_tab(_parent) {
 		}, {
 			displayDate: false
 		});
-		taskHolder.todo.renderTodoList(todoList);
+		taskHolder.todo.renderTaskList(todoList);
 	}
 
 
@@ -218,7 +218,7 @@ function _MainContent_taskPage_tab(_parent) {
 			}, {
 				displayDate: false
 			});
-			taskHolder.todo.renderTodoList(todoList);
+			taskHolder.todo.renderTaskList(todoList);
 		}
 	}
 
@@ -239,7 +239,7 @@ function _MainContent_taskPage_tab(_parent) {
 			{displayProjectTitle: false},
 			"list"
 		);
-		taskHolder.todo.renderTodoList(taskList);
+		taskHolder.todo.renderTaskList(taskList);
 	}
 
 
