@@ -665,13 +665,13 @@ function _taskHolder_overdue(_appendTo, _preferences, _renderPreferences) {
 	// make overdue alterations
 	this.HTML.Self.classList.add("overdue");
 	
-	this.onTaskRemove = this.onTaskFinish;
 	this.onTaskFinish = function(_task) {
 		let taskId = _task.id ? _task.id : _task;
 		this.todo.removeTask(taskId);
 		if (this.todo.taskList.length > 0) return;
 		this.remove();
 	}
+	this.onTaskRemove = this.onTaskFinish;
 }
 
 
