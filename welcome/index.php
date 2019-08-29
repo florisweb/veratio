@@ -1,3 +1,8 @@
+<?php
+	echo "<script>const LINKUSER_LINK = decodeURIComponent('" . urlencode((string)$_GET["link"]) . "');</script>";
+?>
+
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -215,7 +220,9 @@
 					</a>
 				</div>
 				
-				<div class="button bBoxy bDefault text clickable" onclick="window.location.replace('../')" style="width: 100px">Open Veratio</div>
+				<div class="button bBoxy bDefault text clickable" onclick="
+				window.location.replace('../?link=' + LINKUSER_LINK);
+				" style="width: 100px">Open Veratio</div>
 			</div>
 		</div>
 	</body>
