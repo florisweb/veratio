@@ -7,11 +7,7 @@
 		<link rel="manifest" href="manifest.json">
 		<link rel="shortcut icon" href="../images/pressSet/favicon.ico">
 
-		<link rel="stylesheet" type="text/css" href="../css/component.css?a=37">
-
-		<script type="text/javascript" src="/JS/jQuery.js" asy nc></script>
-		<script type="text/javascript" src="/JS/request2.js" asy nc></script>
-	
+		<link rel="stylesheet" type="text/css" href="../css/component.css?">
 		<style>
 			#backgroundImage {
 				position: fixed;
@@ -25,8 +21,6 @@
 				opacity: .4;
 				transform: scale(1.5);
 			}
-
-
 
 
 			#pageHolder {
@@ -53,6 +47,7 @@
 			#page1.page {
 				top: calc(50vh - 150px);
 			}
+
 
 
 
@@ -187,10 +182,6 @@
 
 
 
-
-
-
-
 			@media (max-aspect-ratio: 7/4) {
 			  #backgroundImage {
 				width: auto;
@@ -226,9 +217,6 @@
 				
 				<div class="button bBoxy bDefault text clickable" onclick="window.location.replace('../')" style="width: 100px">Open Veratio</div>
 			</div>
-
-
 		</div>
-
 	</body>
 </html>	
