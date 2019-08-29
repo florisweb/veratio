@@ -43,7 +43,19 @@
 
 		public function createProject($_ownerId) {
 			$this->projectId 	= $this->createId();
-			$projectOwner 		= '{"id": "' . (string)$_ownerId . '", "permissions": "[\"0\", \"22\", \"21\", \"2\"]", "isOwner": true, "type": "member"}';
+			$userId = $GLOBALS["SESSION"]->get("userId");
+			$user = $GLOBALS["USER"]->getById($userId);
+			if (!$user) return "E_userNotFound";
+
+			$projectOwner 		= json_encode(array(
+				"id" 			=> $_ownerId,
+				"name"			=> $user["name"],
+				"permissions"	=> "[\"0\", \"22\", \"21\", \"2\"]",
+				"type"			=> "member",
+				"isOwner"		=> true
+			));
+
+			'{"id": "' . (string)$_ownerId . '", "permissions": "[\"0\", \"22\", \"21\", \"2\"]", "isOwner": true, "type": "member"}';
 
 			$DBResult = $this->DB->execute(
 				"INSERT INTO projectList (id, users) VALUES (?, ?)", 

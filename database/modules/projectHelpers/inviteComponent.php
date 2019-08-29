@@ -54,6 +54,9 @@
 
 		public function joinAsLink($_inviteId, $_inviteUserObj) {
 			$userName 	= $_inviteUserObj["name"];
+			$user = $GLOBALS["USER"]->getByEmail($userName);
+			if ($user) $userName = $user["name"];
+
 			$linkId 	= $this->createLinkId($_inviteId);
 			$newUser 	= array(
 				"id" 			=> $linkId,
@@ -67,10 +70,14 @@
 
 		public function joinAsMember($_inviteId, $_inviteUserObj) {
 			$userName 	= $_inviteUserObj["name"];
+
 			$userId 	= $this->getUserId($_inviteId);
+			$user = $GLOBALS["USER"]->getById($userId);
+			if (!$user) return "E_userNotFound";
+
 			$newUser 	= array(
 				"id" 			=> sha1($userId),
-				"name" 			=> $userName,
+				"name" 			=> $user["name"],
 				"permissions" 	=> $_inviteUserObj["permissions"],
 				"type" 			=> "member"
 			);
