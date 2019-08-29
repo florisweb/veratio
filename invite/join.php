@@ -20,7 +20,7 @@
 
 	if ($_joinType == "signedIn")
 	{
-		$project->users->InviteComponent->joinAsMember($_inviteLink, $inviteUserObj);
+		$project->users->InviteComponent->joinAsMember((string)$_GET["link"], $inviteUserObj);
 		header("Location: /git/todo");
 	} else {
 		$project->users->InviteComponent->joinAsLink($_inviteLink, $inviteUserObj);

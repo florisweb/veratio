@@ -3,10 +3,17 @@
 	require_once "$root/PHPV2/PacketManager.php";
 
 	$GLOBALS["PM"]->includePacket("DB", "1.0");
+	$GLOBALS["PM"]->includePacket("SESSION", "1.0");
+
+	// backwards compatability
+	$sessionName = session_name("user");
+	session_set_cookie_params(60 * 60 * 24 * 365.25, '/', '.florisweb.tk', TRUE, FALSE);
+	session_start();
+
+
 	
 	global $DBHelper;
 	$DBHelper = new _databaseHelper;
-
 
 	class _databaseHelper {
 		private $DBName = "eelekweb_todo";
@@ -20,6 +27,17 @@
 
 		public function getDBInstance($_projectId) {
 			return new _databaseHelper_DBInstance($this->DB, $_projectId);
+		}
+
+		public function getUserId() {
+			$userId = $GLOBALS["SESSION"]->get("userId");
+			if (!$userId)
+			{
+				$userId = $_SESSION["userId"];
+			}
+
+			if (!$userId) return false;
+			return $userId;
 		}
 	}
 
@@ -43,8 +61,9 @@
 
 		public function createProject($_ownerId) {
 			$this->projectId 	= $this->createId();
-			$userId = $GLOBALS["SESSION"]->get("userId");
-			$user = $GLOBALS["USER"]->getById($userId);
+
+			$userId = $GLOBALS["DBHelper"]->getUserId();
+			$user 	= $GLOBALS["USER"]->getById($userId);
 			if (!$user) return "E_userNotFound";
 
 			$projectOwner 		= json_encode(array(
