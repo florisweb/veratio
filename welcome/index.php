@@ -2,7 +2,6 @@
 	setcookie("Veratio_hasSeenWelcomeMessage", "1", time() + 60 * 60 * 24 * 365, "/git/todo");	
 	echo "<script>const LINKUSER_LINK = decodeURIComponent('" . urlencode((string)$_GET["link"]) . "');</script>";
 ?>
-
 <!DOCTYPE html>
 <html>
 	<head>

@@ -23,6 +23,9 @@
 		$introProject->todos->update([
 			"title" => "4 - And while you're at it, perhaps even invite some friends using the 'share' button in the upper right.", "id" => "5", "groupType" => "default"
 		]);
+		$introProject->todos->update([
+			"title" => "5 - If you have any questions, would like to suggest a feature or report a bug, feel free to mail to: veratio@florisweb.tk", "id" => "6", "groupType" => "default"
+		]);
 	}
 
 
