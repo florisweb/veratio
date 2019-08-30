@@ -1,7 +1,7 @@
 <?php
+	setcookie("Veratio_hasSeenWelcomeMessage", "1", time() + 60 * 60 * 24 * 365, "/git/todo");	
 	echo "<script>const LINKUSER_LINK = decodeURIComponent('" . urlencode((string)$_GET["link"]) . "');</script>";
 ?>
-
 
 <!DOCTYPE html>
 <html>
@@ -221,7 +221,7 @@
 				</div>
 				
 				<div class="button bBoxy bDefault text clickable" onclick="
-				window.location.replace('../?link=' + LINKUSER_LINK);
+					window.location.replace('../?link=' + LINKUSER_LINK);
 				" style="width: 100px">Open Veratio</div>
 			</div>
 		</div>

@@ -1,21 +1,18 @@
 <?php
+	// system that redirects the user to the welcome page if they're new
+	if (!isset($_COOKIE["Veratio_hasSeenWelcomeMessage"]))
+	{
+		if ($_GET["link"])
+		{
+			header("Location: welcome?link=" . $_GET["link"]);
+		} else header("Location: welcome");
+	}
+
 	$root = realpath($_SERVER["DOCUMENT_ROOT"]);	
 	require_once "$root/git/todo/database/modules/app.php";
 
 
 	$isLinkUser = setLink();
-	// system that redirects the user to the welcome page if they're new
-	if (!isset($_COOKIE["Veratio_hasSeenWelcomeMessage"]))
-	{
-		if ($isLinkUser) 
-		{
-			header("Location: welcome?link=" . $_GET["link"]);
-		} else header("Location: welcome");
-		setcookie("Veratio_hasSeenWelcomeMessage", true, time() + 60 * 60 * 24 * 365);
-	}
-
-
-
 	if ($isLinkUser == "false") $GLOBALS["SESSION"]->clear("veratio_userLink");
 	if ($isLinkUser == "false" && userNeedsRedirect())
 	{
