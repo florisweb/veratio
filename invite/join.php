@@ -21,10 +21,10 @@
 	if ($_joinType == "signedIn")
 	{
 		$project->users->InviteComponent->joinAsMember((string)$_GET["link"], $inviteUserObj);
-		header("Location: /git/todo");
+		header("Location: https://veratio.florisweb.tk");
 	} else {
 		$project->users->InviteComponent->joinAsLink($_inviteLink, $inviteUserObj);
-		header("Location: /git/todo?link=" . $_inviteLink);
+		header("Location: https://veratio.florisweb.tk?link=" . $_inviteLink);
 	}
 	
 	die("Redirect user");
