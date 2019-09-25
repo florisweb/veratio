@@ -178,49 +178,49 @@
 
 		<script>
 			// temporary so things don't get cached
-			// let antiCache = Math.round(Math.random() * 100000000);
-			// $.getScript("js/DOMData.js?antiCache=" 									+ antiCache, function() {});
-			// $.getScript("js/time.js?antiCache=" 									+ antiCache, function() {});
-			// $.getScript("js/extraFunctions.js?antiCache=" 							+ antiCache, function() {});
+			let antiCache = Math.round(Math.random() * 100000000);
+			$.getScript("js/DOMData.js?antiCache=" 									+ antiCache, function() {});
+			$.getScript("js/time.js?antiCache=" 									+ antiCache, function() {});
+			$.getScript("js/extraFunctions.js?antiCache=" 							+ antiCache, function() {});
 			
-			// $.getScript("js/popup.js?antiCache=" 									+ antiCache, function() {});
-			// $.getScript("js/constants.js?antiCache=" 								+ antiCache, function() {});
-			// $.getScript("js/optionMenu.js?antiCache=" 								+ antiCache, function() {});
+			$.getScript("js/popup.js?antiCache=" 									+ antiCache, function() {});
+			$.getScript("js/constants.js?antiCache=" 								+ antiCache, function() {});
+			$.getScript("js/optionMenu.js?antiCache=" 								+ antiCache, function() {});
 			
 
-			// $.getScript("js/eventHandlers/keyHandler.js?antiCache=" 				+ antiCache, function() {});
-			// $.getScript("js/eventHandlers/doubleClickHandler.js?antiCache=" 		+ antiCache, function() {});
-			// $.getScript("js/eventHandlers/rightClickHandler.js?antiCache=" 			+ antiCache, function() {});
+			$.getScript("js/eventHandlers/keyHandler.js?antiCache=" 				+ antiCache, function() {});
+			$.getScript("js/eventHandlers/doubleClickHandler.js?antiCache=" 		+ antiCache, function() {});
+			$.getScript("js/eventHandlers/rightClickHandler.js?antiCache=" 			+ antiCache, function() {});
 
 
-			// $.getScript("js/mainContent/header/header.js?antiCache=" 				+ antiCache, function() {});
+			$.getScript("js/mainContent/header/header.js?antiCache=" 				+ antiCache, function() {});
 		
 
-			// $.getScript("js/mainContent/pages.js?antiCache=" 						+ antiCache, function() {});
+			$.getScript("js/mainContent/pages.js?antiCache=" 						+ antiCache, function() {});
 			
-			// $.getScript("js/mainContent/todoHolder/taskHolder.js?antiCache=" 		+ antiCache, function() {});
-			// $.getScript("js/mainContent/todoHolder/renderSettings.js?antiCache=" 	+ antiCache, function() {});
-			// $.getScript("js/mainContent/todoHolder/renderer.js?antiCache=" 			+ antiCache, function() {});
+			$.getScript("js/mainContent/todoHolder/taskHolder.js?antiCache=" 		+ antiCache, function() {});
+			$.getScript("js/mainContent/todoHolder/renderSettings.js?antiCache=" 	+ antiCache, function() {});
+			$.getScript("js/mainContent/todoHolder/renderer.js?antiCache=" 			+ antiCache, function() {});
 
-			// $.getScript("js/mainContent/mainContent.js?antiCache=" 					+ antiCache, function() {});
+			$.getScript("js/mainContent/mainContent.js?antiCache=" 					+ antiCache, function() {});
 
 
-			// $.getScript("js/sideBar.js?antiCache=" 									+ antiCache, function() {});
+			$.getScript("js/sideBar.js?antiCache=" 									+ antiCache, function() {});
 			
 
-			// $.getScript("js/server/encoder.js?antiCache=" 							+ antiCache, function() {});
-			// $.getScript("js/server/projectHelpers/dataTypeTemplate.js?antiCache=" 	+ antiCache, function() {});
-			// $.getScript("js/server/projectHelpers/userComponent.js?antiCache=" 		+ antiCache, function() {});
-			// $.getScript("js/server/projectHelpers/todoComponent.js?antiCache=" 		+ antiCache, function() {});
-			// $.getScript("js/server/projectHelpers/tagComponent.js?antiCache=" 		+ antiCache, function() {});
-			// $.getScript("js/server/project.js?antiCache=" 							+ antiCache, function() {});
+			$.getScript("js/server/encoder.js?antiCache=" 							+ antiCache, function() {});
+			$.getScript("js/server/projectHelpers/dataTypeTemplate.js?antiCache=" 	+ antiCache, function() {});
+			$.getScript("js/server/projectHelpers/userComponent.js?antiCache=" 		+ antiCache, function() {});
+			$.getScript("js/server/projectHelpers/todoComponent.js?antiCache=" 		+ antiCache, function() {});
+			$.getScript("js/server/projectHelpers/tagComponent.js?antiCache=" 		+ antiCache, function() {});
+			$.getScript("js/server/project.js?antiCache=" 							+ antiCache, function() {});
 
-			// $.getScript("js/server/server.js?antiCache=" 							+ antiCache, function() {});
+			$.getScript("js/server/server.js?antiCache=" 							+ antiCache, function() {});
 
 
-			// $.getScript("js/app.js?antiCache=" 										+ antiCache, function() {});
+			$.getScript("js/app.js?antiCache=" 										+ antiCache, function() {});
 		</script>
 
- 		<script type="text/javascript" src="js/main_min.js" asy nc></script>
+ 		<!-- <script type="text/javascript" src="js/main_min.js" asy nc></script> -->
 	</body>
 </html>	

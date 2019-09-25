@@ -189,16 +189,29 @@ function _MainContent_taskPage_tab(_parent) {
 		MainContent.header.setTitle(project.title);
 		MainContent.header.setMemberList(project.users.getList());
 
-		let taskList 	= project.todos.getTasksByGroup("default");
-		taskList 		= taskList.concat(project.todos.getTasksByDateRange(new Date(), 1000));
-		taskList 		= MainContent.taskPage.renderer.settings.sort(taskList, []);
+
+		let plannedTasks 		= project.todos.getTasksByDateRange(new Date(), 1000);
+		if (plannedTasks.length)
+		{
+			plannedTasks = MainContent.taskPage.renderer.settings.sort(plannedTasks, []);
+			let taskHolder_planned = Parent.taskHolder.add(
+				{title: "Planned"}, 
+				{displayProjectTitle: false},
+				"list"
+			);
+			taskHolder_planned.todo.renderTaskList(plannedTasks);
+		}
+
+
+		let nonPlannedTasks = project.todos.getTasksByGroup("default");		
+		nonPlannedTasks 	= MainContent.taskPage.renderer.settings.sort(nonPlannedTasks, []);
 		
-		let taskHolder = Parent.taskHolder.add(
-			{title: ""}, 
+		let taskHolder_nonPlanned = Parent.taskHolder.add(
+			{title: "Not planned"}, 
 			{displayProjectTitle: false},
 			"list"
 		);
-		taskHolder.todo.renderTaskList(taskList);
+		taskHolder_nonPlanned.todo.renderTaskList(nonPlannedTasks);
 	}
 
 

@@ -653,7 +653,6 @@ function _taskHolder_day(_appendTo, _preferences, _renderPreferences) {
 
 
 function _taskHolder_list(_appendTo, _preferences, _renderPreferences) {
-	_preferences.title = "";
 	_taskHolder.call(this, _appendTo, _preferences, _renderPreferences, "list");
 }
 
