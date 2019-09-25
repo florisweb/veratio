@@ -47,6 +47,7 @@
 		return !$userId;
 	}
 ?>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -55,16 +56,26 @@
 		<meta name="theme-color" content="#636ad5">
 		<link rel="manifest" href="manifest.json">
 		<link rel="shortcut icon" href="images/pressSet/favicon.ico">
-		<link rel="stylesheet" type="text/css" href="css/main_min.css">
 
-		<script type="text/javascript" src="/JS/jQuery.js" async></script>
-		<script type="text/javascript" src="/JS/request2.js" async></script>
+		<link rel="stylesheet" type="text/css" href="css/component.css?a=37">
+		<link rel="stylesheet" type="text/css" href="css/popup.css?a=30">
+		<link rel="stylesheet" type="text/css" href="css/main.css?a=22">
+		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=24">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=43">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=42">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/header.css?a=0">
+
+		<script type="text/javascript" src="/JS/jQuery.js" asy nc></script>
+		<script type="text/javascript" src="/JS/request2.js" asy nc></script>
+	
 	</head>	
 	<body>
 		<div id="notificationBoxHolder" class="hide">
 			<div id="notificationBox">
 			</div>
 		</div>
+
+
 		<div id="sideBar">
 			<img class="sideBarBackground" src="images/sideBarBackground/?type=sidebar">
 			<div class="navigationHolder">
@@ -94,6 +105,10 @@
 				
 			</div>
 		</div>
+		
+
+
+
 		<div id="mainContent" class="animatePageChange">
 			<div id="mainContentHeader">
 				<div class="header titleHolder userText"></div>
@@ -112,15 +127,23 @@
 					<div class="functionItem memberList userText" onclick='MainContent.settingsPage.open(MainContent.curProjectId)'></div>
 				</div>
 			</div>
+
 			<div id="mainContentHolder" class="renderFinishedTodos">
+
 				<div class="mainContentPage doNotAlignLeft hi de">
-					<div class="todoListHolder"></div>				
+					<div class="todoListHolder"></div>
+				
 					<div class='optionMenuHolder searchOption hide'></div>
+
+
 					<div onclick="MainContent.taskPage.tab.tabs['Inbox'].loadMoreDays(3)" class="smallTextHolder clickable loadMoreButton">
 						<a class="smallText smallTextIcon">+</a>
 						<div class="titleHolder userText smallText">Load more</div>
 					</div>
 				</div>
+
+
+
 				<div class="mainContentPage hide createProjectPage">
 					<div class="createProjectHolder">
 						<div class="text tHeaderMedium">Create a project</div>
@@ -130,6 +153,8 @@
 						<a class="button bDefault bBoxy" onclick='MainContent.createProjectPage.createProject()'>Create</a>
 					</div>
 				</div>
+
+
 				<div class="mainContentPage settingsPage hide">
 					<div class="inviteMemberHolder">
 						<input placeholder="E-mail-adress" class="inputField iBoxy text" id="inviteMemberInput">
@@ -147,6 +172,55 @@
 
 			</div>
 		</div>
- 		<script type="text/javascript" src="js/main_min.js" async></script>
+
+
+
+
+		<script>
+			// temporary so things don't get cached
+			// let antiCache = Math.round(Math.random() * 100000000);
+			// $.getScript("js/DOMData.js?antiCache=" 									+ antiCache, function() {});
+			// $.getScript("js/time.js?antiCache=" 									+ antiCache, function() {});
+			// $.getScript("js/extraFunctions.js?antiCache=" 							+ antiCache, function() {});
+			
+			// $.getScript("js/popup.js?antiCache=" 									+ antiCache, function() {});
+			// $.getScript("js/constants.js?antiCache=" 								+ antiCache, function() {});
+			// $.getScript("js/optionMenu.js?antiCache=" 								+ antiCache, function() {});
+			
+
+			// $.getScript("js/eventHandlers/keyHandler.js?antiCache=" 				+ antiCache, function() {});
+			// $.getScript("js/eventHandlers/doubleClickHandler.js?antiCache=" 		+ antiCache, function() {});
+			// $.getScript("js/eventHandlers/rightClickHandler.js?antiCache=" 			+ antiCache, function() {});
+
+
+			// $.getScript("js/mainContent/header/header.js?antiCache=" 				+ antiCache, function() {});
+		
+
+			// $.getScript("js/mainContent/pages.js?antiCache=" 						+ antiCache, function() {});
+			
+			// $.getScript("js/mainContent/todoHolder/taskHolder.js?antiCache=" 		+ antiCache, function() {});
+			// $.getScript("js/mainContent/todoHolder/renderSettings.js?antiCache=" 	+ antiCache, function() {});
+			// $.getScript("js/mainContent/todoHolder/renderer.js?antiCache=" 			+ antiCache, function() {});
+
+			// $.getScript("js/mainContent/mainContent.js?antiCache=" 					+ antiCache, function() {});
+
+
+			// $.getScript("js/sideBar.js?antiCache=" 									+ antiCache, function() {});
+			
+
+			// $.getScript("js/server/encoder.js?antiCache=" 							+ antiCache, function() {});
+			// $.getScript("js/server/projectHelpers/dataTypeTemplate.js?antiCache=" 	+ antiCache, function() {});
+			// $.getScript("js/server/projectHelpers/userComponent.js?antiCache=" 		+ antiCache, function() {});
+			// $.getScript("js/server/projectHelpers/todoComponent.js?antiCache=" 		+ antiCache, function() {});
+			// $.getScript("js/server/projectHelpers/tagComponent.js?antiCache=" 		+ antiCache, function() {});
+			// $.getScript("js/server/project.js?antiCache=" 							+ antiCache, function() {});
+
+			// $.getScript("js/server/server.js?antiCache=" 							+ antiCache, function() {});
+
+
+			// $.getScript("js/app.js?antiCache=" 										+ antiCache, function() {});
+		</script>
+
+ 		<script type="text/javascript" src="js/main_min.js" asy nc></script>
 	</body>
 </html>	

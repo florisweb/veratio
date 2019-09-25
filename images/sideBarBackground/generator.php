@@ -42,7 +42,7 @@
 				
 			// }
 			
-			let canvas = createCanvasBackground(Colors, 300, 100, 10);
+			let canvas = createCanvasBackground(Colors, 300, 300, 10);
 			document.body.append(canvas);
 
 
