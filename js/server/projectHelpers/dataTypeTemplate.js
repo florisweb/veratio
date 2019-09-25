@@ -61,7 +61,6 @@ function _Server_project_dataTypeTemplate(_projectId, _dataTypeTemplate) {
       return REQUEST.send("database/project/simpleOperation.php", parameters).then(
         function (_result) {
           if (typeof _result != "object") return;
-          console.log(_result);
           This.update(_result, false);
         }
       ).catch(function () {});

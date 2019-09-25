@@ -7,7 +7,7 @@
 		<link rel="manifest" href="https://florisweb.tk/git/todo/manifest.json">
 		<link rel="shortcut icon" href="https://florisweb.tk/git/todo/images/pressSet/favicon.ico">
 		<style>
-			iframe {
+			#mainContentFrame {
 				position: fixed;
 				left: 0;
 				top: 0;
@@ -20,7 +20,13 @@
 	<body>
 		<?php
 			$link = "https://florisweb.tk/git/todo?link=" . urlencode((string)$_GET["link"]);;
-			echo "<iframe src='" . $link . "'></iframe>";
+			echo "<iframe id='mainContentFrame' src='" . $link . "'></iframe>";
 		?>
+
+		<script>
+			document.body.onload = function() {
+				mainContentFrame.focus();
+			}
+		</script>
 	</body>
 </html>	
