@@ -129,11 +129,15 @@
 						fill-opacity: 0;
 					}
 					
-
-
 				.todoItem.finished .statusCircleHitBox .statusCircle {
 					opacity: 1;
 				}
+
+			.todoItem.finished .titleHolder {
+				text-decoration: line-through;
+			}
+
+
 
 
 
