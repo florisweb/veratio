@@ -44,174 +44,6 @@
 		margin-left: 2px;
 	}
 
-		
-
-
-	
-
-
-		.todoItem.listItem {
-			position: relative;
-
-			width: 100%;
-			height: 20px;
-
-			padding-left: 35px;
-			overflow: hidden;
-
-			transition: all 0.3s;
-		}
-
-		.todoItem.listItem.finished {
-			opacity: 0.4;
-		}
-		#mainContentHolder:not(.renderFinishedTodos) .todoListHolder .todoItem.finished {
-			opacity: 0;
-			pointer-events: none;
-			margin-bottom: -35px;
-		}
-
-		
-
-
-
-		.todoItem.listItem .isMyTaskIndicator {
-			position: relative;
-			float: left;
-
-			left: -15px;
-			top: calc((20px - 7px) / 2);
-
-			width: 7px;
-			height: 7px;
-
-			margin-right: -7px;
-
-			border-radius: 5px;
-			background: rgb(175, 107, 237);
-			opacity: 0;
-		}
-
-		.todoItem.listItem.isMyTask .isMyTaskIndicator {
-			opacity: .4;
-		}
-
-
-
-		
-	
-
-
-
-	
-			.todoItem .statusCircleHitBox {
-				position: relative;
-				float: left;
-
-				width: 13px;
-				height: 13px;
-
-				padding: 15px 20px;
-				margin: -15px -20px;
-				margin-right: -5px;
-			}
-
-				.todoItem .statusCircleHitBox .statusCircle {
-					margin-top: 2px;
-					width: 13px;
-					height: 13px;
-					border-radius: 100%;
-
-					border: 2px solid #ccc;
-					background: rgba(0, 0, 0, 0.02);
-				}
-					.todoItem:not(.finished) .statusCircleHitBox .statusCircle rect {
-						fill-opacity: 0;
-					}
-					
-				.todoItem.finished .statusCircleHitBox .statusCircle {
-					opacity: 1;
-				}
-
-			.todoItem.finished .titleHolder {
-				text-decoration: line-through;
-			}
-
-
-
-
-
-			.todoItem .functionHolder {
-				position: absolute;
-				float: right;
-				right: 0;
-				top: 3px;
-
-				height: 20px;
-				width: auto;
-				
-				background: #fff;
-				box-shadow: -10px 0 10px 10px #fff;
-			}
-
-				.todoItem .functionHolder .functionItem {
-					position: relative;
-					float: right;
-
-					height: 20px;
-					padding: 0;
-
-					margin-right: 12px;
-					margin-left: 0;
-					line-height: 20px;
-					
-					pointer-events: none;
-				}
-
-				.todoItem .functionHolder .functionItem.optionIcon {
-					pointer-events: none;
-					padding: 10px;
-					margin: -10px;
-					opacity: 0;
-				}
-				.todoItem:hover .functionHolder .functionItem.optionIcon {
-					pointer-events: all;
-					opacity: .4;
-				}
-				
-				
-
-
-				.todoItem .functionHolder .deadLineHolder {
-					color: #ccc;
-					font-size: 13px;
-				}
-
-
-				.todoItem .functionHolder .projectHolder {
-					margin: 0;
-				}
-					
-					.todoItem .functionHolder .projectHolder .projectTitle {
-						color: #777;
-						font-size: 14px;
-					}
-
-					.todoItem .functionHolder .projectHolder .projectIcon {
-						top: 1px;
-						height: 17px;
-						width: auto;
-						opacity: 0.4;
-					}
-
-
-
-
-
-
-
-
-
 
 
 
@@ -320,6 +152,195 @@
 				top: -2.5px;
 				height: 12px;
 			}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.taskItem.listItem {
+	position: relative;
+
+	width: 100%;
+	height: 20px;
+
+	padding-left: 35px;
+	overflow: hidden;
+
+	transition: all 0.3s;
+}
+
+.taskItem.listItem.finished {
+	opacity: 0.4;
+}
+#mainContentHolder:not(.renderFinishedTodos) .todoListHolder .taskItem.finished {
+	opacity: 0;
+	pointer-events: none;
+	margin-bottom: -35px;
+}
+
+
+
+
+
+.taskItem.listItem .isMyTaskIndicator {
+	position: relative;
+	float: left;
+
+	left: -15px;
+	top: calc((20px - 7px) / 2);
+
+	width: 7px;
+	height: 7px;
+
+	margin-right: -7px;
+
+	border-radius: 5px;
+	background: rgb(175, 107, 237);
+	opacity: 0;
+}
+
+.taskItem.listItem.isMyTask .isMyTaskIndicator {
+	opacity: .4;
+}
+
+
+
+
+
+
+
+
+
+	.taskItem .statusCircleHitBox {
+		position: relative;
+		float: left;
+
+		width: 13px;
+		height: 13px;
+
+		padding: 15px 20px;
+		margin: -15px -20px;
+		margin-right: -5px;
+	}
+
+		.taskItem .statusCircleHitBox .statusCircle {
+			margin-top: 2px;
+			width: 13px;
+			height: 13px;
+			border-radius: 100%;
+
+			border: 2px solid #ccc;
+			background: rgba(0, 0, 0, 0.02);
+		}
+			.taskItem:not(.finished) .statusCircleHitBox .statusCircle rect {
+				fill-opacity: 0;
+			}
+			
+		.taskItem.finished .statusCircleHitBox .statusCircle {
+			opacity: 1;
+		}
+
+	.taskItem.finished .titleHolder {
+		text-decoration: line-through;
+	}
+
+
+
+
+
+	.taskItem .functionHolder {
+		position: absolute;
+		float: right;
+		right: 0;
+		top: 3px;
+
+		height: 20px;
+		width: auto;
+		
+		background: #fff;
+		box-shadow: -10px 0 10px 10px #fff;
+	}
+
+		.taskItem .functionHolder .functionItem {
+			position: relative;
+			float: right;
+
+			height: 20px;
+			padding: 0;
+
+			margin-right: 12px;
+			margin-left: 0;
+			line-height: 20px;
+			
+			pointer-events: none;
+		}
+
+		.taskItem .functionHolder .functionItem.optionIcon {
+			pointer-events: none;
+			padding: 10px;
+			margin: -10px;
+			opacity: 0;
+		}
+		.taskItem:hover .functionHolder .functionItem.optionIcon {
+			pointer-events: all;
+			opacity: .4;
+		}
+		
+		
+
+
+		.taskItem .functionHolder .deadLineHolder {
+			color: #ccc;
+			font-size: 13px;
+		}
+
+
+		.taskItem .functionHolder .projectHolder {
+			margin: 0;
+		}
+			
+			.taskItem .functionHolder .projectHolder .projectTitle {
+				color: #777;
+				font-size: 14px;
+			}
+
+			.taskItem .functionHolder .projectHolder .projectIcon {
+				top: 1px;
+				height: 17px;
+				width: auto;
+				opacity: 0.4;
+			}
+
+
+
+
+
+
+
+
+
 
 
 
