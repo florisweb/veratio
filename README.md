@@ -1,46 +1,18 @@
 
 
 
+Version 1.1
+Planned features:
+- Drop-down-menu's for the taskHolders
+- Subtasks
+- Repeatable tasks
+- Drag and drop support for tasks
+- Sorting and filtering UI
+	- Sort tasks by deadline
 
 
 
-
-
-
-
-
-
-
-
-DayItems:
-- type
-	- dayItem 		[day]
-	- overdue 		[overdue]
-	- listItem 		[list]
-- OnCreation:
-	preferences: {
-		title: "customTitle",
-		class: "customClass",
-		customAttributes: [{key: "click", value: function}]
-	}
-
-
-
-
-
-
-
-Tasks:
-* title
-* groupType
-	- 'default' 	- A projects item without date
-	- 'date'
-		- 'overdue'
-* groupValue
-
-
-- assignedTo
-- tagId
-- finished
-- creatorId
-- id
+Version 1.2
+Planned features:
+- Offline service
+- Tooltips to indicate what button does what
