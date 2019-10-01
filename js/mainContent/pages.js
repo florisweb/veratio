@@ -114,13 +114,15 @@ function _MainContent_taskPage_tab(_parent) {
 		
 		todoList 		= MainContent.taskPage.renderer.settings.sort(todoList, []);
 
-		let taskHolder 	= Parent.taskHolder.add({
-			displayProjectTitle: true, 
-			date: date
-		}, {
-			displayDate: false
-		});
-		taskHolder.todo.renderTaskList(todoList);
+		let taskHolder 	= Parent.taskHolder.add(
+			"date",
+			{
+				displayProjectTitle: true, 
+				displayDate: false
+			}, 
+			[date]
+		);
+		taskHolder.task.renderTaskList(todoList);
 	}
 
 
@@ -136,12 +138,16 @@ function _MainContent_taskPage_tab(_parent) {
 	}
 
 	function inbox_addTaskHolder(_date) {
-		let taskHolder 	= Parent.taskHolder.add({
-			displayProjectTitle: true, 
-			date: _date
-		}, {
-			displayDate: false
-		});
+		let taskHolder 	= Parent.taskHolder.add(
+			"date",
+			{
+				displayProjectTitle: true, 
+				displayDate: false
+			}, 
+			[date]
+		);
+
+
 
 		let taskList 	= Server.todos.getByDate(_date);
 		taskList 		= MainContent.taskPage.renderer.settings.filter(taskList, {
@@ -149,7 +155,7 @@ function _MainContent_taskPage_tab(_parent) {
 			assignedTo: false
 		});
 		taskList 		= MainContent.taskPage.renderer.settings.sort(taskList, []);
-		taskHolder.todo.renderTaskList(taskList);
+		taskHolder.task.renderTaskList(taskList);
 	}
 
 
@@ -195,11 +201,14 @@ function _MainContent_taskPage_tab(_parent) {
 		{
 			plannedTasks = MainContent.taskPage.renderer.settings.sort(plannedTasks, []);
 			let taskHolder_planned = Parent.taskHolder.add(
-				{title: "Planned"}, 
-				{displayProjectTitle: false},
-				"list"
+				"default",
+				{
+					displayProjectTitle: false, 
+				}, 
+				["Planned"]
 			);
-			taskHolder_planned.todo.renderTaskList(plannedTasks);
+
+			taskHolder_planned.task.renderTaskList(plannedTasks);
 		}
 
 
@@ -207,11 +216,14 @@ function _MainContent_taskPage_tab(_parent) {
 		nonPlannedTasks 	= MainContent.taskPage.renderer.settings.sort(nonPlannedTasks, []);
 		
 		let taskHolder_nonPlanned = Parent.taskHolder.add(
-			{title: "Not planned"}, 
-			{displayProjectTitle: false},
-			"list"
+			"default",
+			{
+				displayProjectTitle: false, 
+			}, 
+			["Not Planned"]
 		);
-		taskHolder_nonPlanned.todo.renderTaskList(nonPlannedTasks);
+
+		taskHolder_nonPlanned.task.renderTaskList(nonPlannedTasks);
 	}
 
 

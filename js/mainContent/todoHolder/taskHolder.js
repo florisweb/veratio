@@ -8,7 +8,6 @@ function _MainContent_taskHolder() {
 		todoHolder: $("#mainContentHolder .todoListHolder")[0],
 		taskPage: $(".mainContentPage")[0]
 	}
-	
 
 	this.deadLineOptionMenu = function() {
 		let Menu = OptionMenu.create(HTML.taskPage, true);
@@ -47,14 +46,8 @@ function _MainContent_taskHolder() {
 
 
 	this.list = [];
-	this.add = function(_preferences = {customAttributes: []}, _taskRenderPreferences = {}, _type = "day") {
-		let taskHolder = buildDayItem(
-			HTML.todoHolder,
-			_preferences,
-			_taskRenderPreferences,
-			_type
-		);
-
+	this.add = function(_type = "default", _renderPreferences = {}, _parameters = []) {
+		let taskHolder = buildDayItem(_type, _renderPreferences, _parameters);
 		this.list.push(taskHolder);
 		return taskHolder;
 	}
@@ -77,29 +70,31 @@ function _MainContent_taskHolder() {
 		if (!todoList.length) return false;
 
 		let item = this.add(
-			{}, 
+			"overdue", 
 			{
 				displayProjectTitle: !MainContent.curProjectId
-			}, 
-			"overdue"
+			}
 		);
-
-		item.createMenu.disable();
-		item.todo.renderTaskList(todoList);
+		item.task.renderTaskList(todoList);
 	}
 
 
+	const constructors = {
+		default: 	TaskHolder_default,
+		date: 		TaskHolder_date,
+		overdue: 	TaskHolder_overdue
+	}
 
-	function buildDayItem(_appendTo, _preferences, _taskRenderPreferences, _type) {
-		let constructor = _taskHolder_day;
-
-		switch (_type)
-		{
-			case "overdue": constructor = _taskHolder_overdue; break;
-			case "list": 	constructor = _taskHolder_list; break;
+	function buildDayItem(_type, _renderPreferences, _parameters) {
+		const config = {
+			html: {
+				appendTo: HTML.todoHolder
+			},
+			renderPreferences: _renderPreferences
 		}
-
-		return new constructor(_appendTo, _preferences, _taskRenderPreferences);
+		
+		let parameters = [config].concat(_parameters);
+		return new constructors[_type](...parameters);
 	}
 
 
@@ -183,21 +178,115 @@ function _MainContent_taskHolder() {
 
 
 
-function _taskHolder(_appendTo, _preferences, _renderPreferences, _type) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Types
+function TaskHolder_default(_config, _title) {
+	_config.title = _title;
+	TaskHolder.call(this, _config, "default");
+	TaskHolder_createMenuConstructor.call(this, _config, "default");
+}
+
+
+function TaskHolder_date(_config, _date) {
+	this.date = _date;
+	_config.title = DateNames.toString(_date, false);
+
+	TaskHolder.call(this, _config, "date");
+	TaskHolder_createMenuConstructor.call(this, _config, "default");
+}
+
+
+function TaskHolder_overdue(_config) {
+	_config.title 		= "Overdue";
+	_config.html.class 	= "overdue";
+	TaskHolder.call(this, _config, "overdue");
+
+	
+	this.onTaskFinish = function(_task) {
+		let taskId = _task.id ? _task.id : _task;
+		this.todo.removeTask(taskId);
+		if (this.todo.taskList.length > 0) return;
+		this.remove();
+	}
+	this.onTaskRemove = this.onTaskFinish;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function TaskHolder(_config = {}, _type = "default") {
 	let This = this;
 	this.id 			= newId();
-	this.preferences 	= _preferences;
+	this.config 		= _config;
 	this.type 			= _type;
 
 	this.HTML = {
-		Parent: _appendTo,
+		Parent: _config.html.appendTo,
 	}
-	this.HTML.Self = renderDayItem(this),
-
-	this.createMenu 	= new _taskHolder_createMenu(this);
-	this.todo 			= new _taskHolder_task(this, _renderPreferences);
-
-
+	this.HTML.Self = renderDayItem(this.HTML.Parent);
+	
+	this.task 			= new TaskHolder_task(this);
 
 
 	this.remove = function() {
@@ -211,68 +300,114 @@ function _taskHolder(_appendTo, _preferences, _renderPreferences, _type) {
 
 	this.onTaskRemove = function(_taskId) {
 		console.warn("REMOVE", _taskId);
-		this.todo.removeTask(_taskId);
+		this.task.removeTask(_taskId);
 	}
 
-	function renderDayItem() {
+
+	function renderDayItem(_parent) {
 		let html = document.createElement("div");
 		html.className = "taskHolder";
+		if (This.config.html.class) html.className += " " + This.config.html.class;
 
 		html.innerHTML = 	'<div class="header dateHolder"></div>' + 
-							'<div class="todoHolder"></div>' + 
-							'<div class="todoItem createTaskHolder close">' + 
-								'<div class="createMenuHolder">' + 
-									'<input class="text inputField iBoxy clickable taskTitle">' + 
-									'<input class="text inputField iBoxy clickable taskDeadLine" placeholder="Deadline">' + 
-									'<div class="leftHand">' + 
-										'<div class="text button bDefault bBoxy" style="float: left">Create</div>' + 
-										'<div class="text button" style="float: left">Cancel</div>' + 
-									'</div>' +
-									'<div class="rightHand">' + 
-										'<img src="images/icons/tagIcon.png" class="icon tagIcon clickable">' +
-										'<img src="images/icons/memberIcon.png" class="icon clickable">' +
-										'<img src="images/icons/projectIconDark.svg" class="icon projectIcon clickable">' +
-									'</div>' +
-								'</div>' + 
-								'<div class="addButtonHolder smallTextHolder clickable" onclick="MainContent.taskHolder.openCreateMenu(this.parentNode)">' + 
-									'<a class="smallText smallTextIcon">+</a>' + 
-									'<div class="smallText">Create Task</div>' + 
-								'</div>' +
-							'</div>';
+							'<div class="todoHolder"></div>';
 
-		This.HTML.createMenu = html.children[2];
-
-		if (!This.preferences.title) html.style.marginTop = "0";
-		setTextToElement(html.children[0], This.preferences.title);
-
-
-
-		let createMenu = This.HTML.createMenu.children[0];
-		createMenu.children[2].children[0].onclick = function () {This.createMenu.createTask();}
-		createMenu.children[2].children[1].onclick = function () {This.createMenu.close();}
-
-
-		createMenu.children[3].children[0].onclick = function () {This.createMenu.openTagSelectMenu()}
-		createMenu.children[3].children[1].onclick = function () {This.createMenu.openMemberSelectMenu()}
-		createMenu.children[3].children[2].onclick = function () {This.createMenu.openProjectSelectMenu()}
+		if (!This.config.title) html.style.marginTop = "0";
+		setTextToElement(html.children[0], This.config.title);
 		
-		let deadLineField = This.HTML.createMenu.children[0].children[1];
-		deadLineField.onfocusin = function() {
-			MainContent.taskPage.taskHolder.deadLineOptionMenu.open(deadLineField);
-		}
-		deadLineField.onfocusout = function() {
-			This.HTML.createMenu.children[0].children[0].focus();
-		}
-		
+		_parent.append(html);
 
-
-		createMenu.children[0].placeholder = PLACEHOLDERTEXTS.randomItem();
-		This.HTML.createMenu.children[1].onclick = function () {This.createMenu.open();}
-
-
-
-		This.HTML.Parent.append(html);
 		return html;
+	}
+}
+
+
+
+
+
+
+
+function TaskHolder_task(_parent) {
+	let Parent = _parent;
+	
+	Parent.HTML.todoHolder = Parent.HTML.Self.children[1];
+	
+	
+
+	this.taskList = [];
+	this.renderTaskList = function(_taskList) {
+		for (task of _taskList) this.renderTask(task);
+	}
+
+	this.renderTask = function(_task) {
+		let todos = Parent.HTML.todoHolder.children;
+		_task.taskHolderId = Parent.id;
+
+		let task = MainContent.taskPage.renderer.renderTask(
+			_task, 
+			Parent, 
+			Parent.config.renderPreferences
+		);
+
+		Parent.HTML.todoHolder.append(task);
+
+		this.taskList.push({
+			taskId: _task.id,
+			html: task
+		});
+	}
+
+
+	this.removeTask = function(_id) {
+		for (let i = 0; i < this.taskList.length; i++)
+		{
+			if (this.taskList[i].taskId != _id) continue;
+			
+			let html = this.taskList[i].html;
+			html.classList.add("hide");
+			
+			var loopTimer = setTimeout(
+				function () {
+					html.parentNode.removeChild(html)
+				}, 
+				500
+			);
+
+
+			this.taskList.splice(i, 1);
+
+			return true;
+		}
+
+		return false;
+	}
+
+
+
+	this.shouldRenderTask = function(_task) {
+		let renderTask = true;
+		switch (_task.groupType)
+		{
+			case "date": 
+				if (Parent.type == "day" && 
+					!Parent.date.compareDate(new Date().setFromStr(_task.groupValue))
+				) renderTask = false;
+			break;
+			case "default": 
+				if (Parent.type != "list") renderTask = false;
+			break;
+			case "overdue": 
+				if (new Date().setFromStr(_task.groupValue) >= new Date()) renderTask = false;
+			break;	
+		}
+
+		if (Parent.type == "overdue") // temporary code, until the backendSystem works
+		{
+			if (new Date().setFromStr(_task.groupValue) >= new Date()) renderTask = false;
+		}
+
+		if (MainContent.curProjectId && MainContent.curProjectId != _task.projectId) renderTask = false;
+		return renderTask;
 	}
 }
 
@@ -284,75 +419,118 @@ function _taskHolder(_appendTo, _preferences, _renderPreferences, _type) {
 
 
 
-function _taskHolder_createMenu(_Parent) {
-	let Parent = _Parent;
+
+
+
+
+
+
+function TaskHolder_createMenuConstructor(_config, _type) {
+	this.HTML.Self.append(createCreateMenuHTML(this));
+
+	this.createMenu = new TaskHolder_createMenu(this);
+
+	function createCreateMenuHTML(This) {
+		let html = document.createElement("div");
+		html.className = "taskItem createTaskHolder close";
+
+		html.innerHTML = '<div class="createMenuHolder">' + 
+							'<input class="text inputField iBoxy clickable taskTitle">' + 
+							'<input class="text inputField iBoxy clickable taskDeadLine" placeholder="Deadline">' + 
+							'<div class="leftHand">' + 
+								'<div class="text button bDefault bBoxy" style="float: left"></div>' + 
+								'<div class="text button" style="float: left">Cancel</div>' + 
+							'</div>' +
+							'<div class="rightHand">' + 
+								'<img src="images/icons/tagIcon.png" class="icon tagIcon clickable">' +
+								'<img src="images/icons/memberIcon.png" class="icon clickable">' +
+								'<img src="images/icons/projectIconDark.svg" class="icon projectIcon clickable">' +
+							'</div>' +
+						'</div>' + 
+						'<div class="addButtonHolder smallTextHolder clickable" onclick="MainContent.taskHolder.openCreateMenu(this.parentNode)">' + 
+							'<a class="smallText smallTextIcon">+</a>' + 
+							'<div class="smallText">Add Task</div>' + 
+						'</div>';
+
+		This.HTML.createMenuHolder = html;
+		This.HTML.createMenu 		= html.children[0];
+
+		addEventListeners(This);
+
+		return html;
+	}
+
+		function addEventListeners(_this) {
+			_this.HTML.createMenu.children[2].children[0].onclick = function () {_this.createMenu.createTask();}
+			_this.HTML.createMenu.children[2].children[1].onclick = function () {_this.createMenu.close();}
+
+
+			_this.HTML.createMenu.children[3].children[0].onclick = function () {_this.createMenu.openTagSelectMenu()}
+			_this.HTML.createMenu.children[3].children[1].onclick = function () {_this.createMenu.openMemberSelectMenu()}
+			_this.HTML.createMenu.children[3].children[2].onclick = function () {_this.createMenu.openProjectSelectMenu()}
+			
+			let deadLineField = _this.HTML.createMenu.children[1];
+			deadLineField.onfocusin = function() {
+				MainContent.taskPage.taskHolder.deadLineOptionMenu.open(deadLineField);
+			}
+			deadLineField.onfocusout = function() {
+				_this.HTML.createMenu.children[0].focus();
+			}
+
+			_this.HTML.createMenu.children[0].placeholder = PLACEHOLDERTEXTS.randomItem();
+			_this.HTML.createMenuHolder.children[1].onclick = function () {_this.HTML.createMenu.open();}
+		}
+}
+
+
+function TaskHolder_createMenu(_parent) {
+	let Parent = _parent;
 	let This = this;
 	let HTML = {
 		inputField: Parent.HTML.createMenu.children[0].children[0],
 		deadLineField: Parent.HTML.createMenu.children[0].children[1],
 	}
 
+	let editData = {
+		task: false,
+		html: false
+	}
 	let edit_todo = null;
 	let edit_todoHTML = null;
 
 
 	this.openState = false;
-	this.enabled = true;
-
-	function setup() {
-		This.close(false);
-
-		let project = Server.getProject(MainContent.curProjectId);
-		if (!project || !project.users.Self) return;
-		if (!project.users.Self.taskActionAllowed("update")) This.disable();
-	};
-
-
-
-	this.open = function(_editing = false) {
-		if (!this.enabled) return;	
-
-		MainContent.taskPage.taskHolder.closeAllCreateMenus();
-
+	this.open = function() {
 		this.openState = true;
+
 		Parent.HTML.createMenu.classList.remove("close");
 		HTML.inputField.focus();
 		HTML.inputField.value = null;
 		HTML.deadLineField.value = null;
-		if (Parent.date) HTML.deadLineField.value = DateNames.toString(Parent.date);
+
+		let buttonTitle = editData.task ? "Add" : "Change";
+		Parent.HTML.createMenu.children[0].children[2].children[0].innerHTML = buttonTitle;	
+
+		if (Parent.date) HTML.deadLineField.value = DateNames.toString(Parent.date); 		// DEPRICATED?
 
 
-
-		let buttonTitle = "Create";
-		if (_editing) buttonTitle = "Change";
-		Parent.HTML.createMenu.children[0].children[2].children[0].innerHTML = buttonTitle;
-
+		MainContent.taskPage.taskHolder.closeAllCreateMenus();
 		MainContent.searchOptionMenu.openWithInputField(Parent.HTML.createMenu.children[0].children[0]);
 	}
 
+	this.openEdit = function(_taskHTML, _taskId) {
+		let task = Server.todos.get(_taskId);
+		if (!task || !_taskHTML) return false;
 
-	this.openEdit = function(_todoHTML, _todoId) {
-		if (!this.enabled) return;
+		editData.task = task;
+		editData.html = _taskHTML;
+		editData.html.classList.add("hide");
 
-		let task = Server.todos.get(_todoId);
-		if (!task || !_todoHTML) return false;
-		this.open(true);
-
-		edit_todo = task;
-		edit_todoHTML = _todoHTML;
-		edit_todoHTML.classList.add("hide");
-
-		setEditModeData(task);
+		this.open();
+	
+		Parent.HTML.createMenu.children[0].children[0].value = _task.title;
+		if (_task.groupType == "date") Parent.HTML.createMenu.children[0].children[1].value = _task.groupValue;
 	}
-
-	function setEditModeData(_task) {
-		let createMenu = Parent.HTML.createMenu;
-		let project = Server.getProject(_task.projectId);
-		
-		createMenu.children[0].children[0].value = _task.title;
-		if (_task.groupType == "date") createMenu.children[0].children[1].value = _task.groupValue;
-	}
-
 
 
 	this.close = function() {
@@ -362,17 +540,7 @@ function _taskHolder_createMenu(_Parent) {
 	}
 
 
-
-
-	this.disable = function() {
-		this.enabled = false;
-		Parent.HTML.createMenu.innerHTML = "";
-	}
-
-
 	this.createTask = function() {
-		if (!this.enabled) return;
-
 		let task 		= scrapeTaskData();
 		let project 	= Server.getProject(task.projectId);
 
@@ -391,18 +559,29 @@ function _taskHolder_createMenu(_Parent) {
 		return true;
 	}
 
-
 	this.openTagSelectMenu = function() {
 		openSelectMenu(0, "#", Server.projectList[0].tags.list);
 	}
-
 	this.openMemberSelectMenu = function() {
 		openSelectMenu(1, "@", Server.projectList[0].users.getList());
-	}
-		
+	}	
 	this.openProjectSelectMenu = function() {
 		openSelectMenu(2, ".", Server.projectList);
 	}
+
+
+
+	// Setup
+	This.close(false);
+
+	// let project = Server.getProject(MainContent.curProjectId);
+	// if (!project || !project.users.Self) return;
+	// if (!project.users.Self.taskActionAllowed("update")) This.disable();
+
+
+
+
+
 
 	function openSelectMenu(_iconIndex = 0, _indicator = ".", _items = []) {
 		if (!This.openState) return false;
@@ -423,15 +602,11 @@ function _taskHolder_createMenu(_Parent) {
 
 
 
-
-
-
-
-	function resetEditMode(_deleteTodo = false) {
-		if (edit_todoHTML) edit_todoHTML.classList.remove("hide");
-		if (edit_todoHTML && _deleteTodo) edit_todoHTML.parentNode.removeChild(edit_todoHTML);
-		edit_todoHTML = null;
-		edit_todo = "";
+	function resetEditMode(_deleteTaskHTML = false) {
+		if (editData.html) editData.html.classList.remove("hide");
+		if (editData.html && _deleteTaskHTML) editData.html.parentNode.removeChild(editData.html);
+		editData.html = false;
+		editData.task = false;
 	}
 
 
@@ -530,8 +705,6 @@ function _taskHolder_createMenu(_Parent) {
 		if (date && date.getDateInDays()) return date.toString();
 		return false;
 	}
-
-	setup();
 }
 
 
@@ -541,137 +714,6 @@ function _taskHolder_createMenu(_Parent) {
 
 
 
-function _taskHolder_task(_parent, _renderPreferences) {
-	let Parent = _parent;
-	let RenderPreferences = _renderPreferences;
-	
-	Parent.HTML.todoHolder = Parent.HTML.Self.children[1];
-	
-	
-
-	this.taskList = [];
-	this.renderTaskList = function(_todoList, _location) {
-		for (let i = 0; i < _todoList.length; i++)
-		{
-			if (location)
-			{
-				this.renderTask(_todoList[i], _location + i);
-				continue;
-			}
-
-			this.renderTask(_todoList[i]);
-		}
-	}
-
-	this.renderTask = function(_task, _location) {
-		let todos = Parent.HTML.todoHolder.children;
-		if (typeof _location != "number") _location = todos.length;
-		_task.taskHolderId = Parent.id;
-
-		let task = MainContent.taskPage.renderer.renderTask(_task, Parent, RenderPreferences);
-
-		Parent.HTML.todoHolder.insertBefore(
-			task, 
-			todos[parseInt(_location)]
-		);
-
-		this.taskList.push({
-			taskId: _task.id,
-			html: task
-		});
-	}
-
-
-	this.removeTask = function(_id) {
-		for (let i = 0; i < this.taskList.length; i++)
-		{
-			if (this.taskList[i].taskId != _id) continue;
-			
-			let html = this.taskList[i].html;
-			html.classList.add("hide");
-			
-			var loopTimer = setTimeout(
-				function () {
-					html.parentNode.removeChild(html)
-				}, 
-				500
-			);
-
-
-			this.taskList.splice(i, 1);
-
-			return true;
-		}
-
-		return false;
-	}
-
-
-
-	this.shouldRenderTask = function(_task) {
-		let renderTask = true;
-		switch (_task.groupType)
-		{
-			case "date": 
-				if (Parent.type == "day" && 
-					!Parent.date.compareDate(new Date().setFromStr(_task.groupValue))
-				) renderTask = false;
-			break;
-			case "default": 
-				if (Parent.type != "list") renderTask = false;
-			break;
-			case "overdue": 
-				if (new Date().setFromStr(_task.groupValue) >= new Date()) renderTask = false;
-			break;	
-		}
-
-		if (Parent.type == "overdue") // temporary code, until the backendSystem works
-		{
-			if (new Date().setFromStr(_task.groupValue) >= new Date()) renderTask = false;
-		}
-
-		if (MainContent.curProjectId && MainContent.curProjectId != _task.projectId) renderTask = false;
-		return renderTask;
-	}
-}
-
-
-
-
-
-
-
-
-
-
-
-function _taskHolder_day(_appendTo, _preferences, _renderPreferences) {
-	_preferences.title = DateNames.toString(_preferences.date, false);
-	this.date = _preferences.date;
-	_taskHolder.call(this, _appendTo, _preferences, _renderPreferences, "day");
-}
-
-
-function _taskHolder_list(_appendTo, _preferences, _renderPreferences) {
-	_taskHolder.call(this, _appendTo, _preferences, _renderPreferences, "list");
-}
-
-
-function _taskHolder_overdue(_appendTo, _preferences, _renderPreferences) {
-	_preferences.title = "Overdue";
-	_taskHolder.call(this, _appendTo, _preferences, _renderPreferences, "overdue");
-
-	// make overdue alterations
-	this.HTML.Self.classList.add("overdue");
-	
-	this.onTaskFinish = function(_task) {
-		let taskId = _task.id ? _task.id : _task;
-		this.todo.removeTask(taskId);
-		if (this.todo.taskList.length > 0) return;
-		this.remove();
-	}
-	this.onTaskRemove = this.onTaskFinish;
-}
 
 
 

@@ -68,7 +68,7 @@ function _TaskRenderer() {
 
 		function createTaskHTML(_toDoData, _taskHolder) {
 			let html = document.createElement("div");
-			html.className = "listItem todoItem";
+			html.className = "listItem taskItem";
 			if (_toDoData.finished) html.classList.add("finished");
 			if (_toDoData.assignedToMe) html.classList.add("isSelf");
 			if (_toDoData.isMyTask) html.classList.add("isMyTask");
