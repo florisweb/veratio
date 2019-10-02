@@ -6,6 +6,10 @@ function _MainContent() {
 		pages: $("#mainContent .mainContentPage"),
 	}
 
+	let Private = {
+		openPage: openPage
+	}
+
 	this.curProjectId = "";
 
 	this.header 			= new _MainContent_header();
@@ -74,30 +78,25 @@ function _MainContent() {
 
 
 	// Maincontent pages
-	this.curPage			= false;
-	this.createProjectPage	= new _MainContent_createProjectPage();
-	this.settingsPage 		= new _MainContent_settingsPage();
-	this.taskPage	 		= new _MainContent_taskPage();
+	this.createProjectPage	= new _MainContent_createProjectPage(Private);
+	this.settingsPage 		= new _MainContent_settingsPage(Private);
+	this.taskPage	 		= new _MainContent_taskPage(Private);
 
 
-	this.openPage = function(_pageName, _projectId) {
-		$(HTML.mainContent).animate({opacity: 0}, 50);
+	function openPage(_pageName, _projectId) {// Not for direct use
+		HTML.mainContent.classList.add("loading");
 		resetPage();
 
-		let page = this[_pageName + "Page"];
+		let page = MainContent[_pageName + "Page"];
 		if (!page || !page.pageSettings) return console.warn("MainContent.openPage: " + _pageName + " doesn't exist.");
 
-		this.curProjectId 	= _projectId;
-		this.curPageName 	= page.pageSettings.pageName;
+		MainContent.curProjectId 	= _projectId;
+		MainContent.curPageName 	= page.pageSettings.pageName;
 
-		setTimeout(function () {
-			if (!page.pageSettings.customHeaderSetting) MainContent.header.showItemsByPage(page.pageSettings.pageName);
-			openMenuByIndex(page.pageSettings.pageIndex);
-			page.pageSettings.onOpen(_projectId);
-		}, 55);
+		if (!page.pageSettings.customHeaderSetting) MainContent.header.showItemsByPage(page.pageSettings.pageName);
+		openMenuByIndex(page.pageSettings.pageIndex);
 
-
-		$(HTML.mainContent).delay(50).animate({opacity: 1}, 50);
+		setTimeout('mainContent.classList.remove("loading");', 100);
 	}
 
 

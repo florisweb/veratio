@@ -1,102 +1,69 @@
 
 
-function _MainContent_taskPage(_parent) {
-	let HTML = {
-		todoHolder: $("#mainContentHolder .todoListHolder")[0],
-	}
-	let This = this;
-
-	this.pageSettings = {
-		pageName: "task",
-		pageIndex: 0,
-		onOpen: onOpen, 
-		customHeaderSetting: true
-	}
-
-	function onOpen(_projectId) {
-		if (!_projectId) return MainContent.taskPage.tab.reopenCurTab();
-		MainContent.taskPage.tab.open("Project", _projectId);
-	}
-
-	this.open = function(_projectId) {
-		MainContent.openPage(this.pageSettings.pageName, _projectId);
-	}
-
-
-	this.tab 			= new _MainContent_taskPage_tab(this);
-	this.taskHolder 	= new _MainContent_taskHolder();
-	this.renderer 		= new _TaskRenderer(HTML.todoHolder);
-}
-
-
-
-
-
-
-
-function _MainContent_taskPage_tab(_parent) {
-	let Parent = _parent;
-	let This = this;
-
+function _MainContent_taskPage(_ParentInheritance) {
 	let HTML = {
 		mainContent: mainContent,
 		mainContentHolder: mainContentHolder,
 		todoHolder: $("#mainContentHolder .todoListHolder")[0],
 		loadMoreButton: $("#mainContentHolder .loadMoreButton")[0],
 	}
+	
+	let Parent = _ParentInheritance;
+	let This = this;
+
+	const Private = {
+		HTML: HTML
+	}
 
 
-	this.tabs = {
-		Today: {
-			hideLoadMoreButton: true,
-			onOpen: openToday
-		},
-		Inbox: {
-			onOpen: openInbox,
-			loadMoreDays: loadMoreDays,
-		},
-		Project: {
-			hideLoadMoreButton: true,
-			onOpen: openProject
+
+	this.pageSettings = {
+		pageName: "task",
+		pageIndex: 0,
+		customHeaderSetting: true
+	}
+
+	this.open = function(_projectId) {
+		if (!_projectId) _projectId = MainContent.curProjectId;
+		Parent.openPage(this.pageSettings.pageName, _projectId);
+	
+		if (!_projectId) return MainContent.taskPage.reopenCurTab();
+		MainContent.taskPage.projectTab.open(_projectId);
+	}
+
+
+	this.taskHolder 	= new _MainContent_taskHolder();
+	this.renderer 		= new _TaskRenderer(HTML.todoHolder);
+	
+
+
+	// tabs
+	this.todayTab = new taskPage_tab(Private, {
+		title: "today",
+		onOpen: openToday,
+		hideLoadMoreButton: true
+	});
+
+	this.weekTab = new taskPage_tab(Private, {
+		title: "week",
+		onOpen: openInbox,
+		customFunctions: {
+			loadMoreDays: loadMoreDays
 		}
-	}
+	});
+	
+	this.projectTab = new taskPage_tab(Private, {
+		title: "project",
+		onOpen: openProject,
+		hideLoadMoreButton: true
+	});
+	
 
-
-
-	this.curTab = "Today";
+	this.curTab = "today";
 	this.reopenCurTab = function() {
-		if (this.curTab == "project" && !MainContent.curProjectId) this.curTab = "Today";
-		this.open(this.curTab, MainContent.curProjectId);
+		if (this.curTab == "project" && !MainContent.curProjectId) this.curTab = "today";
+		this[this.curTab + "Tab"].open(MainContent.curProjectId);
 	}
-
-
-	this.open = function(_tabName = "Today", _projectId = false) {
-		if (MainContent.curPageName != "task") MainContent.taskPage.open(_projectId);
-
-		$(HTML.mainContentHolder.parentNode).animate({opacity: 0}, 50);
-		_resetPage();
-		setTimeout(function () {
-			let tab = This.tabs[_tabName];
-			if (!tab) return console.warn("MainContent.taskPage.tab.open: " + _tabName + " doesn't exist.");
-			
-			if (tab.hideLoadMoreButton) HTML.loadMoreButton.classList.add("hide"); else HTML.loadMoreButton.classList.remove("hide");
-			MainContent.curProjectId = _projectId;
-			This.curTab = _tabName;
-
-			Parent.taskHolder.clear();
-			Parent.taskHolder.addOverdue();
-
-			MainContent.header.showItemsByPage("taskpage - " + _tabName)
-			
-			tab.onOpen(_projectId);
-		}, 55);
-
-
-		$(HTML.mainContentHolder.parentNode).delay(50).animate({opacity: 1}, 50);	
-	}
-
-
-		
 		
 
 	function openToday() {
@@ -115,7 +82,7 @@ function _MainContent_taskPage_tab(_parent) {
 		
 		todoList 		= MainContent.taskPage.renderer.settings.sort(todoList, []);
 
-		let taskHolder 	= Parent.taskHolder.add(
+		let taskHolder 	= MainContent.taskPage.taskHolder.add(
 			"date",
 			{
 				displayProjectTitle: true, 
@@ -139,7 +106,7 @@ function _MainContent_taskPage_tab(_parent) {
 	}
 
 	function inbox_addTaskHolder(_date) {
-		let taskHolder 	= Parent.taskHolder.add(
+		let taskHolder 	= MainContent.taskPage.taskHolder.add(
 			"date",
 			{
 				displayProjectTitle: true, 
@@ -181,7 +148,7 @@ function _MainContent_taskPage_tab(_parent) {
 
 	function getNewDate() {
 		let lastTaskHolder = MainContent.taskPage.taskHolder.list.lastItem();
-		if (lastTaskHolder.type != "day") return false;
+		if (lastTaskHolder.type != "date") return false;
 		return lastTaskHolder.date;
 	}
 
@@ -200,7 +167,7 @@ function _MainContent_taskPage_tab(_parent) {
 		if (plannedTasks.length)
 		{
 			plannedTasks = MainContent.taskPage.renderer.settings.sort(plannedTasks, []);
-			let taskHolder_planned = Parent.taskHolder.add(
+			let taskHolder_planned = MainContent.taskPage.taskHolder.add(
 				"default",
 				{
 					displayProjectTitle: false, 
@@ -215,7 +182,7 @@ function _MainContent_taskPage_tab(_parent) {
 		let nonPlannedTasks = project.todos.getTasksByGroup("default");		
 		nonPlannedTasks 	= MainContent.taskPage.renderer.settings.sort(nonPlannedTasks, []);
 		
-		let taskHolder_nonPlanned = Parent.taskHolder.add(
+		let taskHolder_nonPlanned = MainContent.taskPage.taskHolder.add(
 			"default",
 			{
 				displayProjectTitle: false, 
@@ -225,12 +192,54 @@ function _MainContent_taskPage_tab(_parent) {
 
 		taskHolder_nonPlanned.task.renderTaskList(nonPlannedTasks);
 	}
+	
+}
 
 
 
 
-	function _resetPage() {
+function taskPage_tab(_ParentInheritance, _settings) {
+	let Parent = _ParentInheritance;
+	let Settings = _settings;
+
+	applyCustomFunctions(this);
+
+
+	this.open = function(_projectId = false) {
+		if (MainContent.curPageName != "task") MainContent.taskPage.open(_projectId);
+		
+		MainContent.curProjectId = _projectId;
+		MainContent.taskPage.curTab = Settings.title;
+		MainContent.header.showItemsByPage("taskpage - " + Settings.title);
+
+
+		MainContent.taskPage.taskHolder.clear();
+		MainContent.taskPage.taskHolder.addOverdue();
+
+		applyTabSettings();
+		resetPage();
+
+		Settings.onOpen(_projectId);
+	}
+
+
+	function applyTabSettings() {
+		if (Settings.hideLoadMoreButton) 
+			Parent.HTML.loadMoreButton.classList.add("hide"); 
+		else 
+			Parent.HTML.loadMoreButton.classList.remove("hide");
+	}
+
+	function resetPage() {
 		MainContent.optionMenu.close();
+	}
+
+	function applyCustomFunctions(This) {
+		if (!Settings.customFunctions) return;
+		for (functionName in Settings.customFunctions)
+		{
+			This[functionName] = Settings.customFunctions[functionName];
+		}
 	}
 }
 
@@ -255,11 +264,9 @@ function _MainContent_taskPage_tab(_parent) {
 
 
 
-
-
-function _MainContent_createProjectPage(_parent) {
+function _MainContent_createProjectPage(_ParentInheritance) {
 	let This = this;
-	let Parent = _parent;
+	let Parent = _ParentInheritance;
 	
 	let HTML = {
 		page: $(".mainContentPage.createProjectPage"),
@@ -269,19 +276,18 @@ function _MainContent_createProjectPage(_parent) {
 	this.pageSettings = {
 		pageName: "createProject",
 		pageIndex: 1,
-		hideHeader: true,
-		onOpen: onOpen, 
+		hideHeader: true
 	}
 
 	this.open = function(_projectId) {
-		MainContent.openPage(this.pageSettings.pageName, _projectId);
-	}
+		Parent.openPage(this.pageSettings.pageName, _projectId);
 
-	function onOpen(_projectId) {
 		HTML.titleInputField.value = null;
 		HTML.titleInputField.focus();
 		MainContent.header.setTitle("Create Project");
 	}
+
+	
 
 
 
@@ -327,9 +333,9 @@ function _MainContent_createProjectPage(_parent) {
 
 
 
-function _MainContent_settingsPage(_parent) {
+function _MainContent_settingsPage(_ParentInheritance) {
 	let This = this;
-	let Parent = _parent;
+	let Parent = _ParentInheritance;
 	
 	let HTML = {
 		Self: $(".mainContentPage.settingsPage")[0],
@@ -340,8 +346,7 @@ function _MainContent_settingsPage(_parent) {
 
 	this.pageSettings = {
 		pageName: "settings",
-		pageIndex: 2,
-		onOpen: onOpen, 
+		pageIndex: 2
 	}
 
 	this.permissionsMenu = new _MainContent_settingsPage_permissionsMenu();
@@ -350,27 +355,19 @@ function _MainContent_settingsPage(_parent) {
 
 	this.open = function(_projectId) {
 		if (!_projectId) _projectId = Server.projectList[0].id;
-		MainContent.openPage(this.pageSettings.pageName, _projectId);
+		Parent.openPage(this.pageSettings.pageName, _projectId);
 
 		let project = Server.getProject(_projectId);
+
 		enableAllButtons();
-		
+		MainContent.header.setTitle("Settings - " + project.title);
+		This.setMemberItemsFromList(project.users.getList());
+
 		if (!project.users.Self.userActionAllowed("invite")) HTML.inviteMemberHolder.hide();
 	}
 
 	function enableAllButtons() {
 		HTML.inviteMemberHolder.show();
-	}
-
-
-
-	function onOpen(_projectId) {
-		let project = Server.getProject(_projectId);
-		if (!project) return false;
-
-		MainContent.header.setTitle("Settings - " + project.title);
-
-		This.setMemberItemsFromList(project.users.getList());
 	}
 
 
@@ -498,7 +495,6 @@ function _MainContent_settingsPage(_parent) {
 		DOMData.set(html, _member.id);
 		return html;
 	}
-
 }
 
 

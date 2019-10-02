@@ -138,10 +138,11 @@ function _MainContent_taskHolder() {
 	}
 
 	this.createTask = function() {
-		for (let i = 0; i < this.list.length; i++)
+		for (taskHolder of this.list)
 		{
-			if (!this.list[i].createMenu.openState) continue;
-			this.list[i].createMenu.createTask();
+			if (!taskHolder.createMenu) continue;
+			if (!taskHolder.createMenu.openState) continue;
+			taskHolder.createMenu.createTask();
 			return true;
 		}
 		return false;
@@ -150,10 +151,11 @@ function _MainContent_taskHolder() {
 
 	this.closeAllCreateMenus = function() {
 		let closedCreateMenu = false;
-		for (let i = 0; i < this.list.length; i++)
+		for (taskHolder of this.list)
 		{
-			if (!this.list[i].createMenu.openState) continue;
-			this.list[i].createMenu.close();
+			if (!taskHolder.createMenu) continue;
+			if (!taskHolder.createMenu.openState) continue;
+			taskHolder.createMenu.close();
 			closedCreateMenu = true;
 		}
 		return closedCreateMenu;

@@ -15,13 +15,11 @@ var MainContent   = new _MainContent();
 
 function _app() {
 
-	this.update = function() {
-		Server.sync().then(
-			function() {
-				MainContent.taskPage.tab.reopenCurTab();
-				SideBar.projectList.fillProjectHolder();
-			}, function() {}
-		);
+	this.update = async function() {
+		await Server.sync();
+    
+		MainContent.taskPage.open();
+		SideBar.projectList.fillProjectHolder();	
 	}
 
 
@@ -82,6 +80,8 @@ function _app() {
     
 
     SideBar.projectList.open();
+    // setTimeout('appLoadHolder.classList.add("hide");', 300);
+    setTimeout('document.body.classList.remove("appLoading");', 300);
   }
 }
 

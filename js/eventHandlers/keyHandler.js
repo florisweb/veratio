@@ -10,7 +10,7 @@ function _KeyHandler() {
         let list = MainContent.taskPage.taskHolder.list;
         for (item of list)
         {
-          if (!item.createMenu.enabled) continue;
+          if (!item.createMenu) continue;
           return item.createMenu.open();
         }
       },
@@ -45,18 +45,17 @@ function _KeyHandler() {
 
 
 
-
     {
       keys: ["i"], 
       event: function () {
-          MainContent.taskPage.tab.open("Inbox");
+          MainContent.taskPage.weekTab.open();
       },
       ignoreIfInInputField: true
     },
     {
       keys: ["t"], 
       event: function () {
-          MainContent.taskPage.tab.open("Today");
+          MainContent.taskPage.todayTab.open();
       },
       ignoreIfInInputField: true
     },
@@ -67,7 +66,6 @@ function _KeyHandler() {
       },
       ignoreIfInInputField: true
     },
-
     {
       keys: ["l"], 
       event: function () {
