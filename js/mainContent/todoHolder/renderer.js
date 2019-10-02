@@ -203,6 +203,7 @@ function taskConstructor(_element, _task, _taskHolder) {
 
 
 	this.openEdit = function() {
+		if (!this.taskHolder.createMenu) return;
 		this.taskHolder.createMenu.openEdit(this.html, this.taskId);
 	}
 

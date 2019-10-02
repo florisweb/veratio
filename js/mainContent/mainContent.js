@@ -241,11 +241,12 @@ function _MainContent_searchOptionMenu() {
 	this.close = function() {
 		this.openState = false;
 
-		inputField.onkeyup = null;
-		inputField = null;
-
 		HTML.menu.classList.add("hide");
 		setTimeout('$("#mainContentHolder .optionMenuHolder.searchOption")[0].style.top = "-50px";', 300);
+
+		if (!inputField) return;
+		inputField.onkeyup = null;
+		inputField = null;
 	}
 
 	this.chooseFirstSearchItem = function() {

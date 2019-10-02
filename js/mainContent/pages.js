@@ -39,6 +39,7 @@ function _MainContent_taskPage_tab(_parent) {
 	let This = this;
 
 	let HTML = {
+		mainContent: mainContent,
 		mainContentHolder: mainContentHolder,
 		todoHolder: $("#mainContentHolder .todoListHolder")[0],
 		loadMoreButton: $("#mainContentHolder .loadMoreButton")[0],
@@ -144,9 +145,8 @@ function _MainContent_taskPage_tab(_parent) {
 				displayProjectTitle: true, 
 				displayDate: false
 			}, 
-			[date]
+			[_date]
 		);
-
 
 
 		let taskList 	= Server.todos.getByDate(_date);
