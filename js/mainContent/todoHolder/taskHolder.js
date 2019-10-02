@@ -286,9 +286,9 @@ function TaskHolder(_config = {}, _type = "default") {
 	this.HTML = {
 		Parent: _config.html.appendTo,
 	}
-	this.HTML.Self = renderDayItem(this.HTML.Parent);
+	this.HTML.Self 	= renderTaskHolder(this.HTML.Parent);
 	
-	this.task 			= new TaskHolder_task(this);
+	this.task 		= new TaskHolder_task(this);
 
 
 	this.remove = function() {
@@ -306,16 +306,33 @@ function TaskHolder(_config = {}, _type = "default") {
 	}
 
 
-	function renderDayItem(_parent) {
+	this.taskHolderOpenState = false;
+
+	function renderTaskHolder(_parent) {
 		let html = document.createElement("div");
 		html.className = "taskHolder";
 		if (This.config.html.class) html.className += " " + This.config.html.class;
 
-		html.innerHTML = 	'<div class="header dateHolder"></div>' + 
+		html.innerHTML = 	'<img src="images/icons/dropDownIconDark.png" class="dropDownButton clickable">' +
+							'<div class="header dateHolder"></div>' + 
 							'<div class="todoHolder"></div>';
 
+
+		html.onclick = function(_e) {
+			if (_e.target.classList.contains("dropDownButton")) return;
+			This.taskHolderOpenState = false;
+			html.classList.remove("hideTasks");
+		}
+
+		html.children[0].onclick = function() {
+			This.taskHolderOpenState = !This.taskHolderOpenState;
+			console.log("B", This.taskHolderOpenState);
+			let Function = This.taskHolderOpenState ? "add" : "remove";
+			html.classList[Function]("hideTasks");
+		}
+
 		if (!This.config.title) html.style.marginTop = "0";
-		setTextToElement(html.children[0], This.config.title);
+		setTextToElement(html.children[1], This.config.title);
 		
 		_parent.append(html);
 
@@ -332,7 +349,7 @@ function TaskHolder(_config = {}, _type = "default") {
 function TaskHolder_task(_parent) {
 	let Parent = _parent;
 	
-	Parent.HTML.todoHolder = Parent.HTML.Self.children[1];
+	Parent.HTML.todoHolder = Parent.HTML.Self.children[2];
 	
 	
 

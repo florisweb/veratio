@@ -6,8 +6,12 @@
 	height: auto;
 
 	margin-top: 25px;
+	transition: opacity .3s;	
 }
-
+	.taskHolder.hideTasks {
+		opacity: .3;
+	}
+	
 
 	.taskHolder.overdue {
 		left: -30px;
@@ -31,8 +35,45 @@
 	.taskHolder .dateHolder {
 		margin-left: 35px;
 		color: #666;
-		font-weight: bold;
+		font-weight: bold;	
+		transition: margin-left .3s;
 	}
+
+	.taskHolder.hideTasks .dateHolder {
+		margin-left: 60px;
+	}
+
+	.taskHolder img:hover + .dateHolder {
+		margin-left: 60px;
+	}
+
+
+
+
+	.taskHolder .dropDownButton {
+		position: relative;
+		float: left;
+		left: 35px;
+
+		height: 15px;
+		padding: 10px;
+		margin: -7.5px;
+		
+		opacity: 0;
+		transition: transform 0.2s opacity .3s;
+	}
+	
+	.taskHolder .dropDownButton:hover {
+		opacity: .2;
+	}
+
+	.taskHolder.hideTasks .dropDownButton {
+		transform: rotateZ(-90deg);
+		opacity: .2;
+	}
+
+
+
 
 	.taskHolder .todoHolder {
 		position: relative;
@@ -42,7 +83,17 @@
 
 		margin-top: 10px;
 		margin-left: 2px;
+		
+		max-height: 100%;
+		overflow: hidden;
+		transition: max-height .3s, opacity .3s;
 	}
+	
+	.taskHolder.hideTasks .todoHolder {
+		max-height: 0;
+		opacity: 0;
+	}
+
 
 
 
