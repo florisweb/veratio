@@ -153,10 +153,14 @@
 
 			.createMenuHolder .inputField.taskTitle {
 				float: left;
-				width: calc(100% + 5px);
+				/*width: calc(100% + 5px);*/
+				width: calc(100% - 90px);
+				border-right: 0 solid red;
+				border-top-right-radius: 0;
+				border-bottom-right-radius: 0;
 			}
+
 			.createMenuHolder .inputField.taskDeadLine {
-				top: -32px;
 				float: right;
 				right: -5px;
 
@@ -165,6 +169,9 @@
 				opacity: 0.8;
 				text-align: center;
 				font-size: 12px;
+
+				border-top-left-radius: 0;
+				border-bottom-left-radius: 0;
 			}
 
 			.createMenuHolder .leftHand {
@@ -312,6 +319,7 @@
 		.taskItem.finished .statusCircleHitBox .statusCircle {
 			opacity: 1;
 		}
+
 
 	.taskItem.finished .titleHolder {
 		text-decoration: line-through;
