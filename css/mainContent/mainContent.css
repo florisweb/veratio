@@ -13,12 +13,19 @@
 	height: calc(100vh);
 	padding-right: 25px;
 
-	background: #fff;
-	transition: opacity 0.3s;
+	transition: transform .3s, opacity .3s;
 }
 
-#mainContent.animatePageChange {
-	opacity: 0;	
+
+body.appLoading #mainContent {
+	opacity: 0;
+}
+
+
+#mainContent.loading {
+	/*transition: transform .2s;*/
+	opacity: 0 !important;
+	transform: scale(.9);
 }
 
 

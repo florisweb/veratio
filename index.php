@@ -59,17 +59,18 @@
 
 		<link rel="stylesheet" type="text/css" href="css/component.css?a=37">
 		<link rel="stylesheet" type="text/css" href="css/popup.css?a=30">
-		<link rel="stylesheet" type="text/css" href="css/main.css?a=22">
-		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=24">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=43">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=42">
+		<link rel="stylesheet" type="text/css" href="css/main.css?a=24">
+		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=26">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=46">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=47">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/header.css?a=0">
 
 		<script type="text/javascript" src="/JS/jQuery.js" asy nc></script>
 		<script type="text/javascript" src="/JS/request2.js" asy nc></script>
 	
 	</head>	
-	<body>
+	<body class="appLoading">
+		
 		<div id="notificationBoxHolder" class="hide">
 			<div id="notificationBox">
 			</div>
@@ -79,13 +80,13 @@
 		<div id="sideBar">
 			<img class="sideBarBackground" src="images/sideBarBackground/?type=sidebar">
 			<div class="navigationHolder">
-				<div class="header clickable" onclick="MainContent.taskPage.tab.open('Today')">
+				<div class="header clickable" onclick="MainContent.taskPage.todayTab.open()">
 					<img src="images/icons/todayIcon.png" class="headerIcon">
 					<div class="headerText">Today</div>
 				</div>
-				<div class="header clickable" onclick="MainContent.taskPage.tab.open('Inbox')">
+				<div class="header clickable" onclick="MainContent.taskPage.weekTab.open()">
 					<img src="images/icons/weekIcon.png" class="headerIcon">
-					<div class="headerText">Inbox</div>
+					<div class="headerText">This Week</div>
 				</div>
 			</div>
 			<br>
@@ -109,13 +110,13 @@
 
 
 
-		<div id="mainContent" class="animatePageChange">
+		<div id="mainContent">
 			<div id="mainContentHeader">
 				<div class="header titleHolder userText"></div>
 
 				<div class="functionHolder">
 					<img src="images/icons/optionIcon.png" class="functionItem icon clickable" style="left: -5px">
-					<div class="functionItem backButton clickable hide" onclick='MainContent.taskPage.tab.reopenCurTab()'>
+					<div class="functionItem backButton clickable hide" onclick='MainContent.taskPage.reopenCurTab()'>
 						<img src="images/icons/dropDownIconDark.png" class="functionItem icon">
 						<a class="functionItem button text">
 							Back
@@ -136,7 +137,7 @@
 					<div class='optionMenuHolder searchOption hide'></div>
 
 
-					<div onclick="MainContent.taskPage.tab.tabs['Inbox'].loadMoreDays(3)" class="smallTextHolder clickable loadMoreButton">
+					<div onclick="MainContent.taskPage.weekTab.loadMoreDays(3)" class="smallTextHolder clickable loadMoreButton">
 						<a class="smallText smallTextIcon">+</a>
 						<div class="titleHolder userText smallText">Load more</div>
 					</div>
@@ -169,36 +170,35 @@
 						Leave project
 					</div>
 				</div>
-
 			</div>
 		</div>
 
 
 
-
+		<script type="text/javascript" src="js/mainContent/todoHolder/taskHolder.js?a=4" asy nc></script>
 		<script>
 			// temporary so things don't get cached
 			let antiCache = Math.round(Math.random() * 100000000);
+			// Modules
 			$.getScript("js/DOMData.js?antiCache=" 									+ antiCache, function() {});
 			$.getScript("js/time.js?antiCache=" 									+ antiCache, function() {});
-			$.getScript("js/extraFunctions.js?antiCache=" 							+ antiCache, function() {});
 			
 			$.getScript("js/popup.js?antiCache=" 									+ antiCache, function() {});
 			$.getScript("js/constants.js?antiCache=" 								+ antiCache, function() {});
+			$.getScript("js/extraFunctions.js?antiCache=" 							+ antiCache, function() {});
 			$.getScript("js/optionMenu.js?antiCache=" 								+ antiCache, function() {});
 			
 
+			// Eventhandlers
 			$.getScript("js/eventHandlers/keyHandler.js?antiCache=" 				+ antiCache, function() {});
 			$.getScript("js/eventHandlers/doubleClickHandler.js?antiCache=" 		+ antiCache, function() {});
 			$.getScript("js/eventHandlers/rightClickHandler.js?antiCache=" 			+ antiCache, function() {});
 
 
 			$.getScript("js/mainContent/header/header.js?antiCache=" 				+ antiCache, function() {});
-		
-
 			$.getScript("js/mainContent/pages.js?antiCache=" 						+ antiCache, function() {});
 			
-			$.getScript("js/mainContent/todoHolder/taskHolder.js?antiCache=" 		+ antiCache, function() {});
+			// $.getScript("js/mainContent/todoHolder/taskHolder.js?antiCache=" 		+ antiCache, function() {});
 			$.getScript("js/mainContent/todoHolder/renderSettings.js?antiCache=" 	+ antiCache, function() {});
 			$.getScript("js/mainContent/todoHolder/renderer.js?antiCache=" 			+ antiCache, function() {});
 

@@ -21,11 +21,24 @@
 	padding: 20px;
 
 	/*background: #2B3646;*/
-	background: #00b;
+	/*background: #00b;*/
+	background: #60b;
 	
 	box-shadow: 5px 0 20px 5px rgba(0, 0, 0, 0.08);
 	z-index: 10;
+
+	transition: left .32s, opacity .5s;
 }
+
+
+body.appLoading #sideBar {
+	left: -50px;
+	opacity: 0;
+}
+
+
+
+
 	#sideBar .sideBarBackground {
 		position: absolute;
 		left: 0;
