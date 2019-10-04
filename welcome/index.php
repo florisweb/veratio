@@ -17,10 +17,14 @@
 				position: fixed;
 				left: 0;
 				top: 0;
+				width: 100vw;
+				height: 100vh;
+
 				opacity: .2;
 				animation: background_popIn 1s 1;
 				transition: all .5s;
 			}
+			
 			body.page1 #backgroundImage {
 				opacity: .4;
 				transform: scale(1.5);
@@ -182,16 +186,7 @@
 				pointer-events: all;
 			}
 			
-		
-
-
-
-			@media (max-aspect-ratio: 7/4) {
-			  #backgroundImage {
-				width: auto;
-				height: 100vh;
-			  }
-			}
+	
 		</style>
 	</head>	
 	<body class='page0'>
