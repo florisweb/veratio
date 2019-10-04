@@ -116,6 +116,16 @@ Date.prototype.getWeek = function() {
 	return Math.ceil((((this - onejan) / 86400000) + onejan.getDay() + 1) / 7);
 }
 
+Date.prototype.getFirstDayDate = function(_dayIndex) {// 0 = Sunday
+	let curDayIndex = this.getDay();
+	let moveDays = _dayIndex - curDayIndex;
+	if (moveDays < 0) moveDays += 7;
+
+	this.moveDay(moveDays);
+
+	return this;
+}
+
 
 
 
@@ -173,7 +183,14 @@ const DateNames = function() {
       {name: "Yesterday",   date: new Date().moveDay(-1)},
       {name: "Today",       date: new Date()},
       {name: "Tomorrow",    date: new Date().moveDay(1)},
-      {name: "Next week",   date: new Date().moveDay(7)}
+      {name: "Next week",   date: new Date().moveDay(7)},
+      {name: "Sunday",  	date: new Date().getFirstDayDate(0)},
+      {name: "Monday",  	date: new Date().getFirstDayDate(1)},
+      {name: "Tuesday",  	date: new Date().getFirstDayDate(2)},
+      {name: "Wednesday",  	date: new Date().getFirstDayDate(3)},
+      {name: "Thursday",  	date: new Date().getFirstDayDate(4)},
+      {name: "Friday",  	date: new Date().getFirstDayDate(5)},
+      {name: "Saturday",  	date: new Date().getFirstDayDate(6)}
     ];
 
     return {
@@ -226,6 +243,12 @@ const DateNames = function() {
 
 		return false;
 	}
+
+
+
+
+
+
 
 
 	function relativeStrToDate(_str) {
@@ -293,11 +316,6 @@ const DateNames = function() {
 		if (String(year).length != 4) 	return false;
 		return year;
 	}
-
-
-
-
-
 }();
 
 
