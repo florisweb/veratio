@@ -85,7 +85,6 @@
 		margin-left: 2px;
 		
 		max-height: 100%;
-		overflow: hidden;
 		transition: max-height .3s, opacity .3s;
 	}
 	
