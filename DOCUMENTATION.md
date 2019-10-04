@@ -1,7 +1,7 @@
 
-<h3>Definitions</h3>
+<h1>Definitions</h1>
 
-<h4>Tasks</h4>
+<h2>Tasks</h2>
   
     - IsYours: 
       1. Assigned to me
@@ -11,22 +11,65 @@
 
 
 
-<h3>Definitions and Structure</h3>
+<h1>Definitions and Structure</h1>
 
 
-<h4>MainContent</h4>
-      
-    Pages
-  
-
-<h5>Page: taskPage</h5>
-  
-  o: TaskHolder
 
 
+
+
+
+STRUCTURE
+
+<h2>MainContent</h2>
+    
+    Pages:
+    - Task (Tabs \/)
+      - Today
+      - Inbox
+      - Project
+    - Settings
+    - Create Project
+
+    
+
+    v: curProjectId
+    v: curPageName
+
+    o: header
+
+    o: taskPage
+    o: settingsPage
+    o: createProjectPage
+
+
+<h3>Page constructor</h3>
+
+    f: open
+    v: pageSettings
+       * pageName
+       * pageIndex (The page-html's index)
+       - hideHeader [Boolean]
+       - 
+
+
+
+<h3>Page: taskPage</h3>
+    
+    Tabs:
+    - Today
+    - Inbox
+    - Project
+
+    f: openTab
+        [0] TabName       {As defined in MainContent.taskPage.tabs}
+        [1] projectId     Only required when TabName == Project, if absent redirect to page Today
+
+
+    o: TaskHolder
 
 <h5>Page: TaskPage: TaskHolder</h5>
-  
+
     f: add    Params: 
               [0] type                              {As defined in Taskholder.types} 
               [1] [Object] renderPreferences        {As defined in Taskholder.configuration} 
