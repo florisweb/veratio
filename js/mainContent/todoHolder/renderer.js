@@ -34,11 +34,11 @@ function _TaskRenderer() {
 		
 		let html = createTaskHTML(todoRenderData, _taskHolder);
 
-		
-
 		setDOMData(html, _task, _taskHolder);
 		return html;
 	}
+
+
 
 		function setDOMData(_element, _task, _taskHolder) {
 			let data = new taskConstructor(_element, _task, _taskHolder);
@@ -134,6 +134,18 @@ function _TaskRenderer() {
 		}
 
 			function _assignEventHandlers(_html, _toDoData, _taskHolder) {
+				DragHandler.register(
+					_html, 
+					function (_item) {
+						_html.style.left = _item.x + "px";
+						_html.style.top = _item.y + "px";
+					}, function (_e) {
+						_html.style.left = "";
+						_html.style.top = "";
+					}
+				);	
+
+
 				_html.children[1].onclick = function() {
 					let data 	= DOMData.get(_html);
 					let project = Server.getProject(data.projectId);

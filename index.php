@@ -59,10 +59,10 @@
 
 		<link rel="stylesheet" type="text/css" href="css/component.css?a=37">
 		<link rel="stylesheet" type="text/css" href="css/popup.css?a=30">
-		<link rel="stylesheet" type="text/css" href="css/main.css?a=24">
+		<link rel="stylesheet" type="text/css" href="css/main.css?a=25">
 		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=26">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=46">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=47">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=49">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/header.css?a=0">
 
 		<script type="text/javascript" src="/JS/jQuery.js" asy nc></script>
@@ -190,6 +190,7 @@
 			
 
 			// Eventhandlers
+			$.getScript("js/eventHandlers/dragHandler.js?antiCache=" 				+ antiCache, function() {});
 			$.getScript("js/eventHandlers/keyHandler.js?antiCache=" 				+ antiCache, function() {});
 			$.getScript("js/eventHandlers/doubleClickHandler.js?antiCache=" 		+ antiCache, function() {});
 			$.getScript("js/eventHandlers/rightClickHandler.js?antiCache=" 			+ antiCache, function() {});

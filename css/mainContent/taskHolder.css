@@ -258,6 +258,16 @@
 }
 
 
+.taskItem.draging {
+	position: fixed;
+	width: 300px;
+	background: rgba(255, 255, 255, .95);
+	box-shadow: 5px 5px 20px 20px rgba(0, 0, 0, .01);
+	z-index: 100;
+	transition: none;
+}
+
+
 
 
 

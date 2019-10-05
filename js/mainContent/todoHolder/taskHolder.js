@@ -237,8 +237,8 @@ function TaskHolder_overdue(_config) {
 	
 	this.onTaskFinish = function(_task) {
 		let taskId = _task.id ? _task.id : _task;
-		this.todo.removeTask(taskId);
-		if (this.todo.taskList.length > 0) return;
+		this.task.removeTask(taskId);
+		if (this.task.taskList.length > 0) return;
 		this.remove();
 	}
 	this.onTaskRemove = this.onTaskFinish;
