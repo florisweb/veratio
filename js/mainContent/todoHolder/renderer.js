@@ -135,6 +135,7 @@ function _TaskRenderer() {
 
 			function _assignEventHandlers(_html, _toDoData, _taskHolder) {
 				let lastDropTarget = false;
+				let aboveFirstItem = false;
 				DragHandler.register(
 					_html, 
 					function (_item, _dropTarget) {
@@ -142,25 +143,27 @@ function _TaskRenderer() {
 						_html.style.top = _item.y + "px";
 
 						if (!_dropTarget) return;
-						let dropTargetHeight = _dropTarget.offsetHeight;
-						let dropTargetY = _dropTarget.getBoundingClientRect().top;
-						let above = (dropTargetY - _item.y) / dropTargetHeight > .5;
-
 						clearLastDropTarget();
 
-						if (above < dropTargetHeight)
+						let dropTargetHeight 	= _dropTarget.offsetHeight;
+						let dropTargetY 		= _dropTarget.getBoundingClientRect().top;
+						let above = dropTargetY - _item.y > 0;// -dropTargetY / 2;
+
+						aboveFirstItem = false;
+						if (getChildIndex(_dropTarget) == 0 && above)
 						{
-							if (above) 
-								_dropTarget.style.marginTop		= dropTargetHeight + "px";
-							else 
-								_dropTarget.style.marginBottom 	= dropTargetHeight + "px";
-						}
+							aboveFirstItem = true;
+							_dropTarget.style.marginTop 		= dropTargetHeight + "px";
+						} else _dropTarget.style.marginBottom 	= dropTargetHeight + "px";
 
 						lastDropTarget = _dropTarget;
-					}, function (_e) {
+					}, function (_item) {
 						_html.style.left = "";
 						_html.style.top = "";
+						
 						clearLastDropTarget();
+						let data = getMoveDataFromDropTarget(_item);
+						console.log(data);
 					}
 				);
 
@@ -168,9 +171,39 @@ function _TaskRenderer() {
 				function clearLastDropTarget() {
 					if (!lastDropTarget) return;
 	
-					lastDropTarget.style.marginTop 		= "";
+					lastDropTarget.style.marginTop	 	= "";
 					lastDropTarget.style.marginBottom 	= "";
 				}
+
+				function getMoveDataFromDropTarget(_item) {
+					if (!lastDropTarget) return false;
+					let data = {
+						index: false,
+					}
+
+					let siblings = lastDropTarget.parentNode.children;
+					let dragItemI = Infinity;
+
+					for (let i = 0; i < siblings.length; i++)
+					{
+						if (siblings[i] == _item.html) dragItemI = i;
+						if (siblings[i] != lastDropTarget) continue;
+						data.index = i + 1 - (dragItemI < i) - aboveFirstItem;
+					}
+
+					return data;
+				}
+
+				function getChildIndex(_item) {
+					let siblings = _item.parentNode.children;
+					for (let i = 0; i < siblings.length; i++)
+					{
+						if (siblings[i] != _item) continue;
+						return i;
+					}
+				}
+
+
 
 
 
