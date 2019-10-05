@@ -13,7 +13,7 @@ function _TaskRenderer() {
 		let todoRenderData = {
 			id: 			_task.id,
 			title: 			_task.title,
-			taskHolderId: 	_task.taskHolderId,
+			taskHolderId: 	_taskHolder.id,
 			finished: 		_task.finished,
 			
 			assignedToMe: 	_task.assignedTo.includes(project.users.Self.id),
@@ -133,7 +133,7 @@ function _TaskRenderer() {
 			return _assignEventHandlers(html, _toDoData, _taskHolder);
 		}
 
-			function _assignEventHandlers(_html, _toDoData, _taskHolder) {
+			function _assignEventHandlers(_html, _taskData, _taskHolder) {
 				let lastDropTarget = false;
 				let aboveFirstItem = false;
 				DragHandler.register(
@@ -164,6 +164,19 @@ function _TaskRenderer() {
 						clearLastDropTarget();
 						let data = getMoveDataFromDropTarget(_item);
 						console.log(data);
+						if (data === false) return;
+
+						let taskHolder = MainContent.taskPage.taskHolder.get(_taskData.taskHolderId);
+						console.log(taskHolder, _taskData);
+
+						for (let i = 0; i < taskHolder.task.taskList.length; i++)
+						{
+							if (taskHolder.task.taskList[i].id != _taskData.id) continue;
+							let task = taskHolder.task.taskList.splice(i, 1)[0];
+							taskHolder.task.taskList.splice(data.index, 0, task);
+							break;
+						}
+						taskHolder.task.reRenderTaskList();
 					}
 				);
 

@@ -75,7 +75,7 @@ function _MainContent_taskHolder() {
 				displayProjectTitle: !MainContent.curProjectId
 			}
 		);
-		item.task.renderTaskList(todoList);
+		item.task.addTaskList(todoList);
 	}
 
 
@@ -348,39 +348,52 @@ function TaskHolder(_config = {}, _type = "default") {
 
 function TaskHolder_task(_parent) {
 	let Parent = _parent;
+	let This = this;
 	
 	Parent.HTML.todoHolder = Parent.HTML.Self.children[2];
 	
 	
 
 	this.taskList = [];
-	this.renderTaskList = function(_taskList) {
-		for (task of _taskList) this.renderTask(task);
+	this.addTaskList = function(_taskList) {
+		for (task of _taskList) this.addTask(task);
+	}
+
+	this.addTask = function(_task) {
+		let task = new _taskConstructor(_task);
+		this.renderTask(task);
+
+		this.taskList.push(task);
+	}
+
+
+	this.reRenderTaskList = function() {
+		Parent.HTML.todoHolder.innerHTML = "";
+		for (task of this.taskList) 
+		{
+			task.html = this.renderTask(task);
+		}
 	}
 
 	this.renderTask = function(_task) {
-		let todos = Parent.HTML.todoHolder.children;
-		_task.taskHolderId = Parent.id;
-
-		let task = MainContent.taskPage.renderer.renderTask(
-			_task, 
+		let actualTask = Server.todos.get(_task.id);
+		_task.html = MainContent.taskPage.renderer.renderTask(
+			actualTask, 
 			Parent, 
 			Parent.config.renderPreferences
 		);
 
-		Parent.HTML.todoHolder.append(task);
 
-		this.taskList.push({
-			taskId: _task.id,
-			html: task
-		});
+		Parent.HTML.todoHolder.append(_task.html);
+		return _task.html;
 	}
 
+	
 
 	this.removeTask = function(_id) {
 		for (let i = 0; i < this.taskList.length; i++)
 		{
-			if (this.taskList[i].taskId != _id) continue;
+			if (this.taskList[i].id != _id) continue;
 			
 			let html = this.taskList[i].html;
 			html.classList.add("hide");
@@ -427,6 +440,27 @@ function TaskHolder_task(_parent) {
 
 		if (MainContent.curProjectId && MainContent.curProjectId != _task.projectId) renderTask = false;
 		return renderTask;
+	}
+
+
+	function get(_id) {
+		for (task of This.taskList) 
+		{
+			if (task.id == _id) return task;
+		}
+		return false;
+	}
+
+
+
+
+	function _taskConstructor(_task) {
+		let This = {
+			id: _task.id,
+			html: false,
+			taskHolderId: Parent.id,
+		}
+		return This;
 	}
 }
 

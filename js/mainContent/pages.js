@@ -90,7 +90,7 @@ function _MainContent_taskPage(_ParentInheritance) {
 			}, 
 			[date]
 		);
-		taskHolder.task.renderTaskList(todoList);
+		taskHolder.task.addTaskList(todoList);
 	}
 
 
@@ -122,7 +122,7 @@ function _MainContent_taskPage(_ParentInheritance) {
 			assignedTo: false
 		});
 		taskList 		= MainContent.taskPage.renderer.settings.sort(taskList, []);
-		taskHolder.task.renderTaskList(taskList);
+		taskHolder.task.addTaskList(taskList);
 	}
 
 
@@ -175,7 +175,7 @@ function _MainContent_taskPage(_ParentInheritance) {
 				["Planned"]
 			);
 
-			taskHolder_planned.task.renderTaskList(plannedTasks);
+			taskHolder_planned.task.addTaskList(plannedTasks);
 		}
 
 
@@ -190,7 +190,7 @@ function _MainContent_taskPage(_ParentInheritance) {
 			["Not Planned"]
 		);
 
-		taskHolder_nonPlanned.task.renderTaskList(nonPlannedTasks);
+		taskHolder_nonPlanned.task.addTaskList(nonPlannedTasks);
 	}
 	
 }
