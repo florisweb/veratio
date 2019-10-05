@@ -261,11 +261,21 @@
 .taskItem.draging {
 	position: fixed;
 	width: 300px;
-	background: rgba(255, 255, 255, .95);
-	box-shadow: 5px 5px 20px 20px rgba(0, 0, 0, .01);
+	background: #fff;
+	box-shadow: 5px 5px 20px 20px rgba(0, 0, 0, .03);
+	
 	z-index: 100;
 	transition: none;
+	pointer-events: none;
 }
+
+
+.taskItem.hoverOver {
+	margin-bottom: 50px;
+}
+
+
+
 
 
 

@@ -88,14 +88,13 @@ function _DragHandler() {
     } else return false;
 
 
-
-
     let parPos = item.html.parentNode.getBoundingClientRect();
     item.x = _event.x - item.rx;
     item.y = _event.y - item.ry;
 
     try {
-      item.moveCallBack(item);
+      let dropTarget = dropTargetFromEvent(_event);
+      item.moveCallBack(item, dropTarget);
     }
     catch (e) {console.error("DragHandler: An error accured while trying to handle the moveCallBack", e)}
   }
@@ -118,18 +117,27 @@ function _DragHandler() {
   }
 
 
+  function dropTargetFromEvent(_event) {
+    let hoveringTarget = _event.target;
+
+    if (hoveringTarget.classList.contains("dropTarget")) return hoveringTarget;
+    return false;
+  }
+
+
 
 
   function addPlaceHolderItem(item) {
     let placeHolderItem = item.html.cloneNode(true);
     placeHolderItem.style.opacity = ".4";
+    placeHolderItem.classList.remove("dropTarget");
     item.html.parentNode.insertBefore(placeHolderItem, item.html);
+
     return placeHolderItem;
   }
 
   function removePlaceHolder(item) {
     if (!item.placeHolder || !item.placeHolder.parentNode) return false;
-    console.log(item.placeHolderItem);
     item.placeHolder.parentNode.removeChild(item.placeHolder);
   }
 }

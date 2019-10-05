@@ -68,7 +68,7 @@ function _TaskRenderer() {
 
 		function createTaskHTML(_toDoData, _taskHolder) {
 			let html = document.createElement("div");
-			html.className = "listItem taskItem";
+			html.className = "listItem taskItem dropTarget";
 			if (_toDoData.finished) html.classList.add("finished");
 			if (_toDoData.assignedToMe) html.classList.add("isSelf");
 			if (_toDoData.isMyTask) html.classList.add("isMyTask");
@@ -134,16 +134,44 @@ function _TaskRenderer() {
 		}
 
 			function _assignEventHandlers(_html, _toDoData, _taskHolder) {
+				let lastDropTarget = false;
 				DragHandler.register(
 					_html, 
-					function (_item) {
+					function (_item, _dropTarget) {
 						_html.style.left = _item.x + "px";
 						_html.style.top = _item.y + "px";
+
+						if (!_dropTarget) return;
+						let dropTargetHeight = _dropTarget.offsetHeight;
+						let dropTargetY = _dropTarget.getBoundingClientRect().top;
+						let above = (dropTargetY - _item.y) / dropTargetHeight > .5;
+
+						clearLastDropTarget();
+
+						if (above < dropTargetHeight)
+						{
+							if (above) 
+								_dropTarget.style.marginTop		= dropTargetHeight + "px";
+							else 
+								_dropTarget.style.marginBottom 	= dropTargetHeight + "px";
+						}
+
+						lastDropTarget = _dropTarget;
 					}, function (_e) {
 						_html.style.left = "";
 						_html.style.top = "";
+						clearLastDropTarget();
 					}
-				);	
+				);
+
+
+				function clearLastDropTarget() {
+					if (!lastDropTarget) return;
+	
+					lastDropTarget.style.marginTop 		= "";
+					lastDropTarget.style.marginBottom 	= "";
+				}
+
 
 
 				_html.children[1].onclick = function() {
