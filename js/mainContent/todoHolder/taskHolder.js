@@ -347,11 +347,10 @@ function TaskHolder(_config = {}, _type = "default") {
 
 
 function TaskHolder_task(_parent) {
-	let Parent = _parent;
-	let This = this;
+	const Parent = _parent;
+	let TaskHolder = this;
 	
 	Parent.HTML.todoHolder = Parent.HTML.Self.children[2];
-	
 	
 
 	this.taskList = [];
@@ -361,56 +360,28 @@ function TaskHolder_task(_parent) {
 
 	this.addTask = function(_task) {
 		let task = new _taskConstructor(_task);
-		this.renderTask(task);
-
 		this.taskList.push(task);
+		task.render();
+
+		return task;
 	}
 
 
 	this.reRenderTaskList = function() {
-		Parent.HTML.todoHolder.innerHTML = "";
-		for (task of this.taskList) 
-		{
-			task.html = this.renderTask(task);
-		}
+		for (task of this.taskList) task.render();
 	}
 
-	this.renderTask = function(_task) {
-		let actualTask = Server.todos.get(_task.id);
-		_task.html = MainContent.taskPage.renderer.renderTask(
-			actualTask, 
-			Parent, 
-			Parent.config.renderPreferences
-		);
-
-
-		Parent.HTML.todoHolder.append(_task.html);
-		return _task.html;
-	}
 
 	
 
-	this.removeTask = function(_id) {
+	this.removeTask = function(_id, _animate = false) {
 		for (let i = 0; i < this.taskList.length; i++)
 		{
 			if (this.taskList[i].id != _id) continue;
-			
-			let html = this.taskList[i].html;
-			html.classList.add("hide");
-			
-			var loopTimer = setTimeout(
-				function () {
-					html.parentNode.removeChild(html)
-				}, 
-				500
-			);
-
-
+			this.taskList[i].removeHTML(_animate);
 			this.taskList.splice(i, 1);
-
 			return true;
 		}
-
 		return false;
 	}
 
@@ -444,7 +415,7 @@ function TaskHolder_task(_parent) {
 
 
 	function get(_id) {
-		for (task of This.taskList) 
+		for (task of TaskHolder.taskList) 
 		{
 			if (task.id == _id) return task;
 		}
@@ -454,12 +425,71 @@ function TaskHolder_task(_parent) {
 
 
 
+
+
+
+
+
+
 	function _taskConstructor(_task) {
 		let This = {
 			id: _task.id,
 			html: false,
 			taskHolderId: Parent.id,
+			render: render,
+			remove: remove,
+			removeHTML: removeHTML
 		}
+		
+
+		function remove(_animate) {
+			TaskHolder.removeTask(This.id, _animate);
+		}
+
+		function removeHTML(_animate) {
+			let html = This.html;
+			if (!html) return false;
+
+			html.classList.add("hide");
+			setTimeout(
+				function () {
+					html.parentNode.removeChild(html)
+				}, 
+				500 * _animate
+			);
+		}
+
+		let lastTaskIndex = Infinity;
+		
+		function render() {
+			let taskIndex = getTaskListIndex();
+			if (taskIndex == lastTaskIndex) return;
+			lastTaskIndex = taskIndex;
+
+			This.removeHTML(false);
+
+			let actualTask = Server.todos.get(This.id);
+			This.html = MainContent.taskPage.renderer.renderTask(
+				actualTask, 
+				Parent, 
+				Parent.config.renderPreferences
+			);
+
+			if (taskIndex == TaskHolder.taskList.length) return Parent.HTML.todoHolder.append(This.html);
+
+			let insertBeforeElement = Parent.HTML.todoHolder.children[taskIndex];
+			Parent.HTML.todoHolder.insertBefore(This.html, insertBeforeElement);
+		}
+
+		function getTaskListIndex() {
+			for (let i = 0; i < TaskHolder.taskList.length; i++)
+			{
+				if (TaskHolder.taskList[i].id != This.id) continue;
+				return i;
+			}
+			return TaskHolder.taskList.length;
+		}
+
 		return This;
 	}
 }

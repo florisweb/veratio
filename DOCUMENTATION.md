@@ -85,11 +85,7 @@ STRUCTURE
 
 
 
-
-
-
-
-<h4>TaskHolder</h4>
+<h4>Class: TaskHolder</h4>
 
     Holds a list of tasks.
     let taskHolder = new TaskHolder(config, type)
@@ -107,6 +103,37 @@ STRUCTURE
       - renderPreferences
         - [Boolean] displayProjectTitle
         - [Boolean] displayDate
+
+
+<h6>TaskHolder_task</h6>
+  
+    v: [Array] taskList - taskObjects
+
+    f: addTask()
+       [0] Server.taskObject
+    f: removeTask(_task, _animate)
+       [0] Server.taskObject.id
+       [1] [Boolean] Whether the task-removal should be animated        DEFAULT: false
+
+    f: reRender()
+    f: sort()
+       [0] SortParams
+
+
+<h5>Class: TaskHolder_task.taskObject</h5>
+
+    v: id
+    v: taskHolderId
+    v: html
+
+    f: render
+    f: remove()
+       [0] [Boolean] animate          DEFAULT: false
+
+
+
+
+
 
 
 
