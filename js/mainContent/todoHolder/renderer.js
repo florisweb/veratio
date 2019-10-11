@@ -162,21 +162,12 @@ function _TaskRenderer() {
 						_html.style.top = "";
 						
 						clearLastDropTarget();
-						let data = getMoveDataFromDropTarget(_item);
-						console.log(data);
-						if (data === false) return;
+						let index = getMoveIndexFromDropTarget(_item);
+						if (index === false) return;
 
 						let taskHolder = MainContent.taskPage.taskHolder.get(_taskData.taskHolderId);
-						console.log(taskHolder, _taskData);
-
-						for (let i = 0; i < taskHolder.task.taskList.length; i++)
-						{
-							if (taskHolder.task.taskList[i].id != _taskData.id) continue;
-							let task = taskHolder.task.taskList.splice(i, 1)[0];
-							taskHolder.task.taskList.splice(data.index, 0, task);
-							break;
-						}
-						taskHolder.task.reRenderTaskList();
+						let task = Server.todos.get(_taskData.id);
+						taskHolder.task.dropTask(task, index);
 					}
 				);
 
@@ -188,11 +179,9 @@ function _TaskRenderer() {
 					lastDropTarget.style.marginBottom 	= "";
 				}
 
-				function getMoveDataFromDropTarget(_item) {
+				function getMoveIndexFromDropTarget(_item) {
 					if (!lastDropTarget) return false;
-					let data = {
-						index: false,
-					}
+					let index = false;
 
 					let siblings = lastDropTarget.parentNode.children;
 					let dragItemI = Infinity;
@@ -201,10 +190,10 @@ function _TaskRenderer() {
 					{
 						if (siblings[i] == _item.html) dragItemI = i;
 						if (siblings[i] != lastDropTarget) continue;
-						data.index = i + 1 - (dragItemI < i) - aboveFirstItem;
+						index = i + 1 - (dragItemI < i) - aboveFirstItem;
 					}
 
-					return data;
+					return index;
 				}
 
 				function getChildIndex(_item) {
@@ -215,8 +204,6 @@ function _TaskRenderer() {
 						return i;
 					}
 				}
-
-
 
 
 

@@ -370,8 +370,6 @@ function TaskHolder_task(_parent) {
 	this.reRenderTaskList = function() {
 		for (task of this.taskList) task.render();
 	}
-
-
 	
 
 	this.removeTask = function(_id, _animate = false) {
@@ -384,6 +382,18 @@ function TaskHolder_task(_parent) {
 		}
 		return false;
 	}
+
+
+
+	this.dropTask = function(_task, _taskIndex) {
+		let task = moveTask(_task, _taskIndex);
+		
+		for (curTask of this.taskList) if (task != curTask) curTask.render();
+		task.render(true);
+	}
+
+
+
 
 
 
@@ -423,6 +433,22 @@ function TaskHolder_task(_parent) {
 	}
 
 
+	function moveTask(_task, _taskIndex) {
+		if (typeof _taskIndex != "number") _taskIndex = TaskHolder.taskList.length;
+
+		for (let i = 0; i < TaskHolder.taskList.length; i++)
+		{
+			if (TaskHolder.taskList[i].id != _task.id) continue;
+			let task = TaskHolder.taskList.splice(i, 1)[0];
+			TaskHolder.taskList.splice(_taskIndex, 0, task);
+			return task;
+		}
+
+		let newTask = new _taskConstructor(_task);
+		TaskHolder.taskList.push(newTask);
+		return newTask;
+	}	
+
 
 
 
@@ -461,7 +487,7 @@ function TaskHolder_task(_parent) {
 
 		let lastTaskIndex = Infinity;
 		
-		function render() {
+		function render(_dropped = false) {
 			let taskIndex = getTaskListIndex();
 			if (taskIndex == lastTaskIndex) return;
 			lastTaskIndex = taskIndex;
@@ -479,6 +505,10 @@ function TaskHolder_task(_parent) {
 
 			let insertBeforeElement = Parent.HTML.todoHolder.children[taskIndex];
 			Parent.HTML.todoHolder.insertBefore(This.html, insertBeforeElement);
+
+			if (!_dropped) return;
+			This.html.classList.add("draging");
+			setTimeout(function () {This.html.classList.remove("draging");}, 0);
 		}
 
 		function getTaskListIndex() {

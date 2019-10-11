@@ -119,6 +119,10 @@ STRUCTURE
     f: sort()
        [0] SortParams
 
+    f: dropTask
+       [0] The taskObject to be dropped (Can either be added or moved)
+       [1] The index at which the task should be dropped                DEFAULT: taskList.length, (Will drop at the end)
+
 
 <h5>Class: TaskHolder_task.taskObject</h5>
 
