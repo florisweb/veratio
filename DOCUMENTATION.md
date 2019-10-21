@@ -90,11 +90,6 @@ STRUCTURE
     Holds a list of tasks.
     let taskHolder = new TaskHolder(config, type)
 
-    - Types: [DEFAULT: 'Default']
-      1. Default 
-      2. Overdue
-      3. Date
-
     - Configuration
       * html:
         * appendTo: The html object to which the taskHolder will be appended
@@ -103,6 +98,20 @@ STRUCTURE
       - renderPreferences
         - [Boolean] displayProjectTitle
         - [Boolean] displayDate
+
+    - Types: [DEFAULT: 'Default']
+      1. Default 
+      2. Overdue
+      3. Date
+
+
+
+    Properties:
+
+    - O: Task -> TaskHolder_task
+
+
+
 
 
 <h6>TaskHolder_task</h6>
@@ -122,6 +131,7 @@ STRUCTURE
     f: dropTask
        [0] The taskObject to be dropped (Can either be added or moved)
        [1] The index at which the task should be dropped                DEFAULT: taskList.length, (Will drop at the end)
+
 
 
 <h5>Class: TaskHolder_task.taskObject</h5>

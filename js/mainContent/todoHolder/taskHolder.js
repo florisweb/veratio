@@ -133,7 +133,7 @@ function _MainContent_taskHolder() {
 		for (taskHolder of this.list) 
 		{
 			if (!taskHolder.task.shouldRenderTask(_task)) continue;
-			taskHolder.task.renderTask(_task);
+			taskHolder.task.addTask(_task);
 		}
 	}
 
@@ -359,6 +359,8 @@ function TaskHolder_task(_parent) {
 	}
 
 	this.addTask = function(_task) {
+		this.removeTask(_task.id, false);
+
 		let task = new _taskConstructor(_task);
 		this.taskList.push(task);
 		task.render();
@@ -447,7 +449,7 @@ function TaskHolder_task(_parent) {
 		let newTask = new _taskConstructor(_task);
 		TaskHolder.taskList.push(newTask);
 		return newTask;
-	}	
+	}
 
 
 
