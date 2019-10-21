@@ -111,9 +111,10 @@ function _DragHandler() {
     item.dragStarted = false;
    
     try {
-      item.stopDragingCallback(item);
+      let dropTarget = dropTargetFromEvent(_event);
+      item.stopDragingCallback(item, dropTarget);
     }
-    catch (e) {}
+    catch (e) {console.error("DragHandler: An error accured while trying to handle the dropCallBack", e)}
   }
 
 

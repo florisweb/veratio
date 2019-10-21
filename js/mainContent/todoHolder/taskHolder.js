@@ -311,6 +311,7 @@ function TaskHolder(_config = {}, _type = "default") {
 	function renderTaskHolder(_parent) {
 		let html = document.createElement("div");
 		html.className = "taskHolder";
+		html.setAttribute("taskHolderId", This.id);
 		if (This.config.html.class) html.className += " " + This.config.html.class;
 
 		html.innerHTML = 	'<img src="images/icons/dropDownIconDark.png" class="dropDownButton clickable">' +

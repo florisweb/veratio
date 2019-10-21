@@ -182,14 +182,22 @@ function removeSpacesFromEnds(_str) {
 
 // https://stackoverflow.com/questions/6562727/is-there-a-function-to-deselect-all-text-using-javascript
 function clearSelection() {
- if (window.getSelection) {window.getSelection().removeAllRanges();}
- else if (document.selection) {document.selection.empty();}
+  if (window.getSelection) {window.getSelection().removeAllRanges();}
+  else if (document.selection) {document.selection.empty();}
 }
 
 
 
 
 
+function getChildIndex(_item) {
+  let siblings = _item.parentNode.children;
+  for (let i = 0; i < siblings.length; i++)
+  {
+    if (siblings[i] != _item) continue;
+    return i;
+  }
+}
 
 
 

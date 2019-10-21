@@ -130,46 +130,47 @@ function _TaskRenderer() {
 			}
 
 
-			return _assignEventHandlers(html, _toDoData, _taskHolder);
+			return assignEventHandlers(html, _toDoData, _taskHolder);
 		}
 
-			function _assignEventHandlers(_html, _taskData, _taskHolder) {
+			function assignEventHandlers(_html, _taskData, _taskHolder) {
+
 				let lastDropTarget = false;
-				let aboveFirstItem = false;
 				DragHandler.register(
 					_html, 
 					function (_item, _dropTarget) {
-						_html.style.left = _item.x + "px";
-						_html.style.top = _item.y + "px";
+						_html.style.left 	= _item.x + "px";
+						_html.style.top 	= _item.y + "px";
 
 						if (!_dropTarget) return;
 						clearLastDropTarget();
 
-						let dropTargetHeight 	= _dropTarget.offsetHeight;
-						let dropTargetY 		= _dropTarget.getBoundingClientRect().top;
-						let above = dropTargetY - _item.y > 0;// -dropTargetY / 2;
-
-						aboveFirstItem = false;
-						if (getChildIndex(_dropTarget) == 0 && above)
+						if (getChildIndex(_dropTarget) == 0 && getAboveStatus(_item, _dropTarget))
 						{
-							aboveFirstItem = true;
-							_dropTarget.style.marginTop 		= dropTargetHeight + "px";
-						} else _dropTarget.style.marginBottom 	= dropTargetHeight + "px";
+							_dropTarget.style.marginTop 		= _dropTarget.offsetHeight + "px";
+						} else _dropTarget.style.marginBottom 	= _dropTarget.offsetHeight + "px";
 
 						lastDropTarget = _dropTarget;
-					}, function (_item) {
+					}, 
+
+					function (_item) {
 						_html.style.left = "";
 						_html.style.top = "";
 						
 						clearLastDropTarget();
-						let index = getMoveIndexFromDropTarget(_item);
-						if (index === false) return;
 
-						let taskHolder = MainContent.taskPage.taskHolder.get(_taskData.taskHolderId);
+						let dropData = getDropData(_item);
+						if (!dropData) return;
+
 						let task = Server.todos.get(_taskData.id);
-						taskHolder.task.dropTask(task, index);
+						dropData.taskHolder.task.dropTask(task, dropData.index);
+
+						if (dropData.taskHolder.id == _taskData.taskHolderId) return;
+						let prevTaskHolder = MainContent.taskPage.taskHolder.get(_taskData.taskHolderId);
+						prevTaskHolder.task.removeTask(_taskData.id);
 					}
 				);
+
 
 
 				function clearLastDropTarget() {
@@ -179,31 +180,50 @@ function _TaskRenderer() {
 					lastDropTarget.style.marginBottom 	= "";
 				}
 
-				function getMoveIndexFromDropTarget(_item) {
+				function getAboveStatus(_item, _dropTarget) {
+					let dropTargetHeight 	= _dropTarget.offsetHeight;
+					let dropTargetY 		= _dropTarget.getBoundingClientRect().top;
+					return dropTargetY - _item.y > 0;
+				}
+
+
+
+
+				function getDropData(_item) {
 					if (!lastDropTarget) return false;
-					let index = false;
-
-					let siblings = lastDropTarget.parentNode.children;
-					let dragItemI = Infinity;
-
-					for (let i = 0; i < siblings.length; i++)
-					{
-						if (siblings[i] == _item.html) dragItemI = i;
-						if (siblings[i] != lastDropTarget) continue;
-						index = i + 1 - (dragItemI < i) - aboveFirstItem;
+					let data = {
+						index: getDropIndex(_item)
 					}
 
-					return index;
+					let taskHolderId = lastDropTarget.parentNode.parentNode.getAttribute("taskHolderId");
+					data.taskHolder  = MainContent.taskPage.taskHolder.get(taskHolderId);
+					if (!data.taskHolder) return false;
+					
+					return data;
 				}
 
-				function getChildIndex(_item) {
-					let siblings = _item.parentNode.children;
-					for (let i = 0; i < siblings.length; i++)
-					{
-						if (siblings[i] != _item) continue;
-						return i;
+
+					function getDropIndex(_item) {
+						let index = false;	
+
+						let siblings = lastDropTarget.parentNode.children;
+						let dragItemI = Infinity;
+
+						for (let i = 0; i < siblings.length; i++)
+						{
+							if (siblings[i] == _item.html) dragItemI = i;
+							if (siblings[i] != lastDropTarget) continue;
+							index = i + 1 - (dragItemI < i) - getAboveStatus(_item, lastDropTarget);
+						}
+
+						return index;
 					}
-				}
+
+
+
+
+
+
 
 
 
@@ -234,6 +254,12 @@ function _TaskRenderer() {
 				return _html;
 			}	
 }
+
+
+
+
+
+
 
 
 
