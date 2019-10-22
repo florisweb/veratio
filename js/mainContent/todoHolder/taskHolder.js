@@ -327,7 +327,6 @@ function TaskHolder(_config = {}, _type = "default") {
 
 		html.children[0].onclick = function() {
 			This.taskHolderOpenState = !This.taskHolderOpenState;
-			console.log("B", This.taskHolderOpenState);
 			let Function = This.taskHolderOpenState ? "add" : "remove";
 			html.classList[Function]("hideTasks");
 		}
@@ -437,7 +436,6 @@ function TaskHolder_task(_parent) {
 
 
 	function moveTask(_task, _taskIndex) {
-		console.log(_task, _taskIndex);
 		if (typeof _taskIndex != "number") _taskIndex = TaskHolder.taskList.length;
 
 		for (let i = 0; i < TaskHolder.taskList.length; i++)
