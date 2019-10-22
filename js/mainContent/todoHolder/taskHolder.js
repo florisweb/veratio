@@ -437,6 +437,7 @@ function TaskHolder_task(_parent) {
 
 
 	function moveTask(_task, _taskIndex) {
+		console.log(_task, _taskIndex);
 		if (typeof _taskIndex != "number") _taskIndex = TaskHolder.taskList.length;
 
 		for (let i = 0; i < TaskHolder.taskList.length; i++)
@@ -448,7 +449,7 @@ function TaskHolder_task(_parent) {
 		}
 
 		let newTask = new _taskConstructor(_task);
-		TaskHolder.taskList.push(newTask);
+		TaskHolder.taskList.splice(_taskIndex, 0, newTask);
 		return newTask;
 	}
 
