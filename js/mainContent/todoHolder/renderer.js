@@ -139,8 +139,8 @@ function _TaskRenderer() {
 				DragHandler.register(
 					_html, 
 					function (_item, _dropTarget) {
-						_html.style.left 	= _item.x + "px";
-						_html.style.top 	= _item.y + "px";
+						// _html.style.left 	= _item.x + "px";
+						// _html.style.top 	= _item.y + "px";
 
 						if (!_dropTarget) return;
 						clearLastDropTarget();
@@ -154,20 +154,27 @@ function _TaskRenderer() {
 					}, 
 
 					function (_item) {
-						_html.style.left = "";
-						_html.style.top = "";
+						// _html.style.transition = "all 5s";
+						// _html.style.left = "";
+						// _html.style.top = "";
 						
 						clearLastDropTarget();
 
 						let dropData = getDropData(_item);
 						if (!dropData) return;
+						let dropCoords = {
+							x: dropData.x, 
+							y: dropData.y
+						}
 
 						let task = Server.todos.get(_taskData.id);
 						dropData.taskHolder.task.dropTask(task, dropData.index);
 
-						if (dropData.taskHolder.id == _taskData.taskHolderId) return;
+						if (dropData.taskHolder.id == _taskData.taskHolderId) return dropCoords;
 						let prevTaskHolder = MainContent.taskPage.taskHolder.get(_taskData.taskHolderId);
 						prevTaskHolder.task.removeTask(_taskData.id);
+
+						return dropCoords;
 					}
 				);
 
@@ -192,12 +199,17 @@ function _TaskRenderer() {
 				function getDropData(_item) {
 					if (!lastDropTarget) return false;
 					let data = {
-						index: getDropIndex(_item)
+						index: getDropIndex(_item),
 					}
 
 					let taskHolderId = lastDropTarget.parentNode.parentNode.getAttribute("taskHolderId");
 					data.taskHolder  = MainContent.taskPage.taskHolder.get(taskHolderId);
+					
 					if (!data.taskHolder) return false;
+					let positionObj = data.taskHolder.HTML.todoHolder.children[data.index];
+					let pos = positionObj.getBoundingClientRect();
+					data.x = pos.left - 1;
+					data.y = pos.top + positionObj.offsetHeight - 4;
 					
 					return data;
 				}

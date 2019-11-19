@@ -15,3 +15,12 @@ html {
             user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome and Opera */
 }
+
+
+
+#DragHandler_dragObject {
+  position: fixed;
+}
+
+#DragHandler_dragObject:not(.draging) {
+}

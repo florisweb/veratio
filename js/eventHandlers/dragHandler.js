@@ -72,6 +72,12 @@ function _DragHandler() {
     let pos = item.html.getBoundingClientRect();
     item.rx = _event.x - pos.left;
     item.ry = _event.y - pos.top;
+    
+    item.startCoords = {
+      x: _event.pageX - item.rx,
+      y: _event.pageY - item.ry,
+    }
+
     item.startDraging = new Date();
   }
 
@@ -84,13 +90,16 @@ function _DragHandler() {
       item.dragStarted = true;
       item.placeHolder = addPlaceHolderItem(item);
       document.body.classList.add("noselect");
-      item.html.classList.add("draging");
+      item.placeHolder.classList.add("draging");
+
+      item.html.classList.add("hide");
     } else return false;
 
 
-    let parPos = item.html.parentNode.getBoundingClientRect();
     item.x = _event.x - item.rx;
     item.y = _event.y - item.ry;
+    item.placeHolder.style.left = item.x + "px";
+    item.placeHolder.style.top  = item.y + "px";
 
     try {
       let dropTarget = dropTargetFromEvent(_event);
@@ -103,18 +112,29 @@ function _DragHandler() {
     let item = get(_id);
     if (!item || !item.draging) return false;
     document.body.classList.remove("noselect");
-    item.html.classList.remove("draging");
-
-    removePlaceHolder(item);
+    item.html.classList.remove("hide");
 
     item.draging = false;
     item.dragStarted = false;
    
+    let dropCoords = {};
     try {
       let dropTarget = dropTargetFromEvent(_event);
-      item.stopDragingCallback(item, dropTarget);
+      dropCoords = item.stopDragingCallback(item, dropTarget);
     }
+
     catch (e) {console.error("DragHandler: An error accured while trying to handle the dropCallBack", e)}
+
+    item.placeHolder.classList.remove("draging");
+    console.log(dropCoords);
+    if (!dropCoords) dropCoords = item.startCoords;
+
+    item.placeHolder.style.left = dropCoords.x + "px";
+    item.placeHolder.style.top  = dropCoords.y + "px";
+    
+    setTimeout(function () {
+      removePlaceHolder(item);
+    }, 500);
   }
 
 
@@ -130,9 +150,8 @@ function _DragHandler() {
 
   function addPlaceHolderItem(item) {
     let placeHolderItem = item.html.cloneNode(true);
-    placeHolderItem.style.opacity = ".4";
-    placeHolderItem.classList.remove("dropTarget");
-    item.html.parentNode.insertBefore(placeHolderItem, item.html);
+    placeHolderItem.setAttribute("id", "DragHandler_dragObject");
+    document.body.append(placeHolderItem);
 
     return placeHolderItem;
   }
