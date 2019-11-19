@@ -126,7 +126,6 @@ function _DragHandler() {
     catch (e) {console.error("DragHandler: An error accured while trying to handle the dropCallBack", e)}
 
     item.placeHolder.classList.remove("draging");
-    console.log(dropCoords);
     if (!dropCoords) dropCoords = item.startCoords;
 
     item.placeHolder.style.left = dropCoords.x + "px";

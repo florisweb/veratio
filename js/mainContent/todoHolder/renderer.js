@@ -139,9 +139,6 @@ function _TaskRenderer() {
 				DragHandler.register(
 					_html, 
 					function (_item, _dropTarget) {
-						// _html.style.left 	= _item.x + "px";
-						// _html.style.top 	= _item.y + "px";
-
 						if (!_dropTarget) return;
 						clearLastDropTarget();
 
@@ -153,11 +150,7 @@ function _TaskRenderer() {
 						lastDropTarget = _dropTarget;
 					}, 
 
-					function (_item) {
-						// _html.style.transition = "all 5s";
-						// _html.style.left = "";
-						// _html.style.top = "";
-						
+					function (_item) {						
 						clearLastDropTarget();
 
 						let dropData = getDropData(_item);
@@ -207,9 +200,13 @@ function _TaskRenderer() {
 					
 					if (!data.taskHolder) return false;
 					let positionObj = data.taskHolder.HTML.todoHolder;
+					const taskHeight = positionObj.children[0].offsetHeight;
+					
 					let pos = positionObj.getBoundingClientRect();
 					data.x = pos.left;
-					data.y = pos.top + positionObj.children[0].offsetHeight * data.index;
+					data.y = pos.top + taskHeight * data.index;
+					
+					if (data.index === 0) data.y -= taskHeight - 10;
 					
 					return data;
 				}
