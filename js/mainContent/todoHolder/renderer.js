@@ -206,10 +206,10 @@ function _TaskRenderer() {
 					data.taskHolder  = MainContent.taskPage.taskHolder.get(taskHolderId);
 					
 					if (!data.taskHolder) return false;
-					let positionObj = data.taskHolder.HTML.todoHolder.children[data.index];
+					let positionObj = data.taskHolder.HTML.todoHolder;
 					let pos = positionObj.getBoundingClientRect();
-					data.x = pos.left - 1;
-					data.y = pos.top + positionObj.offsetHeight - 4;
+					data.x = pos.left;
+					data.y = pos.top + positionObj.children[0].offsetHeight * data.index;
 					
 					return data;
 				}
