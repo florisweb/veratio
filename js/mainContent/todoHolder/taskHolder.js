@@ -389,9 +389,7 @@ function TaskHolder_task(_parent) {
 
 	this.dropTask = function(_task, _taskIndex) {
 		let task = moveTask(_task, _taskIndex);
-		
-		for (curTask of this.taskList) if (task != curTask) curTask.render();
-		task.render(true);
+		this.reRenderTaskList();
 	}
 
 
@@ -489,7 +487,7 @@ function TaskHolder_task(_parent) {
 
 		let lastTaskIndex = Infinity;
 		
-		function render(_dropped = false) {
+		function render() {
 			let taskIndex = getTaskListIndex();
 			if (taskIndex == lastTaskIndex) return;
 			lastTaskIndex = taskIndex;
@@ -507,10 +505,6 @@ function TaskHolder_task(_parent) {
 
 			let insertBeforeElement = Parent.HTML.todoHolder.children[taskIndex];
 			Parent.HTML.todoHolder.insertBefore(This.html, insertBeforeElement);
-
-			if (!_dropped) return;
-			This.html.classList.add("draging");
-			setTimeout(function () {This.html.classList.remove("draging");}, 0);
 		}
 
 		function getTaskListIndex() {
