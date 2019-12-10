@@ -388,10 +388,19 @@ function TaskHolder_task(_parent) {
 
 
 	this.dropTask = function(_task, _taskIndex) {
-		let task = moveTask(_task, _taskIndex);
+		let task = moveTaskToNewLocalPosition(_task, _taskIndex);
+		updateTaskToNewTaskHolder(_task);
 		this.reRenderTaskList();
 	}
 
+	function updateTaskToNewTaskHolder(_task) {
+		console.log(Parent, _task);
+		_task.groupType = Parent.type;
+		if (Parent.type == "date") _task.groupValue = Parent.date.toString();
+		
+		let project = Server.getProject(_task.projectId);
+		project.todos.update(_task);
+	}
 
 
 
@@ -433,7 +442,7 @@ function TaskHolder_task(_parent) {
 	}
 
 
-	function moveTask(_task, _taskIndex) {
+	function moveTaskToNewLocalPosition(_task, _taskIndex) {
 		if (typeof _taskIndex != "number") _taskIndex = TaskHolder.taskList.length;
 
 		for (let i = 0; i < TaskHolder.taskList.length; i++)
