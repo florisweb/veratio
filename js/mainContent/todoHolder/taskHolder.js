@@ -394,7 +394,6 @@ function TaskHolder_task(_parent) {
 	}
 
 	function updateTaskToNewTaskHolder(_task) {
-		console.log(Parent, _task);
 		_task.groupType = Parent.type;
 		if (Parent.type == "date") _task.groupValue = Parent.date.toString();
 		
