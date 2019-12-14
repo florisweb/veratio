@@ -70,16 +70,18 @@
 			$_date 	= $this->_filterDate($_info["date"]);
 			if (!$_date || $_range < 0 || $_range > 1000) return false;
 
-			$foundTodos = array();
+			$foundTasks = array();
 			for ($i = 0; $i < $_range; $i++) 
 			{
 				$curDate 		= new DateTime($_info["date"] . " + $i day");
 				$curDate 		= $curDate->format('d-m-Y');
-				$curDatesTodos 	= $this->getByDate($curDate);
-				$foundTodos 	= array_merge($foundTodos, $curDatesTodos);
+				$curDateTasks 	= $this->getByDate($curDate);
+
+				if (sizeof($curDateTasks) == 0) continue;
+				$foundTasks[$curDate] = $curDateTasks;
 			}
 
-			return $foundTodos;
+			return $foundTasks;
 		}
 
 
