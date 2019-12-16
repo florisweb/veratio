@@ -20,6 +20,8 @@
 	$projects = $App->getAllProjects();
 	if (!$projects || sizeof($projects) == 0) die("E_projectNotFound");
 	
+
+
 	$results = array();
 	foreach ($projects as $project)
 	{	
@@ -27,10 +29,14 @@
 		$projectResult = applyActionByProject($project, $_method, $parameters);
 		
 		if (!$projectResult) continue;
-		$results[$project->id] = $projectResult;
+		array_push($results, $projectResult);
 	}
 
+
+	if ($_method == "getByDate" || $_method == "getByDateRange") die(json_encode(mergeDateArrays($results)));
 	echo json_encode($results);
+
+
 
 
 	function applyActionByProject($_project, $_method, $_parameters) {	
@@ -46,4 +52,26 @@
 		$result = $target->{$_method}($_parameters);
 		return $result;
 	}
+
+
+
+	function mergeDateArrays($results) {
+		$newDateArray = [];
+		for ($p = 0; $p < sizeof($results); $p++)
+		{
+			$projectResult = $results[$p];
+			$keys = array_keys($projectResult);
+			for ($k = 0; $k < sizeof($keys); $k++)
+			{
+				$key = $keys[$k];
+				if (array_key_exists($key, $newDateArray))
+				{
+					$newDateArray[$key] = array_merge($newDateArray[$key], $projectResult[$key]);
+				} else $newDateArray[$key] = $projectResult[$key];
+			}
+		}
+		return $newDateArray;
+	}
+
+
 ?>
