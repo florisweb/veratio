@@ -30,33 +30,7 @@ function _Server() {
 
 
 
-
-
-  this.todos = new function() {
-    this.getByDate = function(_date) {
-      let todos = [];
-      for (let i = 0; i < This.projectList.length; i++)
-      {
-        let curProject = This.projectList[i];
-        todos = todos.concat(curProject.todos.getTodosByDate(_date));
-      }
-      return todos;
-    }
-
-    this.get = function(_id) {
-      for (let i = 0; i < This.projectList.length; i++)
-      {
-        let curProject = This.projectList[i];
-        let foundTodo = curProject.todos.get(_id);
-
-        if (!foundTodo || isPromise(foundTodo)) continue;  
-        foundTodo.projectId = curProject.id;
-        return foundTodo;
-      }
-      
-      return false;
-    }
-  }
+  this.global = new _Server_globalProject("*");
 
 
  
@@ -67,30 +41,10 @@ function _Server() {
 
 
 
-
-
-
-
   this.sync = function(_) {
     console.warn("Server.sync()");
-    return new Promise(
-      function (resolve, reject) {
-        Server.DB.getProjects().then(
-          function () {
-            _syncProjectContents();
-            var loopTimer = setTimeout(resolve, 100);
-          }
-        );
-      }
-    )
+    Server.DB.getProjects();
   }
-
-    function _syncProjectContents() {
-      for (let i = 0; i < This.projectList.length; i++)
-      {
-        This.projectList[i].sync();
-      }
-    }
 
 
 
@@ -98,7 +52,7 @@ function _Server() {
 
     this.createProject = function(_title) {
       return new Promise(function (resolve, error) {
-        REQUEST.send("database/project/createProject.php", "title=" + encodeURIComponent(_title)).then(
+        REQUEST.send("database/project/create.php", "title=" + encodeURIComponent(_title)).then(
           function (_project) {
             _importProject(_project);
             resolve(_project);

@@ -36,6 +36,8 @@
 
 		public function get($_id) {
 			$task 				= $this->DTTemplate->get($_id);
+			if (!$task) 		return false;
+			
 			$task["projectId"] 	= $this->projectId;
 			return $task;
 		}
@@ -66,9 +68,12 @@
 
 
 		public function getByDateRange($_info) {
+			if (!$_info || !$_info["range"] || !$_info["date"]) return false;
+
 			$_range	= (int)$_info["range"];
 			$_date 	= $this->_filterDate($_info["date"]);
-			if (!$_date || $_range < 0 || $_range > 1000) return false;
+			if (!$_date || $_range < 0 || $_range > 200) return false;
+
 
 			$foundTasks = array();
 			for ($i = 0; $i < $_range; $i++) 
@@ -158,7 +163,6 @@
 
 			$keys = array_keys($_oldTask);
 			$difference = [];
-
 			for ($i = 0; $i < sizeof($keys); $i++)
 			{
 				$curKey = $keys[$i];
@@ -171,6 +175,8 @@
 			return $difference;
 		}
 		
+
+
 
 
 		private function filterGroupInfo($_groupType, $_groupValue) {

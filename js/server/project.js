@@ -1,12 +1,53 @@
-
-function _Server_project(_projectId, _projectTitle) {
+function _Server_globalProject(_projectId) {
   let This    = this;
   this.id     = String(_projectId);
-  this.title  = String(_projectTitle);
 
-  this.todos  = new _Server_project_todoComponent(this);
+  this.tasks  = new function() {
+    let Type = "task";
+
+    this.getByDate = function(_date) {
+      return this.getByDateRange(_date, 1);
+    }
+
+    this.getByDateRange = function(_date, _range = 1) {
+      return REQUEST.send(
+        "database/project/" + Type + ".php", 
+        "method=getByDateRange&parameters=" + 
+        JSON.stringify({
+          date: _date.toString(),
+          range: _range
+        }) + 
+        "&projectId=" + This.id
+      );
+    }
+
+    this.update = function(_newTask) {
+       return REQUEST.send(
+        "database/project/" + Type + ".php", 
+        "method=update&parameters=" + 
+        JSON.stringify(_newTask) + 
+        "&projectId=" + This.id
+      );
+    }
+
+  }
+
+
+
+
   this.users  = new _Server_project_userComponent(this);
   this.tags   = new _Server_project_tagComponent(this);
+}
+
+
+
+
+function _Server_project(_projectId, _projectTitle) {
+  _Server_globalProject.call(this, _projectId);
+
+  let This    = this;
+  this.title  = String(_projectTitle);
+
 
 
 
@@ -47,35 +88,32 @@ function _Server_project(_projectId, _projectTitle) {
 
 
 
-  this.sync = function() {
-    this.users.sync();
-    this.todos.sync();
-    // this.tags.sync();
+  this.rename = function(_newTitle) {
+    return new Promise(function (resolve, error) {
+      REQUEST.send("database/project/rename.php", "projectId=" + This.id + "&newTitle=" + Encoder.encodeString(_newTitle)).then(
+        function (_response) {
+          if (_response === 1) resolve();
+          error(_response);
+        }
+      );
+    });
   }
 
-
-  this.DB = new function() {
-    this.rename = function(_newTitle) {
-      return new Promise(function (resolve, error) {
-        REQUEST.send("database/project/changeProjectTitle.php", "projectId=" + This.id + "&newTitle=" + Encoder.encodeString(_newTitle)).then(
-          function (_response) {
-            if (_response === 1) resolve();
-            error(_response);
-          }
-        );
-      });
-    }
-
-    this.remove = function() {
-      return new Promise(function (resolve, error) {
-        REQUEST.send("database/project/removeProject.php", "projectId=" + This.id).then(
-          function (_response) {
-            if (_response === 1) resolve();
-            error(_response);
-          }
-        );
-      });
-    }
-
+  this.remove = function() {
+    return new Promise(function (resolve, error) {
+      REQUEST.send("database/project/remove.php", "projectId=" + This.id).then(
+        function (_response) {
+          if (_response === 1) resolve();
+          error(_response);
+        }
+      );
+    });
   }
 }
+
+
+
+
+
+
+
