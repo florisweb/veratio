@@ -66,21 +66,24 @@ function _MainContent_taskPage(_ParentInheritance) {
 	}
 		
 
-	function openToday() {
+	async function openToday() {
 		let date = new Date();
 		MainContent.header.setTitle("Today - " + date.getDate() + " " + date.getMonths()[date.getMonth()].name);
 		MainContent.header.setMemberList([]);
 
-		let todoList 	= Server.todos.getByDate(date);
-		todoList 		= MainContent.taskPage.renderer.settings.filter(todoList, {
-			finished: 	true
-		});
-		todoList 		= MainContent.taskPage.renderer.settings.filter(todoList, {
-			ownTask: 	false,
-			assignedTo: false
-		});
+		let taskList 	= await Server.global.tasks.getByDate(date);
+		if (!taskList || !taskList[date]) return false;
+		taskList = taskList[date];
+
+		// taskList 		= MainContent.taskPage.renderer.settings.filter(taskList, {
+		// 	finished: 	true
+		// });
+		// taskList 		= MainContent.taskPage.renderer.settings.filter(taskList, {
+		// 	ownTask: 	false,
+		// 	assignedTo: false
+		// });
 		
-		todoList 		= MainContent.taskPage.renderer.settings.sort(todoList, []);
+		// taskList 		= MainContent.taskPage.renderer.settings.sort(taskList, []);
 
 		let taskHolder 	= MainContent.taskPage.taskHolder.add(
 			"date",
@@ -90,22 +93,27 @@ function _MainContent_taskPage(_ParentInheritance) {
 			}, 
 			[date]
 		);
-		taskHolder.task.addTaskList(todoList);
+		taskHolder.task.addTaskList(taskList);
 	}
 
 
-	function openInbox() {
+	async function openInbox() {
 		MainContent.header.setTitle("Inbox");
 		MainContent.header.setMemberList([]);
+		let startDate = new Date();
+
+		let dateList = await Server.global.tasks.getByDateRange(startDate, 7);
 
 		for (let i = 0; i < 7; i++)
 		{
-			let date = new Date().moveDay(i);
-			inbox_addTaskHolder(date);
+			let date = startDate.copy().moveDay(i);
+			let taskList = dateList[date.toString()];
+
+			inbox_addTaskHolder(date, taskList);
 		}
 	}
 
-	function inbox_addTaskHolder(_date) {
+	function inbox_addTaskHolder(_date, _taskList) {
 		let taskHolder 	= MainContent.taskPage.taskHolder.add(
 			"date",
 			{
@@ -115,14 +123,13 @@ function _MainContent_taskPage(_ParentInheritance) {
 			[_date]
 		);
 
-
-		let taskList 	= Server.todos.getByDate(_date);
-		taskList 		= MainContent.taskPage.renderer.settings.filter(taskList, {
-			ownTask: false, 
-			assignedTo: false
-		});
-		taskList 		= MainContent.taskPage.renderer.settings.sort(taskList, []);
-		taskHolder.task.addTaskList(taskList);
+		if (!_taskList) return;
+		// let taskList = MainContent.taskPage.renderer.settings.filter(_taskList, {
+		// 	ownTask: false, 
+		// 	assignedTo: false
+		// });
+		// taskList 		= MainContent.taskPage.renderer.settings.sort(taskList, []);
+		taskHolder.task.addTaskList(_taskList);
 	}
 
 
@@ -133,7 +140,7 @@ function _MainContent_taskPage(_ParentInheritance) {
 		for (project of Server.projectList)
 		{
 			promises.push(
-				project.todos.DTTemplate.DB.getByDateRange(startDate.copy().moveDay(1), _days)
+				project.tasks.DTTemplate.DB.getByDateRange(startDate.copy().moveDay(1), _days)
 			);
 		}
 
@@ -155,7 +162,7 @@ function _MainContent_taskPage(_ParentInheritance) {
 
 
 
-	function openProject(_projectId) {
+	async function openProject(_projectId) {
 		let project = Server.getProject(_projectId);
 		if (!project) return;
 		
@@ -163,7 +170,7 @@ function _MainContent_taskPage(_ParentInheritance) {
 		MainContent.header.setMemberList(project.users.getList());
 
 
-		let plannedTasks 		= project.todos.getTasksByDateRange(new Date(), 1000);
+		let plannedTasks 		= await project.tasks.getTasksByDateRange(new Date(), 1000);
 		if (plannedTasks.length)
 		{
 			plannedTasks = MainContent.taskPage.renderer.settings.sort(plannedTasks, []);
@@ -179,7 +186,7 @@ function _MainContent_taskPage(_ParentInheritance) {
 		}
 
 
-		let nonPlannedTasks = project.todos.getTasksByGroup("default");		
+		let nonPlannedTasks = await project.tasks.getTasksByGroup("default");		
 		nonPlannedTasks 	= MainContent.taskPage.renderer.settings.sort(nonPlannedTasks, []);
 		
 		let taskHolder_nonPlanned = MainContent.taskPage.taskHolder.add(
