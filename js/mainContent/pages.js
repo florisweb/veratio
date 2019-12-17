@@ -135,22 +135,15 @@ function _MainContent_taskPage(_ParentInheritance) {
 
 	async function loadMoreDays(_days = 1) {
 		let startDate = getNewDate();
-		
-		let promises = [];
-		for (project of Server.projectList)
-		{
-			promises.push(
-				project.tasks.DTTemplate.DB.getByDateRange(startDate.copy().moveDay(1), _days)
-			);
-		}
+		let dateList = await Server.global.tasks.getByDateRange(startDate.copy().moveDay(1), _days);
 
-		Promise.all(promises).then(function () {
-			for (let i = 1; i < _days + 1; i++)
-			{
-				let date = startDate.copy().moveDay(i);
-				inbox_addTaskHolder(date);
-			}
-		});
+		for (let i = 1; i < _days + 1; i++)
+		{
+			let date = startDate.copy().moveDay(i);
+			let taskList = dateList[date.toString()];
+
+			inbox_addTaskHolder(date, taskList);
+		}
 	}
 
 	function getNewDate() {
