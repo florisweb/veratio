@@ -163,10 +163,10 @@ function _MainContent_taskPage(_ParentInheritance) {
 		MainContent.header.setMemberList(project.users.getList());
 
 
-		let plannedTasks 		= await project.tasks.getByDateRange(new Date(), 1000);
-		if (plannedTasks.length)
+		let plannedTasks 		= await project.tasks.getByDateRange(new Date(), 200);
+		if (Object.keys(plannedTasks).length)
 		{
-			plannedTasks = MainContent.taskPage.renderer.settings.sort(plannedTasks, []);
+			// plannedTasks = MainContent.taskPage.renderer.settings.sort(plannedTasks, []);
 			let taskHolder_planned = MainContent.taskPage.taskHolder.add(
 				"default",
 				{
@@ -174,12 +174,15 @@ function _MainContent_taskPage(_ParentInheritance) {
 				}, 
 				["Planned"]
 			);
-
-			taskHolder_planned.task.addTaskList(plannedTasks);
+			let dates = Object.keys(plannedTasks);
+			for (let i = 0; i < dates.length; i++)
+			{
+				taskHolder_planned.task.addTaskList(plannedTasks[dates[i]]);
+			}
 		}
 
 
-		let nonPlannedTasks = await project.tasks.getTasksByGroup("default");		
+		let nonPlannedTasks = await project.tasks.getByGroup("default");		
 		nonPlannedTasks 	= MainContent.taskPage.renderer.settings.sort(nonPlannedTasks, []);
 		
 		let taskHolder_nonPlanned = MainContent.taskPage.taskHolder.add(

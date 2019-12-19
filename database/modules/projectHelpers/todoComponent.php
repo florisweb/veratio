@@ -71,7 +71,8 @@
 
 			$_range	= (int)$_info["range"];
 			$_date 	= $this->_filterDate($_info["date"]);
-			if (!$_date || $_range < 0 || $_range > 200) return false;
+			if (!$_date) return false; 
+			if ($_range < 0 || $_range > 200) return "E_invalidRange";
 
 
 			$foundTasks = array();
