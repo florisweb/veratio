@@ -34,8 +34,8 @@
 
 
 	if ($_method == "getByDate" || $_method == "getByDateRange") die(json_encode(mergeDateArrays($results)));
-	echo json_encode($results);
-
+	if ($_projectId == "*") die(json_encode($results));
+	echo json_encode($results[0]);
 
 
 

@@ -47,13 +47,12 @@
 			if ($groupValue === false) return false;
 			$tasks 				= $this->getAll();
 
-
 			$foundTasks = array();
 			for ($i = 0; $i < sizeof($tasks); $i++)
 			{
 				$curTask = $tasks[$i];
 				if ($curTask["groupType"] != (String)$_info["type"]) continue;
-				if ($curTask["groupValue"] != (String)$groupValue) continue;
+				if ($curTask["groupValue"] != (String)$groupValue && (String)$groupValue != "*") continue;
 				
 				$curTask["projectId"] = $this->projectId;
 				array_push($foundTasks, $curTask);

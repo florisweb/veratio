@@ -21,8 +21,20 @@ function _Server_globalProject(_projectId) {
       );
     }
 
+    this.getByGroup = function(_groupType, _groupValue = "*") {
+      return REQUEST.send(
+        "database/project/" + Type + ".php", 
+        "method=getByGroup&parameters=" + 
+        JSON.stringify({
+          type: _groupType, 
+          value: _groupValue
+        }) + 
+        "&projectId=" + This.id
+      );
+    }
+
     this.update = function(_newTask) {
-       return REQUEST.send(
+      return REQUEST.send(
         "database/project/" + Type + ".php", 
         "method=update&parameters=" + 
         JSON.stringify(_newTask) + 
