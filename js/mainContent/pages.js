@@ -163,7 +163,7 @@ function _MainContent_taskPage(_ParentInheritance) {
 		MainContent.header.setMemberList(project.users.getList());
 
 
-		let plannedTasks 		= await project.tasks.getTasksByDateRange(new Date(), 1000);
+		let plannedTasks 		= await project.tasks.getByDateRange(new Date(), 1000);
 		if (plannedTasks.length)
 		{
 			plannedTasks = MainContent.taskPage.renderer.settings.sort(plannedTasks, []);
