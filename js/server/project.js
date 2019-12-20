@@ -5,6 +5,14 @@ function _Server_globalProject(_projectId) {
   this.tasks  = new function() {
     let Type = "task";
 
+    this.get = function(_id) {
+       return REQUEST.send(
+        "database/project/" + Type + ".php", 
+        "method=get&parameters=" + _id +  
+        "&projectId=" + This.id
+      );
+    }
+
     this.getByDate = function(_date) {
       return this.getByDateRange(_date, 1);
     }
