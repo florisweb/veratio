@@ -21,7 +21,7 @@ function _TaskRenderer() {
 
 			memberText: 	_createMemberTextByUserIdList(_task.assignedTo, project),
 		}
-		if (_task.groupType == "date" && _renderSettings.displayDate !== false)
+		if ((_task.groupType == "date" || _task.groupType == "overdue") && _renderSettings.displayDate !== false)
 		{
 			todoRenderData.deadLineText = DateNames.toString(
 				new Date().setDateFromStr(_task.groupValue),
