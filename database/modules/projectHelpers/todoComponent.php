@@ -68,22 +68,30 @@
 
 		public function getByDateRange($_info) {
 			if (!$_info || !$_info["range"] || !$_info["date"]) return false;
-
-			$_range	= (int)$_info["range"];
-			$_date 	= $this->_filterDate($_info["date"]);
+			
+			$_date 		= $this->_filterDate($_info["date"]);
 			if (!$_date) return false; 
-			if ($_range < 0 || $_range > 200) return "E_invalidRange";
+			$startDate 	= strtotime($_date);
 
+			$_range		= (int)$_info["range"];
+			$endDate 	= new DateTime($_date . " + $_range day");
+			$endDate 	= strtotime($endDate->format('d-m-Y'));
+
+
+			$tasks 				= $this->getAll();
 
 			$foundTasks = array();
-			for ($i = 0; $i < $_range; $i++) 
+			foreach ($tasks as $task) 
 			{
-				$curDate 		= new DateTime($_info["date"] . " + $i day");
-				$curDate 		= $curDate->format('d-m-Y');
-				$curDateTasks 	= $this->getByDate($curDate);
+				if ($task["groupType"] != "date") continue;
+				$curDate = $task["groupValue"];
+				$curTime = new DateTime($curDate);
+				$curTime = strtotime($curTime->format('d-m-Y'));
 
-				if (sizeof($curDateTasks) == 0) continue;
-				$foundTasks[$curDate] = $curDateTasks;
+				if ($startDate > $curTime || $curTime > $endDate) continue;
+
+				if (!$foundTasks[$curDate]) $foundTasks[$curDate] = [];
+				array_push($foundTasks[$curDate], $task);
 			}
 
 			return $foundTasks;
@@ -178,7 +186,7 @@
 
 
 		private function groupTypeExists($_groupType) {
-			return in_array($_groupType, ["date", "default"]);
+			return in_array($_groupType, ["date", "default", "overdue"]);
 		}
 
 		private function filterGroupInfo($_groupType, $_groupValue) {

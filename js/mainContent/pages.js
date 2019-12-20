@@ -84,16 +84,6 @@ function _MainContent_taskPage(_ParentInheritance) {
 		if (!taskList || !taskList[date]) return false;
 		taskList = taskList[date];
 
-		// taskList 		= MainContent.taskPage.renderer.settings.filter(taskList, {
-		// 	finished: 	true
-		// });
-		// taskList 		= MainContent.taskPage.renderer.settings.filter(taskList, {
-		// 	ownTask: 	false,
-		// 	assignedTo: false
-		// });
-		
-		// taskList 		= MainContent.taskPage.renderer.settings.sort(taskList, []);
-
 		taskHolder.task.addTaskList(taskList);
 	}
 
@@ -125,11 +115,6 @@ function _MainContent_taskPage(_ParentInheritance) {
 		);
 
 		if (!_taskList) return;
-		// let taskList = MainContent.taskPage.renderer.settings.filter(_taskList, {
-		// 	ownTask: false, 
-		// 	assignedTo: false
-		// });
-		// taskList 		= MainContent.taskPage.renderer.settings.sort(taskList, []);
 		taskHolder.task.addTaskList(_taskList);
 	}
 
@@ -164,11 +149,9 @@ function _MainContent_taskPage(_ParentInheritance) {
 		MainContent.header.setMemberList(project.users.getList());
 
 
-		// let plannedTasks 		= await project.tasks.getByDateRange(new Date(), 200);
-		let plannedTasks 		= await project.tasks.getByGroup("date", "*");
+		let plannedTasks 		= await project.tasks.getByDateRange(new Date(), 1000);
 		if (Object.keys(plannedTasks).length)
 		{
-			// plannedTasks = MainContent.taskPage.renderer.settings.sort(plannedTasks, []);
 			let taskHolder_planned = MainContent.taskPage.taskHolder.add(
 				"default",
 				{
@@ -176,9 +159,17 @@ function _MainContent_taskPage(_ParentInheritance) {
 				}, 
 				["Planned"]
 			);
-
-			taskHolder_planned.task.addTaskList(plannedTasks);
+			
+			let dates = Object.keys(plannedTasks);
+			for (date of dates)
+			{
+				taskHolder_planned.task.addTaskList(
+					plannedTasks[date]
+				);
+			}
+			
 		}
+		
 
 
 		let nonPlannedTasks = await project.tasks.getByGroup("default");		
@@ -207,7 +198,7 @@ function taskPage_tab(_ParentInheritance, _settings) {
 	applyCustomFunctions(this);
 
 
-	this.open = function(_projectId = false) {
+	this.open = async function(_projectId = false) {
 		if (MainContent.curPageName != "task") MainContent.taskPage.open(_projectId);
 		
 		MainContent.curProjectId = _projectId;
@@ -216,7 +207,7 @@ function taskPage_tab(_ParentInheritance, _settings) {
 
 
 		MainContent.taskPage.taskHolder.clear();
-		MainContent.taskPage.taskHolder.addOverdue();
+		await MainContent.taskPage.taskHolder.addOverdue();
 
 		applyTabSettings();
 		resetPage();
