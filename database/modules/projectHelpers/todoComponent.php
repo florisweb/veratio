@@ -122,7 +122,7 @@
 				$_newTask["creatorId"]	= $userId;
 			}
 
-			if (!groupTypeExists($_newTask["groupType"])) return "E_groupTypeDoesNotExist";
+			if (!$this->groupTypeExists($_newTask["groupType"])) return "E_groupTypeDoesNotExist";
 
 			if ($_newTask["groupType"] == "date") 
 			{				
