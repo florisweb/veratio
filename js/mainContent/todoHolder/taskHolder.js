@@ -57,17 +57,13 @@ function _MainContent_taskHolder() {
 		let todoList = []; 
 		if (project) 
 		{
-			todoList = await project.tasks.getByDate(new Date().moveDay(-1));
+			todoList = await project.tasks.getByGroup("overdue", "*");
 		} else {
-			todoList = await Server.global.tasks.getByDate(new Date().moveDay(-1));
+			let projectList = await Server.global.tasks.getByGroup("overdue", "*");
+			for (project of projectList) todoList = todoList.concat(project);
 		}
-		
-		todoList 	= MainContent.taskPage.renderer.settings.filter(todoList, {
-			finished: true
-		});
-		todoList 	= MainContent.taskPage.renderer.settings.sort(todoList, []);
-		
-		if (!todoList.length) return false;
+	
+		if (!todoList || !todoList.length) return false;
 
 		let item = this.add(
 			"overdue", 
