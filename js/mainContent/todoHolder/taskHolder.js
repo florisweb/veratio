@@ -308,10 +308,13 @@ function TaskHolder(_config = {}, _type = "default") {
 
 	this.taskHolderOpenState = false;
 
-	function renderTaskHolder(_parent) {
+	function renderTaskHolder(_parent,) {
 		let html = document.createElement("div");
-		html.className = "taskHolder";
+		html.className = "taskHolder animateIn";
+		setTimeout(function () {html.classList.remove("animateIn");}, 50);
+
 		html.setAttribute("taskHolderId", This.id);
+
 		if (This.config.html.class) html.className += " " + This.config.html.class;
 
 		html.innerHTML = 	'<img src="images/icons/dropDownIconDark.png" class="dropDownButton clickable">' +
@@ -355,6 +358,7 @@ function TaskHolder_task(_parent) {
 
 	this.taskList = [];
 	this.addTaskList = function(_taskList) {
+		if (!_taskList) return;
 		for (task of _taskList) this.addTask(task);
 	}
 

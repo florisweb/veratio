@@ -5,9 +5,19 @@
 	width: calc(100% - 35px);
 	height: auto;
 
+	overflow: hidden;
+
 	margin-top: 25px;
-	transition: opacity .3s;	
+	/*transition: opacity .3s;*/
+	transition: opacity 1s, margin-top .5s;
 }
+
+.mainContentPage .todoListHolder .taskHolder.animateIn {	
+	margin-top: calc(25px + 25px);
+	opacity: 0;
+}
+
+
 	.taskHolder.hideTasks {
 		opacity: .3;
 	}
