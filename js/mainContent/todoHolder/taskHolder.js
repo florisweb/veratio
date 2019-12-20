@@ -52,14 +52,14 @@ function _MainContent_taskHolder() {
 		return taskHolder;
 	}
 
-	this.addOverdue = function() {
+	this.addOverdue = async function() {
 		let project = Server.getProject(MainContent.curProjectId);
 		let todoList = []; 
 		if (project) 
 		{
-			todoList = project.todos.getTodosByDate(new Date().moveDay(-1));
+			todoList = await project.tasks.getByDate(new Date().moveDay(-1));
 		} else {
-			todoList = Server.todos.getByDate(new Date().moveDay(-1));
+			todoList = await Server.global.tasks.getByDate(new Date().moveDay(-1));
 		}
 		
 		todoList 	= MainContent.taskPage.renderer.settings.filter(todoList, {
@@ -389,6 +389,7 @@ function TaskHolder_task(_parent) {
 
 	this.dropTask = function(_task, _taskIndex) {
 		let task = moveTaskToNewLocalPosition(_task, _taskIndex);
+		console.log(_task);
 		updateTaskToNewTaskHolder(_task);
 		this.reRenderTaskList();
 	}
@@ -398,7 +399,7 @@ function TaskHolder_task(_parent) {
 		if (Parent.type == "date") _task.groupValue = Parent.date.toString();
 		
 		let project = Server.getProject(_task.projectId);
-		project.todos.update(_task);
+		project.tasks.update(_task);
 	}
 
 
@@ -467,7 +468,7 @@ function TaskHolder_task(_parent) {
 
 	function _taskConstructor(_task) {
 		let This = {
-			id: _task.id,
+			task: _task,
 			html: false,
 			taskHolderId: Parent.id,
 			render: render,
@@ -477,7 +478,7 @@ function TaskHolder_task(_parent) {
 		
 
 		function remove(_animate) {
-			TaskHolder.removeTask(This.id, _animate);
+			TaskHolder.removeTask(This.task.id, _animate);
 		}
 
 		function removeHTML(_animate) {
@@ -502,9 +503,8 @@ function TaskHolder_task(_parent) {
 
 			This.removeHTML(false);
 
-			let actualTask = Server.todos.get(This.id);
 			This.html = MainContent.taskPage.renderer.renderTask(
-				actualTask, 
+				This.task, 
 				Parent, 
 				Parent.config.renderPreferences
 			);
@@ -631,8 +631,8 @@ function TaskHolder_createMenu(_parent) {
 		if (Parent.date) Parent.HTML.deadLineField.value = DateNames.toString(Parent.date); 		// DEPRICATED?
 	}
 
-	this.openEdit = function(_taskHTML, _taskId) {
-		let task = Server.todos.get(_taskId);
+	this.openEdit = async function(_taskHTML, _taskId) {
+		let task = await Server.tasks.get(_taskId);
 		if (!task || !_taskHTML) return false;
 
 		editData.task = task;
@@ -653,7 +653,7 @@ function TaskHolder_createMenu(_parent) {
 	}
 
 
-	this.createTask = function() {
+	this.createTask = async function() {
 		let task 		= scrapeTaskData();
 		let project 	= Server.getProject(task.projectId);
 
@@ -661,10 +661,8 @@ function TaskHolder_createMenu(_parent) {
 		if (typeof task != "object") return task;
 		resetEditMode(true);
 
-		project.todos.update(task);		
-		task.projectId = project.id; 
-
-		MainContent.taskPage.taskHolder.renderTask(task);
+		let newTask = await project.tasks.update(task);
+		MainContent.taskPage.taskHolder.renderTask(newTask);
 		
 		this.close();
 		MainContent.searchOptionMenu.close();
