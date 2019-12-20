@@ -110,7 +110,7 @@ function _DragHandler() {
 
   this.constructor.prototype.stopDraging = function(_id, _event) {
     let item = get(_id);
-    if (!item || !item.draging) return false;
+    if (!item || !item.draging || !item.dragStarted) return false;
     document.body.classList.remove("noselect");
     item.html.classList.remove("hide");
 
