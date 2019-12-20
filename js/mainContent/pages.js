@@ -163,7 +163,8 @@ function _MainContent_taskPage(_ParentInheritance) {
 		MainContent.header.setMemberList(project.users.getList());
 
 
-		let plannedTasks 		= await project.tasks.getByDateRange(new Date(), 200);
+		// let plannedTasks 		= await project.tasks.getByDateRange(new Date(), 200);
+		let plannedTasks 		= await project.tasks.getByGroup("date", "*");
 		if (Object.keys(plannedTasks).length)
 		{
 			// plannedTasks = MainContent.taskPage.renderer.settings.sort(plannedTasks, []);
@@ -174,11 +175,8 @@ function _MainContent_taskPage(_ParentInheritance) {
 				}, 
 				["Planned"]
 			);
-			let dates = Object.keys(plannedTasks);
-			for (let i = 0; i < dates.length; i++)
-			{
-				taskHolder_planned.task.addTaskList(plannedTasks[dates[i]]);
-			}
+
+			taskHolder_planned.task.addTaskList(plannedTasks);
 		}
 
 

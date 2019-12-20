@@ -122,7 +122,7 @@
 				$_newTask["creatorId"]	= $userId;
 			}
 
-			if (!in_array($_newTask["groupType"], ["date", "default"])) return "E_groupTypeDoesNotExist";
+			if (!groupTypeExists($_newTask["groupType"])) return "E_groupTypeDoesNotExist";
 
 			if ($_newTask["groupType"] == "date") 
 			{				
@@ -177,14 +177,18 @@
 		
 
 
-
+		private function groupTypeExists($_groupType) {
+			return in_array($_groupType, ["date", "default"]);
+		}
 
 		private function filterGroupInfo($_groupType, $_groupValue) {
+			if (!$this->groupTypeExists($_groupType)) return false;
+			if ($_groupValue == "*") return $_groupValue;
+
 			switch ($_groupType) 
 			{
 				case "date":		return $this->_filterDate($_groupValue); break;
 				case "default": 	return (String)$_groupValue; break;
-				default: 			return false; break;
 			}
 		}
 
@@ -194,11 +198,6 @@
 
 				return (int)substr($dateParts[0], 0, 2) . "-" . (int)substr($dateParts[1], 0, 2) . "-" . (int)substr($dateParts[2], 0, 4);
 			}
-
-
-
-
-
 	
 	}
 ?>
