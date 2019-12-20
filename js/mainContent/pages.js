@@ -221,7 +221,10 @@ function taskPage_tab(_ParentInheritance, _settings) {
 		applyTabSettings();
 		resetPage();
 
-		Settings.onOpen(_projectId);
+		MainContent.startLoadingAnimation();
+		Settings.onOpen(_projectId).then(function () {
+			setTimeout(MainContent.stopLoadingAnimation, 100);
+		});
 	}
 
 

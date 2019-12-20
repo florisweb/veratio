@@ -114,6 +114,17 @@ body.appLoading #mainContent {
 
 	width: 100%;
 	height: 100%;
+	
+	
+	transition: all .3s;
+	background-size: 70px 70px;
+	background-position: 50% calc(40% - 70px / 2);
+	background-repeat: no-repeat;
+}
+
+#mainContentHolder.showLoadingAnimation {
+	opacity: .2;
+	background-image: url("../../images/loadingDark.gif");
 }
 
 
