@@ -156,16 +156,15 @@ function _MainContent_optionMenu() {
 	);
 		
 
-	this.open = function(_item, _event) {
+	this.open = async function(_item, _event) {
 		curDOMData 	= DOMData.get(_item.parentNode.parentNode);
 		let project = Server.getProject(curDOMData.projectId);
-		let task 	= project.todos.get(curDOMData.taskId);
+		let task 	= await project.tasks.get(curDOMData.taskId);
 
 		Menu.enableAllOptions();
 		if (!project.users.Self.taskActionAllowed("remove", task)) Menu.options[0].disable();
 		if (!project.users.Self.taskActionAllowed("finish", task)) Menu.options[1].disable();
 		if (!project.users.Self.taskActionAllowed("update", task)) Menu.options[2].disable();
-
 
 		return Menu.open(_item, {top: -20, left: 0}, _event);
 	}
@@ -220,7 +219,7 @@ function _MainContent_searchOptionMenu() {
 		inputField.onkeyup = function() {
 			if (keyupTimeout > 0) return keyupTimeout--;
 			
-			addListItemsByValue(this.value, this.selectionStart);
+			addOptionItemsByValue(this.value, this.selectionStart);
 			moveToItem(this, this.selectionStart);
 		}
 
@@ -257,7 +256,7 @@ function _MainContent_searchOptionMenu() {
 
 
 
-	this.getItemListByType = function(_type, _project) {
+	function getItemListByType(_type, _project) {
 		if (!_project) _project = curProject;
 		if (!_project) _project = Server.projectList[0];
 		switch (_type)
@@ -270,19 +269,19 @@ function _MainContent_searchOptionMenu() {
 	
 
 
-	function addListItemsByValue(_value, _cursorPosition) {
+	function addOptionItemsByValue(_value, _cursorPosition) {
 		HTML.menu.innerHTML = "";
 		HTML.menu.classList.remove("hide");
 		This.openState = true;
 
-		if (addListItemsByValueAndType(_value, _cursorPosition, "#")) return;
-		if (addListItemsByValueAndType(_value, _cursorPosition, "@")) return;
-		if (addListItemsByValueAndType(_value, _cursorPosition, ".")) return;
+		if (addOptionItemsByValueAndType(_value, _cursorPosition, "#")) return;
+		if (addOptionItemsByValueAndType(_value, _cursorPosition, "@")) return;
+		if (addOptionItemsByValueAndType(_value, _cursorPosition, ".")) return;
 	
 		This.hide(false, 0);
 	}	
 
-		function addListItemsByValueAndType(_value, _cursorPosition, _type) {
+		function addOptionItemsByValueAndType(_value, _cursorPosition, _type) {
 			let active = 0;
 			let items = This.getListByValue(_value, _type, _cursorPosition);
 			for (let i = 0; i < items.length; i++)
@@ -297,7 +296,8 @@ function _MainContent_searchOptionMenu() {
 
 		this.getListByValue = function(_value, _type, _cursorPosition) {
 			let found = [];
-			let itemList = This.getItemListByType(_type);
+			let itemList = getItemListByType(_type);
+			if (!itemList) itemList = [];													// TEMPORARILY
 
 			for (let i = 0; i < itemList.length; i++)
 			{
