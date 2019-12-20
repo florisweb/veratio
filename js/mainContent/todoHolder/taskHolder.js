@@ -632,7 +632,7 @@ function TaskHolder_createMenu(_parent) {
 	}
 
 	this.openEdit = async function(_taskHTML, _taskId) {
-		let task = await Server.tasks.get(_taskId);
+		let task = await Server.global.tasks.get(_taskId);
 		if (!task || !_taskHTML) return false;
 
 		editData.task = task;

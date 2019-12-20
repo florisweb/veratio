@@ -159,7 +159,7 @@ function _TaskRenderer() {
 							y: dropData.y
 						}
 
-						let task = await Server.tasks.get(_taskData.id);
+						let task = await Server.global.tasks.get(_taskData.id);
 						dropData.taskHolder.task.dropTask(task, dropData.index);
 
 						if (dropData.taskHolder.id == _taskData.taskHolderId) return dropCoords;
@@ -280,7 +280,7 @@ function taskConstructor(_element, _task, _taskHolder) {
 
 
 	this.finish = async function() {
-		let task = await Server.tasks.get(this.task.id);
+		let task = await Server.global.tasks.get(this.task.id);
 		
 		if (task.finished)
 		{
