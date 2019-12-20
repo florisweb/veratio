@@ -149,8 +149,7 @@ function _TaskRenderer() {
 
 						lastDropTarget = _dropTarget;
 					}, 
-
-					function (_item) {						
+					async function (_item) {						
 						clearLastDropTarget();
 
 						let dropData = getDropData(_item);
@@ -160,7 +159,7 @@ function _TaskRenderer() {
 							y: dropData.y
 						}
 
-						let task = Server.todos.get(_taskData.id);
+						let task = await Server.tasks.get(_taskData.id);
 						dropData.taskHolder.task.dropTask(task, dropData.index);
 
 						if (dropData.taskHolder.id == _taskData.taskHolderId) return dropCoords;
@@ -175,7 +174,6 @@ function _TaskRenderer() {
 
 				function clearLastDropTarget() {
 					if (!lastDropTarget) return;
-	
 					lastDropTarget.style.marginTop	 	= "";
 					lastDropTarget.style.marginBottom 	= "";
 				}
@@ -236,22 +234,22 @@ function _TaskRenderer() {
 
 
 
-				_html.children[1].onclick = function() {
+				_html.children[1].onclick = async function() {
 					let data 	= DOMData.get(_html);
 					let project = Server.getProject(data.projectId);
-					let task 	= project.todos.get(data.taskId);
+					let task 	= await project.tasks.get(data.taskId);
 					
-					if (!project.users.Self.taskActionAllowed("finish", task)) return false;
+					// if (!project.users.Self.taskActionAllowed("finish", task)) return false;
 					
 					data.finish();
 				}
 
-				DoubleClick.register(_html, function() {
+				DoubleClick.register(_html, async function() {
 					let data 	= DOMData.get(_html);
 					let project = Server.getProject(data.projectId);
-					let task 	= project.todos.get(data.taskId);
+					let task 	= await project.tasks.get(data.taskId);
 					
-					if (!project.users.Self.taskActionAllowed("update", task)) return false;
+					// if (!project.users.Self.taskActionAllowed("update", task)) return false;
 					data.openEdit();
 				});
 
@@ -274,15 +272,15 @@ function _TaskRenderer() {
 
 
 function taskConstructor(_element, _task, _taskHolder) {
-	this.taskId 		= _task.id;
+	this.task 			= _task;
 	this.projectId 		= _task.projectId;
 	this.html 			= _element;
 
 	this.taskHolder = _taskHolder;
 
 
-	this.finish = function() {
-		let task = Server.todos.get(this.taskId);
+	this.finish = async function() {
+		let task = await Server.tasks.get(this.task.id);
 		
 		if (task.finished)
 		{
@@ -294,7 +292,7 @@ function taskConstructor(_element, _task, _taskHolder) {
 		}
 
 		let project = Server.getProject(this.projectId);
-		project.todos.update(task, true);
+		project.tasks.update(task, true);
 
 		//notify the taskHolder
 		this.taskHolder.onTaskFinish(task);
@@ -303,16 +301,16 @@ function taskConstructor(_element, _task, _taskHolder) {
 
 	this.remove = function() {					
 		let project = Server.getProject(this.projectId);
-		project.todos.remove(this.taskId);
+		project.tasks.remove(this.task.id);
 
 		//notify the taskHolder
-		this.taskHolder.onTaskRemove(this.taskId);
+		this.taskHolder.onTaskRemove(this.task.id);
 	}
 
 
 	this.openEdit = function() {
 		if (!this.taskHolder.createMenu) return;
-		this.taskHolder.createMenu.openEdit(this.html, this.taskId);
+		this.taskHolder.createMenu.openEdit(this.html, this.task.id);
 	}
 
 }

@@ -365,7 +365,7 @@ function _MainContent_settingsPage(_ParentInheritance) {
 		MainContent.header.setTitle("Settings - " + project.title);
 		This.setMemberItemsFromList(project.users.getList());
 
-		if (!project.users.Self.userActionAllowed("invite")) HTML.inviteMemberHolder.hide();
+		// if (!project.users.Self.userActionAllowed("invite")) HTML.inviteMemberHolder.hide();
 	}
 
 	function enableAllButtons() {
@@ -412,8 +412,8 @@ function _MainContent_settingsPage(_ParentInheritance) {
 			if (!member || !project) return false;
 
 			Menu.enableAllOptions();
-			if (!project.users.Self.userActionAllowed("remove", member)) Menu.options[0].disable();
-			if (!project.users.Self.userActionAllowed("update", member)) Menu.options[1].disable();
+			// if (!project.users.Self.userActionAllowed("remove", member)) Menu.options[0].disable();
+			// if (!project.users.Self.userActionAllowed("update", member)) Menu.options[1].disable();
 
 			return Menu.open(_target, {left: -100, top: -45});
 		}
@@ -484,7 +484,7 @@ function _MainContent_settingsPage(_ParentInheritance) {
 		setTextToElement(html.children[2].children[1], _member.permissions);
 		DoubleClick.register(html.children[2].children[1], function () {
 			let project = Server.getProject(MainContent.curProjectId);
-			if (!project.users.Self.userActionAllowed("update", member)) return false;
+			// if (!project.users.Self.userActionAllowed("update", member)) return false;
 
 			MainContent.settingsPage.permissionsMenu.open(_member.id);
 		})

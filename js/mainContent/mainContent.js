@@ -162,9 +162,9 @@ function _MainContent_optionMenu() {
 		let task 	= await project.tasks.get(curDOMData.taskId);
 
 		Menu.enableAllOptions();
-		if (!project.users.Self.taskActionAllowed("remove", task)) Menu.options[0].disable();
-		if (!project.users.Self.taskActionAllowed("finish", task)) Menu.options[1].disable();
-		if (!project.users.Self.taskActionAllowed("update", task)) Menu.options[2].disable();
+		// if (!project.users.Self.taskActionAllowed("remove", task)) Menu.options[0].disable();
+		// if (!project.users.Self.taskActionAllowed("finish", task)) Menu.options[1].disable();
+		// if (!project.users.Self.taskActionAllowed("update", task)) Menu.options[2].disable();
 
 		return Menu.open(_item, {top: -20, left: 0}, _event);
 	}
