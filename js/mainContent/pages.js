@@ -71,6 +71,15 @@ function _MainContent_taskPage(_ParentInheritance) {
 		MainContent.header.setTitle("Today - " + date.getDate() + " " + date.getMonths()[date.getMonth()].name);
 		MainContent.header.setMemberList([]);
 
+		let taskHolder 	= MainContent.taskPage.taskHolder.add(
+			"date",
+			{
+				displayProjectTitle: true, 
+				displayDate: false
+			}, 
+			[date]
+		);
+
 		let taskList 	= await Server.global.tasks.getByDate(date);
 		if (!taskList || !taskList[date]) return false;
 		taskList = taskList[date];
@@ -85,14 +94,6 @@ function _MainContent_taskPage(_ParentInheritance) {
 		
 		// taskList 		= MainContent.taskPage.renderer.settings.sort(taskList, []);
 
-		let taskHolder 	= MainContent.taskPage.taskHolder.add(
-			"date",
-			{
-				displayProjectTitle: true, 
-				displayDate: false
-			}, 
-			[date]
-		);
 		taskHolder.task.addTaskList(taskList);
 	}
 
