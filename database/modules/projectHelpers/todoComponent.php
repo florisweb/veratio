@@ -132,11 +132,23 @@
 
 			if (!$this->groupTypeExists($_newTask["groupType"])) return "E_groupTypeDoesNotExist";
 
+			if ($_newTask["groupType"] == "overdue" && $_newTask["finished"]) 
+			{
+				$_newTask["groupType"] = "date";
+			}
+
 			if ($_newTask["groupType"] == "date") 
-			{				
-				$date = $this->_filterDate($_newTask["groupValue"]);
+			{
+				$curDate 		= new DateTime();
+				$curTime 		= strtotime($curDate->format('d-m-Y'));
+
+				$date 			= $this->_filterDate($_newTask["groupValue"]);
+
 				if (!$date) return false;
 				$_newTask["groupValue"] = $date;
+
+				$time = strtotime((new DateTime($date))->format('d-m-Y'));
+				if ($time < $curTime && !$_newTask["finished"]) $_newTask["groupType"] = "overdue";
 			}
 
 			$this->DTTemplate->update($_newTask);
