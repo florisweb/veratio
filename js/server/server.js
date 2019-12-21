@@ -30,7 +30,10 @@ function _Server() {
 
 
 
-  this.global = new _Server_globalProject("*");
+  this.global = new function() {
+    _Server_globalProject.call(this, "*")
+    delete this.users;
+  }
 
 
  

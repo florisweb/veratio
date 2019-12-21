@@ -49,13 +49,31 @@ function _Server_globalProject(_projectId) {
         "&projectId=" + This.id
       );
     }
-
   }
 
 
+  this.users  = new function() {
+    let Type = "user";
 
+    this.get = async function(_id) {
+      let users = await this.getAll();
+      for (user of users)
+      {
+        if (user.id != _id) continue;
+        return user;
+      }
+      return false;
+    }
 
-  this.users  = new _Server_project_userComponent(this);
+    this.getAll = function() {
+      return REQUEST.send(
+        "database/project/" + Type + ".php", 
+        "method=getAll" + 
+        "&projectId=" + This.id
+      );
+    }
+  }
+
   this.tags   = new _Server_project_tagComponent(this);
 }
 
