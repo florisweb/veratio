@@ -101,6 +101,8 @@ function _Server_project(_projectId, _projectTitle) {
   let This    = this;
   this.title  = String(_projectTitle);
 
+  this.users.getAll();
+
 
 
 
