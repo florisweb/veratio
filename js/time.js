@@ -9,7 +9,8 @@
 Date.prototype.copy = function() {return new Date().setDateFromStr(this.toString(true));}
 
 Date.prototype.stringIsDate = function(_date) {
-	return isNaN(
+	if (!_date) return false;
+	return !isNaN(
 		new Date().setDateFromStr(_date)
 	);
 }

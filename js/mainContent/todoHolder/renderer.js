@@ -23,15 +23,16 @@ function _TaskRenderer() {
 
 			memberText: 	_createMemberTextByUserIdList(_task.assignedTo, project),
 		}
-		if ((_task.groupType == "date" || _task.groupType == "overdue") && _renderSettings.displayDate !== false)
-		{
-			if (new Date().stringIsDate(_task.groupValue))
-			{
-				todoRenderData.deadLineText = DateNames.toString(
-					new Date().setDateFromStr(_task.groupValue),
-					true
-				);
-			}
+		
+		if (
+			(_task.groupType == "date" || _task.groupType == "overdue") && 
+			_renderSettings.displayDate !== false &&
+			new Date().stringIsDate(_task.groupValue)
+		) {
+			todoRenderData.deadLineText = DateNames.toString(
+				new Date().setDateFromStr(_task.groupValue),
+				true
+			);
 		} 
 
 		if (_renderSettings.displayProjectTitle !== false) todoRenderData.projectTitle = project.title;
