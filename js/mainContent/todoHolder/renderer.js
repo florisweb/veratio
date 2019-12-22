@@ -8,8 +8,10 @@ function _TaskRenderer() {
 	this.renderTask = function(_task, _taskHolder, _renderSettings) {
 		if (!_task) return false;
 		let project = Server.getProject(_task.projectId);
-		let tag 	= project.tags.get(_task.tagId);
+		if (!project) return false;
 
+		let tag 	= false; //project.tags.get(_task.tagId);
+		
 		let todoRenderData = {
 			id: 			_task.id,
 			title: 			_task.title,
@@ -23,10 +25,13 @@ function _TaskRenderer() {
 		}
 		if ((_task.groupType == "date" || _task.groupType == "overdue") && _renderSettings.displayDate !== false)
 		{
-			todoRenderData.deadLineText = DateNames.toString(
-				new Date().setDateFromStr(_task.groupValue),
-				true
-			);
+			if (new Date().stringIsDate(_task.groupValue))
+			{
+				todoRenderData.deadLineText = DateNames.toString(
+					new Date().setDateFromStr(_task.groupValue),
+					true
+				);
+			}
 		} 
 
 		if (_renderSettings.displayProjectTitle !== false) todoRenderData.projectTitle = project.title;
@@ -50,13 +55,19 @@ function _TaskRenderer() {
 
 
 
-		function _createMemberTextByUserIdList(_userIdList, _project) {
+		async function _createMemberTextByUserIdList(_userIdList, _project) {
+			if (!_project || !_userIdList || !_userIdList.length) return "";
+
+			let projectUsers = _project.users.getLocalList();
+
 			let memberList = [];
 			for (id of _userIdList)
 			{
-				let user = _project.users.get(id);
-				if (!user || isPromise(user)) continue;
-				memberList.push(user);
+				for (projectUser of projectUsers)
+				{
+					if (projectUser.id != id) continue;
+					memberList.push(projectUser);
+				}				
 			}
 
 			return App.delimitMemberText(memberList, 20);

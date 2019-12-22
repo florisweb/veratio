@@ -173,7 +173,7 @@ function _MainContent_taskPage(_ParentInheritance) {
 
 
 		let nonPlannedTasks = await project.tasks.getByGroup("default");		
-		nonPlannedTasks 	= MainContent.taskPage.renderer.settings.sort(nonPlannedTasks, []);
+		// nonPlannedTasks 	= MainContent.taskPage.renderer.settings.sort(nonPlannedTasks, []);
 		
 		let taskHolder_nonPlanned = MainContent.taskPage.taskHolder.add(
 			"default",
@@ -357,7 +357,9 @@ function _MainContent_settingsPage(_ParentInheritance) {
 
 		enableAllButtons();
 		MainContent.header.setTitle("Settings - " + project.title);
-		This.setMemberItemsFromList(project.users.getLocalList());
+
+		let users = await project.users.getAll();
+		This.setMemberItemsFromList(users);
 
 		// if (!project.users.Self.userActionAllowed("invite")) HTML.inviteMemberHolder.hide();
 	}

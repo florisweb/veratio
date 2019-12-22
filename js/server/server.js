@@ -36,17 +36,14 @@ function _Server() {
   }
 
 
- 
 
 
 
 
 
-
-
-  this.sync = function(_) {
+  this.sync = async function(_) {
     console.warn("Server.sync()");
-    Server.DB.getProjects();
+    return Server.DB.getProjects();
   }
 
 
@@ -69,6 +66,7 @@ function _Server() {
       return REQUEST.send("database/project/getProjectList.php").then(
         function (_projectList) {
           if (!_projectList) return false;
+          This.projectList = [];
 
           for (let i = 0; i < _projectList.length; i++)
           {
@@ -80,24 +78,16 @@ function _Server() {
 
       function _importProject(_project) {
         if (!_project || typeof _project != "object") return;
-        let cachedProject = This.getProject(_project.id);
-        if (cachedProject)
-        {
-          cachedProject.title = String(_project.title);
-          return true;
-        }
-
 
         let project = new _Server_project(
           _project.id, 
           _project.title
         );
+        project.sync();
 
         This.projectList.push(project);
       }
   }
 
-
 }
-
 
