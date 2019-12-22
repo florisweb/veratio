@@ -728,27 +728,18 @@ function TaskHolder_createMenu(_parent) {
 		if (!createMenuItems[0]) return false;
 
 		let task = _inputValueToData(createMenuItems[0].value);
-		let date = filterDate(createMenuItems[1].value);
+		let taskDate = filterDate(createMenuItems[1].value);
 
 		if (!task.title || task.title.split(" ").join("").length < 1) return "E_InvalidTitle";
 		
-		switch (Parent.type)
-		{
-			case "list": 
-				task.groupType = "default";
-				task.groupValue = "";
-			break;
-			default: 
-				if (date) break;
-				date = Parent.date.copy().toString();
-			break;
-		}
+		task.groupType = "default";
+		
+		if (Parent.type == "date" && !taskDate) taskDate = Parent.date.copy().toString();
 
-		if (date) 
+		if (taskDate) 
 		{
 			task.groupType = "date";
-			task.groupValue = date;
-			if (!task.groupValue) return "E_InvalidDate";
+			task.groupValue = taskDate;
 		}
 
 		return task;
