@@ -55,7 +55,7 @@ function _TaskRenderer() {
 
 
 
-		async function _createMemberTextByUserIdList(_userIdList, _project) {
+		function _createMemberTextByUserIdList(_userIdList, _project) {
 			if (!_project || !_userIdList || !_userIdList.length) return "";
 
 			let projectUsers = _project.users.getLocalList();
