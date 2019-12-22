@@ -91,6 +91,8 @@
 				if ($startDate > $curTime || $curTime > $endDate) continue;
 
 				if (!$foundTasks[$curDate]) $foundTasks[$curDate] = [];
+
+				$task["projectId"] = $this->projectId;
 				array_push($foundTasks[$curDate], $task);
 			}
 
