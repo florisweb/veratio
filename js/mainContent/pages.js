@@ -146,7 +146,7 @@ function _MainContent_taskPage(_ParentInheritance) {
 		if (!project) return;
 		
 		MainContent.header.setTitle(project.title);
-		MainContent.header.setMemberList(project.users.getList());
+		MainContent.header.setMemberList(project.users.getLocalList());
 
 
 		let plannedTasks 		= await project.tasks.getByDateRange(new Date(), 1000);
@@ -349,7 +349,7 @@ function _MainContent_settingsPage(_ParentInheritance) {
 
 
 
-	this.open = function(_projectId) {
+	this.open = async function(_projectId) {
 		if (!_projectId) _projectId = Server.projectList[0].id;
 		Parent.openPage(this.pageSettings.pageName, _projectId);
 
@@ -357,7 +357,7 @@ function _MainContent_settingsPage(_ParentInheritance) {
 
 		enableAllButtons();
 		MainContent.header.setTitle("Settings - " + project.title);
-		This.setMemberItemsFromList(project.users.getList());
+		This.setMemberItemsFromList(project.users.getLocalList());
 
 		// if (!project.users.Self.userActionAllowed("invite")) HTML.inviteMemberHolder.hide();
 	}

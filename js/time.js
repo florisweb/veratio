@@ -8,6 +8,11 @@
 
 Date.prototype.copy = function() {return new Date().setDateFromStr(this.toString(true));}
 
+Date.prototype.stringIsDate = function(_date) {
+	return isNaN(
+		new Date().setDateFromStr(_date)
+	);
+}
 
 Date.prototype.setDateFromStr = function(_str) {
 	if (typeof _str != "string" || !_str) return _str;
@@ -200,31 +205,32 @@ const DateNames = function() {
     }
 
     function getDateStrFromDateNames(_date) {
-      for (obj of dateNames)
-      {
-        if (!obj.date.compareDate(_date)) continue;
-        return obj.name;
-      }
-      return "";
+    	if (!_date) return "";
+    	for (obj of dateNames)
+      	{
+        	if (!obj.date.compareDate(_date)) continue;
+        	return obj.name;
+      	}
+      	return "";
     }
 
     function toString(_date, _compact) {
-      let dateName = getDateStrFromDateNames(_date);
-      if (dateName) return dateName;
+     	let dateName = getDateStrFromDateNames(_date);
+     	if (dateName) return dateName;
 
-      dateName = _date.getDayName();
-      if (!dateName) return false;
-      if (_compact) dateName = dateName.substr(0, 3);
+      	dateName = _date.getDayName();
+      	if (!dateName) return false;
+      	if (_compact) dateName = dateName.substr(0, 3);
 
-      let monthName = _date.getMonths()[_date.getMonth()].name;
-      if (_compact)
-      {
-        dateName += " " + _date.getDate() + " " + monthName.substr(0, 3);
-      } else dateName += " - " + _date.getDate() + " " + monthName;
+      	let monthName = _date.getMonths()[_date.getMonth()].name;
+      	if (_compact)
+      	{
+	        dateName += " " + _date.getDate() + " " + monthName.substr(0, 3);
+    	  } else dateName += " - " + _date.getDate() + " " + monthName;
 
-      if (_date.getFullYear() != new Date().getFullYear()) dateName += " " + _date.getFullYear();
+      	if (_date.getFullYear() != new Date().getFullYear()) dateName += " " + _date.getFullYear();
 
-      return dateName;
+      	return dateName;
     }
 
 

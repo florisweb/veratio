@@ -54,6 +54,10 @@ function _Server_globalProject(_projectId) {
 
   this.users  = new function() {
     let Type = "user";
+    let list = [];
+    
+    let lastSync = new Date();
+    const dateRecensy = 10000; // miliseconds after which the data is considered out of date
 
     this.get = async function(_id) {
       let users = await this.getAll();
@@ -66,17 +70,28 @@ function _Server_globalProject(_projectId) {
     }
 
     this.getAll = function() {
-      return REQUEST.send(
-        "database/project/" + Type + ".php", 
-        "method=getAll" + 
-        "&projectId=" + This.id
-      );
+      return new Promise(async function (resolve, error) {
+        let result = await REQUEST.send(
+          "database/project/" + Type + ".php", 
+          "method=getAll" + 
+          "&projectId=" + This.id
+        );
+        if (!Array.isArray(result)) return error(result);
+        
+        list = result;
+        resolve(result);
+        lastSync = new Date();
+      });
+    }
+
+    this.getLocalList = function() {
+      if (new Date() - lastSync > dateRecensy) this.getAll();
+      return list;
     }
   }
 
   this.tags   = new _Server_project_tagComponent(this);
 }
-
 
 
 

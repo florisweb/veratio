@@ -3,6 +3,7 @@
 function _MainContent() {
 	let HTML = {
 		mainContent: $("#mainContent")[0],
+		mainContentHolder: $("#mainContentHolder")[0],
 		pages: $("#mainContent .mainContentPage"),
 	}
 
@@ -108,6 +109,14 @@ function _MainContent() {
 
 	function resetPage() {
 		MainContent.optionMenu.close();
+	}
+
+
+	this.startLoadingAnimation = function() {
+		HTML.mainContentHolder.classList.add("showLoadingAnimation");
+	}
+	this.stopLoadingAnimation = function() {
+		HTML.mainContentHolder.classList.remove("showLoadingAnimation");
 	}
 }
 	
@@ -261,9 +270,9 @@ function _MainContent_searchOptionMenu() {
 		if (!_project) _project = Server.projectList[0];
 		switch (_type)
 		{
-			case "#": 	return _project.tags.list; 			break;
-			case ".": 	return Server.projectList; 			break;
-			default: 	return _project.users.getList(); 	break;
+			case "#": 	return _project.tags.list; 				break;
+			case ".": 	return Server.projectList; 				break;
+			default: 	return _project.users.getLocalList(); 	break;
 		}
 	}
 	
