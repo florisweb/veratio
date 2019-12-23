@@ -425,19 +425,15 @@ function _MainContent_settingsPage(_ParentInheritance) {
 
 
 
-	this.inviteUser = function() {
-		let email = HTML.inviteMemberInput.value;
+	this.inviteUser = async function() {
+		let email 	= HTML.inviteMemberInput.value;
 		let project = Server.getProject(MainContent.curProjectId);
-		let promise = project.users.inviteUserByEmail(email);
-		if (!isPromise(promise)) return alert(promise);
-		promise.then(function () {
-			project.users.sync().then(function () {
-				This.open(MainContent.curProjectId);
-			});
-			HTML.inviteMemberInput.value = null;
-		}, function (_error) {
-			alert(_error);
-		});
+		
+		let returnVal = await project.users.inviteByEmail(email);
+		if (returnVal !== true) console.error("An error accured while invite a user:", returnVal);
+		
+		HTML.inviteMemberInput.value = null;
+		This.open(MainContent.curProjectId);
 	}
 
 

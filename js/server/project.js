@@ -102,6 +102,15 @@ function _Server_globalProject(_projectId) {
         "&projectId=" + This.id
       );
     }
+
+
+    this.inviteByEmail = function(_email) {
+      return REQUEST.send(
+        "database/project/" + Type + ".php", 
+        "method=inviteByEmail&parameters=" + _email +
+        "&projectId=" + This.id
+      );
+    }
   }
 
 
