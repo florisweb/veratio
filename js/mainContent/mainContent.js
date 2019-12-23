@@ -12,6 +12,7 @@ function _MainContent() {
 	}
 
 	this.curProjectId = "";
+	this.curPageName = "task";
 
 	this.header 			= new _MainContent_header();
 
