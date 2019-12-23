@@ -80,6 +80,7 @@ function _MainContent_header() {
 
 	this.showItemsByPage = function(_pageName) {
 		hideAllFunctionItems();
+		
 		switch (_pageName.toLowerCase()) 
 		{
 			case "settings":
@@ -89,9 +90,9 @@ function _MainContent_header() {
 			case "createproject":
 				HTML.functionItems[1].classList.remove("hide");
 			break;
-			case "taskpage - today": //taskPage
+			case "taskpage - today":
 			break;
-			case "taskpage - inbox": //taskPage
+			case "taskpage - week":
 			break;
 			default: //taskPage - project
 				HTML.functionItems[0].classList.remove("hide");
