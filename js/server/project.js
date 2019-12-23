@@ -92,6 +92,16 @@ function _Server_globalProject(_projectId) {
       if (new Date() - lastSync > dateRecensy) this.getAll();
       return list;
     }
+
+
+    this.update = function(_newUser) {
+      return REQUEST.send(
+        "database/project/" + Type + ".php", 
+        "method=update&parameters=" + 
+        JSON.stringify(_newUser) + 
+        "&projectId=" + This.id
+      );
+    }
   }
 
 
@@ -120,7 +130,7 @@ function _Server_project(_projectId, _projectTitle) {
 
 
   this.leave = function() {
-    let users = this.users.getList();
+    let users = this.users.getLocalList();
     for (user of users)
     {
       if (!user.Self) continue;

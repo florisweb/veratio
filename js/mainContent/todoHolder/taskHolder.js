@@ -674,7 +674,7 @@ function TaskHolder_createMenu(_parent) {
 		openSelectMenu(0, "#", Server.projectList[0].tags.list);
 	}
 	this.openMemberSelectMenu = function() {
-		openSelectMenu(1, "@", Server.projectList[0].users.getList());
+		openSelectMenu(1, "@", Server.projectList[0].users.getLocalList());
 	}	
 	this.openProjectSelectMenu = function() {
 		openSelectMenu(2, ".", Server.projectList);

@@ -502,10 +502,9 @@ function _MainContent_settingsPage(_ParentInheritance) {
 
 
 function _MainContent_settingsPage_permissionsMenu() {
-	this.open = function(_memberId) {
+	this.open = async function(_memberId) {
 		let project	= Server.getProject(MainContent.curProjectId);
-		let member 	= project.users.get(_memberId);
-
+		let member 	= await project.users.get(_memberId);
 		openPopupMenu(member);
 	}
 
@@ -554,7 +553,7 @@ function _MainContent_settingsPage_permissionsMenu() {
 			{buttons: [
 				{button: "CANCEL", onclick: Popup.close},
 				{button: "CHANGE", onclick: 
-					function () 
+					async function () 
 					{
 						let optionGroup = $("#PERMISSIONMENU .optionGroup");
 						let newPermissions = [
@@ -572,7 +571,7 @@ function _MainContent_settingsPage_permissionsMenu() {
 						let project = Server.getProject(MainContent.curProjectId);
 						if (!project) return false;
 
-						project.users.update(_member);
+						await project.users.update(_member);
 						MainContent.settingsPage.open(MainContent.curProjectId);
 
 						Popup.close();

@@ -57,12 +57,12 @@
 		<link rel="manifest" href="manifest.json">
 		<link rel="shortcut icon" href="images/pressSet/favicon.ico">
 
-		<link rel="stylesheet" type="text/css" href="css/component.css?a=37">
+		<link rel="stylesheet" type="text/css" href="css/component.css?a=38">
 		<link rel="stylesheet" type="text/css" href="css/popup.css?a=30">
-		<link rel="stylesheet" type="text/css" href="css/main.css?a=25">
+		<link rel="stylesheet" type="text/css" href="css/main.css?a=28">
 		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=26">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=46">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=49">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=51">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=55">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/header.css?a=0">
 
 		<script type="text/javascript" src="/JS/jQuery.js" asy nc></script>
@@ -175,7 +175,6 @@
 
 
 
-		<script type="text/javascript" src="js/mainContent/todoHolder/taskHolder.js?a=4" asy nc></script>
 		<script>
 			// temporary so things don't get cached
 			let antiCache = Math.round(Math.random() * 100000000);
@@ -199,7 +198,7 @@
 			$.getScript("js/mainContent/header/header.js?antiCache=" 				+ antiCache, function() {});
 			$.getScript("js/mainContent/pages.js?antiCache=" 						+ antiCache, function() {});
 			
-			// $.getScript("js/mainContent/todoHolder/taskHolder.js?antiCache=" 		+ antiCache, function() {});
+			$.getScript("js/mainContent/todoHolder/taskHolder.js?antiCache=" 		+ antiCache, function() {});
 			$.getScript("js/mainContent/todoHolder/renderSettings.js?antiCache=" 	+ antiCache, function() {});
 			$.getScript("js/mainContent/todoHolder/renderer.js?antiCache=" 			+ antiCache, function() {});
 
@@ -211,8 +210,6 @@
 
 			$.getScript("js/server/encoder.js?antiCache=" 							+ antiCache, function() {});
 			$.getScript("js/server/projectHelpers/dataTypeTemplate.js?antiCache=" 	+ antiCache, function() {});
-			$.getScript("js/server/projectHelpers/userComponent.js?antiCache=" 		+ antiCache, function() {});
-			$.getScript("js/server/projectHelpers/todoComponent.js?antiCache=" 		+ antiCache, function() {});
 			$.getScript("js/server/projectHelpers/tagComponent.js?antiCache=" 		+ antiCache, function() {});
 			$.getScript("js/server/project.js?antiCache=" 							+ antiCache, function() {});
 
@@ -220,8 +217,26 @@
 
 
 			$.getScript("js/app.js?antiCache=" 										+ antiCache, function() {});
+		
 		</script>
+<!-- 
+ 		<script type="text/javascript" src="js/mainContent/header/header.js" asy nc></script>
+ 		<script type="text/javascript" src="js/mainContent/pages.js" asy nc></script>
 
- 		<!-- <script type="text/javascript" src="js/main_min.js" asy nc></script> -->
+ 		<script type="text/javascript" src="js/mainContent/todoHolder/taskHolder.js" asy nc></script>
+ 		<script type="text/javascript" src="js/mainContent/todoHolder/renderSettings.js" asy nc></script>
+ 		<script type="text/javascript" src="js/mainContent/todoHolder/renderer.js" asy nc></script>
+
+ 		<script type="text/javascript" src="js/mainContent/mainContent.js" asy nc></script>
+
+ 		<script type="text/javascript" src="js/sideBar.js" asy nc></script>
+
+ 		<script type="text/javascript" src="js/server/encoder.js" asy nc></script>
+ 		<script type="text/javascript" src="js/server/projectHelpers/dataTypeTemplate.js" asy nc></script>
+ 		<script type="text/javascript" src="js/server/projectHelpers/tagComponent.js" asy nc></script>
+ 		<script type="text/javascript" src="js/server/project.js" asy nc></script>
+ 		<script type="text/javascript" src="js/server/server.js" asy nc></script>
+ 		<script type="text/javascript" src="js/app.js" asy nc></script>
+ -->
 	</body>
 </html>	
