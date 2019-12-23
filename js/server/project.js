@@ -52,6 +52,10 @@ function _Server_globalProject(_projectId) {
   }
 
 
+
+
+
+
   this.users  = new function() {
     let Type = "user";
     let list = [];
@@ -94,11 +98,22 @@ function _Server_globalProject(_projectId) {
     }
 
 
+
+
     this.update = function(_newUser) {
       return REQUEST.send(
         "database/project/" + Type + ".php", 
         "method=update&parameters=" + 
         JSON.stringify(_newUser) + 
+        "&projectId=" + This.id
+      );
+    }
+
+
+    this.remove = function(_id) {
+      return REQUEST.send(
+        "database/project/" + Type + ".php", 
+        "method=remove&parameters=" + _id + 
         "&projectId=" + This.id
       );
     }
