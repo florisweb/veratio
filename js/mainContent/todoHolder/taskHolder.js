@@ -302,7 +302,7 @@ function TaskHolder(_config = {}, _type = "default") {
 	}
 
 
-	this.taskHolderOpenState = false;
+	this.taskHolderOpenState = true;
 
 	function renderTaskHolder(_parent,) {
 		let html = document.createElement("div");
@@ -320,13 +320,13 @@ function TaskHolder(_config = {}, _type = "default") {
 
 		html.onclick = function(_e) {
 			if (_e.target.classList.contains("dropDownButton")) return;
-			This.taskHolderOpenState = false;
+			This.taskHolderOpenState = true;
 			html.classList.remove("hideTasks");
 		}
 
 		html.children[0].onclick = function() {
 			This.taskHolderOpenState = !This.taskHolderOpenState;
-			let Function = This.taskHolderOpenState ? "add" : "remove";
+			let Function = This.taskHolderOpenState ? "remove" : "add";
 			html.classList[Function]("hideTasks");
 		}
 

@@ -94,7 +94,7 @@
 		margin-top: 10px;
 		margin-left: 2px;
 		
-		max-height: 10000%;
+		max-height: 1000vh;
 		transition: max-height .3s, opacity .3s;
 	}
 	
