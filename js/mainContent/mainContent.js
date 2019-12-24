@@ -168,8 +168,7 @@ function _MainContent_optionMenu() {
 
 	this.open = async function(_item, _event) {
 		curDOMData 	= DOMData.get(_item.parentNode.parentNode);
-		let project = Server.getProject(curDOMData.projectId);
-		let task 	= await project.tasks.get(curDOMData.taskId);
+		// let project = Server.getProject(curDOMData.task.projectId);
 
 		Menu.enableAllOptions();
 		// if (!project.users.Self.taskActionAllowed("remove", task)) Menu.options[0].disable();

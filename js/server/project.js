@@ -41,6 +41,15 @@ function _Server_globalProject(_projectId) {
       );
     }
 
+
+    this.remove = function(_id) {
+      return REQUEST.send(
+        "database/project/" + Type + ".php", 
+        "method=remove&parameters=" + _id + 
+        "&projectId=" + This.id
+      );
+    }
+
     this.update = function(_newTask) {
       return REQUEST.send(
         "database/project/" + Type + ".php", 

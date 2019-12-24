@@ -248,8 +248,7 @@ function _TaskRenderer() {
 
 				_html.children[1].onclick = async function() {
 					let data 	= DOMData.get(_html);
-					let project = Server.getProject(data.projectId);
-					let task 	= await project.tasks.get(data.taskId);
+					// let project = Server.getProject(data.task.projectId);
 					
 					// if (!project.users.Self.taskActionAllowed("finish", task)) return false;
 					
@@ -258,8 +257,7 @@ function _TaskRenderer() {
 
 				DoubleClick.register(_html, async function() {
 					let data 	= DOMData.get(_html);
-					let project = Server.getProject(data.projectId);
-					let task 	= await project.tasks.get(data.taskId);
+					// let project = Server.getProject(data.task.projectId);
 					
 					// if (!project.users.Self.taskActionAllowed("update", task)) return false;
 					data.openEdit();
@@ -285,35 +283,33 @@ function _TaskRenderer() {
 
 function taskConstructor(_element, _task, _taskHolder) {
 	this.task 			= _task;
-	this.projectId 		= _task.projectId;
 	this.html 			= _element;
 
-	this.taskHolder = _taskHolder;
+	this.taskHolder 	= _taskHolder;
 
 
-	this.finish = async function() {
-		let task = await Server.global.tasks.get(this.task.id);
-		
-		if (task.finished)
+	this.finish = async function() {		
+		if (this.task.finished)
 		{
 			this.html.classList.remove("finished");
-			task.finished = false;
+			this.task.finished = false;
 		} else {
 			this.html.classList.add("finished");
-			task.finished = true;
+			this.task.finished = true;
 		}
 
-		let project = Server.getProject(this.projectId);
-		project.tasks.update(task, true);
+		let project = Server.getProject(this.task.projectId);
+		project.tasks.update(this.task, true);
 
 		//notify the taskHolder
-		this.taskHolder.onTaskFinish(task);
+		this.taskHolder.onTaskFinish(this.task);
 	}
 
 
-	this.remove = function() {					
-		let project = Server.getProject(this.projectId);
-		project.tasks.remove(this.task.id);
+	this.remove = async function() {					
+		let project = Server.getProject(this.task.projectId);
+		console.log(project);
+		await project.tasks.remove(this.task.id);
 
 		//notify the taskHolder
 		this.taskHolder.onTaskRemove(this.task.id);
