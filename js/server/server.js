@@ -4,10 +4,6 @@ function _Server() {
   let This = this;
   this.projectList = [];
       
-  this.createProject = function(_title) {
-    return Server.DB.createProject(_title);
-  };
-
   this.removeProject = function(_id) {
     for (let i = 0; i < this.projectList.length; i++)
     {
@@ -43,51 +39,47 @@ function _Server() {
 
   this.sync = async function(_) {
     console.warn("Server.sync()");
-    return Server.DB.getProjects();
+    return getProjects();
   }
 
 
 
-  this.DB = new function() {
+  this.createProject = function(_title) {
+    return new Promise(async function (resolve, error) {
+      let result = await REQUEST.send("database/project/create.php", "title=" + encodeURIComponent(_title));
+      if (!result) alert(result);
 
-    this.createProject = function(_title) {
-      return new Promise(function (resolve, error) {
-        REQUEST.send("database/project/create.php", "title=" + encodeURIComponent(_title)).then(
-          function (_project) {
-            _importProject(_project);
-            resolve(_project);
-          }
-        ).catch(function () {error()});
-      });
-    }
-
-
-    this.getProjects = function() {
-      return REQUEST.send("database/project/getProjectList.php").then(
-        function (_projectList) {
-          if (!_projectList) return false;
-          This.projectList = [];
-
-          for (let i = 0; i < _projectList.length; i++)
-          {
-            _importProject(_projectList[i]);
-          }
-        }
-      ).catch(function () {});
-    }
-
-      function _importProject(_project) {
-        if (!_project || typeof _project != "object") return;
-
-        let project = new _Server_project(
-          _project.id, 
-          _project.title
-        );
-        project.sync();
-
-        This.projectList.push(project);
-      }
+      _importProject(result);
+      resolve(result);
+    });
   }
+
+
+
+
+
+  async function getProjects() {
+    let results = await REQUEST.send("database/project/getProjectList.php");
+    if (!results) return false;
+    This.projectList = [];
+
+    for (let i = 0; i < results.length; i++)
+    {
+      _importProject(results[i]);
+    }
+  }
+
+    function _importProject(_project) {
+      if (!_project || typeof _project != "object") return;
+
+      let project = new _Server_project(
+        _project.id, 
+        _project.title
+      );
+      project.sync();
+
+      This.projectList.push(project);
+    }
 
 }
 

@@ -28,6 +28,11 @@ const Popup = new function () {
 	}
 	
 	this.openState = false;
+	this.createProjectMenu  = new _Popup_createProject();
+
+
+
+
 
 
 	HTML.notificationHolder.onclick = function(_e) {
@@ -182,11 +187,93 @@ const Popup = new function () {
 	}
 
 
-
-
-
-
-
-
-
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function _Popup_createProject() {
+	let This = this;
+
+	this.open = function() {
+		openCreateProjectMenu();
+	}
+
+	
+	function openCreateProjectMenu() {
+		let builder = [
+			{title: "CREATE PROJECT"},
+			"<br><br>",
+			{input: "Project title", value: null, id: "CREATEPROJECTValueHolder", focus: true, customClass: "text"},
+			"<br><br>",
+			"<br><br>",
+			"<br>",
+			{buttons: [
+				{button: "CANCEL", onclick: Popup.close},
+				{button: "CREATE", onclick: Popup.createProjectMenu.createProject,
+				important: true, color: COLOR.POSITIVE}
+			]}
+		];
+
+		Popup.showNotification(builder);
+	}
+
+
+
+
+	this.createProject = async function() {
+		let project = scrapeProjectData();
+		if (typeof project != "object") return alert(project);
+
+		project = await Server.createProject(project.title);
+		if (!project) return console.error("Something went wrong while creating a project:", project);
+		await Server.sync();
+		
+		SideBar.projectList.fillProjectHolder();
+		MainContent.taskPage.open(project.id);
+		Popup.close();
+	} 
+	
+
+	function scrapeProjectData() {
+		let project = {title: document.getElementById("CREATEPROJECTValueHolder").value};
+		
+		if (!project.title || project.title.length < 2) return "E_incorrectTitle";
+
+		return project;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

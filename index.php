@@ -62,7 +62,7 @@
 		<link rel="stylesheet" type="text/css" href="css/main.css?a=28">
 		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=26">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=51">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=55">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=57">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/header.css?a=0">
 
 		<script type="text/javascript" src="/JS/jQuery.js" asy nc></script>
@@ -98,7 +98,7 @@
 				<div class="projectList hide">
 					<div>
 					</div>
-					<div class="smallTextHolder clickable" onclick="MainContent.createProjectPage.open()"> 
+					<div class="smallTextHolder clickable" onclick="Popup.createProjectMenu.open()"> 
 						<a class="smallText smallTextIcon">+</a>
 						<a class="smallText">Create project</a>
 					</div>
@@ -144,16 +144,6 @@
 				</div>
 
 
-
-				<div class="mainContentPage hide createProjectPage">
-					<div class="createProjectHolder">
-						<div class="text tHeaderMedium">Create a project</div>
-						<br>
-
-						<input placeholder="Your projects title" class="inputField iBoxy text">
-						<a class="button bDefault bBoxy" onclick='MainContent.createProjectPage.createProject()'>Create</a>
-					</div>
-				</div>
 
 
 				<div class="mainContentPage settingsPage hide">

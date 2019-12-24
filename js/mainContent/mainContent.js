@@ -78,9 +78,7 @@ function _MainContent() {
 
 
 
-
 	// Maincontent pages
-	this.createProjectPage	= new _MainContent_createProjectPage(Private);
 	this.settingsPage 		= new _MainContent_settingsPage(Private);
 	this.taskPage	 		= new _MainContent_taskPage(Private);
 
@@ -425,31 +423,5 @@ function _MainContent_searchOptionMenu() {
 			HTML.menu.style.top 	= top + "px";
 		}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

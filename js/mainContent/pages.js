@@ -260,67 +260,6 @@ function taskPage_tab(_ParentInheritance, _settings) {
 
 
 
-function _MainContent_createProjectPage(_ParentInheritance) {
-	let This = this;
-	let Parent = _ParentInheritance;
-	
-	let HTML = {
-		page: $(".mainContentPage.createProjectPage"),
-		titleInputField: $(".mainContentPage.createProjectPage .inputField")[0],
-	}
-
-	this.pageSettings = {
-		pageName: "createProject",
-		pageIndex: 1,
-		hideHeader: true
-	}
-
-	this.open = function(_projectId) {
-		Parent.openPage(this.pageSettings.pageName, _projectId);
-
-		HTML.titleInputField.value = null;
-		HTML.titleInputField.focus();
-		MainContent.header.setTitle("Create Project");
-	}
-
-	
-
-
-
-
-
-	this.createProject = function() {
-		let project = scrapeProjectData();
-		if (typeof project != "object") return alert(project);
-
-		Server.createProject(project.title).then(function (_project) {
-			Server.getProject(_project.id).sync();
-			SideBar.projectList.fillProjectHolder();
-			MainContent.openPage("task", _project.id);
-		});
-	} 
-	
-
-	function scrapeProjectData() {
-		let project = {title: HTML.titleInputField.value};
-		
-		if (!project.title || project.title.length < 2) return "E_incorrectTitle";
-
-		return project;
-	}
-}
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -342,7 +281,7 @@ function _MainContent_settingsPage(_ParentInheritance) {
 
 	this.pageSettings = {
 		pageName: "settings",
-		pageIndex: 2
+		pageIndex: 1
 	}
 
 	this.permissionsMenu = new _MainContent_settingsPage_permissionsMenu();
