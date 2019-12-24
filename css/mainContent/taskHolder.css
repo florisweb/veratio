@@ -2,7 +2,7 @@
 
 .mainContentPage .todoListHolder .taskHolder {
 	position: relative;
-	width: calc(100% - 35px);
+	width: 100%;
 	height: auto;
 
 	overflow: hidden;
@@ -88,7 +88,7 @@
 	.taskHolder .todoHolder {
 		position: relative;
 
-		width: calc(100% - 2px);
+		width: 100%;
 		height: auto;
 
 		margin-top: 10px;
@@ -249,7 +249,7 @@
 .taskItem.listItem {
 	position: relative;
 
-	width: 100%;
+	width: calc(100% - 35px);
 	height: 20px;
 
 	padding-left: 35px;
@@ -352,8 +352,8 @@
 	.taskItem .functionHolder {
 		position: absolute;
 		float: right;
-		right: 0;
-		top: 3px;
+		right: 5px;
+		top: 10px;
 
 		height: 20px;
 		width: auto;
