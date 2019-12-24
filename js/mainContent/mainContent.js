@@ -22,20 +22,20 @@ function _MainContent() {
 	
 
 
-	this.leaveCurrentProject = function() {
+	this.leaveCurrentProject = async function() {
 		let project = Server.getProject(this.curProjectId);
 		if (!project) return false;
-		project.leave();
-		this.taskPage.tab.open("Inbox");
+		await project.leave();
+		MainContent.taskPage.weekTab.open();
 		App.update();
 	}
 
-	this.removeCurrentProject = function() {
+	this.removeCurrentProject = async function() {
 		let project = Server.getProject(this.curProjectId);
 		if (!project) return false;
-		project.remove();
+		await project.remove();
 		
-		this.taskPage.tab.open("Inbox");
+		MainContent.taskPage.weekTab.open();
 		App.update();
 	}
 

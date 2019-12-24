@@ -8,9 +8,9 @@
 
 	$projectId = $App->createProject($_projectTitle);
 	if (!$projectId) die("E_projectNotCreated");
-
+	
 	$project = $App->getProject($projectId);
-	if (!$project) die("E_projectNotCreated");
+	if (!$project || is_string($project)) die("E_projectNotCreated");
 
 
 	$projectReturnObj = array(

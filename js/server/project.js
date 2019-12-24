@@ -145,6 +145,9 @@ function _Server_globalProject(_projectId) {
 
 
 
+
+
+
 function _Server_project(_projectId, _projectTitle) {
   _Server_globalProject.call(this, _projectId);
 
@@ -185,18 +188,6 @@ function _Server_project(_projectId, _projectTitle) {
 
 
 
-  this.remove = function() {
-    this.DB.remove().then(function () {
-      Server.removeProject(This.id);
-      console.warn("Succesfully removed this project");
-
-    }).catch(function (_error) {
-      console.warn(_error);
-    });
-  }
-
-
-
 
   this.rename = function(_newTitle) {
     return new Promise(function (resolve, error) {
@@ -209,15 +200,13 @@ function _Server_project(_projectId, _projectTitle) {
     });
   }
 
-  this.remove = function() {
-    return new Promise(function (resolve, error) {
-      REQUEST.send("database/project/remove.php", "projectId=" + This.id).then(
-        function (_response) {
-          if (_response === 1) resolve();
-          error(_response);
-        }
-      );
-    });
+  this.remove = async function() {
+    let result = await REQUEST.send(
+      "database/project/remove.php",
+      "projectId=" + This.id
+    );
+
+    return result;
   }
 }
 

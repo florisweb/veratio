@@ -3,16 +3,6 @@ const Server = new _Server;
 function _Server() {
   let This = this;
   this.projectList = [];
-      
-  this.removeProject = function(_id) {
-    for (let i = 0; i < this.projectList.length; i++)
-    {
-      if (this.projectList[i].id != _id) continue;
-      this.projectList.splice(i, 1);
-    }
-    return false;
-  }
-
 
   this.getProject = function(_id) {
     for (let i = 0; i < this.projectList.length; i++)
@@ -30,8 +20,6 @@ function _Server() {
     _Server_globalProject.call(this, "*")
     delete this.users;
   }
-
-
 
 
 
