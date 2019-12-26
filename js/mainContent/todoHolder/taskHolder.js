@@ -130,6 +130,7 @@ function _MainContent_taskHolder() {
 		{
 			if (!taskHolder.task.shouldRenderTask(_task)) continue;
 			taskHolder.task.addTask(_task);
+			return true;
 		}
 	}
 
@@ -408,24 +409,20 @@ function TaskHolder_task(_parent) {
 
 	this.shouldRenderTask = function(_task) {
 		let renderTask = true;
+
 		switch (_task.groupType)
 		{
 			case "date": 
-				if (Parent.type == "day" && 
+				if (Parent.type != "date" ||
 					!Parent.date.compareDate(new Date().setFromStr(_task.groupValue))
 				) renderTask = false;
 			break;
 			case "default": 
-				if (Parent.type != "list") renderTask = false;
+				if (Parent.type != "default") renderTask = false;
 			break;
 			case "overdue": 
-				if (new Date().setFromStr(_task.groupValue) >= new Date()) renderTask = false;
-			break;	
-		}
-
-		if (Parent.type == "overdue") // temporary code, until the backendSystem works
-		{
-			if (new Date().setFromStr(_task.groupValue) >= new Date()) renderTask = false;
+				if (Parent.type != "overdue") renderTask = false;
+			break;
 		}
 
 		if (MainContent.curProjectId && MainContent.curProjectId != _task.projectId) renderTask = false;
