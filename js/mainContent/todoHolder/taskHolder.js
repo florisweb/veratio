@@ -305,7 +305,7 @@ function TaskHolder(_config = {}, _type = "default") {
 
 	this.taskHolderOpenState = true;
 
-	function renderTaskHolder(_parent,) {
+	function renderTaskHolder(_parent) {
 		let html = document.createElement("div");
 		html.className = "taskHolder animateIn";
 		setTimeout(function () {html.classList.remove("animateIn");}, 50);
@@ -575,17 +575,20 @@ function TaskHolder_createMenuConstructor(_config, _type) {
 	}
 
 		function addEventListeners(This) {
-			This.HTML.createMenuHolder.children[1].onclick = function () {This.createMenu.open();}
+			This.HTML.createMenuHolder.children[1].onclick 			= function () {This.createMenu.open();}
 
-			This.HTML.createMenu.children[2].children[0].onclick = function () {This.createMenu.createTask();}
-			This.HTML.createMenu.children[2].children[1].onclick = function () {This.createMenu.close();}
+			This.HTML.createMenu.children[2].children[0].onclick 	= function () {This.createMenu.createTask();}
+			This.HTML.createMenu.children[2].children[1].onclick 	= function () {This.createMenu.close();}
 
-			This.HTML.createMenu.children[3].children[0].onclick = function () {This.createMenu.openTagSelectMenu()}
-			This.HTML.createMenu.children[3].children[1].onclick = function () {This.createMenu.openMemberSelectMenu()}
-			This.HTML.createMenu.children[3].children[2].onclick = function () {This.createMenu.openProjectSelectMenu()}
+			This.HTML.createMenu.children[3].children[0].onclick 	= function () {This.createMenu.openTagSelectMenu()}
+			This.HTML.createMenu.children[3].children[1].onclick 	= function () {This.createMenu.openMemberSelectMenu()}
+			This.HTML.createMenu.children[3].children[2].onclick 	= function () {This.createMenu.openProjectSelectMenu()}
 			
 			
-			This.HTML.inputField 	= This.HTML.createMenu.children[0];
+			This.HTML.inputField = This.HTML.createMenu.children[0];
+			This.HTML.inputField.placeholder = PLACEHOLDERTEXTS.randomItem();
+
+
 			This.HTML.deadLineField = This.HTML.createMenu.children[1];
 			
 			This.HTML.deadLineField.onfocusin = function() {
@@ -595,7 +598,7 @@ function TaskHolder_createMenuConstructor(_config, _type) {
 				This.HTML.createMenu.children[0].focus();
 			}
 
-			This.HTML.inputField.placeholder = PLACEHOLDERTEXTS.randomItem();
+			
 		}
 }
 
@@ -613,13 +616,13 @@ function TaskHolder_createMenu(_parent) {
 	this.openState = false;
 	this.open = function() {
 		MainContent.taskPage.taskHolder.closeAllCreateMenus();
-		MainContent.searchOptionMenu.openWithInputField(Parent.HTML.createMenu.children[0].children[0]);
+		MainContent.searchOptionMenu.openWithInputField(Parent.HTML.inputField);
 
 		this.openState = true;
 
 		Parent.HTML.createMenuHolder.classList.remove("close");
 		Parent.HTML.inputField.focus();
-		Parent.HTML.inputField.value = null;
+		Parent.HTML.inputField.value 	= null;
 		Parent.HTML.deadLineField.value = null;
 
 		let buttonTitle = editData.task ? "Change" : "Add";
