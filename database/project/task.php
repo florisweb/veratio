@@ -8,14 +8,7 @@
 	
 	if (!$_projectId || !$_method) die("Invalid request");
 
-	try {
-		$parameters = json_decode($_parameters, true);
-	}
-	catch (Exception $e) {
-		$parameters = $_parameters;
-	}
-	if ($parameters == NULL) $parameters = $_parameters;
-
+	$parameters = filterParameters($_parameters);
 	
 	$projects = $App->getAllProjects();
 	if (!$projects || sizeof($projects) == 0) die("E_projectNotFound");
@@ -72,4 +65,19 @@
 	}
 
 
+
+	function filterParameters($_parString) {
+		// var_dump($_parString);
+		$decodedParameters = $_parString; //urldecode($_parString);
+		$parameters = "";
+		try {
+			$parameters = json_decode($decodedParameters, true);
+		}
+		catch (Exception $e) {
+			$parameters = $decodedParameters;
+		}
+		if ($parameters == NULL) $parameters = $decodedParameters;
+
+		return $parameters;
+	}
 ?>

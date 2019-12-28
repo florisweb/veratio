@@ -35,7 +35,7 @@
 	{
 		$curProject = array();
 		$curProject["id"] 		= $projects[$i]->id;
-		$curProject["title"] 	= $projects[$i]->title;
+		$curProject["title"] 	= urlencode($projects[$i]->title);
 		array_push($returnProjects, $curProject);
 	}
 	echo json_encode($returnProjects);

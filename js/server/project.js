@@ -5,40 +5,43 @@ function _Server_globalProject(_projectId) {
   this.tasks  = new function() {
     let Type = "task";
 
-    this.get = function(_id) {
-       return REQUEST.send(
+    this.get = async function(_id) {
+      let result = await REQUEST.send(
         "database/project/" + Type + ".php", 
         "method=get&parameters=" + _id +  
         "&projectId=" + This.id
       );
+      return Encoder.decodeObj(result);
     }
 
     this.getByDate = function(_date) {
       return this.getByDateRange(_date, 1);
     }
 
-    this.getByDateRange = function(_date, _range = 1) {
-      return REQUEST.send(
+    this.getByDateRange = async function(_date, _range = 1) {
+      let result = await REQUEST.send(
         "database/project/" + Type + ".php", 
         "method=getByDateRange&parameters=" + 
-        JSON.stringify({
+        Encoder.objToString({
           date: _date.toString(),
           range: _range
         }) + 
         "&projectId=" + This.id
       );
+      return Encoder.decodeObj(result);
     }
 
-    this.getByGroup = function(_groupType, _groupValue = "*") {
-      return REQUEST.send(
+    this.getByGroup = async function(_groupType, _groupValue = "*") {
+      let result = await REQUEST.send(
         "database/project/" + Type + ".php", 
         "method=getByGroup&parameters=" + 
-        JSON.stringify({
+        Encoder.objToString({
           type: _groupType, 
           value: _groupValue
         }) + 
         "&projectId=" + This.id
       );
+      return Encoder.decodeObj(result);
     }
 
 
@@ -50,13 +53,14 @@ function _Server_globalProject(_projectId) {
       );
     }
 
-    this.update = function(_newTask) {
-      return REQUEST.send(
+    this.update = async function(_newTask) {
+      let result = await REQUEST.send(
         "database/project/" + Type + ".php", 
         "method=update&parameters=" + 
-        JSON.stringify(_newTask) + 
+        Encoder.objToString(_newTask) + 
         "&projectId=" + This.id
       );
+      return Encoder.decodeObj(result);
     }
   }
 
@@ -84,21 +88,21 @@ function _Server_globalProject(_projectId) {
       return false;
     }
 
-    this.getAll = function() {
-      return new Promise(async function (resolve, error) {
-        let results = await REQUEST.send(
-          "database/project/" + Type + ".php", 
-          "method=getAll" + 
-          "&projectId=" + This.id
-        );
-        if (!Array.isArray(results)) return error(results);
-        
-        for (user of results) if (user.Self) This.users.Self = new _Server_project_userComponent_Self(user);
+    this.getAll = async function() {
+      let results = await REQUEST.send(
+        "database/project/" + Type + ".php", 
+        "method=getAll" + 
+        "&projectId=" + This.id
+      );
+      if (!Array.isArray(results)) return false;
+      results = Encoder.decodeObj(results);
+      
+      for (user of results) if (user.Self) This.users.Self = new _Server_project_userComponent_Self(user);
 
-        list = results;
-        resolve(results);
-        lastSync = new Date();
-      });
+      list = results;
+      
+      lastSync = new Date();
+      return results;
     }
 
     this.getLocalList = function() {
@@ -109,13 +113,14 @@ function _Server_globalProject(_projectId) {
 
 
 
-    this.update = function(_newUser) {
-      return REQUEST.send(
+    this.update = async function(_newUser) {
+      let result = REQUEST.send(
         "database/project/" + Type + ".php", 
         "method=update&parameters=" + 
-        JSON.stringify(_newUser) + 
+        Encoder.objToString(_newUser) + 
         "&projectId=" + This.id
       );
+      return Encoder.decodeObj(result);
     }
 
 

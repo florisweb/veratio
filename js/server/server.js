@@ -34,7 +34,7 @@ function _Server() {
 
   this.createProject = function(_title) {
     return new Promise(async function (resolve, error) {
-      let result = await REQUEST.send("database/project/create.php", "title=" + encodeURIComponent(_title));
+      let result = await REQUEST.send("database/project/create.php", "title=" + Encoder.encodeString(_title));
       if (!result) alert(result);
 
       _importProject(result);
@@ -60,6 +60,8 @@ function _Server() {
     function _importProject(_project) {
       if (!_project || typeof _project != "object") return;
 
+      _project = Encoder.decodeObj(_project);
+      
       let project = new _Server_project(
         _project.id, 
         _project.title
