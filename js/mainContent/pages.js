@@ -119,7 +119,12 @@ function _MainContent_taskPage(_ParentInheritance) {
 	}
 
 
+
+	let loadingMoreDays = false;
 	async function loadMoreDays(_days = 1) {
+		if (loadingMoreDays) return false;
+		loadingMoreDays = true;
+		
 		let startDate = getNewDate();
 		let dateList = await Server.global.tasks.getByDateRange(startDate.copy().moveDay(1), _days);
 
@@ -130,6 +135,8 @@ function _MainContent_taskPage(_ParentInheritance) {
 
 			inbox_addTaskHolder(date, taskList);
 		}
+		
+		loadingMoreDays = false;
 	}
 
 	function getNewDate() {
