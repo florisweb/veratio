@@ -5,32 +5,32 @@ function _TaskRenderer() {
 	this.settings = new _TaskRenderer_settings();
 
 
-	this.renderTask = function(_task, _taskHolder, _renderSettings) {
-		if (!_task) return false;
-		let project = Server.getProject(_task.projectId);
+	this.renderTask = function(_taskWrapper, _renderSettings) {
+		if (!_taskWrapper) return false;
+		let project = Server.getProject(_taskWrapper.task.projectId);
 		if (!project) return false;
 
 		let tag 	= false; //project.tags.get(_task.tagId);
 		
 		let todoRenderData = {
-			id: 			_task.id,
-			title: 			_task.title,
-			taskHolderId: 	_taskHolder.id,
-			finished: 		_task.finished,
+			id: 			_taskWrapper.task.id,
+			title: 			_taskWrapper.task.title,
+			taskHolderId: 	_taskWrapper.taskHolder.id,
+			finished: 		_taskWrapper.task.finished,
 			
-			assignedToMe: 	_task.assignedTo.includes(project.users.Self.id),
-			isMyTask: 		_task.creatorId == project.users.Self.id,
+			assignedToMe: 	_taskWrapper.task.assignedTo.includes(project.users.Self.id),
+			isMyTask: 		_taskWrapper.task.creatorId == project.users.Self.id,
 
-			memberText: 	_createMemberTextByUserIdList(_task.assignedTo, project),
+			memberText: 	_createMemberTextByUserIdList(_taskWrapper.task.assignedTo, project),
 		}
 		
 		if (
-			(_task.groupType == "date" || _task.groupType == "overdue") && 
+			(_taskWrapper.task.groupType == "date" || _taskWrapper.task.groupType == "overdue") && 
 			_renderSettings.displayDate !== false &&
-			new Date().stringIsDate(_task.groupValue)
+			new Date().stringIsDate(_taskWrapper.task.groupValue)
 		) {
 			todoRenderData.deadLineText = DateNames.toString(
-				new Date().setDateFromStr(_task.groupValue),
+				new Date().setDateFromStr(_taskWrapper.task.groupValue),
 				true
 			);
 		} 
@@ -38,19 +38,14 @@ function _TaskRenderer() {
 		if (_renderSettings.displayProjectTitle !== false) todoRenderData.projectTitle = project.title;
 		if (tag) todoRenderData.tagColour = tag.colour;
 		
-		let html = createTaskHTML(todoRenderData, _taskHolder);
+		let html = createTaskHTML(todoRenderData);
 
-		setDOMData(html, _task, _taskHolder);
+		DOMData.set(html, _taskWrapper);
+
 		return html;
 	}
 
 
-
-		function setDOMData(_element, _task, _taskHolder) {
-			let data = new taskConstructor(_element, _task, _taskHolder);
-
-			DOMData.set(_element, data);
-		}
 
 
 
@@ -78,7 +73,7 @@ function _TaskRenderer() {
 
 
 
-		function createTaskHTML(_toDoData, _taskHolder) {
+		function createTaskHTML(_toDoData) {
 			let html = document.createElement("div");
 			html.className = "listItem taskItem dropTarget";
 			if (_toDoData.finished) html.classList.add("finished");
@@ -142,10 +137,10 @@ function _TaskRenderer() {
 			}
 
 
-			return assignEventHandlers(html, _toDoData, _taskHolder);
+			return assignEventHandlers(html, _toDoData);
 		}
 
-			function assignEventHandlers(_html, _taskData, _taskHolder) {
+			function assignEventHandlers(_html, _taskData) {
 
 				let lastDropTarget = false;
 				DragHandler.register(
@@ -280,45 +275,3 @@ function _TaskRenderer() {
 
 
 
-
-function taskConstructor(_element, _task, _taskHolder) {
-	this.task 			= _task;
-	this.html 			= _element;
-
-	this.taskHolder 	= _taskHolder;
-
-
-	this.finish = async function() {		
-		if (this.task.finished)
-		{
-			this.html.classList.remove("finished");
-			this.task.finished = false;
-		} else {
-			this.html.classList.add("finished");
-			this.task.finished = true;
-		}
-
-		let project = Server.getProject(this.task.projectId);
-		project.tasks.update(this.task, true);
-
-		//notify the taskHolder
-		this.taskHolder.onTaskFinish(this.task);
-	}
-
-
-	this.remove = async function() {					
-		let project = Server.getProject(this.task.projectId);
-		console.log(project);
-		await project.tasks.remove(this.task.id);
-
-		//notify the taskHolder
-		this.taskHolder.onTaskRemove(this.task.id);
-	}
-
-
-	this.openEdit = function() {
-		if (!this.taskHolder.createMenu) return;
-		this.taskHolder.createMenu.openEdit(this.html, this.task.id);
-	}
-
-}

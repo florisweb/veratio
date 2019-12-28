@@ -232,9 +232,8 @@ function TaskHolder_overdue(_config) {
 	TaskHolder.call(this, _config, "overdue");
 
 	
-	this.onTaskFinish = function(_task) {
-		let taskId = _task.id ? _task.id : _task;
-		this.task.removeTask(taskId);
+	this.onTaskFinish = function(_taskWrapper) {
+		this.task.removeTask(_taskWrapper.task.id, true);
 		if (this.task.taskList.length > 0) return;
 		this.remove();
 	}
@@ -362,7 +361,7 @@ function TaskHolder_task(_parent) {
 	this.addTask = function(_task) {
 		this.removeTask(_task.id, false);
 
-		let task = new _taskConstructor(_task);
+		let task = new _taskWrapper(_task);
 		this.taskList.push(task);
 		task.render();
 
@@ -378,7 +377,7 @@ function TaskHolder_task(_parent) {
 	this.removeTask = function(_id, _animate = false) {
 		for (let i = 0; i < this.taskList.length; i++)
 		{
-			if (this.taskList[i].id != _id) continue;
+			if (this.taskList[i].task.id != _id) continue;
 			this.taskList[i].removeHTML(_animate);
 			this.taskList.splice(i, 1);
 			return true;
@@ -390,7 +389,6 @@ function TaskHolder_task(_parent) {
 
 	this.dropTask = function(_task, _taskIndex) {
 		let task = moveTaskToNewLocalPosition(_task, _taskIndex);
-		console.log(_task);
 		updateTaskToNewTaskHolder(_task);
 		this.reRenderTaskList();
 	}
@@ -450,7 +448,7 @@ function TaskHolder_task(_parent) {
 			return task;
 		}
 
-		let newTask = new _taskConstructor(_task);
+		let newTask = new _taskWrapper(_task);
 		TaskHolder.taskList.splice(_taskIndex, 0, newTask);
 		return newTask;
 	}
@@ -463,20 +461,55 @@ function TaskHolder_task(_parent) {
 
 
 
-	function _taskConstructor(_task) {
+	function _taskWrapper(_task) {
 		let This = {
 			task: _task,
 			html: false,
-			taskHolderId: Parent.id,
+			taskHolder: Parent,
 			render: render,
-			remove: remove,
-			removeHTML: removeHTML
-		}
-		
+			removeHTML: removeHTML,
 
-		function remove(_animate) {
-			TaskHolder.removeTask(This.task.id, _animate);
+			finish: finish,
+			openEdit: openEdit,
+			remove: remove
 		}
+
+
+		async function finish() {		
+			if (This.task.finished)
+			{
+				This.html.classList.remove("finished");
+				This.task.finished = false;
+			} else {
+				This.html.classList.add("finished");
+				this.task.finished = true;
+			}
+
+			let project = Server.getProject(This.task.projectId);
+			project.tasks.update(This.task, true);
+
+			//notify the taskHolder
+			This.taskHolder.onTaskFinish(This);
+		}
+
+
+		async function remove() {					
+			let project = Server.getProject(This.task.projectId);
+			await project.tasks.remove(This.task.id);
+
+			//notify the taskHolder
+			This.taskHolder.onTaskRemove(This.task.id);
+		}
+
+
+		function openEdit() {
+			if (!This.taskHolder.createMenu) return;
+			This.taskHolder.createMenu.openEdit(This.html, This.task.id);
+		}
+
+
+
+
 
 		function removeHTML(_animate) {
 			let html = This.html;
@@ -485,7 +518,7 @@ function TaskHolder_task(_parent) {
 			html.classList.add("hide");
 			setTimeout(
 				function () {
-					html.parentNode.removeChild(html)
+					html.parentNode.removeChild(html);
 				}, 
 				500 * _animate
 			);
@@ -501,8 +534,7 @@ function TaskHolder_task(_parent) {
 			This.removeHTML(false);
 
 			This.html = MainContent.taskPage.renderer.renderTask(
-				This.task, 
-				Parent, 
+				This, 
 				Parent.config.renderPreferences
 			);
 
@@ -597,8 +629,6 @@ function TaskHolder_createMenuConstructor(_config, _type) {
 			This.HTML.deadLineField.onfocusout = function() {
 				This.HTML.createMenu.children[0].focus();
 			}
-
-			
 		}
 }
 
@@ -628,7 +658,7 @@ function TaskHolder_createMenu(_parent) {
 		let buttonTitle = editData.task ? "Change" : "Add";
 		Parent.HTML.createMenu.children[2].children[0].innerHTML = buttonTitle;	
 
-		if (Parent.date) Parent.HTML.deadLineField.value = DateNames.toString(Parent.date); 		// DEPRICATED?
+		if (Parent.date) Parent.HTML.deadLineField.value = DateNames.toString(Parent.date);
 	}
 
 	this.openEdit = async function(_taskHTML, _taskId) {

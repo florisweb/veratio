@@ -104,6 +104,7 @@
 
 
 		public function update($_newTask) {
+			if (!is_array($_newTask)) return false;
 			$userId = $GLOBALS["App"]->userId;
 
 			$oldTask 				= $this->get($_newTask["id"]);
