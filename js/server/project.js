@@ -145,7 +145,8 @@ function _Server_globalProject(_projectId) {
 
 
 
-  this.tags   = new _Server_project_tagComponent(this);
+  this.tags   = new function() {
+  }
 }
 
 
@@ -191,19 +192,6 @@ function _Server_project(_projectId, _projectTitle) {
     });
   }
 
-
-
-
-  this.rename = function(_newTitle) {
-    return new Promise(function (resolve, error) {
-      REQUEST.send("database/project/rename.php", "projectId=" + This.id + "&newTitle=" + Encoder.encodeString(_newTitle)).then(
-        function (_response) {
-          if (_response === 1) resolve();
-          error(_response);
-        }
-      );
-    });
-  }
 
   this.remove = async function() {
     let result = await REQUEST.send(

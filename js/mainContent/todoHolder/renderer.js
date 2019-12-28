@@ -2,8 +2,6 @@
 function _TaskRenderer() {
 	let This = this;
 
-	this.settings = new _TaskRenderer_settings();
-
 
 	this.renderTask = function(_taskWrapper, _renderSettings) {
 		if (!_taskWrapper) return false;
@@ -236,25 +234,13 @@ function _TaskRenderer() {
 
 
 
-
-
-
-
-
 				_html.children[1].onclick = async function() {
 					let data 	= DOMData.get(_html);
-					// let project = Server.getProject(data.task.projectId);
-					
-					// if (!project.users.Self.taskActionAllowed("finish", task)) return false;
-					
 					data.finish();
 				}
 
 				DoubleClick.register(_html, async function() {
 					let data 	= DOMData.get(_html);
-					// let project = Server.getProject(data.task.projectId);
-					
-					// if (!project.users.Self.taskActionAllowed("update", task)) return false;
 					data.openEdit();
 				});
 
