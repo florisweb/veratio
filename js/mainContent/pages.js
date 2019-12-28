@@ -179,9 +179,7 @@ function _MainContent_taskPage(_ParentInheritance) {
 		
 
 
-		let nonPlannedTasks = await project.tasks.getByGroup("default");		
-		// nonPlannedTasks 	= MainContent.taskPage.renderer.settings.sort(nonPlannedTasks, []);
-		
+		let nonPlannedTasks = await project.tasks.getByGroup("default");
 		let taskHolder_nonPlanned = MainContent.taskPage.taskHolder.add(
 			"default",
 			{
