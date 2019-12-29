@@ -42,24 +42,21 @@ function _SideBar_projectList() {
 
 	this.fillProjectHolder = function() {
 		HTML.projectsHolder.innerHTML = "";
-		for (let i = 0; i < Server.projectList.length; i++)
-		{
-			_createProjectHTML(Server.projectList[i]);
-		}
+		for (project of Server.projectList) createProjectHTML(project);
 	}
 
-		function _createProjectHTML(_project) {
-			if (!_project) return;
-			let html = document.createElement("div");
-			html.className = "header small clickable";
-			html.innerHTML = '<img src="images/icons/projectIcon.png" class="headerIcon">' +
-							 '<div class="headerText userText"></div>';
+	function createProjectHTML(_project) {
+		if (!_project) return;
+		let html = document.createElement("div");
+		html.className = "header small clickable";
+		html.innerHTML = '<img src="images/icons/projectIcon.png" class="headerIcon">' +
+						 '<div class="headerText userText"></div>';
 
-			setTextToElement(html.children[1], _project.title);
-			html.onclick = function() {MainContent.taskPage.projectTab.open(_project.id);}
+		setTextToElement(html.children[1], _project.title);
+		html.onclick = function() {MainContent.taskPage.projectTab.open(_project.id);}
 
-			HTML.projectsHolder.append(html);
-		}
+		HTML.projectsHolder.append(html);
+	}
 }
 
 
