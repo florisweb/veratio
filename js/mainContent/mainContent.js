@@ -7,19 +7,34 @@ function _MainContent() {
 		pages: $("#mainContent .mainContentPage"),
 	}
 
-	let Private = {
-		openPage: openPage
-	}
-
 	this.curProjectId = "";
 	this.curPageName = "task";
 
 	this.header 			= new _MainContent_header();
+	
+	this.taskHolder 		= new _MainContent_taskHolder();
 
 	this.optionMenu 		= new _MainContent_optionMenu();
 	this.searchOptionMenu 	= new _MainContent_searchOptionMenu();
 
 	
+
+
+	this.taskPage 		= new MainContent_taskPage();
+	this.settingsPage 	= new MainContent_settingsPage();
+	this.curPage 		= this.taskPage;
+
+	
+
+
+
+
+	this.startLoadingAnimation = function() {
+		HTML.mainContentHolder.classList.add("showLoadingAnimation");
+	}
+	this.stopLoadingAnimation = function() {
+		HTML.mainContentHolder.classList.remove("showLoadingAnimation");
+	}
 
 
 	this.leaveCurrentProject = async function() {
@@ -76,49 +91,14 @@ function _MainContent() {
 		});
 	}
 
-
-
-	// Maincontent pages
-	this.settingsPage 		= new _MainContent_settingsPage(Private);
-	this.taskPage	 		= new _MainContent_taskPage(Private);
-
-
-	function openPage(_pageName, _projectId) {// Not for direct use
-		HTML.mainContent.classList.add("loading");
-		resetPage();
-
-		let page = MainContent[_pageName + "Page"];
-		if (!page || !page.pageSettings) return console.warn("MainContent.openPage: " + _pageName + " doesn't exist.");
-
-		MainContent.curProjectId 	= _projectId;
-		MainContent.curPageName 	= page.pageSettings.pageName;
-
-		if (!page.pageSettings.customHeaderSetting) MainContent.header.showItemsByPage(page.pageSettings.pageName);
-		openMenuByIndex(page.pageSettings.pageIndex);
-
-		setTimeout('mainContent.classList.remove("loading");', 100);
-	}
-
-
-
-	function openMenuByIndex(_index) {
-		for (let i = 0; i < HTML.pages.length; i++) if (i != _index) HTML.pages[i].classList.add("hide");
-		HTML.pages[parseInt(_index)].classList.remove("hide");
-	}
-
-	function resetPage() {
-		MainContent.optionMenu.close();
-	}
-
-
-	this.startLoadingAnimation = function() {
-		HTML.mainContentHolder.classList.add("showLoadingAnimation");
-	}
-	this.stopLoadingAnimation = function() {
-		HTML.mainContentHolder.classList.remove("showLoadingAnimation");
-	}
 }
 	
+
+
+
+
+
+
 
 
 
@@ -179,11 +159,6 @@ function _MainContent_optionMenu() {
 	this.openState 	= Menu.openState;
 	this.close 		= Menu.close;
 }
-
-
-
-
-
 
 
 

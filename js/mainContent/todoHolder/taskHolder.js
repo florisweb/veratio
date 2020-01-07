@@ -289,7 +289,7 @@ function TaskHolder(_config = {}, _type = "default") {
 
 	this.remove = function() {
 		this.HTML.Self.parentNode.removeChild(this.HTML.Self);
-		MainContent.taskPage.taskHolder.remove(this.id);
+		MainContent.taskHolder.remove(this.id);
 	}
 
 	this.onTaskFinish = function(_task) {
@@ -624,7 +624,7 @@ function TaskHolder_createMenuConstructor(_config, _type) {
 			This.HTML.deadLineField = This.HTML.createMenu.children[1];
 			
 			This.HTML.deadLineField.onfocusin = function() {
-				MainContent.taskPage.taskHolder.deadLineOptionMenu.open(This.HTML.deadLineField);
+				MainContent.taskHolder.deadLineOptionMenu.open(This.HTML.deadLineField);
 			}
 			This.HTML.deadLineField.onfocusout = function() {
 				This.HTML.createMenu.children[0].focus();
@@ -645,7 +645,7 @@ function TaskHolder_createMenu(_parent) {
 
 	this.openState = false;
 	this.open = function() {
-		MainContent.taskPage.taskHolder.closeAllCreateMenus();
+		MainContent.taskHolder.closeAllCreateMenus();
 		MainContent.searchOptionMenu.openWithInputField(Parent.HTML.inputField);
 
 		this.openState = true;
@@ -692,7 +692,7 @@ function TaskHolder_createMenu(_parent) {
 		resetEditMode(true);
 
 		let newTask = await project.tasks.update(task);
-		MainContent.taskPage.taskHolder.renderTask(newTask);
+		MainContent.taskHolder.renderTask(newTask);
 		
 		this.close();
 		MainContent.searchOptionMenu.close();

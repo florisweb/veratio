@@ -168,7 +168,7 @@ function _TaskRenderer() {
 						dropData.taskHolder.task.dropTask(task, dropData.index);
 
 						if (dropData.taskHolder.id == _taskData.taskHolderId) return dropCoords;
-						let prevTaskHolder = MainContent.taskPage.taskHolder.get(_taskData.taskHolderId);
+						let prevTaskHolder = MainContent.taskHolder.get(_taskData.taskHolderId);
 						prevTaskHolder.task.removeTask(_taskData.id);
 
 						return dropCoords;
@@ -199,7 +199,7 @@ function _TaskRenderer() {
 					}
 
 					let taskHolderId = lastDropTarget.parentNode.parentNode.getAttribute("taskHolderId");
-					data.taskHolder  = MainContent.taskPage.taskHolder.get(taskHolderId);
+					data.taskHolder  = MainContent.taskHolder.get(taskHolderId);
 					
 					if (!data.taskHolder) return false;
 					let positionObj = data.taskHolder.HTML.todoHolder;

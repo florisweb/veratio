@@ -1,77 +1,147 @@
 
+function MainContent_page(_config) {
+	this.name = _config.name;
+	let onOpen = _config.onOpen;
+	this.settings = {
+		index: _config.index
+	}
 
-function _MainContent_taskPage(_ParentInheritance) {
-	let HTML = {
+	const HTML = {
+		pages: $("#mainContent .mainContentPage"),
+	}
+
+
+
+	this.open = function(_projectId) {
+		// HTML.mainContent.classList.add("loading");
+		MainContent.startLoadingAnimation();
+
+
+		resetPage();
+		
+		MainContent.curPage			= this;
+		MainContent.curProjectId 	= _projectId;
+
+		openPageByIndex(this.settings.index);
+		MainContent.header.showItemsByPage(this.name);
+
+		onOpen(_projectId);
+
+
+		MainContent.stopLoadingAnimation();
+		// setTimeout('mainContent.classList.remove("loading");', 100);
+	}
+
+	
+	function openPageByIndex(_index) {
+		for (let i = 0; i < HTML.pages.length; i++) if (i != _index) HTML.pages[i].classList.add("hide");
+		HTML.pages[parseInt(_index)].classList.remove("hide");
+	}
+
+	function resetPage() {
+		MainContent.optionMenu.close();
+	}
+}
+
+
+
+
+
+
+function MainContent_taskPage() {
+	let This = this;
+	MainContent_page.call(this, {
+		name: "task",
+		index: 0,
+		onOpen: function() {
+			setTimeout(function () {This.reopenCurTab();}, 1);
+		}
+	});
+
+	const HTML = {
 		mainContent: mainContent,
 		mainContentHolder: mainContentHolder,
 		todoHolder: $("#mainContentHolder .todoListHolder")[0],
 		loadMoreButton: $("#mainContentHolder .loadMoreButton")[0],
 	}
 	
-	let Parent = _ParentInheritance;
-	let This = this;
-
-	const Private = {
-		HTML: HTML
-	}
 
 
-
-	this.pageSettings = {
-		pageName: "task",
-		pageIndex: 0,
-		customHeaderSetting: true
-	}
-
-	this.open = function(_projectId) {
-		if (!_projectId) _projectId = MainContent.curProjectId;
-		Parent.openPage(this.pageSettings.pageName, _projectId);
-	
-		if (!_projectId) return MainContent.taskPage.reopenCurTab();
-		MainContent.taskPage.projectTab.open(_projectId);
-	}
-
-
-	this.taskHolder 	= new _MainContent_taskHolder();
 	this.renderer 		= new _TaskRenderer(HTML.todoHolder);
 	
 
 
-	// tabs
-	this.todayTab = new taskPage_tab(Private, {
-		title: "today",
-		onOpen: openToday,
-		hideLoadMoreButton: true
-	});
-
-	this.weekTab = new taskPage_tab(Private, {
-		title: "week",
-		onOpen: openInbox,
-		customFunctions: {
-			loadMoreDays: loadMoreDays
-		}
-	});
-	
-	this.projectTab = new taskPage_tab(Private, {
-		title: "project",
-		onOpen: openProject,
-		hideLoadMoreButton: true
-	});
-	
-
-	this.curTab = "today";
-	this.reopenCurTab = function() {
-		if (this.curTab == "project" && !MainContent.curProjectId) this.curTab = "today";
-		this[this.curTab + "Tab"].open(MainContent.curProjectId);
+	this.curTab = false;
+	this.openTab = function(_name, _projectId) {
+		MainContent.curProjectId = _projectId;
+		this.curTab = new getTabConstructorByName(_name)(_projectId);
 	}
-		
 
-	async function openToday() {
+
+	function getTabConstructorByName(_name) {
+		switch (_name)
+		{
+			case "week": 	return taskPage_tab_week; 		break;
+			case "project": return taskPage_tab_project; 	break;
+			default: 		return taskPage_tab_today; 		break; // today
+		}
+	}
+
+
+	
+	this.reopenCurTab = function() {
+		if (!this.curTab) this.curTab.name = "today";
+		this.openTab(this.curTab.name, MainContent.curProjectId);
+	}
+}
+
+
+
+
+
+
+
+function taskPage_tab(_settings) {
+	this.name = _settings.name;
+	
+	MainContent.startLoadingAnimation();
+	setup();
+
+	async function setup() {
+		resetPage();
+		MainContent.taskHolder.clear();
+		await MainContent.taskHolder.addOverdue();
+	}
+
+
+	function resetPage() {
+		MainContent.optionMenu.close();
+	}
+}
+
+
+
+function taskPage_tab_today() {
+	taskPage_tab.call(this, {
+		name: "today",
+		hideLoadMoreButton: true
+	});
+
+	MainContent.header.showItemsByPage("taskpage - " + this.name);
+
+
+	setup().then(function () {
+		MainContent.stopLoadingAnimation();
+		// setTimeout(MainContent.stopLoadingAnimation, 100);
+	});
+	
+
+	async function setup() {
 		let date = new Date();
 		MainContent.header.setTitle("Today - " + date.getDate() + " " + date.getMonths()[date.getMonth()].name);
 		MainContent.header.setMemberList([]);
 
-		let taskHolder 	= MainContent.taskPage.taskHolder.add(
+		let taskHolder 	= MainContent.taskHolder.add(
 			"date",
 			{
 				displayProjectTitle: true, 
@@ -86,13 +156,33 @@ function _MainContent_taskPage(_ParentInheritance) {
 
 		taskHolder.task.addTaskList(taskList);
 	}
+}
 
 
-	async function openInbox() {
-		MainContent.header.setTitle("Inbox");
+
+
+
+function taskPage_tab_week() {
+	taskPage_tab.call(this, {
+		name: "week",
+	});
+
+	MainContent.header.showItemsByPage("week");
+
+
+	setup().then(function () {
+		MainContent.stopLoadingAnimation();
+		// setTimeout(MainContent.stopLoadingAnimation, 100);
+	});
+	
+
+
+
+	async function setup() {
+		MainContent.header.setTitle("This week");
 		MainContent.header.setMemberList([]);
-		let startDate = new Date();
 
+		let startDate = new Date();
 		let dateList = await Server.global.tasks.getByDateRange(startDate, 7);
 
 		for (let i = 0; i < 7; i++)
@@ -100,12 +190,12 @@ function _MainContent_taskPage(_ParentInheritance) {
 			let date = startDate.copy().moveDay(i);
 			let taskList = dateList[date.toString()];
 
-			inbox_addTaskHolder(date, taskList);
+			addTaskHolder(date, taskList);
 		}
 	}
 
-	function inbox_addTaskHolder(_date, _taskList) {
-		let taskHolder 	= MainContent.taskPage.taskHolder.add(
+	function addTaskHolder(_date, _taskList) {
+		let taskHolder 	= MainContent.taskHolder.add(
 			"date",
 			{
 				displayProjectTitle: true, 
@@ -119,9 +209,8 @@ function _MainContent_taskPage(_ParentInheritance) {
 	}
 
 
-
 	let loadingMoreDays = false;
-	async function loadMoreDays(_days = 1) {
+	this.loadMoreDays = async function(_days = 1) {
 		if (loadingMoreDays) return false;
 		loadingMoreDays = true;
 		
@@ -140,15 +229,31 @@ function _MainContent_taskPage(_ParentInheritance) {
 	}
 
 	function getNewDate() {
-		let lastTaskHolder = MainContent.taskPage.taskHolder.list.lastItem();
+		let lastTaskHolder = MainContent.taskHolder.list.lastItem();
 		if (lastTaskHolder.type != "date") return false;
 		return lastTaskHolder.date;
 	}
+}
 
 
 
+function taskPage_tab_project(_projectId) {
+	taskPage_tab.call(this, {
+		name: "project",
+	});
 
-	async function openProject(_projectId) {
+	MainContent.header.showItemsByPage("project");
+
+
+	setup(_projectId).then(function () {
+		MainContent.stopLoadingAnimation();
+		// setTimeout(MainContent.stopLoadingAnimation, 100);
+	});
+	
+
+
+
+	async function setup(_projectId) {
 		let project = Server.getProject(_projectId);
 		if (!project) return;
 		
@@ -159,7 +264,7 @@ function _MainContent_taskPage(_ParentInheritance) {
 		let plannedTasks 		= await project.tasks.getByDateRange(new Date(), 1000);
 		if (Object.keys(plannedTasks).length)
 		{
-			let taskHolder_planned = MainContent.taskPage.taskHolder.add(
+			let taskHolder_planned = MainContent.taskHolder.add(
 				"default",
 				{
 					displayProjectTitle: false, 
@@ -173,14 +278,12 @@ function _MainContent_taskPage(_ParentInheritance) {
 				taskHolder_planned.task.addTaskList(
 					plannedTasks[date]
 				);
-			}
-			
+			}	
 		}
-		
 
 
 		let nonPlannedTasks = await project.tasks.getByGroup("default");
-		let taskHolder_nonPlanned = MainContent.taskPage.taskHolder.add(
+		let taskHolder_nonPlanned = MainContent.taskHolder.add(
 			"default",
 			{
 				displayProjectTitle: false, 
@@ -190,58 +293,6 @@ function _MainContent_taskPage(_ParentInheritance) {
 
 		taskHolder_nonPlanned.task.addTaskList(nonPlannedTasks);
 	}
-	
-}
-
-
-
-
-function taskPage_tab(_ParentInheritance, _settings) {
-	let Parent = _ParentInheritance;
-	let Settings = _settings;
-
-	applyCustomFunctions(this);
-
-
-	this.open = async function(_projectId = false) {
-		if (MainContent.curPageName != "task") MainContent.taskPage.open(_projectId);
-		
-		MainContent.curProjectId = _projectId;
-		MainContent.taskPage.curTab = Settings.title;
-		MainContent.header.showItemsByPage("taskpage - " + Settings.title);
-
-
-		MainContent.taskPage.taskHolder.clear();
-		await MainContent.taskPage.taskHolder.addOverdue();
-
-		applyTabSettings();
-		resetPage();
-
-		MainContent.startLoadingAnimation();
-		Settings.onOpen(_projectId).then(function () {
-			setTimeout(MainContent.stopLoadingAnimation, 100);
-		});
-	}
-
-
-	function applyTabSettings() {
-		if (Settings.hideLoadMoreButton) 
-			Parent.HTML.loadMoreButton.classList.add("hide"); 
-		else 
-			Parent.HTML.loadMoreButton.classList.remove("hide");
-	}
-
-	function resetPage() {
-		MainContent.optionMenu.close();
-	}
-
-	function applyCustomFunctions(This) {
-		if (!Settings.customFunctions) return;
-		for (functionName in Settings.customFunctions)
-		{
-			This[functionName] = Settings.customFunctions[functionName];
-		}
-	}
 }
 
 
@@ -265,17 +316,14 @@ function taskPage_tab(_ParentInheritance, _settings) {
 
 
 
+function MainContent_settingsPage(_projectId) {
+	MainContent_page.call(this, {
+		name: "settings",
+		index: 1,
+		onOpen: onOpen
+	});
 
-
-
-
-
-
-
-
-function _MainContent_settingsPage(_ParentInheritance) {
 	let This = this;
-	let Parent = _ParentInheritance;
 	
 	let HTML = {
 		Self: $(".mainContentPage.settingsPage")[0],
@@ -284,34 +332,85 @@ function _MainContent_settingsPage(_ParentInheritance) {
 		inviteMemberHolder: $(".inviteMemberHolder")
 	}
 
-	this.pageSettings = {
-		pageName: "settings",
-		pageIndex: 1
-	}
 
 	this.permissionsMenu = new _MainContent_settingsPage_permissionsMenu();
 
 
 
-	this.open = async function(_projectId) {
+	async function onOpen(_projectId) {
 		if (!_projectId) _projectId = Server.projectList[0].id;
-		Parent.openPage(this.pageSettings.pageName, _projectId);
-
 		let project = Server.getProject(_projectId);
 
-		enableAllButtons();
 		MainContent.header.setTitle("Settings - " + project.title);
 
 		let users = await project.users.getAll();
 		This.setMemberItemsFromList(users);
-
-		// if (!project.users.Self.userActionAllowed("invite")) HTML.inviteMemberHolder.hide();
 	}
 
-	function enableAllButtons() {
-		HTML.inviteMemberHolder.show();
+
+
+
+
+
+	this.inviteUser = async function() {
+		let email 	= HTML.inviteMemberInput.value;
+		let project = Server.getProject(MainContent.curProjectId);
+		
+		let returnVal = await project.users.inviteByEmail(email);
+		if (returnVal !== true) console.error("An error accured while invite a user:", returnVal);
+		
+		HTML.inviteMemberInput.value = null;
+		This.open(MainContent.curProjectId);
 	}
 
+
+
+
+
+	this.setMemberItemsFromList = function(_memberList) {
+		HTML.memberHolder.innerHTML = '<div class="text header">Members (' + _memberList.length + ')</div>';
+		for (member of _memberList) this.addMemberItem(member);
+	}
+
+
+	this.addMemberItem = function(_member) {
+		let html = createMemberItemHtml(_member);
+		HTML.memberHolder.append(html);
+	}
+
+
+	function createMemberItemHtml(_member) { 
+		let html = document.createElement("div");
+		html.className = "listItem memberItem";
+		if (_member.Self) html.classList.add("isSelf");
+		
+		html.innerHTML = '<img class="mainIcon icon" src="images/icons/memberIcon.png">' + 
+						'<div class="titleHolder userText text">Dirk@dirkloop.com</div>' +
+						'<div class="rightHand">' + 
+							'<img src="images/icons/optionIcon.png" class="rightHandItem optionIcon onlyShowOnItemHover icon clickable">' +
+							'<div class="rightHandItem text"></div>' + 
+						'</div>';
+
+		if (_member.type == "invite") 	html.children[0].setAttribute("src", "images/icons/inviteIconDark.png");
+		if (_member.type == "link") 	html.children[0].setAttribute("src", "images/icons/linkIconDark.png");
+		if (_member.isOwner)			html.children[0].setAttribute("src", "images/icons/ownerIconDark.png");
+
+		
+		setTextToElement(html.children[1], _member.name);
+		setTextToElement(html.children[2].children[1], _member.permissions);
+		DoubleClick.register(html.children[2].children[1], function () {
+			let project = Server.getProject(MainContent.curProjectId);
+			MainContent.settingsPage.permissionsMenu.open(_member.id);
+		})
+
+		html.children[2].children[0].onclick = function () {
+			MainContent.settingsPage.optionMenu.open(html.children[2].children[0]);
+		}
+
+
+		DOMData.set(html, _member.id);
+		return html;
+	}
 
 
 
@@ -360,78 +459,6 @@ function _MainContent_settingsPage(_ParentInheritance) {
 
 		this.openState 	= Menu.openState;
 		this.close 		= Menu.close;
-	}
-
-
-
-
-
-
-
-
-	this.inviteUser = async function() {
-		let email 	= HTML.inviteMemberInput.value;
-		let project = Server.getProject(MainContent.curProjectId);
-		
-		let returnVal = await project.users.inviteByEmail(email);
-		if (returnVal !== true) console.error("An error accured while invite a user:", returnVal);
-		
-		HTML.inviteMemberInput.value = null;
-		This.open(MainContent.curProjectId);
-	}
-
-
-
-
-
-	this.setMemberItemsFromList = function(_memberList) {
-		HTML.memberHolder.innerHTML = '<div class="text header">Members (' + _memberList.length + ')</div>';
-		for (member of _memberList)
-		{
-			this.addMemberItem(member);
-		}
-	}
-
-
-	this.addMemberItem = function(_member) {
-		let html = createMemberItemHtml(_member);
-		HTML.memberHolder.append(html);
-	}
-
-
-	function createMemberItemHtml(_member) { 
-		let html = document.createElement("div");
-		html.className = "listItem memberItem";
-		if (_member.Self) html.classList.add("isSelf");
-		
-		html.innerHTML = '<img class="mainIcon icon" src="images/icons/memberIcon.png">' + 
-						'<div class="titleHolder userText text">Dirk@dirkloop.com</div>' +
-						'<div class="rightHand">' + 
-							'<img src="images/icons/optionIcon.png" class="rightHandItem optionIcon onlyShowOnItemHover icon clickable">' +
-							'<div class="rightHandItem text"></div>' + 
-						'</div>';
-
-		if (_member.type == "invite") 	html.children[0].setAttribute("src", "images/icons/inviteIconDark.png");
-		if (_member.type == "link") 	html.children[0].setAttribute("src", "images/icons/linkIconDark.png");
-		if (_member.isOwner)			html.children[0].setAttribute("src", "images/icons/ownerIconDark.png");
-
-		
-		setTextToElement(html.children[1], _member.name);
-		setTextToElement(html.children[2].children[1], _member.permissions);
-		DoubleClick.register(html.children[2].children[1], function () {
-			let project = Server.getProject(MainContent.curProjectId);
-			// if (!project.users.Self.userActionAllowed("update", member)) return false;
-
-			MainContent.settingsPage.permissionsMenu.open(_member.id);
-		})
-
-		html.children[2].children[0].onclick = function () {
-			MainContent.settingsPage.optionMenu.open(html.children[2].children[0]);
-		}
-
-
-		DOMData.set(html, _member.id);
-		return html;
 	}
 }
 

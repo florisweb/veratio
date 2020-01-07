@@ -7,7 +7,7 @@ function _KeyHandler() {
     {
       keys: ["n"], 
       event: function () {
-        let list = MainContent.taskPage.taskHolder.list;
+        let list = MainContent.taskHolder.list;
         for (item of list)
         {
           if (!item.createMenu) continue;
@@ -22,7 +22,7 @@ function _KeyHandler() {
       event: function () {
         if (MainContent.searchOptionMenu.openState)                         return MainContent.searchOptionMenu.hide(true);
         if (MainContent.optionMenu.openState)                               return MainContent.optionMenu.close();
-        if (MainContent.taskPage.taskHolder.closeAllCreateMenus())          return true;
+        if (MainContent.taskHolder.closeAllCreateMenus())          return true;
       },
       ignoreIfInInputField: false
     },
@@ -30,14 +30,14 @@ function _KeyHandler() {
     {
       keys: ["Enter"], 
       event: function (_e) {
-        if (MainContent.taskPage.taskHolder.deadLineOptionMenu.openState)  return MainContent.taskPage.taskHolder.deadLineOptionMenu.clickFirstOption();
+        if (MainContent.taskHolder.deadLineOptionMenu.openState)  return MainContent.taskHolder.deadLineOptionMenu.clickFirstOption();
         if (MainContent.searchOptionMenu.openState)                        return MainContent.searchOptionMenu.chooseFirstSearchItem();
-        if (MainContent.curPageName == "createProject")                    return MainContent.createProjectPage.createProject();
+        if (MainContent.curPageName == "createProject")                    return Popup.createProjectMenu.createProject();
         
         if (_e.target == $("#RENAMEPROJECTValueHolder")[0])                return MainContent.renameProjectFromPopup();
         
         if (_e.target == inviteMemberInput)                                return MainContent.settingsPage.inviteUser();
-        return MainContent.taskPage.taskHolder.createTask();
+        return MainContent.taskHolder.createTask();
       },
       ignoreIfInInputField: false
     },

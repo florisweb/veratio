@@ -240,7 +240,9 @@ function _Popup_createProject() {
 		await Server.sync();
 		
 		SideBar.projectList.fillProjectHolder();
-		MainContent.taskPage.open(project.id);
+		MainContent.taskPage.open();
+		MainContent.curPage.openTab("project", project.id);
+		
 		Popup.close();
 	} 
 	
