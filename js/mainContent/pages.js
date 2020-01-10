@@ -19,7 +19,7 @@ function MainContent_page(_config) {
 		resetPage();
 		
 		MainContent.curPage			= this;
-		MainContent.curProjectId 	= _projectId;
+		if (_projectId) MainContent.curProjectId = _projectId;
 
 		openPageByIndex(this.settings.index);
 		MainContent.header.showItemsByPage(this.name);
@@ -50,7 +50,7 @@ function MainContent_taskPage() {
 	MainContent_page.call(this, {
 		name: "task",
 		index: 0,
-		onOpen: function() {This.reopenCurTab();}
+		onOpen: function() {if (!This.curTab) This.todayTab.open()}
 	});
 
 	const HTML = {
@@ -70,7 +70,7 @@ function MainContent_taskPage() {
 	
 	this.reopenCurTab = function() {
 		if (!this.curTab) return this.todayTab.open();
-		this.curTab.open(MainContent.projectId);
+		this.curTab.open(MainContent.curProjectId);
 	}
 }
 
@@ -91,24 +91,20 @@ function taskPage_tab(_settings) {
 
 
 	this.open = async function(_projectId) {
-		// HTML.mainContent.classList.add("loading");
 		MainContent.startLoadingAnimation();
 
-		if (!MainContent.taskPage.isOpen()) MainContent.taskPage.open();
-		applySettings(_settings);
-
-		
 		MainContent.taskPage.curTab	= this;
 		MainContent.curProjectId 	= _projectId;
 
+		if (!MainContent.taskPage.isOpen()) MainContent.taskPage.open();
 		resetPage();
+		applySettings(_settings);
+
 		await MainContent.taskHolder.addOverdue();
 
 		onOpen(_projectId);
 
-
 		MainContent.stopLoadingAnimation();
-		// setTimeout('mainContent.classList.remove("loading");', 100);
 	}
 
 
