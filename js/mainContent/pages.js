@@ -53,9 +53,7 @@ function MainContent_taskPage() {
 	MainContent_page.call(this, {
 		name: "task",
 		index: 0,
-		onOpen: function() {
-			setTimeout(function () {This.reopenCurTab();}, 1);
-		}
+		onOpen: function() {This.reopenCurTab();}
 	});
 
 	const HTML = {
@@ -70,28 +68,16 @@ function MainContent_taskPage() {
 	this.renderer 		= new _TaskRenderer(HTML.todoHolder);
 	
 
-
-	this.curTab = false;
-	this.openTab = function(_name, _projectId) {
-		MainContent.curProjectId = _projectId;
-		this.curTab = new getTabConstructorByName(_name)(_projectId);
-	}
-
-
-	function getTabConstructorByName(_name) {
-		switch (_name)
-		{
-			case "week": 	return taskPage_tab_week; 		break;
-			case "project": return taskPage_tab_project; 	break;
-			default: 		return taskPage_tab_today; 		break; // today
-		}
-	}
+	this.curTab;
+	this.todayTab 	= new taskPage_tab_today();
+	this.weekTab	= new taskPage_tab_week();
+	this.projectTab = new taskPage_tab_project();
 
 
 	
 	this.reopenCurTab = function() {
-		if (!this.curTab) this.curTab.name = "today";
-		this.openTab(this.curTab.name, MainContent.curProjectId);
+		if (!this.curTab) this.todayTab.open();
+		this.curTab.open(MainContent.projectId);
 	}
 }
 
@@ -103,19 +89,33 @@ function MainContent_taskPage() {
 
 function taskPage_tab(_settings) {
 	this.name = _settings.name;
-	
-	MainContent.startLoadingAnimation();
-	setup();
+	let onOpen = _settings.onOpen;
 
-	async function setup() {
+
+
+	this.open = async function(_projectId) {
+		// HTML.mainContent.classList.add("loading");
+		MainContent.startLoadingAnimation();
+
+		
+		MainContent.taskPage.curTab	= this;
+		MainContent.curProjectId 	= _projectId;
+
 		resetPage();
-		MainContent.taskHolder.clear();
 		await MainContent.taskHolder.addOverdue();
+
+		onOpen(_projectId);
+
+
+		MainContent.stopLoadingAnimation();
+		// setTimeout('mainContent.classList.remove("loading");', 100);
 	}
+
 
 
 	function resetPage() {
 		MainContent.optionMenu.close();
+		MainContent.taskHolder.clear();
 	}
 }
 
@@ -124,20 +124,15 @@ function taskPage_tab(_settings) {
 function taskPage_tab_today() {
 	taskPage_tab.call(this, {
 		name: "today",
+		onOpen: onOpen,
 		hideLoadMoreButton: true
 	});
 
-	MainContent.header.showItemsByPage("taskpage - " + this.name);
 
-
-	setup().then(function () {
-		MainContent.stopLoadingAnimation();
-		// setTimeout(MainContent.stopLoadingAnimation, 100);
-	});
-	
-
-	async function setup() {
+	async function onOpen() {
 		let date = new Date();
+
+		MainContent.header.showItemsByPage("taskpage - " + this.name);
 		MainContent.header.setTitle("Today - " + date.getDate() + " " + date.getMonths()[date.getMonth()].name);
 		MainContent.header.setMemberList([]);
 
@@ -165,20 +160,12 @@ function taskPage_tab_today() {
 function taskPage_tab_week() {
 	taskPage_tab.call(this, {
 		name: "week",
+		onOpen: onOpen,
 	});
 
-	MainContent.header.showItemsByPage("week");
-
-
-	setup().then(function () {
-		MainContent.stopLoadingAnimation();
-		// setTimeout(MainContent.stopLoadingAnimation, 100);
-	});
 	
-
-
-
-	async function setup() {
+	async function onOpen() {
+		MainContent.header.showItemsByPage("week");
 		MainContent.header.setTitle("This week");
 		MainContent.header.setMemberList([]);
 
@@ -237,26 +224,18 @@ function taskPage_tab_week() {
 
 
 
-function taskPage_tab_project(_projectId) {
+function taskPage_tab_project() {
 	taskPage_tab.call(this, {
 		name: "project",
+		onOpen: onOpen
 	});
 
-	MainContent.header.showItemsByPage("project");
 
-
-	setup(_projectId).then(function () {
-		MainContent.stopLoadingAnimation();
-		// setTimeout(MainContent.stopLoadingAnimation, 100);
-	});
-	
-
-
-
-	async function setup(_projectId) {
+	async function onOpen(_projectId) {
 		let project = Server.getProject(_projectId);
 		if (!project) return;
 		
+		MainContent.header.showItemsByPage("project");
 		MainContent.header.setTitle(project.title);
 		MainContent.header.setMemberList(project.users.getLocalList());
 

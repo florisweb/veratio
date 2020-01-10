@@ -2,31 +2,22 @@
 
 
 
-
-
-
-
 const OptionMenu  = new _OptionMenu();
 var App           = new _app();
 var SideBar       = new _SideBar();
 var MainContent   = new _MainContent();
 
 
-let SW = false;
-
 function _app() {
 	this.update = async function() {
 		await Server.sync();
     SideBar.projectList.fillProjectHolder();
     
-    switch (MainContent.curPageName)
+    switch (MainContent.curPage.name)
     {
       case "settings": MainContent.settingsPage.open(MainContent.curProjectId); break;
       default: MainContent.taskPage.open(); break;
     }
-
-		
-		
 	}
 
 
@@ -61,8 +52,6 @@ function _app() {
 
 
   this.setup = async function() {
-    this.SW = registerServiceWorker();
-
     document.body.addEventListener("keydown", function(_e) {
       KEYS[_e["key"]] = true;
       let preventDefault = KeyHandler.handleKeys(KEYS, _e);
@@ -90,32 +79,16 @@ function _app() {
 
     SideBar.projectList.open();
     setTimeout('document.body.classList.remove("appLoading");', 300);
-    console.warn("App loaded!");
   }
 
-
-
-
-
-  function registerServiceWorker() {
-    if ('serviceWorker' in navigator) {} else return false;
-
-    SW = navigator.serviceWorker;
-    navigator.serviceWorker.register('serviceWorker.js').then(function(registration) {
-      // Registration was successful
-      console.log('ServiceWorker registration successful with scope: ', registration.scope);
-    }, function(err) {
-      // registration failed :(
-      console.log('ServiceWorker registration failed: ', err);
-    });
-
-  }
-
-      
 }
 
 
 
-App.setup();
+window.onload = async function() {
+  console.warn("Start loading..."); 
+  await App.setup();
+  console.warn("App loaded!");
+}
 
 
