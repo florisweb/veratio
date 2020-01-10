@@ -8,14 +8,13 @@ function MainContent_page(_config) {
 
 	const HTML = {
 		pages: $("#mainContent .mainContentPage"),
+		mainContent: mainContent
 	}
 
-
+	this.isOpen = function() {return this.name == MainContent.curPage.name}
 
 	this.open = function(_projectId) {
-		// HTML.mainContent.classList.add("loading");
-		MainContent.startLoadingAnimation();
-
+		HTML.mainContent.classList.add("loading");
 
 		resetPage();
 		
@@ -27,9 +26,7 @@ function MainContent_page(_config) {
 
 		onOpen(_projectId);
 
-
-		MainContent.stopLoadingAnimation();
-		// setTimeout('mainContent.classList.remove("loading");', 100);
+		setTimeout('mainContent.classList.remove("loading");', 100);
 	}
 
 	
@@ -97,7 +94,7 @@ function taskPage_tab(_settings) {
 		// HTML.mainContent.classList.add("loading");
 		MainContent.startLoadingAnimation();
 
-
+		if (!MainContent.taskPage.isOpen()) MainContent.taskPage.open();
 		applySettings(_settings);
 
 		
