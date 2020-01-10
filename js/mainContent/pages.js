@@ -173,7 +173,7 @@ function taskPage_tab_week() {
 
 	
 	async function onOpen() {
-		MainContent.header.showItemsByPage("week");
+		MainContent.header.showItemsByPage("taskPage - week");
 		MainContent.header.setTitle("This week");
 		MainContent.header.setMemberList([]);
 
