@@ -57,12 +57,8 @@ function MainContent_taskPage() {
 	});
 
 	const HTML = {
-		mainContent: mainContent,
-		mainContentHolder: mainContentHolder,
 		todoHolder: $("#mainContentHolder .todoListHolder")[0],
-		loadMoreButton: $("#mainContentHolder .loadMoreButton")[0],
 	}
-	
 
 
 	this.renderer 		= new _TaskRenderer(HTML.todoHolder);
@@ -91,11 +87,18 @@ function taskPage_tab(_settings) {
 	this.name = _settings.name;
 	let onOpen = _settings.onOpen;
 
+	const HTML = {
+		loadMoreButton: $("#mainContentHolder .loadMoreButton")[0],
+	}
+	
 
 
 	this.open = async function(_projectId) {
 		// HTML.mainContent.classList.add("loading");
 		MainContent.startLoadingAnimation();
+
+
+		applySettings(_settings);
 
 		
 		MainContent.taskPage.curTab	= this;
@@ -112,6 +115,11 @@ function taskPage_tab(_settings) {
 	}
 
 
+	function applySettings(_settings) {
+		HTML.loadMoreButton.classList.add("hide");
+		if (_settings.showLoadMoreButton) HTML.loadMoreButton.classList.remove("hide");
+	} 
+
 
 	function resetPage() {
 		MainContent.optionMenu.close();
@@ -124,8 +132,7 @@ function taskPage_tab(_settings) {
 function taskPage_tab_today() {
 	taskPage_tab.call(this, {
 		name: "today",
-		onOpen: onOpen,
-		hideLoadMoreButton: true
+		onOpen: onOpen
 	});
 
 
@@ -161,6 +168,7 @@ function taskPage_tab_week() {
 	taskPage_tab.call(this, {
 		name: "week",
 		onOpen: onOpen,
+		showLoadMoreButton: true
 	});
 
 	
@@ -209,7 +217,7 @@ function taskPage_tab_week() {
 			let date = startDate.copy().moveDay(i);
 			let taskList = dateList[date.toString()];
 
-			inbox_addTaskHolder(date, taskList);
+			addTaskHolder(date, taskList);
 		}
 		
 		loadingMoreDays = false;
