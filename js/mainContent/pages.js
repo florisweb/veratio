@@ -76,7 +76,7 @@ function MainContent_taskPage() {
 
 	
 	this.reopenCurTab = function() {
-		if (!this.curTab) this.todayTab.open();
+		if (!this.curTab) return this.todayTab.open();
 		this.curTab.open(MainContent.projectId);
 	}
 }
