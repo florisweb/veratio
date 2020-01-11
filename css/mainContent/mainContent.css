@@ -200,33 +200,6 @@ body.appLoading #mainContent {
 
 
 
-	#mainContentHolder .mainContentPage.createProjectPage {
-		text-align: center;
-	}
-
-		.createProjectPage .createProjectHolder {
-			position: relative;
-			width: calc(100% - 35px);
-			top: calc(15vh);
-			height: 80px;
-		}
-			.createProjectHolder .inputField {
-				width: calc(100% - 50px);
-				max-width: 400px;
-			}
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
