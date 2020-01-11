@@ -16,6 +16,7 @@ function _MainContent() {
 
 	this.optionMenu 		= new _MainContent_optionMenu();
 	this.searchOptionMenu 	= new _MainContent_searchOptionMenu();
+	this.userIndicatorMenu 	= new _MainContent_userIndicatorMenu();
 
 	
 
@@ -104,6 +105,32 @@ function _MainContent() {
 
 
 
+function _MainContent_userIndicatorMenu() {
+	const HTML = {
+		mainContentHolder: mainContentHolder
+	}
+
+	let Menu = OptionMenu.create(HTML.mainContentHolder);
+
+	this.close = Menu.close;
+	this.open = async function(_user, _item, _event) {
+		removeAllOptions();
+		setUser(_user);
+		return Menu.open(_item, {top: -40, left: -20}, _event);
+	}
+
+	function setUser(_user) {		
+		Menu.addOption(
+			_user.name,
+			function () {}, 
+			"images/icons/memberIcon.png"
+		);
+	}
+
+	function removeAllOptions() {
+		for (option of Menu.options) option.remove();
+	}
+}
 
 
 

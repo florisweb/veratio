@@ -11,13 +11,15 @@ function _TaskRenderer() {
 		let tag 	= false; //project.tags.get(_task.tagId);
 		
 		let todoRenderData = {
+			project: 		project,
+			
 			id: 			_taskWrapper.task.id,
 			title: 			_taskWrapper.task.title,
 			taskHolderId: 	_taskWrapper.taskHolder.id,
 			finished: 		_taskWrapper.task.finished,
 			
 			assignedToMe: 	_taskWrapper.task.assignedTo.includes(project.users.Self.id),
-			isMyTask: 		_taskWrapper.task.creatorId == project.users.Self.id,
+			taskOwner: 		project.users.getLocal(_taskWrapper.task.creatorId),
 
 			memberText: 	_createMemberTextByUserIdList(_taskWrapper.task.assignedTo, project),
 		}
@@ -76,11 +78,11 @@ function _TaskRenderer() {
 			html.className = "listItem taskItem dropTarget";
 			if (_toDoData.finished) html.classList.add("finished");
 			if (_toDoData.assignedToMe) html.classList.add("isSelf");
-			if (!_toDoData.isMyTask) html.classList.add("isMyTask");
+			
 
 
 			const statusCircleSVG = '<?xml version="1.0" standalone="no"?><svg class="statusCircle clickable" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="isolation:isolate" viewBox="0 0 83 83" width="83" height="83"><defs><clipPath id="_clipPath_EvyxEBqQoipdaXxIJMEjCjvXV7edc1qw"><rect width="83" height="83"/></clipPath></defs><g clip-path="url(#_clipPath_EvyxEBqQoipdaXxIJMEjCjvXV7edc1qw)"><rect x="0.729" y="42.389" width="43.308" height="20" transform="matrix(0.707,0.707,-0.707,0.707,43.601,-0.482)"/><rect x="16.22" y="30.02" width="70" height="20" transform="matrix(0.707,-0.707,0.707,0.707,-13.296,47.939)"/></g></svg>';
-			html.innerHTML = 	"<div class='isMyTaskIndicator'></div>" + 
+			html.innerHTML = 	"<div class='taskOwnerIndicator'></div>" + 
 								"<div class='statusCircleHitBox'>" + statusCircleSVG + "</div>" + 
 								'<div class="titleHolder text userText"></div>' + 
 							 	'<div class="functionHolder">' +
@@ -90,6 +92,7 @@ function _TaskRenderer() {
 									'<div class="functionItem memberList userText"></div>' +
 								'</div>';
 
+			setOwnerIndicator(_toDoData, html);
 
 			setTextToElement(html.children[2], _toDoData.title);
 			if (_toDoData.memberText) setTextToElement(html.children[3].children[3], _toDoData.memberText);
@@ -137,6 +140,27 @@ function _TaskRenderer() {
 
 			return assignEventHandlers(html, _toDoData);
 		}
+
+			function setOwnerIndicator(_taskData, _html) {
+				if (_taskData.taskOwner || _taskData.taskOwner.id == _taskData.project.users.Self.id) return;
+				_html.classList.add("isMyTask");
+				let ownerIndicator = _html.children[0];
+
+				let onIndicator = false;
+
+				ownerIndicator.onmouseleave = function() {
+					onIndicator = false;
+					MainContent.userIndicatorMenu.close();
+				}
+				ownerIndicator.onmouseenter = function(_event) {
+					onIndicator = true;	
+					setTimeout(function () {
+						if (!onIndicator) return;
+						MainContent.userIndicatorMenu.open(_taskData.taskOwner, ownerIndicator, _event);
+					}, 500);
+				}
+			}
+
 
 			function assignEventHandlers(_html, _taskData) {
 

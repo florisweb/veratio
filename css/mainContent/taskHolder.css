@@ -282,7 +282,7 @@
 
 
 
-.taskItem.listItem .isMyTaskIndicator {
+.taskItem.listItem .taskOwnerIndicator {
 	position: relative;
 	float: left;
 
@@ -292,14 +292,16 @@
 	width: 7px;
 	height: 7px;
 
-	margin-right: -7px;
+	border: 10px solid #fff;
+	margin: -10px;
+	margin-right: -17px;
 
-	border-radius: 5px;
+	border-radius: 100%;
 	background: rgb(175, 107, 237);
 	opacity: 0;
 }
 
-.taskItem.listItem.isMyTask .isMyTaskIndicator {
+.taskItem.listItem.isMyTask .taskOwnerIndicator {
 	opacity: .35;
 }
 
@@ -318,8 +320,10 @@
 		width: 13px;
 		height: 13px;
 
-		padding: 15px 20px;
-		margin: -15px -20px;
+		padding: 15px 5px;
+		margin: -15px -5px;
+		
+		padding-right: 20px;
 		margin-right: -5px;
 	}
 
