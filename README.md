@@ -3,12 +3,11 @@
 
 Version 1.1
 Planned features:
+- [x] Midend / clientside datamanagement redesign
 - [x] Drop-down-menu's for the taskHolders
 - [ ] Drag and drop support for tasks
-- [ ] Sorting and filtering UI
-	- [ ] Sort tasks by deadline
-- [ ] Offline service
-- [ ] Overdue auto-setter
+- [x] Overdue auto-setter
+- [x] TaskOwnerIndicator: hover to see the task's owner
 
 
 
@@ -16,6 +15,9 @@ Version 1.2
 Planned features:
 - [ ] Tags (Creation, usage, and such)
 - [ ] Project colours
+? - [ ] Sorting and filtering UI
+?    - [ ] Sort tasks by deadline
+- [ ] Offline service
 
 
 Version 1.3
