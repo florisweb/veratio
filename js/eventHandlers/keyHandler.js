@@ -46,7 +46,7 @@ function _KeyHandler() {
 
 
     {
-      keys: ["i"], 
+      keys: ["w"], 
       event: function () {
           MainContent.taskPage.weekTab.open();
       },
