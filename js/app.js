@@ -16,7 +16,7 @@ function _app() {
     switch (MainContent.curPage.name)
     {
       case "settings": MainContent.settingsPage.open(MainContent.curProjectId); break;
-      default: MainContent.taskPage.open(); break;
+      default: MainContent.taskPage.reopenCurTab(); break;
     }
 	}
 
