@@ -8,7 +8,6 @@
 	overflow: hidden;
 
 	margin-top: 25px;
-	/*transition: opacity .3s;*/
 	transition: opacity 1s, margin-top .5s;
 }
 
@@ -112,7 +111,7 @@
 		position: relative;
 		left: 35px;
 
-		width: calc(100% - 25px);
+		width: calc(100% - 35px - 25px);
 		height: auto;
 		
 		overflow: hidden;
@@ -171,7 +170,7 @@
 
 			.createMenuHolder .inputField.taskDeadLine {
 				float: right;
-				right: -5px;
+				right: 0;
 
 				width: 90px;
 
@@ -199,7 +198,7 @@
 			.createMenuHolder .rightHand {
 				position: relative;
 				float: right;
-				right: -95px;
+				right: -5px;
 				margin-top: 10px;
 			}
 

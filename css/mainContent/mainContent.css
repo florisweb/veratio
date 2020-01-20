@@ -284,7 +284,7 @@ body.appLoading #mainContent {
 	#mainContentHolder .todoListHolder {
 		position: relative;
 
-		width: 100%;
+		width: calc(100% + 10px);
 		height: auto;
 			
 		overflow: show;
