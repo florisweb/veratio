@@ -726,7 +726,7 @@ function TaskHolder_createMenu(_parent) {
 
 	function openSelectMenu(_iconIndex = 0, _indicator = ".", _items = []) {
 		if (!This.openState) return false;
-		let item = Parent.HTML.createMenu.children[2].children[_iconIndex];
+		let item = Parent.HTML.createMenu.children[3].children[_iconIndex];
 		MainContent.searchOptionMenu.open(item);
 		
 		for (item of _items) 

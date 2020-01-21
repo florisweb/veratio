@@ -63,13 +63,13 @@ function _app() {
     });
 
     document.body.addEventListener("click", function(_e) {
-      let close = true;
-      if (isDescendant($("#mainContentHolder .optionMenuHolder")[0], _e.target))              close = false;
-      if (isDescendant($(".functionItem.optionIcon"), _e.target))                             close = false;
-      if (isDescendant($("#mainContentHolder .optionMenuHolder.searchOption")[0], _e.target)) close = false;
-      if (isDescendant($(".todoItem.createTaskHolder .rightHand"), _e.target))                close = false;
+      if (isDescendant($("#mainContentHolder .optionMenuHolder")[0], _e.target)) return;
+      if (isDescendant($(".functionItem.optionIcon"), _e.target)) return;
+      if (isDescendant($("#mainContentHolder .optionMenuHolder.searchOption")[0], _e.target)) return;
+      if (isDescendant($(".todoItem.createTaskHolder .rightHand"), _e.target)) return;
       
-      if (!close) return false;
+      if (_e.target.classList.contains("clickable")) return;
+      
       MainContent.optionMenu.close();
       MainContent.searchOptionMenu.hide();
     });
