@@ -41,7 +41,7 @@ function _MainContent_header() {
 		Menu.addOption(
 			"Rename project", 
 			function () {
-				MainContent.openRenameProjectMenu();
+				Popup.renameProjectMenu.open(MainContent.curProjectId);
 				return true;
 			}, 
 			"images/icons/changeIconDark.png"
@@ -52,9 +52,6 @@ function _MainContent_header() {
 			let project = Server.getProject(MainContent.curProjectId);
 			
 			Menu.enableAllOptions();
-			// if (!project.users.Self.projectActionAllowed("remove")) 		Menu.options[2].disable();
-			// if (!project.users.Self.projectActionAllowed("rename"))	Menu.options[3].disable();
-
 			return Menu.open(HTML.optionIcon, {top: 45});
 		}
 

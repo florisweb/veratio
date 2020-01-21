@@ -30,11 +30,10 @@ function _KeyHandler() {
     {
       keys: ["Enter"], 
       event: function (_e) {
-        if (MainContent.taskHolder.deadLineOptionMenu.openState)  return MainContent.taskHolder.deadLineOptionMenu.clickFirstOption();
+        if (MainContent.taskHolder.deadLineOptionMenu.openState)           return MainContent.taskHolder.deadLineOptionMenu.clickFirstOption();
         if (MainContent.searchOptionMenu.openState)                        return MainContent.searchOptionMenu.chooseFirstSearchItem();
-        if (MainContent.curPageName == "createProject")                    return Popup.createProjectMenu.createProject();
-        
-        if (_e.target == $("#RENAMEPROJECTValueHolder")[0])                return MainContent.renameProjectFromPopup();
+        if (Popup.createProjectMenu.openState)                             return Popup.createProjectMenu.createProject();
+        if (Popup.renameProjectMenu.openState)                             return Popup.renameProjectMenu.renameProject();
         
         if (_e.target == inviteMemberInput)                                return MainContent.settingsPage.inviteUser();
         return MainContent.taskHolder.createTask();

@@ -21,46 +21,67 @@
 
 
 
+
+
+
+
 const Popup = new function () {
 	let HTML = {
 		notificationHolder: $("#notificationBoxHolder")[0],
 		notifcationBox: $("#notificationBox")[0]
 	}
 	
-	this.openState = false;
 	this.createProjectMenu  = new _Popup_createProject();
+	this.renameProjectMenu  = new _Popup_renameProject();
+}
 
 
 
+function _popup(_builder) {
+	let This = this;
+	const Builder = _builder;
+	
+	this.HTML = {
+		Self: buildPopup(Builder)
+	};
+	this.HTML.popup = this.HTML.Self.children[0];
 
 
 
-	HTML.notificationHolder.onclick = function(_e) {
-		if (_e.target == this) Popup.close();
+	this.openState = false;
+	
+	this.open = function() {
+		this.openState = true;
+		this.HTML.Self.classList.remove("hide");		
 	}
-
-
-	function show() {
-		Popup.openState = true;
-		HTML.notificationHolder.classList.remove("hide");
-	}
-
+	
 	this.close = function() {
 		this.openState = false;
-		HTML.notificationHolder.classList.add("hide");
+		this.HTML.Self.classList.add("hide");
 	}
 
 
-	this.showNotification = function(_builder) {
-		show();
-		HTML.notifcationBox.innerHTML = "";
+	function buildPopup(_builder) {
+		let popupHolder = document.createElement("div");
+		popupHolder.className = "popupBoxHolder hide";
+		popupHolder.innerHTML = "<div class='popup'></div>";
+		let popup = popupHolder.children[0];
+
 		for (let i = 0; i < _builder.length; i++)
 		{
 			let element = _buildItem(_builder[i]);
-			HTML.notifcationBox.appendChild(element);
+			popup.appendChild(element);
 		}
-		return HTML.notifcationBox;
+
+		document.body.append(popupHolder);
+
+		popupHolder.onclick = function(_e) {
+			if (_e.target == this) This.close();
+		}
+
+		return popupHolder;
 	}
+
 
 	function _buildItem(_item) {
 		let element = false;
@@ -106,10 +127,6 @@ const Popup = new function () {
 		let element = document.createElement("div");
 		element.className = "checkBoxHolder";
 
-		// let html = 	'<div class="checkBox" onclick="if (this.classList.contains(\'checked\')) {this.classList.remove(\'checked\');this.setAttribute(\'checked\', false);} else {this.classList.add(\'checked\');this.setAttribute(\'checked\', true);}">' +
-		// 			'</div>' + 
-		// 			'<div class="checkBoxText text"></div>';
-
 		element.append(_buildText({text: _info.checkBox}))
 		let html = '<input type="checkbox">';
 		element.innerHTML = html;
@@ -147,11 +164,9 @@ const Popup = new function () {
 	function _buildInput(_info) {
 		let input = document.createElement("input");
 		input.className = "inputField";
-		if (_info.focus && !_info.id) _info.id = "popup_autoFocusInputField";
 
 		if (_info.id) input.setAttribute("id", String(_info.id));
 		if (_info.input) input.setAttribute("placeHolder", String(_info.input));
-		if (_info.focus) var loopTimer = setTimeout(_info.id + ".focus()", 1);
 		if (_info.value) input.value = String(_info.value);
 
 		return input;
@@ -185,16 +200,7 @@ const Popup = new function () {
 		
 		return element;
 	}
-
-
 }
-
-
-
-
-
-
-
 
 
 
@@ -204,30 +210,28 @@ const Popup = new function () {
 
 function _Popup_createProject() {
 	let This = this;
+	let builder = [
+		{title: "CREATE PROJECT"},
+		"<br><br>",
+		{input: "Project title", value: null, customClass: "text"},
+		"<br><br>",
+		"<br><br>",
+		"<br>",
+		{buttons: [
+			{button: "CANCEL", onclick: function () {This.close()}},
+			{button: "CREATE", onclick: function () {This.createProject()}, important: true, color: COLOR.POSITIVE}
+		]}
+	];
+
+	_popup.call(this, builder);
+	this.HTML.projectTitle = this.HTML.popup.children[2];
+	let extend_open = this.open;
 
 	this.open = function() {
-		openCreateProjectMenu();
+		extend_open.apply(this);
+		this.HTML.projectTitle.value = null;
+		this.HTML.projectTitle.focus();
 	}
-
-	
-	function openCreateProjectMenu() {
-		let builder = [
-			{title: "CREATE PROJECT"},
-			"<br><br>",
-			{input: "Project title", value: null, id: "CREATEPROJECTValueHolder", focus: true, customClass: "text"},
-			"<br><br>",
-			"<br><br>",
-			"<br>",
-			{buttons: [
-				{button: "CANCEL", onclick: Popup.close},
-				{button: "CREATE", onclick: Popup.createProjectMenu.createProject,
-				important: true, color: COLOR.POSITIVE}
-			]}
-		];
-
-		Popup.showNotification(builder);
-	}
-
 
 
 
@@ -243,16 +247,76 @@ function _Popup_createProject() {
 		MainContent.taskPage.open();
 		MainContent.curPage.projectTab.open(project.id);
 		
-		Popup.close();
+		this.close();
 	} 
 	
 
 	function scrapeProjectData() {
-		let project = {title: document.getElementById("CREATEPROJECTValueHolder").value};
+		let project = {title: This.HTML.projectTitle.value};
 		
 		if (!project.title || project.title.length < 2) return "E_incorrectTitle";
 
 		return project;
+	}
+}
+
+
+
+
+
+
+function _Popup_renameProject() {
+	let This = this;
+	let builder = [
+		{title: "RENAME PROJECT"},
+		"<br><br>",
+		{text: "Rename "},
+		{text: "", highlighted: true},
+		{text: " to:"},
+		"<br><br>",
+		{input: "Project title", value: null, customClass: "text"},
+		"<br><br>",
+		"<br><br>",
+		"<br>",
+		{buttons: [
+			{button: "CANCEL", onclick: function () {This.close()}},
+			{button: "RENAME", onclick: function () {This.renameProject()}, important: true, color: COLOR.DANGEROUS}
+		]}
+	];
+
+	_popup.call(this, builder);
+
+	this.HTML.projectTitle = this.HTML.popup.children[3];
+	this.HTML.newTitleHolder = this.HTML.popup.children[6];
+
+	let extend_open = this.open;
+
+	this.curProjectId = false;
+
+
+	this.open = function(_projectId) {
+		let project = Server.getProject(_projectId);
+		if (!project) return false;
+		this.curProjectId = project.id;
+
+		extend_open.apply(this);
+
+
+		setTextToElement(this.HTML.projectTitle, project.title);
+		this.HTML.newTitleHolder.value = project.title;
+		this.HTML.newTitleHolder.focus();
+	}	
+
+	this.renameProject = function() {
+		let project = Server.getProject(this.curProjectId);
+
+		let newTitle = this.HTML.newTitleHolder.value;
+		if (!newTitle || newTitle.length < 3) return false;
+
+		project.rename(newTitle).then(function () {
+			This.close();
+			App.update();
+		});
 	}
 }
 

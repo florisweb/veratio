@@ -57,12 +57,12 @@
 		<link rel="manifest" href="manifest.json">
 		<link rel="shortcut icon" href="images/pressSet/favicon.ico">
 
-		<link rel="stylesheet" type="text/css" href="css/component.css?a=38">
-		<link rel="stylesheet" type="text/css" href="css/popup.css?a=30">
+		<link rel="stylesheet" type="text/css" href="css/component.css?a=39">
+		<link rel="stylesheet" type="text/css" href="css/popup.css?a=31">
 		<link rel="stylesheet" type="text/css" href="css/main.css?a=28">
-		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=26">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=51">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=57">
+		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=27">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=53">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=59">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/header.css?a=0">
 
 		<script type="text/javascript" src="/JS/jQuery.js" asy nc></script>
@@ -71,12 +71,6 @@
 	</head>	
 	<body class="appLoading">
 		
-		<div id="notificationBoxHolder" class="hide">
-			<div id="notificationBox">
-			</div>
-		</div>
-
-
 		<div id="sideBar">
 			<img class="sideBarBackground" src="images/sideBarBackground/?type=sidebar">
 			<div class="navigationHolder">
@@ -172,11 +166,10 @@
 			$.getScript("js/DOMData.js?antiCache=" 									+ antiCache, function() {});
 			$.getScript("js/time.js?antiCache=" 									+ antiCache, function() {});
 			
-			$.getScript("js/popup.js?antiCache=" 									+ antiCache, function() {});
 			$.getScript("js/constants.js?antiCache=" 								+ antiCache, function() {});
 			$.getScript("js/extraFunctions.js?antiCache=" 							+ antiCache, function() {});
 			$.getScript("js/optionMenu.js?antiCache=" 								+ antiCache, function() {});
-			
+			$.getScript("js/popup.js?antiCache=" 									+ antiCache, function() {});
 
 			// Eventhandlers
 			$.getScript("js/eventHandlers/dragHandler.js?antiCache=" 				+ antiCache, function() {});
@@ -185,11 +178,10 @@
 			$.getScript("js/eventHandlers/rightClickHandler.js?antiCache=" 			+ antiCache, function() {});
 
 
-			$.getScript("js/mainContent/header/header.js?antiCache=" 				+ antiCache, function() {});
+			$.getScript("js/mainContent/header.js?antiCache=" 						+ antiCache, function() {});
 			$.getScript("js/mainContent/pages.js?antiCache=" 						+ antiCache, function() {});
 			
 			$.getScript("js/mainContent/todoHolder/taskHolder.js?antiCache=" 		+ antiCache, function() {});
-			$.getScript("js/mainContent/todoHolder/renderSettings.js?antiCache=" 	+ antiCache, function() {});
 			$.getScript("js/mainContent/todoHolder/renderer.js?antiCache=" 			+ antiCache, function() {});
 
 			$.getScript("js/mainContent/mainContent.js?antiCache=" 					+ antiCache, function() {});
@@ -199,22 +191,18 @@
 			
 
 			$.getScript("js/server/encoder.js?antiCache=" 							+ antiCache, function() {});
-			$.getScript("js/server/projectHelpers/dataTypeTemplate.js?antiCache=" 	+ antiCache, function() {});
-			$.getScript("js/server/projectHelpers/tagComponent.js?antiCache=" 		+ antiCache, function() {});
 			$.getScript("js/server/project.js?antiCache=" 							+ antiCache, function() {});
-
 			$.getScript("js/server/server.js?antiCache=" 							+ antiCache, function() {});
 
 
 			$.getScript("js/app.js?antiCache=" 										+ antiCache, function() {});
 		
 		</script>
-<!-- 
- 		<script type="text/javascript" src="js/mainContent/header/header.js" asy nc></script>
+
+ 		<!-- <script type="text/javascript" src="js/mainContent/header.js" asy nc></script>
  		<script type="text/javascript" src="js/mainContent/pages.js" asy nc></script>
 
  		<script type="text/javascript" src="js/mainContent/todoHolder/taskHolder.js" asy nc></script>
- 		<script type="text/javascript" src="js/mainContent/todoHolder/renderSettings.js" asy nc></script>
  		<script type="text/javascript" src="js/mainContent/todoHolder/renderer.js" asy nc></script>
 
  		<script type="text/javascript" src="js/mainContent/mainContent.js" asy nc></script>
@@ -222,11 +210,9 @@
  		<script type="text/javascript" src="js/sideBar.js" asy nc></script>
 
  		<script type="text/javascript" src="js/server/encoder.js" asy nc></script>
- 		<script type="text/javascript" src="js/server/projectHelpers/dataTypeTemplate.js" asy nc></script>
- 		<script type="text/javascript" src="js/server/projectHelpers/tagComponent.js" asy nc></script>
  		<script type="text/javascript" src="js/server/project.js" asy nc></script>
  		<script type="text/javascript" src="js/server/server.js" asy nc></script>
- 		<script type="text/javascript" src="js/app.js" asy nc></script>
- -->
+ 		<script type ="text/javascript" src="js/app.js" asy nc></script>-->
+
 	</body>
 </html>	

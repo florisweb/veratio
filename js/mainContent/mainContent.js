@@ -8,8 +8,6 @@ function _MainContent() {
 	}
 
 	this.curProjectId = "";
-	this.curPageName = "task";
-
 	this.header 			= new _MainContent_header();
 	
 	this.taskHolder 		= new _MainContent_taskHolder();
@@ -54,44 +52,6 @@ function _MainContent() {
 		MainContent.taskPage.weekTab.open();
 		App.update();
 	}
-
-	this.openRenameProjectMenu = function() {
-		let project = Server.getProject(MainContent.curProjectId);
-		if (!project) return false;
-		let builder = [
-			{title: "RENAME PROJECT"},
-			"<br><br>",
-			{text: "Rename "},
-			{text: project.title, highlighted: true},
-			{text: " to:"},
-			"<br><br>",
-			{input: "Project title", value: project.title, id: "RENAMEPROJECTValueHolder", focus: true, customClass: "text"},
-			"<br><br>",
-			"<br><br>",
-			"<br>",
-			{buttons: [
-				{button: "CANCEL", onclick: Popup.close},
-				{button: "RENAME", onclick: MainContent.renameProjectFromPopup,
-				important: true, color: COLOR.DANGEROUS}
-			]}
-		];
-
-		Popup.showNotification(builder);
-	}
-
-	this.renameProjectFromPopup = function() {
-		let project = Server.getProject(MainContent.curProjectId);
-		if (!project) return false;
-
-		let newTitle = $("#RENAMEPROJECTValueHolder")[0].value;
-		if (!newTitle || newTitle.length < 3) return false;
-
-		project.rename(newTitle).then(function () {
-			Popup.close();
-			App.update();
-		});
-	}
-
 }
 	
 
