@@ -241,7 +241,7 @@ function _Popup_createProject() {
 		
 		SideBar.projectList.fillProjectHolder();
 		MainContent.taskPage.open();
-		MainContent.curPage.openTab("project", project.id);
+		MainContent.curPage.projectTab.open(project.id);
 		
 		Popup.close();
 	} 
