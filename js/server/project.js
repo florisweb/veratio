@@ -110,6 +110,16 @@ function _Server_globalProject(_projectId) {
       return list;
     }
 
+    this.getLocal = function(_id) {
+      let users = this.getLocalList();
+      for (user of users)
+      {
+        if (user.id != _id) continue;
+        return user;
+      }
+      return false;
+    }
+
 
 
 
@@ -182,14 +192,15 @@ function _Server_project(_projectId, _projectTitle) {
   }
 
 
-  this.rename = function(_newTitle) {
+  this.rename = async function(_newTitle) {
     if (!_newTitle) return false;
-    return new Promise(function (resolve, error) {
-      This.DB.rename(_newTitle).then(function () {
-        this.title = _newTitle;
-        resolve();
-      });
-    });
+    
+    let result = await REQUEST.send(
+      "database/project/rename.php",
+      "projectId=" + This.id + "&newTitle=" + Encoder.encodeString(_newTitle)
+    );
+    this.title = _newTitle;
+    return result;
   }
 
 
