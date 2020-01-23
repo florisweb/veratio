@@ -30,8 +30,10 @@ function _OptionMenu_menu(_self) {
 
 	this.openState = false;
 	this.open = function(_item, _relativePosition, _event) {
+		if (!this.options.length) return;
+		
 		this.openState = true;
-		moveToItem(_item, _relativePosition, _event);		
+		moveToItem(_item, _relativePosition, _event);
 		HTML.Self.classList.remove("hide");
 	}
 
@@ -39,11 +41,15 @@ function _OptionMenu_menu(_self) {
 	this.close = function() {
 		this.openState = false;
 		HTML.Self.classList.add("hide");
-		// setTimeout(function (_item) {_item.style.top = "-50px"}, 300, HTML.Self);
 	}
 
 	this.enableAllOptions = function() {
 		for (option of this.options) option.enable();
+	}
+
+	this.removeAllOptions = function() {
+		this.options = [];
+		HTML.Self.innerHTML = "";
 	}
 
 	this.clickFirstOption = function() {

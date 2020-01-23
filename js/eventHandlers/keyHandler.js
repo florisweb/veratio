@@ -20,8 +20,8 @@ function _KeyHandler() {
     {
       keys: ["Escape"], 
       event: function () {
-        if (MainContent.searchOptionMenu.openState)                         return MainContent.searchOptionMenu.hide(true);
-        if (MainContent.optionMenu.openState)                               return MainContent.optionMenu.close();
+        if (MainContent.searchOptionMenu.openState)                return MainContent.searchOptionMenu.hide();
+        if (MainContent.optionMenu.openState)                      return MainContent.optionMenu.close();
         if (MainContent.taskHolder.closeAllCreateMenus())          return true;
       },
       ignoreIfInInputField: false
@@ -30,12 +30,12 @@ function _KeyHandler() {
     {
       keys: ["Enter"], 
       event: function (_e) {
-        if (MainContent.taskHolder.deadLineOptionMenu.openState)           return MainContent.taskHolder.deadLineOptionMenu.clickFirstOption();
-        if (MainContent.searchOptionMenu.openState)                        return MainContent.searchOptionMenu.chooseFirstSearchItem();
-        if (Popup.createProjectMenu.openState)                             return Popup.createProjectMenu.createProject();
-        if (Popup.renameProjectMenu.openState)                             return Popup.renameProjectMenu.renameProject();
+        if (MainContent.taskHolder.deadLineOptionMenu.openState)   return MainContent.taskHolder.deadLineOptionMenu.clickFirstOption();
+        if (MainContent.searchOptionMenu.openState)                return MainContent.searchOptionMenu.clickFirstOption();
+        if (Popup.createProjectMenu.openState)                     return Popup.createProjectMenu.createProject();
+        if (Popup.renameProjectMenu.openState)                     return Popup.renameProjectMenu.renameProject();
         
-        if (_e.target == inviteMemberInput)                                return MainContent.settingsPage.inviteUser();
+        if (_e.target == inviteMemberInput)                        return MainContent.settingsPage.inviteUser();
         return MainContent.taskHolder.createTask();
       },
       ignoreIfInInputField: false

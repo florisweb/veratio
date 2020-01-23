@@ -74,7 +74,7 @@ function _MainContent_userIndicatorMenu() {
 
 	this.close = Menu.close;
 	this.open = async function(_user, _item, _event) {
-		removeAllOptions();
+		Menu.removeAllOptions();
 		setUser(_user);
 		return Menu.open(_item, {top: -40, left: -20}, _event);
 	}
@@ -85,10 +85,6 @@ function _MainContent_userIndicatorMenu() {
 			function () {}, 
 			"images/icons/memberIcon.png"
 		);
-	}
-
-	function removeAllOptions() {
-		for (option of Menu.options) option.remove();
 	}
 }
 
@@ -104,8 +100,12 @@ function _MainContent_optionMenu() {
 	let This = this;
 	
 	let curDOMData;
-
 	let Menu = OptionMenu.create(HTML.mainContentHolder);
+	
+	this.openState 	= Menu.openState;
+	this.close 		= Menu.close;
+
+
 	Menu.addOption(
 		"Remove", 
 		function () {
@@ -136,92 +136,68 @@ function _MainContent_optionMenu() {
 		// let project = Server.getProject(curDOMData.task.projectId);
 
 		Menu.enableAllOptions();
-		// if (!project.users.Self.taskActionAllowed("remove", task)) Menu.options[0].disable();
-		// if (!project.users.Self.taskActionAllowed("finish", task)) Menu.options[1].disable();
-		// if (!project.users.Self.taskActionAllowed("update", task)) Menu.options[2].disable();
 
 		return Menu.open(_item, {top: -20, left: 0}, _event);
 	}
-
-	this.openState 	= Menu.openState;
-	this.close 		= Menu.close;
 }
-
-
-
 
 
 
 
 function _MainContent_searchOptionMenu() {
 	let HTML = {
-		menu: $("#mainContentHolder .optionMenuHolder.searchOption")[0],
 		mainContentHolder: mainContentHolder,
 		scrollYHolder: $("#mainContentHolder .mainContentPage")[0]
 	}
+
 	let This = this;
+	let Menu = OptionMenu.create(HTML.mainContentHolder);
+
+
 	let curProject;
 	let inputField;
-	let keyupTimeout = 0;
+	let keyTimeout = 0;
 
 	this.openState = false;
-	this.open = function(_item) {
-		if (!_item) return;
+	this.open = function(_inputField) {
+		if (!_inputField || _inputField.type != "text") return;
+		inputField = _inputField;
 
-		let project 	= Server.getProject(MainContent.curProjectId);
-		let projectId 	= project ? project.id : Server.projectList[0].id;
-		curProject 		= Server.getProject(projectId);
-
-		HTML.menu.innerHTML = "";
-		HTML.menu.classList.remove("hide");
 		this.openState = true;
+		keyTimeout = 0;
 
-		moveToItem(_item, 0);
-	}
+		curProject = Server.getProject(MainContent.curProjectId);
+		Menu.removeAllOptions();
+		Menu.open(inputField);
 
-
-	this.openWithInputField = function(_item) {
-		if (!_item || _item.type != "text") return;
-
-		inputField = _item;
-		keyupTimeout = 0;
 		inputField.onkeyup = function() {
-			if (keyupTimeout > 0) return keyupTimeout--;
-			
+			if (keyTimeout > 0) return keyTimeout--;
 			addOptionItemsByValue(this.value, this.selectionStart);
-			moveToItem(this, this.selectionStart);
+			moveToItem(this.selectionStart);
 		}
-
-		this.open(_item);
 	}
 
-
-	this.hide = function(_reFocusTextElement = false, _setTimeOut = 5) {
-		this.openState = false;
-		if (!inputField) return;
-		keyupTimeout = _setTimeOut;
-		HTML.menu.classList.add("hide");
-		if (_reFocusTextElement) inputField.focus();
-	}
+	this.clickFirstOption = function () {Menu.clickFirstOption.apply(Menu);};
 
 
 	this.close = function() {
-		this.openState = false;
-
-		HTML.menu.classList.add("hide");
-		setTimeout('$("#mainContentHolder .optionMenuHolder.searchOption")[0].style.top = "-50px";', 300);
+		this.hide();
 
 		if (!inputField) return;
 		inputField.onkeyup = null;
 		inputField = null;
 	}
 
-	this.chooseFirstSearchItem = function() {
-		let searchItem = $(".searchOption .optionItem.clickable")[0];
-		if (!searchItem) return false;
-		searchItem.click();
-		return true;
+	this.hide = function() {
+		this.openState = false;
+		keyTimeout = 5;
+		Menu.close();
+		
+		if (!inputField) return;
+		inputField.focus();
 	}
+
+
 
 
 
@@ -239,15 +215,13 @@ function _MainContent_searchOptionMenu() {
 
 
 	function addOptionItemsByValue(_value, _cursorPosition) {
-		HTML.menu.innerHTML = "";
-		HTML.menu.classList.remove("hide");
-		This.openState = true;
-
+		Menu.removeAllOptions();
+		
 		if (addOptionItemsByValueAndType(_value, _cursorPosition, "#")) return;
 		if (addOptionItemsByValueAndType(_value, _cursorPosition, "@")) return;
 		if (addOptionItemsByValueAndType(_value, _cursorPosition, ".")) return;
 	
-		This.hide(false, 0);
+		This.hide();
 	}	
 
 		function addOptionItemsByValueAndType(_value, _cursorPosition, _type) {
@@ -256,12 +230,61 @@ function _MainContent_searchOptionMenu() {
 			for (let i = 0; i < items.length; i++)
 			{
 				if (!items[i].active) continue;
-				This.addSearchItem(items[i], _type);
+				addSearchItem(items[i], _type);
 				active++;
 			}
 
 			return active > 0;
 		}
+
+
+		function addSearchItem(_item, _type = "@") {
+			var clickHandler = function() {
+				if (!inputField) return;
+				let inValue 	= inputField.value;
+				let partA 		= inValue.substr(0, _item.startAt);
+				let partB 		= inValue.substr(_item.startAt + _item.length, inValue.length - _item.startAt - _item.length);
+				let newStr 		= partA + _type + result.title + partB;
+				inputField.value = newStr;
+
+				if (_type == ".") curProject = _item.item;
+				
+				This.hide();
+				inputField.focus();
+			}
+
+			let result = createSearchItemIconByType(_type, _item);
+			Menu.addOption(result.title, clickHandler, result.src);
+		}
+
+		
+		function createSearchItemIconByType(_type, _item) {
+			switch (_type)
+			{
+				case ".": 
+					return {
+						title: _item.item.title,
+						src: "images/icons/projectIconDark.svg"
+					}
+				break;
+				case "#": 
+					return {
+						title: _item.item.title,
+						src: "images/icons/projectIconDark.svg"
+					}
+				default:
+					return {
+						title: _item.item.name,
+						src: "images/icons/memberIcon.png"
+					}
+				break;
+			}
+		}
+
+
+
+
+
 
 		this.getListByValue = function(_value, _type, _cursorPosition) {
 			let found = [];
@@ -322,67 +345,12 @@ function _MainContent_searchOptionMenu() {
 
 
 
-
-		this.addSearchItem = function(_item, _type = "@") {
-			let html 		= document.createElement("div");
-			html.className 	= "optionItem clickable";
-			html.innerHTML 	= "<div class='userText optionText'></div>";
-			HTML.menu.append(html);
-
-			let result = createSearchItemIconByType(_type, _item);
-			html.insertAdjacentHTML("afterbegin", result.htmlStr);
-			setTextToElement(html.children[1], result.title);
-
-			html.addEventListener("click", function() {
-				if (!inputField) return;
-				let inValue 	= inputField.value;
-				let partA 		= inValue.substr(0, _item.startAt);
-				let partB 		= inValue.substr(_item.startAt + _item.length, inValue.length - _item.startAt - _item.length);
-				let newStr 		= partA + _type + result.title + partB;
-				inputField.value = newStr;
-
-				if (_type == ".") curProject = _item.item;
-				
-				This.hide(true, 1);
+		function moveToItem(_characterIndex = 0) {
+			Menu.open(inputField, {
+				left: _characterIndex * 6.2 - inputField.offsetWidth + 30,
+				top: -20
 			});
-		}
-
-
-		function createSearchItemIconByType(_type, _item) {
-			let title = "";
-			let htmlStr = "";
-			switch (_type)
-			{
-				case ".": 
-					htmlStr = "<img src='images/icons/projectIconDark.svg' class='optionIcon'>";
-					title = _item.item.title;
-				break;
-				case "#": 
-					htmlStr = "<div class='optionIcon statusCircle'></div>";
-					title = _item.item.title;
-				break;
-				default:
-					htmlStr = "<img src='images/icons/memberIcon.png' style='opacity: 0.3' class='optionIcon'>";
-					title = _item.item.name;
-				break;
-			}
-
-			return {title: title, htmlStr: htmlStr}
-		}
-
-
-		function moveToItem(_item, _characterIndex = 0) {
-			if (!_item) return false;
-			let top 	= _item.getBoundingClientRect().top + HTML.scrollYHolder.scrollTop - 25;
-			let left 	= _item.getBoundingClientRect().left - HTML.scrollYHolder.getBoundingClientRect().left;
-			_characterIndex -= 1;
-			left += _characterIndex * 6.2 - 10;
-
-			let maxLeft = $("#mainContent")[0].offsetWidth - HTML.menu.offsetWidth - 15;
-			if (left > maxLeft) left = maxLeft;
-
-			HTML.menu.style.left 	= left + "px";
-			HTML.menu.style.top 	= top + "px";
+			This.openState = Menu.openState;
 		}
 }
 

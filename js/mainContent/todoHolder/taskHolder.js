@@ -646,7 +646,7 @@ function TaskHolder_createMenu(_parent) {
 	this.openState = false;
 	this.open = function() {
 		MainContent.taskHolder.closeAllCreateMenus();
-		MainContent.searchOptionMenu.openWithInputField(Parent.HTML.inputField);
+		MainContent.searchOptionMenu.open(Parent.HTML.inputField);
 
 		this.openState = true;
 
