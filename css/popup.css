@@ -4,7 +4,8 @@
 
 
 /* NOTIFICATIONS/POPUPWINDOW*/
-#notificationBoxHolder {
+
+.popupBoxHolder {
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -17,15 +18,12 @@
 	transition: all 0.3s;
 }
 
-#notificationBoxHolder.hide {
+.popupBoxHolder.hide {
 	opacity: 0;
 	pointer-events: none;
 }
 
-
-
-
-#notificationBoxHolder #notificationBox {
+.popupBoxHolder .popup {
 	position: relative;
 	top: calc(50vh - 200px);
 	margin: auto;
@@ -46,7 +44,8 @@
 	transition: all 0.3s;
 }
 
-#notificationBoxHolder.hide #notificationBox {
+
+.popupBoxHolder.hide .popup {
 	transform: scale(0.5);
 	opacity: 0;
 }
@@ -55,56 +54,21 @@
 
 
 
-#notificationBox .landscapeImage {
-	position: absolute;
-	left: 0;
-	top: 0;
-	width: 100%;
-	height: 80px;
-	opacity: .8;
-}
-#notificationBox .landscapeImage.background {
-	background: linear-gradient(to bottom right, rgb(200, 122, 235), rgba(84, 180, 214, 0.1));
-	box-shadow: 0 5px 10px 5px rgba(0, 0, 0, 0.04);
-}
-
-
-#notificationBox .landscapeTitle {
-	position: absolute;
-	left: 30px;
-	top: 0;
-
-	width: 100%;
-	height: 20px;
-	line-height: 80px;
-
-	color: rgba(255, 255, 255, .7) !important;
-}
-
-
-
-
-
-
-
-
-
-
-#notificationBox .text {
+.popup .text {
 	float: left;
 	color: #888;
 	font-family: Arial, Helvetica, sans-serif;
 }
-#notificationBox .text.highlighted {
+.popup .text.highlighted {
 	font-weight: bolder;
 	color: #777;
 }
-#notificationBox .header {
+.popup .header {
 	float: left;
 	font-size: 16px;
 	color: #999;	
 }
-#notificationBox .header.subHeader {
+.popup .header.subHeader {
 	float: left;
 	font-size: 12px;
 	color: #666;	
@@ -113,7 +77,7 @@
 
 
 
-#notificationBox .buttonBar {
+.popup .buttonBar {
 	position: absolute;
 	float: bottom;
 	left: 0;
@@ -126,7 +90,7 @@
 	float: right;
 }
 
-#notificationBox .buttonBar .boxButton {
+.popup .buttonBar .boxButton {
 	position: relative;
 	float: right;
 	border-radius: 3px;
@@ -136,30 +100,20 @@
 }
 
 
-#notificationBox .buttonBar .boxButton:not(.important) {
+.popup .buttonBar .boxButton:not(.important) {
 	color: #aaa;
 }
-#notificationBox .buttonBar .boxButton.important {
+.popup .buttonBar .boxButton.important {
 	color: rgba(255, 255, 255, .9);
 }
 
-#notificationBox .inputField {
+.popup .inputField {
 	width: calc(100% - 10px);
 	
 	border-radius: 3px;
 
 	border: 2px solid #eaeaea;
 }
-
-
-
-
-
-
-
-
-
-
 
 
 
