@@ -210,6 +210,7 @@ function _MainContent_searchOptionMenu() {
 		this.hide();
 
 		if (!inputField) return;
+		inputField.blur();
 		inputField.onkeyup = null;
 		inputField = null;
 	}
