@@ -26,6 +26,6 @@
 	
 	if (!in_array($_method, $AllowedMethods)) die("E_invalidMethod");
 
-	$result = $project->tags->{$_method}($parameter);
+	$result = $project->tags->{$_method}($parameters);
 	echo json_encode($result);
 ?>
