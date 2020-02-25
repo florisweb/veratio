@@ -1,4 +1,8 @@
 <?php
+	$AllowedMethods = ["update", "remove", "getAll", "inviteByEmail"];
+
+
+
 	$root = realpath($_SERVER["DOCUMENT_ROOT"]);
 	require_once "$root/git/todo/database/modules/app.php";
 
@@ -19,25 +23,8 @@
 	
 	$project = $App->getProject($_projectId);
 	if (!$project || is_string($project)) die("E_projectNotFound");
-	
+	if (!in_array($_method, $AllowedMethods)) die("E_invalidMethod");
 
-	echo json_encode(
-		applyActionByProject($project, $_method, $parameters)
-	);
-		
-
-
-	function applyActionByProject($_project, $_method, $_parameters) {	
-		$target = $_project->users;
-
-		$firstMethods 		= get_class_methods($target);
-		if (!$firstMethods) die("E_invalidMethod");
-
-		$methodOptions 		= array_splice($firstMethods, 1, 100);
-		if (!in_array($_method, $methodOptions)) die("E_invalidMethod");
-
-		
-		$result = $target->{$_method}($_parameters);
-		return $result;
-	}
+	$result = $project->users->{$_method}($_parameters);
+	echo json_encode($result);
 ?>
