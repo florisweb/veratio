@@ -144,6 +144,10 @@ function _MainContent_optionMenu() {
 
 
 
+
+
+
+
 function _MainContent_searchOptionMenu() {
 	let HTML = {
 		mainContentHolder: mainContentHolder,
@@ -159,22 +163,44 @@ function _MainContent_searchOptionMenu() {
 	let keyTimeout = 0;
 
 	this.openState = false;
-	this.open = function(_inputField) {
+	this.openWithInputField = function(_inputField) {
 		if (!_inputField || _inputField.type != "text") return;
-		inputField = _inputField;
-
-		this.openState = true;
-		keyTimeout = 0;
-
-		curProject = Server.getProject(MainContent.curProjectId);
-		Menu.removeAllOptions();
+		
 		Menu.open(inputField);
+		
+		this.openState = true;
+		curProject = Server.getProject(MainContent.curProjectId);
+
+		inputField = _inputField;
+		keyTimeout = 0;
+		Menu.removeAllOptions();
 
 		inputField.onkeyup = function() {
 			if (keyTimeout > 0) return keyTimeout--;
 			addOptionItemsByValue(this.value, this.selectionStart);
 			moveToItem(this.selectionStart);
 		}
+	}
+
+	this.openWithList = function(_button, _list, _indicator) {
+		if (!_button) return;
+		this.openState = true;
+		curProject = Server.getProject(MainContent.curProjectId);
+
+		Menu.removeAllOptions();
+		
+		for (item of _list) 
+		{
+			addSearchItem(
+				{item: item}, 
+				_indicator
+			);
+		}
+		
+		Menu.open(_button, {
+			left: _button.offsetWidth + 30,
+			top: -30
+		});
 	}
 
 	this.clickFirstOption = function () {Menu.clickFirstOption.apply(Menu);};

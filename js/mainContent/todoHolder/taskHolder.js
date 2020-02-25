@@ -646,7 +646,7 @@ function TaskHolder_createMenu(_parent) {
 	this.openState = false;
 	this.open = function() {
 		MainContent.taskHolder.closeAllCreateMenus();
-		MainContent.searchOptionMenu.open(Parent.HTML.inputField);
+		MainContent.searchOptionMenu.openWithInputField(Parent.HTML.inputField);
 
 		this.openState = true;
 
@@ -722,23 +722,11 @@ function TaskHolder_createMenu(_parent) {
 
 
 
-
-
 	function openSelectMenu(_iconIndex = 0, _indicator = ".", _items = []) {
 		if (!This.openState) return false;
 		let item = Parent.HTML.createMenu.children[3].children[_iconIndex];
-		MainContent.searchOptionMenu.open(item);
-		
-		for (item of _items) 
-		{
-			MainContent.searchOptionMenu.addSearchItem(
-				{item: item}, 
-				_indicator
-			);
-		}
+		MainContent.searchOptionMenu.openWithList(item, _items, _indicator);
 	}
-
-
 
 
 
