@@ -1,6 +1,10 @@
 <?php
-	$root = realpath($_SERVER["DOCUMENT_ROOT"]);
-	require_once "$root/git/todo/database/modules/app.php";
+	$AllowedMethods = ["get", "getByGroup", "getByDate", "getByDateRange", "update", "remove"];
+	require_once __DIR__ . "/../modules/app.php";
+
+
+
+	
 
 	$_projectId 	= (String)$_POST["projectId"];
 	$_method 		= (String)$_POST["method"];
@@ -18,7 +22,8 @@
 	foreach ($projects as $project)
 	{	
 		if ($project->id != $_projectId && $_projectId != "*") continue;
-		$projectResult = applyActionByProject($project, $_method, $parameters);
+		$projectResult = applyActionByProject($project, $_method, $parameters, $AllowedMethods);
+		
 		if (!$projectResult) continue;
 		array_push($results, $projectResult);
 	}
@@ -28,18 +33,10 @@
 	echo json_encode($results[0]);
 
 
+	function applyActionByProject($_project, $_method, $_parameters, $_AllowedMethods) {	
+		if (!in_array($_method, $_AllowedMethods)) die("E_invalidMethod");	
 
-	function applyActionByProject($_project, $_method, $_parameters) {	
-		$target = $_project->todos;
-
-		$firstMethods 		= get_class_methods($target);
-		if (!$firstMethods) die("E_invalidMethod");
-
-		$methodOptions 		= array_splice($firstMethods, 1, 100);
-		if (!in_array($_method, $methodOptions)) die("E_invalidMethod");
-
-		
-		$result = $target->{$_method}($_parameters);
+		$result = $_project->todos->{$_method}($_parameters);
 		return $result;
 	}
 
@@ -67,7 +64,6 @@
 
 
 	function filterParameters($_parString) {
-		// var_dump($_parString);
 		$decodedParameters = $_parString; //urldecode($_parString);
 		$parameters = "";
 		try {

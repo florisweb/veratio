@@ -1,6 +1,10 @@
 <?php
-	$root = realpath($_SERVER["DOCUMENT_ROOT"]);
-	require_once "$root/git/todo/database/modules/app.php";
+	$AllowedMethods = ["get", "getByGroup", "getByDate", "getByDateRange", "update", "remove"];
+	require_once __DIR__ . "/../modules/app.php";
+
+
+
+	
 
 	$_projectId 	= (String)$_POST["projectId"];
 	$_method 		= (String)$_POST["method"];
@@ -10,24 +14,18 @@
 
 	$project = $App->getProject($_projectId);
 	if (!$project || $project == "project_notFound") die("E_projectNotFound");
-
 	
-	$target = $project->todos;
-
-	$firstMethods 		= get_class_methods($target);
-	if (!$firstMethods) die("E_invalidMethod");
-	$methodOptions 		= array_splice($firstMethods, 1, 100);
-	if (!in_array($_method, $methodOptions)) die("E_invalidMethod");
-
 	try {
-		$parameter = json_decode($_parameters, true);
+		$parameters = json_decode($_parameters, true);
 	}
 	catch (Exception $e) {
-		$parameter = $_parameters;
+		$parameters = $_parameters;
 	}
-	if ($parameter == NULL) $parameter = $_parameters;
-	
+	if ($parameters == NULL) $parameters = $_parameters;
 
-	$result = $target->{$_method}($parameter);
+	
+	if (!in_array($_method, $AllowedMethods)) die("E_invalidMethod");
+
+	$result = $project->tags->{$_method}($parameter);
 	echo json_encode($result);
 ?>

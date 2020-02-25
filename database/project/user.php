@@ -1,10 +1,10 @@
 <?php
 	$AllowedMethods = ["update", "remove", "getAll", "inviteByEmail"];
+	require_once __DIR__ . "/../modules/app.php";
 
 
 
-	$root = realpath($_SERVER["DOCUMENT_ROOT"]);
-	require_once "$root/git/todo/database/modules/app.php";
+	
 
 	$_projectId 	= (String)$_POST["projectId"];
 	$_method 		= (String)$_POST["method"];
