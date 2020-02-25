@@ -58,6 +58,7 @@
 
 
 		public function update($_newUser) {
+			if (!is_array($_newUser)) return "E_invalidInput";
 			$oldUser 				= $this->get($_newUser["id"]);
 			$ownPermissions 		= $this->getPermissions();
 			$ownPermissions_users 	= $this->getPermissions("users");
