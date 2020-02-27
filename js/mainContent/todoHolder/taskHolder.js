@@ -518,6 +518,7 @@ function TaskHolder_task(_parent) {
 			html.classList.add("hide");
 			setTimeout(
 				function () {
+					if (!html.parentNode) return;
 					html.parentNode.removeChild(html);
 				}, 
 				500 * _animate
