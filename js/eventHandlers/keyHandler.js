@@ -30,7 +30,7 @@ function _KeyHandler() {
     {
       keys: ["Enter"], 
       event: function (_e) {
-        if (MainContent.taskHolder.deadLineOptionMenu.openState)   return MainContent.taskHolder.deadLineOptionMenu.clickFirstOption();
+        if (MainContent.taskHolder.dateOptionMenu.openState)       return MainContent.taskHolder.dateOptionMenu.clickFirstOption();
         if (MainContent.searchOptionMenu.openState)                return MainContent.searchOptionMenu.clickFirstOption();
         if (Popup.createProjectMenu.openState)                     return Popup.createProjectMenu.createProject();
         if (Popup.renameProjectMenu.openState)                     return Popup.renameProjectMenu.renameProject();

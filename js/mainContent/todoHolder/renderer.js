@@ -29,7 +29,7 @@ function _TaskRenderer() {
 			_renderSettings.displayDate !== false &&
 			new Date().stringIsDate(_taskWrapper.task.groupValue)
 		) {
-			todoRenderData.deadLineText = DateNames.toString(
+			todoRenderData.plannedDateText = DateNames.toString(
 				new Date().setDateFromStr(_taskWrapper.task.groupValue),
 				true
 			);
@@ -88,7 +88,7 @@ function _TaskRenderer() {
 							 	'<div class="functionHolder">' +
 									'<img src="images/icons/optionIcon.png" onclick="MainContent.optionMenu.open(this)" class="functionItem optionIcon icon clickable">' +
 									'<div class="functionItem projectHolder"></div>' +
-									'<div class="functionItem deadLineHolder userText"></div>' +
+									'<div class="functionItem plannedDateHolder userText"></div>' +
 									'<div class="functionItem memberList userText"></div>' +
 								'</div>';
 
@@ -96,7 +96,7 @@ function _TaskRenderer() {
 
 			setTextToElement(html.children[2], _toDoData.title);
 			if (_toDoData.memberText) setTextToElement(html.children[3].children[3], _toDoData.memberText);
-			if (_toDoData.deadLineText) setTextToElement(html.children[3].children[2], _toDoData.deadLineText);
+			if (_toDoData.plannedDateText) setTextToElement(html.children[3].children[2], _toDoData.plannedDateText);
 			if (_toDoData.projectTitle) 
 			{
 				let projectTitleHolder = html.children[3].children[1];

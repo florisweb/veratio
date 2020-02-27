@@ -168,7 +168,7 @@
 				border-bottom-right-radius: 0;
 			}
 
-			.createMenuHolder .inputField.taskDeadLine {
+			.createMenuHolder .inputField.taskPlannedDate {
 				float: right;
 				right: 0;
 
@@ -393,7 +393,7 @@
 		
 
 
-		.taskItem .functionHolder .deadLineHolder {
+		.taskItem .functionHolder .plannedDateHolder {
 			color: #ccc;
 			font-size: 13px;
 		}

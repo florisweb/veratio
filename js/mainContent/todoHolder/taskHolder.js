@@ -9,7 +9,7 @@ function _MainContent_taskHolder() {
 		taskPage: $(".mainContentPage")[0]
 	}
 
-	this.deadLineOptionMenu = function() {
+	this.dateOptionMenu = function() {
 		let Menu = OptionMenu.create(HTML.taskPage, true);
 	
 		Menu.removeAllOptions = function() {
@@ -582,7 +582,7 @@ function TaskHolder_createMenuConstructor(_config, _type) {
 
 		html.innerHTML = '<div class="createMenuHolder">' + 
 							'<input class="text inputField iBoxy clickable taskTitle">' + 
-							'<input class="text inputField iBoxy clickable taskDeadLine" placeholder="Deadline">' + 
+							'<input class="text inputField iBoxy clickable taskPlannedDate" placeholder="Planned Date">' + 
 							'<div class="leftHand">' + 
 								'<div class="text button bDefault bBoxy" style="float: left"></div>' + 
 								'<div class="text button" style="float: left">Cancel</div>' + 
@@ -621,12 +621,12 @@ function TaskHolder_createMenuConstructor(_config, _type) {
 			This.HTML.inputField.placeholder = PLACEHOLDERTEXTS.randomItem();
 
 
-			This.HTML.deadLineField = This.HTML.createMenu.children[1];
+			This.HTML.plannedDateField = This.HTML.createMenu.children[1];
 			
-			This.HTML.deadLineField.onfocusin = function() {
-				MainContent.taskHolder.deadLineOptionMenu.open(This.HTML.deadLineField);
+			This.HTML.plannedDateField.onfocusin = function() {
+				MainContent.taskHolder.dateOptionMenu.open(This.HTML.plannedDateField);
 			}
-			This.HTML.deadLineField.onfocusout = function() {
+			This.HTML.plannedDateField.onfocusout = function() {
 				This.HTML.createMenu.children[0].focus();
 			}
 		}
@@ -653,12 +653,12 @@ function TaskHolder_createMenu(_parent) {
 		Parent.HTML.createMenuHolder.classList.remove("close");
 		Parent.HTML.inputField.focus();
 		Parent.HTML.inputField.value 	= null;
-		Parent.HTML.deadLineField.value = null;
+		Parent.HTML.plannedDateField.value = null;
 
 		let buttonTitle = editData.task ? "Change" : "Add";
 		Parent.HTML.createMenu.children[2].children[0].innerHTML = buttonTitle;	
 
-		if (Parent.date) Parent.HTML.deadLineField.value = DateNames.toString(Parent.date);
+		if (Parent.date) Parent.HTML.plannedDateField.value = DateNames.toString(Parent.date);
 	}
 
 	this.openEdit = async function(_taskHTML, _taskId) {

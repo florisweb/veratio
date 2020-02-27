@@ -16,7 +16,7 @@ Planned features:
 - [ ] Tags (Creation, usage, and such)
 - [ ] Project colours
 ? - [ ] Sorting and filtering UI
-?    - [ ] Sort tasks by deadline
+?    - [ ] Sort tasks by planned date
 - [ ] Offline service
 
 
