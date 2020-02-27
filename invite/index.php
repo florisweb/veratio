@@ -1,3 +1,29 @@
+<?php
+	$root = realpath($_SERVER["DOCUMENT_ROOT"]);
+	require_once "$root/git/todo/database/modules/app.php";
+
+	$userNeedsSignIn = !$GLOBALS["App"]->userId;
+
+	$_inviteLink = (string)$_GET["id"];
+	if (!$_inviteLink || strlen($_inviteLink) > 100) die("E_invalidLink");
+	$_inviteLinkEnc = sha1($_inviteLink);
+	$App = new _App($_inviteLinkEnc);
+	
+	$projects = $App->getAllProjects();
+	if (sizeof($projects) == 0) die("E_invalidLink");
+	$project = $projects[0];
+
+	$user = $project->users->get($_inviteLinkEnc);
+	if (!$user || $user["type"] != "invite") die("E_invalidLink");
+
+	$returnData = array(
+		"projectTitle" 		=> urlencode($project->title),
+		"inviteLink"		=> urlencode($_inviteLink),
+		"userSignedIn"		=> !$userNeedsSignIn
+	);
+
+	echo "<script>let rawInviteData = '" . json_encode($returnData) . "';</script>";
+?>
 
 <!DOCTYPE html>
 <html>
@@ -245,33 +271,6 @@
 				element.append(a);
 			}
 
-
-			let rawInviteData = '<?php
-				$root = realpath($_SERVER["DOCUMENT_ROOT"]);
-				require_once "$root/git/todo/database/modules/app.php";
-
-				$userNeedsSignIn = !$GLOBALS["App"]->userId;
-
-				$_inviteLink = (string)$_GET["id"];
-				if (!$_inviteLink || strlen($_inviteLink) > 100) die("E_invalidLink");
-				$_inviteLinkEnc = sha1($_inviteLink);
-				$App = new _App($_inviteLinkEnc);
-				
-				$projects = $App->getAllProjects();
-				if (sizeof($projects) == 0) die("E_invalidLink");
-				$project = $projects[0];
-
-				$user = $project->users->get($_inviteLinkEnc);
-				if (!$user || $user["type"] != "invite") die("E_invalidLink");
-
-				$returnData = array(
-					"projectTitle" 		=> urlencode($project->title),
-					"inviteLink"		=> urlencode($_inviteLink),
-					"userSignedIn"		=> !$userNeedsSignIn
-				);
-
-				echo json_encode($returnData);
-			?>';
 	
 			if (rawInviteData != "E_invalidLink") setup();
 

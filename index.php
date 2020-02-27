@@ -27,7 +27,7 @@
 
 	function setLink() {
 		$_link = (string)$_GET["link"];
-		if (!$_link || sizeof($_link) > 100) return "false";
+		if (!$_link || strlen($_link) > 100) return "false";
 
 		$linkId = "LINKUSER_" . sha1($_link);
 		$GLOBALS["SESSION"]->set("veratio_userLink", $linkId);
@@ -57,13 +57,13 @@
 		<link rel="manifest" href="manifest.json">
 		<link rel="shortcut icon" href="images/pressSet/favicon.ico">
 
-		<link rel="stylesheet" type="text/css" href="css/component.css?a=39">
-		<link rel="stylesheet" type="text/css" href="css/popup.css?a=31">
-		<link rel="stylesheet" type="text/css" href="css/main.css?a=28">
-		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=27">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=53">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=59">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/header.css?a=0">
+		<link rel="stylesheet" type="text/css" href="css/component.css?a=41">
+		<link rel="stylesheet" type="text/css" href="css/popup.css?a=32">
+		<link rel="stylesheet" type="text/css" href="css/main.css?a=29">
+		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=28">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=56">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=61">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/header.css?a=1">
 
 		<script type="text/javascript" src="/JS/jQuery.js" asy nc></script>
 		<script type="text/javascript" src="/JS/request2.js" asy nc></script>

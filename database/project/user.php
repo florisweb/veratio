@@ -1,5 +1,5 @@
 <?php
-	$AllowedMethods = ["update", "remove", "getAll", "inviteByEmail"];
+	$AllowedMethods = ["update", "remove", "getAll", "inviteByEmail", "inviteByLink"];
 	require_once __DIR__ . "/../modules/app.php";
 
 

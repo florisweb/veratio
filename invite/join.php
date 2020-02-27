@@ -3,18 +3,18 @@
 	require_once "$root/git/todo/database/modules/app.php";
 	
 
-	$_inviteLink = sha1((string)$_GET["link"]);
+	$_inviteUser_placeholderId = sha1((string)$_GET["link"]);
 	$_joinType = (string)$_GET["type"];
-	if (!$_inviteLink || strlen($_inviteLink) > 50 || !$_joinType) die("E_invalidLink");
+	if (!$_inviteUser_placeholderId || strlen($_inviteUser_placeholderId) > 50 || !$_joinType) die("E_invalidLink");
 	
 
-	$App = new _App($_inviteLink);
+	$App = new _App($_inviteUser_placeholderId);
 	
 	$projects = $App->getAllProjects();
 	if (sizeof($projects) == 0) die("E_projectNotFound");
 	$project = $projects[0];
 
-	$inviteUserObj = $project->users->get($_inviteLink);
+	$inviteUserObj = $project->users->get($_inviteUser_placeholderId);
 	if (!$inviteUserObj || $inviteUserObj["type"] != "invite") die("E_userNotFound");
 	
 
@@ -23,8 +23,8 @@
 		$project->users->InviteComponent->joinAsMember((string)$_GET["link"], $inviteUserObj);
 		header("Location: https://veratio.florisweb.tk");
 	} else {
-		$project->users->InviteComponent->joinAsLink($_inviteLink, $inviteUserObj);
-		header("Location: https://veratio.florisweb.tk?link=" . $_inviteLink);
+		$project->users->InviteComponent->joinAsLink((string)$_GET["link"], $inviteUserObj);
+		header("Location: https://veratio.florisweb.tk?link=" . $_inviteUser_placeholderId);
 	}
 	
 	die("Redirect user");

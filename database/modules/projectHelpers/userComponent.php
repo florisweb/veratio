@@ -26,10 +26,16 @@
 			$this->Parent 			= $_parent;
 		}
 
-		public function inviteByEmail($_emailAdress) { // permissions will be checked in the inviteComponent
+		public function inviteByEmail($_emailAdress) {
 			$ownPermissions 	= $this->getPermissions("users");
 			if ($ownPermissions[0] < 1) return "E_notAllowedToInvite";
 			return $this->InviteComponent->inviteByEmail($_emailAdress);
+		}
+
+		public function inviteByLink() {
+			$ownPermissions 	= $this->getPermissions("users");
+			if ($ownPermissions[0] < 1) return "E_notAllowedToInvite";
+			return $this->InviteComponent->inviteByLink();
 		}
 
 
@@ -59,6 +65,7 @@
 
 		public function update($_newUser) {
 			if (!is_array($_newUser)) return "E_invalidInput";
+			
 			$oldUser 				= $this->get($_newUser["id"]);
 			$ownPermissions 		= $this->getPermissions();
 			$ownPermissions_users 	= $this->getPermissions("users");

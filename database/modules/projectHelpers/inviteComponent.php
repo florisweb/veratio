@@ -2,9 +2,10 @@
 	$GLOBALS["PM"]->includePacket("SESSION", "1.0");
 
 	// backwards compatability
-	$sessionName = session_name("user");
-	session_set_cookie_params(60 * 60 * 24 * 365.25, '/', '.florisweb.tk', TRUE, FALSE);
-	session_start();
+	
+	// $sessionName = session_name("user");
+	// session_set_cookie_params(60 * 60 * 24 * 365.25, '/', '.florisweb.tk', TRUE, FALSE);
+	// session_start();
 
 
 	class _project_user_inviteComponent {
@@ -33,6 +34,7 @@
 			$inviteId 			= sha1(uniqid(mt_rand(), true));
 			$emailAdress 		= $this->filterEmailAdress($_emailAdress);
 			if (!$emailAdress) 	return "E_invalidEmail";
+
 			$emailExists 		= $this->checkIfEmailAdressAlreadyExists($emailAdress);
 			if ($emailExists) 	return "E_emailAlreadyInvited";
 
@@ -52,12 +54,31 @@
 			return true; 			
 		}
 
-		public function joinAsLink($_inviteId, $_inviteUserObj) {
+
+		public function inviteByLink() {
+			$inviteId 			= sha1(uniqid(mt_rand(), true));
+
+			$user = array(
+				"id" 			=> sha1($inviteId),
+				"name"			=> "Invite-link " . $inviteId, //substr(sha1($inviteId), 0, 4),
+				"permissions" 	=> '["0", "00", "00", 0]',
+				"type"			=> "invite"
+			);
+
+			$newUser = $this->DTTemplate->update($user);
+			if (is_string($newUser)) return $newUser;
+
+			return $inviteId; 
+		}
+
+		public function joinAsLink($_originalInviteId, $_inviteUserObj) {
+			$_inviteUser_placeholderId = sha1($_originalInviteId);
+			
 			$userName 	= $_inviteUserObj["name"];
-			$user = $GLOBALS["USER"]->getByEmail($userName);
+			$user = $GLOBALS["USER"]->getByMail($userName);
 			if ($user) $userName = $user["name"];
 
-			$linkId 	= $this->createLinkId($_inviteId);
+			$linkId 	= $this->createLinkId($_inviteUser_placeholderId);
 			$newUser 	= array(
 				"id" 			=> $linkId,
 				"name" 			=> $userName,
@@ -65,7 +86,7 @@
 				"type" 			=> "link"
 			);
 
-			$this->joinByInviteId($_inviteId, $newUser);
+			$this->joinByInviteId($_inviteUser_placeholderId, $newUser);
 		}
 
 		public function joinAsMember($_originalInviteId, $_inviteUserObj) {
@@ -83,12 +104,11 @@
 			);
 
 			$this->joinByInviteId(sha1($_originalInviteId), $newUser);
-			
 		}
 
 
-		private function joinByInviteId($_inviteId, $_newUser) {
-			$success = $this->DTTemplate->remove($_inviteId);
+		private function joinByInviteId($_inviteUser_placeholderId, $_newUser) {
+			$success = $this->DTTemplate->remove($_inviteUser_placeholderId);
 			if (!$success) return false;
 
 			$userAlreadyExists = $this->DTTemplate->get($_newUser["id"]);
