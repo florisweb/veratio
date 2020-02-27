@@ -313,8 +313,6 @@ function MainContent_settingsPage(_projectId) {
 	}
 
 
-	this.permissionsMenu = new _MainContent_settingsPage_permissionsMenu();
-
 
 
 	async function onOpen(_projectId) {
@@ -380,7 +378,7 @@ function MainContent_settingsPage(_projectId) {
 		setTextToElement(html.children[2].children[1], _member.permissions);
 		DoubleClick.register(html.children[2].children[1], function () {
 			let project = Server.getProject(MainContent.curProjectId);
-			MainContent.settingsPage.permissionsMenu.open(_member.id);
+			Popup.permissionMenu.open(_member.id);
 		})
 
 		html.children[2].children[0].onclick = function () {
@@ -416,7 +414,7 @@ function MainContent_settingsPage(_projectId) {
 		Menu.addOption(
 			"Change permissions", 
 			function () {
-				MainContent.settingsPage.permissionsMenu.open(curMemberId);
+				Popup.permissionMenu.open(curMemberId);
 				return true;
 			}, 
 			"images/icons/changeIconDark.png"
@@ -439,121 +437,6 @@ function MainContent_settingsPage(_projectId) {
 
 		this.openState 	= Menu.openState;
 		this.close 		= Menu.close;
-	}
-}
-
-
-
-
-
-
-
-function _MainContent_settingsPage_permissionsMenu() {
-	this.open = async function(_memberId) {
-		let project	= Server.getProject(MainContent.curProjectId);
-		let member 	= await project.users.get(_memberId);
-		openPopupMenu(member);
-	}
-
-
-	function openPopupMenu(_member) {
-		let builder = [
-			{title: "CHANGE USER PERMISSIONS"},
-			"<br><br>",
-			{text: "Change "},
-			{text: _member.name, highlighted: true},
-			{text: _member.name.substr(_member.name.length - 1, 1).toLowerCase() == "s" ? "'" : "'s", highlighted: true},
-			{text: " permissions to:"},
-			"<br><br><br>",
-			"<div id='PERMISSIONMENU'>" + 
-				"<a class='text optionGroupLabel'>Create and finish tasks</a>" +
-				"<div class='optionGroup'>" + 
-					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Own</div>" + 
-					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Assigned to</div>" + 
-					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>All</div>" + 
-				"</div>" + 
-				'<br><div class="HR"></div>' + 
-				"<a class='text optionGroupLabel'>Invite and remove users</a>" + 
-				"<div class='optionGroup'>" + 
-					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>None</div>" + 
-					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Can invite</div>" + 
-					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Can remove</div>" + 
-				"</div>" + 
-				'<br><div class="HR"></div>' + 
-				
-				"<a class='text optionGroupLabel'>User permissions</a>" +
-				"<div class='optionGroup'>" + 
-					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>None</div>" + 
-					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>can change</div>" + 
-				"</div>" +
-				'<br><div class="HR"></div>' + 
-
-				"<a class='text optionGroupLabel'>Rename and remove this project</a>" + 
-				"<div class='optionGroup'>" + 
-					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>None</div>" + 
-					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Rename</div>" + 
-					"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Remove</div>" + 
-				"</div>" +
-			"</div>",
-	
-			"<br><br><br><br>",
-			{buttons: [
-				{button: "CANCEL", onclick: Popup.close},
-				{button: "CHANGE", onclick: 
-					async function () 
-					{
-						let optionGroup = $("#PERMISSIONMENU .optionGroup");
-						let newPermissions = [
-							"2",
-							String(optionGroup[0].value),
-							String(optionGroup[1].value) + String(optionGroup[2].value),
-							String(optionGroup[3].value)
-						];
-
-						newPermissions[1] += optionGroup[0].value > 0 ? optionGroup[0].value : 1;
-						// Check if permissions are actually allowed to be given
-
-						_member.permissions = JSON.stringify(newPermissions);
-						
-						let project = Server.getProject(MainContent.curProjectId);
-						if (!project) return false;
-
-						await project.users.update(_member);
-						MainContent.settingsPage.open(MainContent.curProjectId);
-
-						Popup.close();
-					}, 
-				important: true, color: COLOR.DANGEROUS}
-			]}
-		];
-
-		Popup.showNotification(builder);
-
-		let permissions = JSON.parse(_member.permissions);
-		let optionGroup = $("#PERMISSIONMENU .optionGroup");
-
-		optionGroup_select(
-			optionGroup[0].children[
-				parseInt(permissions[1][0])
-			]
-		);
-		optionGroup_select(
-			optionGroup[1].children[
-				parseInt(permissions[2][0])
-			]
-		);
-		
-		optionGroup_select(
-			optionGroup[2].children[
-				parseInt(permissions[2][1])
-			]
-		);
-
-		optionGroup_select(
-			optionGroup[3].children[
-				parseInt(permissions[3])
-			]
-		);
 	}
 }
 

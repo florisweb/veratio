@@ -33,6 +33,7 @@ const Popup = new function () {
 	
 	this.createProjectMenu  = new _Popup_createProject();
 	this.renameProjectMenu  = new _Popup_renameProject();
+	this.permissionMenu 	= new _Popup_permissionMenu();
 }
 
 
@@ -333,6 +334,133 @@ function _Popup_renameProject() {
 
 
 
+function _Popup_permissionMenu() {
+	let This = this;
+	let builder = [
+		{title: "CHANGE USER PERMISSIONS"},
+		"<br><br>",
+		{text: "Change "},
+		{text: "Member-name", highlighted: true},
+		{text: " permissions to:"},
+		"<br><br><br>",
+		"<div id='PERMISSIONMENU'>" + 
+			"<a class='text optionGroupLabel'>Create and finish tasks</a>" +
+			"<div class='optionGroup'>" + 
+				"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Own</div>" + 
+				"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Assigned to</div>" + 
+				"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>All</div>" + 
+			"</div>" + 
+			'<br><div class="HR"></div>' + 
+			"<a class='text optionGroupLabel'>Invite and remove users</a>" + 
+			"<div class='optionGroup'>" + 
+				"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>None</div>" + 
+				"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Can invite</div>" + 
+				"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Can remove</div>" + 
+			"</div>" + 
+			'<br><div class="HR"></div>' + 
+			
+			"<a class='text optionGroupLabel'>User permissions</a>" +
+			"<div class='optionGroup'>" + 
+				"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>None</div>" + 
+				"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>can change</div>" + 
+			"</div>" +
+			'<br><div class="HR"></div>' + 
+
+			"<a class='text optionGroupLabel'>Rename and remove this project</a>" + 
+			"<div class='optionGroup'>" + 
+				"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>None</div>" + 
+				"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Rename</div>" + 
+				"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Remove</div>" + 
+			"</div>" +
+		"</div>",
+
+		"<br><br><br><br>",
+		{buttons: [
+			{button: "CANCEL", onclick: This.close},
+			{
+				button: "CHANGE", 
+				onclick: function () {Popup.permissionMenu.updatePermissions()}, 
+				important: true, 
+				color: COLOR.DANGEROUS
+			}
+		]}
+	];
+
+	_popup.call(this, builder);
+	this.HTML.memberName = this.HTML.popup.children[3];
+
+	let extend_open = this.open;
+
+
+	let curMember = false;
+
+	this.open = async function(_memberId) {
+		extend_open.apply(this);
+
+		let project	= Server.getProject(MainContent.curProjectId);
+		let member 	= await project.users.get(_memberId);
+		curMember 	= member;
+		setMemberData(member);
+	}
+
+
+
+	function setMemberData(_member) {
+		let memberName = _member.name + (_member.name.substr(_member.name.length - 1, 1).toLowerCase() == "s" ? "'" : "'s");
+		setTextToElement(This.HTML.memberName, memberName);
+
+		let permissions = JSON.parse(_member.permissions);
+		let optionGroup = $("#PERMISSIONMENU .optionGroup");
+
+		optionGroup_select(
+			optionGroup[0].children[
+				parseInt(permissions[1][0])
+			]
+		);
+		optionGroup_select(
+			optionGroup[1].children[
+				parseInt(permissions[2][0])
+			]
+		);
+		
+		optionGroup_select(
+			optionGroup[2].children[
+				parseInt(permissions[2][1])
+			]
+		);
+
+		optionGroup_select(
+			optionGroup[3].children[
+				parseInt(permissions[3])
+			]
+		);
+	}
+
+
+
+	this.updatePermissions = async function() {
+		if (!curMember) return;
+
+		let optionGroup = $("#PERMISSIONMENU .optionGroup");
+		let newPermissions = [
+			"2",
+			String(optionGroup[0].value) + (optionGroup[0].value > 0 ? optionGroup[0].value : 1),
+			String(optionGroup[1].value) + String(optionGroup[2].value),
+			String(optionGroup[3].value)
+		];
+
+		curMember.permissions = JSON.stringify(newPermissions);
+		
+		let project = Server.getProject(MainContent.curProjectId);
+		if (!project) return false;
+
+		await project.users.update(curMember);
+		MainContent.settingsPage.open(MainContent.curProjectId);
+		curMember = false;
+
+		This.close();
+	}
+}
 
 
 
