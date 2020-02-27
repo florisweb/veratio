@@ -194,7 +194,7 @@ function _Server_project(_projectId, _projectTitle) {
     for (user of users)
     {
       if (!user.Self) continue;
-      Server.removeProject(this.id);
+      App.update()
       return this.users.remove(user.id);
     }
   }
