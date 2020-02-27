@@ -134,12 +134,13 @@ function taskPage_tab_today() {
 		name: "today",
 		onOpen: onOpen
 	});
+	let This = this;
 
 
 	async function onOpen() {
 		let date = new Date();
 
-		MainContent.header.showItemsByPage("taskpage - " + this.name);
+		MainContent.header.showItemsByPage("taskpage - " + This.name);
 		MainContent.header.setTitle("Today - " + date.getDate() + " " + date.getMonths()[date.getMonth()].name);
 		MainContent.header.setMemberList([]);
 
