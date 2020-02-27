@@ -163,7 +163,7 @@ function _TaskRenderer() {
 
 
 			function assignEventHandlers(_html, _taskData) {
-
+				
 				let lastDropTarget = false;
 				DragHandler.register(
 					_html, 
@@ -189,16 +189,14 @@ function _TaskRenderer() {
 						}
 
 						let task = await Server.global.tasks.get(_taskData.id);
-						dropData.taskHolder.task.dropTask(task, dropData.index);
-
-						if (dropData.taskHolder.id == _taskData.taskHolderId) return dropCoords;
 						let prevTaskHolder = MainContent.taskHolder.get(_taskData.taskHolderId);
 						prevTaskHolder.task.removeTask(_taskData.id);
+
+						dropData.taskHolder.task.dropTask(task, dropData.index);
 
 						return dropCoords;
 					}
 				);
-
 
 
 				function clearLastDropTarget() {
