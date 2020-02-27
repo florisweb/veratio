@@ -21,9 +21,9 @@ Date.prototype.setDateFromStr = function(_str) {
 	let date = new Date();
 	
 	let dateParts = dateTime[0].split("-");
-	this.setDate(dateParts[0]);
-	this.setMonth(parseInt(dateParts[1]) - 1);
 	this.setYear(dateParts[2]);
+	this.setMonth(parseInt(dateParts[1]) - 1);
+	this.setDate(dateParts[0]);
 
 	if (!dateTime[1]) return this;
 	let timeParts = dateTime[1].split(":");
