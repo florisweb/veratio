@@ -93,24 +93,31 @@ function taskPage_tab(_settings) {
 	this.open = async function(_projectId) {
 		MainContent.startLoadingAnimation();
 
+		HTML.loadMoreButton.classList.add("hide");
+		
+
 		MainContent.taskPage.curTab	= this;
 		MainContent.curProjectId 	= _projectId;
 
 		if (!MainContent.taskPage.isOpen()) MainContent.taskPage.open();
 		resetPage();
-		applySettings(_settings);
+		
 
 		await MainContent.taskHolder.addOverdue();
 
 		onOpen(_projectId);
 
 		MainContent.stopLoadingAnimation();
+		
+
+		applySettings(_settings);
 	}
 
 
 	function applySettings(_settings) {
-		HTML.loadMoreButton.classList.add("hide");
-		if (_settings.showLoadMoreButton) HTML.loadMoreButton.classList.remove("hide");
+		if (_settings.showLoadMoreButton) setTimeout(function () {
+			HTML.loadMoreButton.classList.remove("hide");
+		}, 100);
 	} 
 
 
