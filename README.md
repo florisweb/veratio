@@ -8,6 +8,7 @@ Planned features:
 - [ ] Drag and drop support for tasks
 - [x] Overdue auto-setter
 - [x] TaskOwnerIndicator: hover to see the task's owner
+- [x] Option to invite using a link
 
 
 
