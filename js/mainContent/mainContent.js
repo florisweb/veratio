@@ -125,7 +125,8 @@ function _MainContent_optionMenu() {
 	Menu.addOption(
 		"Edit", 
 		function () {
-			return curDOMData.openEdit();
+			curDOMData.openEdit();
+			return true;
 		},
 		"images/icons/changeIconDark.png"
 	);
