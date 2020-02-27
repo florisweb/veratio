@@ -31,9 +31,10 @@ const Popup = new function () {
 		notifcationBox: $("#notificationBox")[0]
 	}
 	
-	this.createProjectMenu  = new _Popup_createProject();
-	this.renameProjectMenu  = new _Popup_renameProject();
-	this.permissionMenu 	= new _Popup_permissionMenu();
+	this.createProjectMenu 	 	= new _Popup_createProject();
+	this.renameProjectMenu	  	= new _Popup_renameProject();
+	this.permissionMenu 		= new _Popup_permissionMenu();
+	this.inviteByLinkCopyMenu 	= new _Popup_inviteByLinkCopyMenu();
 }
 
 
@@ -258,6 +259,34 @@ function _Popup_createProject() {
 		if (!project.title || project.title.length < 2) return "E_incorrectTitle";
 
 		return project;
+	}
+}
+
+
+function _Popup_inviteByLinkCopyMenu() {
+	let This = this;
+	let builder = [
+		{title: "SUCCESSFULLY CREATED LINK"},
+		"<br><br>",
+		{text: "Copy and send this link to your invitee."},
+		"<br><br>",
+		{input: "Invitelink", value: null, customClass: "text"},
+		"<br><br>",
+		"<br><br>",
+		{buttons: [
+			{button: "CLOSE", onclick: function () {This.close()}, important: true, color: COLOR.WARNING}
+		]}
+	];
+
+	_popup.call(this, builder);
+	this.HTML.projectTitle = this.HTML.popup.children[4];
+	this.HTML.projectTitle.setAttribute("readonly", "true");
+	let extend_open = this.open;
+
+	this.open = function(_link) {
+		extend_open.apply(this);
+		this.HTML.projectTitle.value = _link;
+		this.HTML.projectTitle.setSelectionRange(0, _link.length);
 	}
 }
 

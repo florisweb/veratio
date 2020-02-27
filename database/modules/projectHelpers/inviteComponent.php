@@ -60,7 +60,7 @@
 
 			$user = array(
 				"id" 			=> sha1($inviteId),
-				"name"			=> "Invite-link " . $inviteId, //substr(sha1($inviteId), 0, 4),
+				"name"			=> "Link " . substr(sha1($inviteId), 0, 4),
 				"permissions" 	=> '["0", "00", "00", 0]',
 				"type"			=> "invite"
 			);

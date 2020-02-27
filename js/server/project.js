@@ -150,6 +150,14 @@ function _Server_globalProject(_projectId) {
         "&projectId=" + This.id
       );
     }
+
+    this.inviteByLink = function() {
+      return REQUEST.send(
+        "database/project/" + Type + ".php", 
+        "method=inviteByLink" + 
+        "&projectId=" + This.id
+      );
+    }
   }
 
 

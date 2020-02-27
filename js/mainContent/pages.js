@@ -338,14 +338,24 @@ function MainContent_settingsPage(_projectId) {
 
 
 
-	this.inviteUser = async function() {
+	this.inviteUserByEmail = async function() {
 		let email 	= HTML.inviteMemberInput.value;
 		let project = Server.getProject(MainContent.curProjectId);
 		
 		let returnVal = await project.users.inviteByEmail(email);
-		if (returnVal !== true) console.error("An error accured while invite a user:", returnVal);
+		if (returnVal !== true) console.error("An error accured while inviting a user:", returnVal);
 		
 		HTML.inviteMemberInput.value = null;
+		This.open(MainContent.curProjectId);
+	}
+
+	this.inviteUserByLink = async function() {
+		let project = Server.getProject(MainContent.curProjectId);
+		
+		let returnVal = await project.users.inviteByLink();
+		if (returnVal !== true) console.error("An error accured while inviting a user:", returnVal);//TODO
+
+		Popup.inviteByLinkCopyMenu.open("https://florisweb.tk/git/todo/invite?id=" + returnVal);
 		This.open(MainContent.curProjectId);
 	}
 

@@ -143,7 +143,10 @@
 				<div class="mainContentPage settingsPage hide">
 					<div class="inviteMemberHolder">
 						<input placeholder="E-mail-adress" class="inputField iBoxy text" id="inviteMemberInput">
-						<a class="button bDefault bBoxy" onclick="MainContent.settingsPage.inviteUser()">Invite</a>
+						<a class="button bDefault bBoxy" onclick="MainContent.settingsPage.inviteUserByEmail()">Invite</a>
+						<br>
+						<br>
+						<a class="button bDefault bBoxy" onclick="MainContent.settingsPage.inviteUserByLink()">Invite by link</a>
 					</div>
 
 					<div class="memberHolder"></div>
