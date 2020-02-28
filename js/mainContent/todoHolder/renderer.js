@@ -188,10 +188,13 @@ function _TaskRenderer() {
 							y: dropData.y
 						}
 
+						_item.html.classList.add("hide");
+
 						let task = await Server.global.tasks.get(_taskData.id);
+						
 						let prevTaskHolder = MainContent.taskHolder.get(_taskData.taskHolderId);
 						prevTaskHolder.task.removeTask(_taskData.id);
-
+						
 						dropData.taskHolder.task.dropTask(task, dropData.index);
 
 						return dropCoords;
