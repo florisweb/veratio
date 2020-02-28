@@ -134,7 +134,7 @@
 .listItem.hide {
 	opacity: 0 				!important;
 	pointer-events: none 	!important;
-	margin-bottom: -34px	!important;
+	margin-bottom: -38px	!important;
 }
 
 	.listItem .mainIcon {

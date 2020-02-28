@@ -333,7 +333,7 @@
 			border-radius: 100%;
 
 			border: 2px solid #ccc;
-			background: rgba(0, 0, 0, 0.02);
+			background: rgba(0, 0, 0, 0.01);
 		}
 			.taskItem:not(.finished) .statusCircleHitBox .statusCircle rect {
 				fill-opacity: 0;
