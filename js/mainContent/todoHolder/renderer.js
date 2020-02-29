@@ -15,7 +15,7 @@ function _TaskRenderer() {
 			
 			id: 			_taskWrapper.task.id,
 			title: 			_taskWrapper.task.title,
-			taskHolderId: 	_taskWrapper.taskHolder.id,
+			taskHolder: 	_taskWrapper.taskHolder,
 			finished: 		_taskWrapper.task.finished,
 			
 			assignedToMe: 	_taskWrapper.task.assignedTo.includes(project.users.Self.id),
@@ -189,12 +189,9 @@ function _TaskRenderer() {
 						}
 
 						_item.html.classList.add("hide");
+						_taskData.taskHolder.onTaskRemove(_taskData.id); // remove the task from the old location
 
-						let task = await Server.global.tasks.get(_taskData.id);
-						
-						let prevTaskHolder = MainContent.taskHolder.get(_taskData.taskHolderId);
-						prevTaskHolder.task.removeTask(_taskData.id);
-						
+						let task = await Server.global.tasks.get(_taskData.id);				
 						dropData.taskHolder.task.dropTask(task, dropData.index);
 
 						return dropCoords;

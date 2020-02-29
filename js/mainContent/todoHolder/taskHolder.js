@@ -233,11 +233,14 @@ function TaskHolder_overdue(_config) {
 
 	
 	this.onTaskFinish = function(_taskWrapper) {
-		this.task.removeTask(_taskWrapper.task.id, true);
+		this.onTaskRemove(_taskWrapper.task.id)
+	}
+
+	this.onTaskRemove = function(_taskId) {
+		this.task.removeTask(_taskId, true);
 		if (this.task.taskList.length > 0) return;
 		this.remove();
 	}
-	this.onTaskRemove = this.onTaskFinish;
 }
 
 
