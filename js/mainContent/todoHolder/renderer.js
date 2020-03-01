@@ -192,7 +192,7 @@ function _TaskRenderer() {
 						}
 						_item.placeHolder.style.transition = "all .3s";
 						_item.placeHolder.style.left = dropData.x + "px";
-						_item.placeHolder.style.top = (dropData.y - HTML.scrollHolder.scrollTop) + "px";
+						_item.placeHolder.style.top = dropData.y + "px";
 						
 
 						_item.html.classList.add("hide");
