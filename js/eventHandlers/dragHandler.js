@@ -1,9 +1,9 @@
 
 document.body.mouseDown = 0;
-document.body.onmousedown = function() { 
+document.onmousedown = function() { 
   ++document.body.mouseDown;
 }
-document.body.onmouseup = function() {
+document.onmouseup = function() {
   --document.body.mouseDown;
 }
 
