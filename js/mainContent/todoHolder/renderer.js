@@ -210,7 +210,6 @@ function _TaskRenderer() {
 
 				function clearLastDropTarget() {
 					if (!lastDropTarget) return;
-					lastDropTarget.style.marginTop	 	= "";
 					lastDropTarget.style.marginBottom 	= "";
 
 					if (!lastDropTarget.parentNode.children[2]) return;
@@ -251,7 +250,7 @@ function _TaskRenderer() {
 					
 					return data;
 				}
-				
+
 					function getTaskHolderByDropTarget(_target) {
 						let taskHolder 								= lastDropTarget.parentNode.parentNode;
 						if (dropTargetIsHeader(_target)) taskHolder = _target.parentNode;
