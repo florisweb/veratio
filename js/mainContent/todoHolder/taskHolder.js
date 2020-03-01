@@ -316,8 +316,8 @@ function TaskHolder(_config = {}, _type = "default") {
 
 		if (This.config.html.class) html.className += " " + This.config.html.class;
 
-		html.innerHTML = 	'<img src="images/icons/dropDownIconDark.png" class="dropDownButton clickable">' +
-							'<div class="header dateHolder"></div>' + 
+		html.innerHTML = 	'<img src="images/icons/dropDownIconDark.png" class="dropDownButton clickable dropTarget">' +
+							'<div class="header dateHolder dropTarget"></div>' + 
 							'<div class="todoHolder"></div>';
 
 

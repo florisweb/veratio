@@ -190,14 +190,6 @@ function clearSelection() {
 
 
 
-function getChildIndex(_item) {
-  let siblings = _item.parentNode.children;
-  for (let i = 0; i < siblings.length; i++)
-  {
-    if (siblings[i] != _item) continue;
-    return i;
-  }
-}
 
 
 

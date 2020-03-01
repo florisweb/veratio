@@ -174,10 +174,12 @@ function _TaskRenderer() {
 						if (!_dropTarget) return;
 						clearLastDropTarget();
 
-						if (getChildIndex(_dropTarget) == 0 && getAboveStatus(_item, _dropTarget))
+						if (dropTargetIsHeader(_dropTarget))
 						{
-							_dropTarget.style.marginTop 		= _dropTarget.offsetHeight + "px";
-						} else _dropTarget.style.marginBottom 	= _dropTarget.offsetHeight + "px";
+							_dropTarget.parentNode.children[2].style.marginTop = "38px";
+						} else {
+							_dropTarget.style.marginBottom = _dropTarget.offsetHeight + "px";
+						}
 
 						lastDropTarget = _dropTarget;
 					}, 
@@ -190,9 +192,9 @@ function _TaskRenderer() {
 							x: dropData.x, 
 							y: dropData.y
 						}
-						_item.placeHolder.style.transition = "all .3s";
-						_item.placeHolder.style.left = dropData.x + "px";
-						_item.placeHolder.style.top = dropData.y + "px";
+						_item.placeHolder.style.transition 	= "all .3s";
+						_item.placeHolder.style.left 		= dropData.x + "px";
+						_item.placeHolder.style.top 		= dropData.y + "px";
 						
 
 						_item.html.classList.add("hide");
@@ -210,6 +212,14 @@ function _TaskRenderer() {
 					if (!lastDropTarget) return;
 					lastDropTarget.style.marginTop	 	= "";
 					lastDropTarget.style.marginBottom 	= "";
+
+					if (!lastDropTarget.parentNode.children[2]) return;
+					lastDropTarget.parentNode.children[2].style.marginTop = "";
+				}
+
+				function dropTargetIsHeader(_target) {
+					return 	_target.classList.contains("dropDownButton") || 
+							_target.classList.contains("dateHolder");
 				}
 
 				function getAboveStatus(_item, _dropTarget) {
@@ -226,13 +236,12 @@ function _TaskRenderer() {
 					let data = {
 						index: getDropIndex(_item),
 					}
-
-					let taskHolderId = lastDropTarget.parentNode.parentNode.getAttribute("taskHolderId");
-					data.taskHolder  = MainContent.taskHolder.get(taskHolderId);
+					
+					data.taskHolder  = getTaskHolderByDropTarget(lastDropTarget)
 					
 					if (!data.taskHolder) return false;
 					let positionObj = data.taskHolder.HTML.todoHolder;
-					const taskHeight = positionObj.children[0].offsetHeight;
+					const taskHeight = 38;
 					
 					let pos = positionObj.getBoundingClientRect();
 					data.x = pos.left;
@@ -242,9 +251,18 @@ function _TaskRenderer() {
 					
 					return data;
 				}
+				
+					function getTaskHolderByDropTarget(_target) {
+						let taskHolder 								= lastDropTarget.parentNode.parentNode;
+						if (dropTargetIsHeader(_target)) taskHolder = _target.parentNode;
+
+						let taskHolderId = taskHolder.getAttribute("taskHolderId");
+						return MainContent.taskHolder.get(taskHolderId);
+					}
 
 
 					function getDropIndex(_item) {
+						if (dropTargetIsHeader(lastDropTarget)) return 0;
 						let index = false;	
 
 						let siblings = lastDropTarget.parentNode.children;

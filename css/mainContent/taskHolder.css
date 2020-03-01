@@ -94,7 +94,7 @@
 		margin-left: 2px;
 		
 		max-height: 1000vh;
-		transition: max-height .3s, opacity .3s;
+		transition: max-height .3s, opacity .3s, margin-top .3s;
 	}
 	
 	.taskHolder.hideTasks .todoHolder {
