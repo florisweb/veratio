@@ -187,6 +187,9 @@ function _TaskRenderer() {
 							x: dropData.x, 
 							y: dropData.y
 						}
+						_item.placeHolder.style.left = dropData.x + "px";
+						_item.placeHolder.style.top = dropData.y + "px";
+						
 
 						_item.html.classList.add("hide");
 						_taskData.taskHolder.onTaskRemove(_taskData.id); // remove the task from the old location
