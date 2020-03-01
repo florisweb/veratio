@@ -254,7 +254,7 @@
 	padding-left: 35px;
 	overflow: hidden;
 
-	transition: all 0.3s;
+	transition: all .3s;
 }
 
 .taskItem.listItem.finished {

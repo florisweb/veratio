@@ -1,6 +1,9 @@
 
 function _TaskRenderer() {
 	let This = this;
+	let HTML = {
+		scrollHolder: $(".mainContentPage")[0]
+	}
 
 
 	this.renderTask = function(_taskWrapper, _renderSettings) {
@@ -187,8 +190,9 @@ function _TaskRenderer() {
 							x: dropData.x, 
 							y: dropData.y
 						}
+						_item.placeHolder.style.transition = "all .3s";
 						_item.placeHolder.style.left = dropData.x + "px";
-						_item.placeHolder.style.top = dropData.y + "px";
+						_item.placeHolder.style.top = (dropData.y - HTML.scrollHolder.scrollTop) + "px";
 						
 
 						_item.html.classList.add("hide");
