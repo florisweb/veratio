@@ -61,7 +61,7 @@
 		<link rel="stylesheet" type="text/css" href="css/popup.css?a=32">
 		<link rel="stylesheet" type="text/css" href="css/main.css?a=29">
 		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=28">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=57">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=58">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=62">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/header.css?a=1">
 
