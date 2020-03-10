@@ -35,6 +35,7 @@ const Popup = new function () {
 	this.renameProjectMenu	  	= new _Popup_renameProject();
 	this.permissionMenu 		= new _Popup_permissionMenu();
 	this.inviteByLinkCopyMenu 	= new _Popup_inviteByLinkCopyMenu();
+	this.inviteByEmailMenu 		= new _Popup_inviteByEmailMenu();
 }
 
 
@@ -279,16 +280,58 @@ function _Popup_inviteByLinkCopyMenu() {
 	];
 
 	_popup.call(this, builder);
-	this.HTML.projectTitle = this.HTML.popup.children[4];
-	this.HTML.projectTitle.setAttribute("readonly", "true");
+	this.HTML.linkHolder = this.HTML.popup.children[4];
+	this.HTML.linkHolder.setAttribute("readonly", "true");
 	let extend_open = this.open;
 
 	this.open = function(_link) {
 		extend_open.apply(this);
-		this.HTML.projectTitle.value = _link;
-		this.HTML.projectTitle.setSelectionRange(0, _link.length);
+		this.HTML.linkHolder.value = _link;
+		this.HTML.linkHolder.setSelectionRange(0, _link.length);
 	}
 }
+
+
+function _Popup_inviteByEmailMenu() {
+	let This = this;
+	let builder = [
+		{title: "INVITE BY EMAIL"},
+		"<br><br>",
+		{text: "Enter your invitees email-adress."},
+		"<br><br>",
+		{input: "Email-adress", value: null, customClass: "text"},
+		"<br><br>",
+		"<br><br>",
+		{buttons: [
+			{button: "CANCEL", onclick: This.close},
+			{button: "INVITE", onclick: function () {This.inviteUser()}, important: true, color: COLOR.POSITIVE}
+		]}
+	];
+
+	_popup.call(this, builder);
+	this.HTML.emailAdressHolder = this.HTML.popup.children[4];
+	let extend_open = this.open;
+
+	this.open = function() {
+		extend_open.apply(this);
+		this.HTML.emailAdressHolder.value = null;
+		this.HTML.emailAdressHolder.focus();
+	}
+
+	this.inviteUser = async function() {
+		let email = this.HTML.emailAdressHolder.value;
+		let project = Server.getProject(MainContent.curProjectId);
+		
+		let returnVal = await project.users.inviteByEmail(email);
+		if (returnVal !== true) console.error("An error accured while inviting a user:", returnVal);
+		
+		this.HTML.emailAdressHolder.value = null;
+		This.close();
+
+		MainContent.settingsPage.open(MainContent.curProjectId);
+	}
+}
+
 
 
 

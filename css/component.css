@@ -24,6 +24,16 @@
 		color: #fff !important;
 	}
 
+	.button img {
+		position: relative;
+		top: 3px;
+		margin-left: -5px;
+		margin-right: 3px;
+
+		width: 16px;
+		height: auto;
+	}
+
 
 
 

@@ -57,12 +57,12 @@
 		<link rel="manifest" href="manifest.json">
 		<link rel="shortcut icon" href="images/pressSet/favicon.ico">
 
-		<link rel="stylesheet" type="text/css" href="css/component.css?a=41">
+		<link rel="stylesheet" type="text/css" href="css/component.css?a=43">
 		<link rel="stylesheet" type="text/css" href="css/popup.css?a=32">
 		<link rel="stylesheet" type="text/css" href="css/main.css?a=29">
 		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=28">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=56">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=61">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=57">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=62">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/header.css?a=1">
 
 		<script type="text/javascript" src="/JS/jQuery.js" asy nc></script>
@@ -86,7 +86,7 @@
 			<br>
 			<div class="projectListHolder hide">
 				<div class="header clickable" onclick="SideBar.projectList.toggleOpenState()">
-					<img src="images/icons/dropDownIcon.png" class="headerIcon dropDownButton close">
+					<img src="images/icons/dropDownIcon.png" class="headerIcon dropDownButton close dropTarget">
 					<div class="headerText">Projects</div>
 				</div>
 				<div class="projectList hide">
@@ -142,11 +142,14 @@
 
 				<div class="mainContentPage settingsPage hide">
 					<div class="inviteMemberHolder">
-						<input placeholder="E-mail-adress" class="inputField iBoxy text" id="inviteMemberInput">
-						<a class="button bDefault bBoxy" onclick="MainContent.settingsPage.inviteUserByEmail()">Invite</a>
-						<br>
-						<br>
-						<a class="button bDefault bBoxy" onclick="MainContent.settingsPage.inviteUserByLink()">Invite by link</a>
+						<a class="button bDefault bBoxy" onclick="Popup.inviteByEmailMenu.open()">
+							<img src='images/icons/inviteIconLight.png'>
+							Invite by email
+						</a>
+						<a class="button bDefault bBoxy" style="margin-left: 15px" onclick="MainContent.settingsPage.inviteUserByLink()">
+							<img src='images/icons/linkIconLight.png'>
+							Invite by link
+						</a>
 					</div>
 
 					<div class="memberHolder"></div>

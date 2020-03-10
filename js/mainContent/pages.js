@@ -316,8 +316,6 @@ function MainContent_settingsPage(_projectId) {
 	let HTML = {
 		Self: $(".mainContentPage.settingsPage")[0],
 		memberHolder: $(".mainContentPage.settingsPage .memberHolder")[0],
-		inviteMemberInput: $("#inviteMemberInput")[0],
-		inviteMemberHolder: $(".inviteMemberHolder")
 	}
 
 
@@ -335,19 +333,6 @@ function MainContent_settingsPage(_projectId) {
 
 
 
-
-
-
-	this.inviteUserByEmail = async function() {
-		let email 	= HTML.inviteMemberInput.value;
-		let project = Server.getProject(MainContent.curProjectId);
-		
-		let returnVal = await project.users.inviteByEmail(email);
-		if (returnVal !== true) console.error("An error accured while inviting a user:", returnVal);
-		
-		HTML.inviteMemberInput.value = null;
-		This.open(MainContent.curProjectId);
-	}
 
 	this.inviteUserByLink = async function() {
 		let project = Server.getProject(MainContent.curProjectId);

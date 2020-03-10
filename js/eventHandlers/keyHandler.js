@@ -34,8 +34,8 @@ function _KeyHandler() {
         if (MainContent.searchOptionMenu.openState)                return MainContent.searchOptionMenu.clickFirstOption();
         if (Popup.createProjectMenu.openState)                     return Popup.createProjectMenu.createProject();
         if (Popup.renameProjectMenu.openState)                     return Popup.renameProjectMenu.renameProject();
-        
-        if (_e.target == inviteMemberInput)                        return MainContent.settingsPage.inviteUser();
+        if (Popup.inviteByEmailMenu.openState)                     return Popup.inviteByEmailMenu.inviteUser();
+
         return MainContent.taskHolder.createTask();
       },
       ignoreIfInInputField: false
