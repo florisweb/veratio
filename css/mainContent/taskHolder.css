@@ -245,6 +245,14 @@
 
 
 
+
+
+
+
+
+
+
+
 .taskItem.listItem {
 	position: relative;
 
@@ -396,6 +404,18 @@
 		.taskItem .functionHolder .plannedDateHolder {
 			color: #ccc;
 			font-size: 13px;
+		}
+
+		.taskItem .functionHolder .plannedDateHolder.today {
+			color: rgb(255, 100, 80);
+			font-weight: bolder;
+		}
+		.taskItem .functionHolder .plannedDateHolder.tomorrow {
+			color: rgb(115, 104, 209);
+			font-weight: bolder;
+		}
+		.taskItem .functionHolder .plannedDateHolder.thisWeek {
+			color: #bbb;
 		}
 
 

@@ -32,10 +32,19 @@ function _TaskRenderer() {
 			_renderSettings.displayDate !== false &&
 			new Date().stringIsDate(_taskWrapper.task.groupValue)
 		) {
+			let date = new Date().setDateFromStr(_taskWrapper.task.groupValue);
 			todoRenderData.plannedDateText = DateNames.toString(
-				new Date().setDateFromStr(_taskWrapper.task.groupValue),
+				date,
 				true
 			);
+
+			let dateIndex = date.getDateInDays(true);
+			let todayIndex =  new Date().getDateInDays(true);
+
+
+			if (dateIndex > todayIndex + 1 && dateIndex <= todayIndex + 7) 	todoRenderData.plannedDateClass = "thisWeek";
+			if (dateIndex == todayIndex + 1) 								todoRenderData.plannedDateClass = "tomorrow";
+			if (dateIndex == todayIndex) 									todoRenderData.plannedDateClass = "today";
 		} 
 
 		if (_renderSettings.displayProjectTitle !== false) todoRenderData.projectTitle = project.title;
@@ -98,8 +107,11 @@ function _TaskRenderer() {
 			setOwnerIndicator(_toDoData, html);
 
 			setTextToElement(html.children[2], _toDoData.title);
-			if (_toDoData.memberText) setTextToElement(html.children[3].children[3], _toDoData.memberText);
-			if (_toDoData.plannedDateText) setTextToElement(html.children[3].children[2], _toDoData.plannedDateText);
+			if (_toDoData.memberText) 		setTextToElement(html.children[3].children[3], _toDoData.memberText);
+			
+			if (_toDoData.plannedDateText) 	setTextToElement(html.children[3].children[2], _toDoData.plannedDateText);
+			if (_toDoData.plannedDateClass) html.children[3].children[2].classList.add(_toDoData.plannedDateClass);
+
 			if (_toDoData.projectTitle) 
 			{
 				let projectTitleHolder = html.children[3].children[1];
