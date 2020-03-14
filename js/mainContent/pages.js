@@ -157,7 +157,34 @@ function taskPage_tab_today() {
 		if (!taskList || !taskList[date]) return false;
 		taskList = taskList[date];
 
-		taskHolder.task.addTaskList(taskList);
+		let finalList = [];
+		for (task of taskList)
+		{
+			if (!shouldRenderTask(task)) continue;
+			finalList.push(task);
+		}
+
+		taskHolder.task.addTaskList(finalList);
+	}
+
+	function shouldRenderTask(_task) {
+		if (_task.finished) return false;
+		return This.taskIsMine(_task);
+	}
+
+
+	this.taskIsMine = function(_task) {
+		let project = Server.getProject(_task.projectId);
+		let userId = project.users.Self.id;
+
+		if (_task.assignedTo.length == 0 && _task.creatorId != userId) return false;
+
+		if (
+			_task.assignedTo.length > 0 && 
+			!_task.assignedTo.includes(userId)
+		) return false;
+
+		return true;
 	}
 }
 
@@ -186,8 +213,23 @@ function taskPage_tab_week() {
 			let date = startDate.copy().moveDay(i);
 			let taskList = dateList[date.toString()];
 
-			addTaskHolder(date, taskList);
+			let finalList = [];
+			
+			if (taskList) 
+			{
+				for (task of taskList)
+				{
+					if (!shouldRenderTask(task)) continue;
+					finalList.push(task);
+				}
+			}
+
+			addTaskHolder(date, finalList);
 		}
+	}
+
+	function shouldRenderTask(_task) {
+		return MainContent.taskPage.todayTab.taskIsMine(_task);
 	}
 
 	function addTaskHolder(_date, _taskList) {
@@ -200,7 +242,6 @@ function taskPage_tab_week() {
 			[_date]
 		);
 
-		if (!_taskList) return;
 		taskHolder.task.addTaskList(_taskList);
 	}
 
