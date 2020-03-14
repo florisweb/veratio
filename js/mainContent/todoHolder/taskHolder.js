@@ -128,7 +128,7 @@ function _MainContent_taskHolder() {
 	this.renderTask = function(_task) {
 		for (taskHolder of this.list) 
 		{
-			if (!taskHolder.task.shouldRenderTask(_task)) continue;
+			if (!taskHolder.shouldRenderTask(_task)) continue;
 			taskHolder.task.addTask(_task);
 			return true;
 		}
@@ -213,7 +213,23 @@ function _MainContent_taskHolder() {
 function TaskHolder_default(_config, _title) {
 	_config.title = _title;
 	TaskHolder.call(this, _config, "default");
-	TaskHolder_createMenuConstructor.call(this, _config, "default");
+	TaskHolder_createMenuConstructor.call(this, _config);
+
+
+
+	this.shouldRenderTask = function(_task) {
+		if (
+			_task.groupType != "default" && 
+			!(
+				this.config.title == "Planned" &&
+				_task.groupType == "date"
+			)
+		) return false;
+		
+		if (MainContent.curProjectId && MainContent.curProjectId != _task.projectId) return false;
+
+		return true;
+	}
 }
 
 
@@ -222,7 +238,17 @@ function TaskHolder_date(_config, _date) {
 	_config.title = DateNames.toString(_date, false);
 
 	TaskHolder.call(this, _config, "date");
-	TaskHolder_createMenuConstructor.call(this, _config, "default");
+	TaskHolder_createMenuConstructor.call(this, _config);
+
+	this.shouldRenderTask = function(_task) {
+		if (_task.groupType != "date") return false;
+		if (MainContent.curProjectId && MainContent.curProjectId != _task.projectId) return false;
+
+		let taskDate = new Date().setDateFromStr(_task.groupValue);
+		if (!this.date.compareDate(taskDate)) return false;
+		
+		return true;
+	}
 }
 
 
@@ -231,6 +257,12 @@ function TaskHolder_overdue(_config) {
 	_config.html.class 	= "overdue";
 	TaskHolder.call(this, _config, "overdue");
 
+	this.shouldRenderTask = function(_task) {
+		if (_task.groupType != "overdue") return false;
+		if (MainContent.curProjectId && MainContent.curProjectId != _task.projectId) return false;
+
+		return true;
+	}
 	
 	this.onTaskFinish = function(_taskWrapper) {
 		this.onTaskRemove(_taskWrapper.task.id)
@@ -402,32 +434,6 @@ function TaskHolder_task(_parent) {
 		
 		let project = Server.getProject(_task.projectId);
 		project.tasks.update(_task);
-	}
-
-
-
-
-
-	this.shouldRenderTask = function(_task) {
-		let renderTask = true;
-
-		switch (_task.groupType)
-		{
-			case "date": 
-				if (Parent.type != "date" ||
-					!Parent.date.compareDate(new Date().setFromStr(_task.groupValue))
-				) renderTask = false;
-			break;
-			case "default": 
-				if (Parent.type != "default") renderTask = false;
-			break;
-			case "overdue": 
-				if (Parent.type != "overdue") renderTask = false;
-			break;
-		}
-
-		if (MainContent.curProjectId && MainContent.curProjectId != _task.projectId) renderTask = false;
-		return renderTask;
 	}
 
 
