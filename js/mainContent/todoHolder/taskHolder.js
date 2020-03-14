@@ -470,12 +470,14 @@ function TaskHolder_task(_parent) {
 			task: _task,
 			html: false,
 			taskHolder: Parent,
-			render: render,
-			removeHTML: removeHTML,
+			
 
 			finish: finish,
 			openEdit: openEdit,
-			remove: remove
+			remove: remove,
+
+			removeHTML: removeHTML,
+			render: render,
 		}
 
 

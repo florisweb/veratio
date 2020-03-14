@@ -61,27 +61,18 @@
 
 
 
-<h3>Backend Structure</h3>
+<h3>TaskWrapper</h3>
 
-<h4>Users</h4>
-  
-    - name [String]
-    * id: [String] sha1 of florisweb.userId
-    * type: [String]
-      - member
-      - link
-      - invite
-    * permissions: ["*", "**", "**", "*"]
+    task              taskObject
+    html              htmlObject
+    taskHolder        taskHolderObject
 
-    - isOwner [Boolean] DEFAULT: false
-
-
-
-<h4>Tasks</h4>
-  
-    * title [String]
-    * id: [String - random]
+    finish            DB-function
+    remove            DB-function
     
-   
+    openEdit          function
+    
+    removeHTML        function
+    render            function
 
 

@@ -15,12 +15,7 @@ function _TaskRenderer() {
 		
 		let todoRenderData = {
 			project: 		project,
-			
-			id: 			_taskWrapper.task.id,
-			title: 			_taskWrapper.task.title,
-			taskHolder: 	_taskWrapper.taskHolder,
-			finished: 		_taskWrapper.task.finished,
-			
+
 			assignedToMe: 	_taskWrapper.task.assignedTo.includes(project.users.Self.id),
 			taskOwner: 		project.users.getLocal(_taskWrapper.task.creatorId),
 
@@ -50,7 +45,7 @@ function _TaskRenderer() {
 		if (_renderSettings.displayProjectTitle !== false) todoRenderData.projectTitle = project.title;
 		if (tag) todoRenderData.tagColour = tag.colour;
 		
-		let html = createTaskHTML(todoRenderData);
+		let html = createTaskHTML(todoRenderData, _taskWrapper);
 
 		DOMData.set(html, _taskWrapper);
 
@@ -85,13 +80,13 @@ function _TaskRenderer() {
 
 
 
-		function createTaskHTML(_toDoData) {
+		function createTaskHTML(_renderData, _taskWrapper) {
 			let html = document.createElement("div");
 			html.className = "listItem taskItem dropTarget";
-			if (_toDoData.finished) html.classList.add("finished");
-			if (_toDoData.assignedToMe) html.classList.add("isSelf");
 			
-
+			if (_taskWrapper.task.finished) html.classList.add("finished");
+			if (_renderData.assignedToMe) html.classList.add("isSelf");
+			
 
 			const statusCircleSVG = '<?xml version="1.0" standalone="no"?><svg class="statusCircle clickable" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="isolation:isolate" viewBox="0 0 83 83" width="83" height="83"><defs><clipPath id="_clipPath_EvyxEBqQoipdaXxIJMEjCjvXV7edc1qw"><rect width="83" height="83"/></clipPath></defs><g clip-path="url(#_clipPath_EvyxEBqQoipdaXxIJMEjCjvXV7edc1qw)"><rect x="0.729" y="42.389" width="43.308" height="20" transform="matrix(0.707,0.707,-0.707,0.707,43.601,-0.482)"/><rect x="16.22" y="30.02" width="70" height="20" transform="matrix(0.707,-0.707,0.707,0.707,-13.296,47.939)"/></g></svg>';
 			html.innerHTML = 	"<div class='taskOwnerIndicator'></div>" + 
@@ -104,28 +99,32 @@ function _TaskRenderer() {
 									'<div class="functionItem memberList userText"></div>' +
 								'</div>';
 
-			setOwnerIndicator(_toDoData, html);
+			setOwnerIndicator(_renderData, html);
+			if (_renderData.tagColour) setTagColour(_html, _renderData);
 
-			setTextToElement(html.children[2], _toDoData.title);
-			if (_toDoData.memberText) 		setTextToElement(html.children[3].children[3], _toDoData.memberText);
+			setTextToElement(html.children[2], _taskWrapper.task.title);
+			if (_renderData.memberText) 		setTextToElement(html.children[3].children[3], _renderData.memberText);
 			
-			if (_toDoData.plannedDateText) 	setTextToElement(html.children[3].children[2], _toDoData.plannedDateText);
-			if (_toDoData.plannedDateClass) html.children[3].children[2].classList.add(_toDoData.plannedDateClass);
+			if (_renderData.plannedDateText) 	setTextToElement(html.children[3].children[2], _renderData.plannedDateText);
+			if (_renderData.plannedDateClass) html.children[3].children[2].classList.add(_renderData.plannedDateClass);
 
-			if (_toDoData.projectTitle) 
+			if (_renderData.projectTitle) 
 			{
 				let projectTitleHolder = html.children[3].children[1];
 				let projectTitleHtml =  '<img src="images/icons/projectIconDark.svg" class="functionItem projectIcon">' +
 										'<div class="functionItem projectTitle userText"></div>';
 				projectTitleHolder.innerHTML = projectTitleHtml;
-				setTextToElement(projectTitleHolder.children[1], _toDoData.projectTitle);
+				setTextToElement(projectTitleHolder.children[1], _renderData.projectTitle);
 			}
 
 
-			if (_toDoData.tagColour)
-			{
-				let tagColour = stringToColour(_toDoData.tagColour);
-				let colorTarget = html.children[1].children[0]; 
+			return assignEventHandlers(html, _renderData, _taskWrapper);
+		}
+
+
+			function setTagColour(_html, _renderData) {
+				let tagColour = stringToColour(_renderData.tagColour);
+				let colorTarget = _html.children[1].children[0]; 
 				colorTarget.style.backgroundColor = colourToString(
 					mergeColours(
 						tagColour,
@@ -152,10 +151,6 @@ function _TaskRenderer() {
 				);
 			}
 
-
-			return assignEventHandlers(html, _toDoData);
-		}
-
 			function setOwnerIndicator(_taskData, _html) {
 				if (_taskData.taskOwner || _taskData.taskOwner.id == _taskData.project.users.Self.id) return;
 				_html.classList.add("isMyTask");
@@ -177,8 +172,29 @@ function _TaskRenderer() {
 			}
 
 
-			function assignEventHandlers(_html, _taskData) {
-				
+
+
+
+
+			function assignEventHandlers(_html, _taskData, _taskWrapper) {
+				_html.children[1].onclick = async function() {
+					_taskWrapper.finish();
+				}
+
+				DoubleClick.register(_html, async function() {
+					_taskWrapper.openEdit();
+				});
+
+				RightClick.register(_html, function(_event, _html) {
+					MainContent.optionMenu.open(_html.children[2].children[0], _event);
+				});
+
+
+				return assignDragHandler(_html, _taskWrapper);
+			}
+
+
+			function assignDragHandler(_html, _taskWrapper) {
 				let lastDropTarget = false;
 				DragHandler.register(
 					_html, 
@@ -210,14 +226,16 @@ function _TaskRenderer() {
 						
 
 						_item.html.classList.add("hide");
-						_taskData.taskHolder.onTaskRemove(_taskData.id); // remove the task from the old location
+						_taskWrapper.taskHolder.onTaskRemove(_taskWrapper.task.id);
 
-						let task = await Server.global.tasks.get(_taskData.id);				
+						let task = await Server.global.tasks.get(_taskWrapper.task.id);				
 						dropData.taskHolder.task.dropTask(task, dropData.index);
 
 						return dropCoords;
 					}
 				);
+
+				return _html;
 
 
 				function clearLastDropTarget() {
@@ -232,15 +250,6 @@ function _TaskRenderer() {
 					return 	_target.classList.contains("dropDownButton") || 
 							_target.classList.contains("dateHolder");
 				}
-
-				function getAboveStatus(_item, _dropTarget) {
-					let dropTargetHeight 	= _dropTarget.offsetHeight;
-					let dropTargetY 		= _dropTarget.getBoundingClientRect().top;
-					return dropTargetY - _item.y > 0;
-				}
-
-
-
 
 				function getDropData(_item) {
 					if (!lastDropTarget) return false;
@@ -289,26 +298,13 @@ function _TaskRenderer() {
 						return index;
 					}
 
+					function getAboveStatus(_item, _dropTarget) {
+						let dropTargetHeight 	= _dropTarget.offsetHeight;
+						let dropTargetY 		= _dropTarget.getBoundingClientRect().top;
+						return dropTargetY - _item.y > 0;
+					}
 
-
-
-				_html.children[1].onclick = async function() {
-					let data 	= DOMData.get(_html);
-					data.finish();
-				}
-
-				DoubleClick.register(_html, async function() {
-					let data 	= DOMData.get(_html);
-					data.openEdit();
-				});
-
-				RightClick.register(_html, function(_event, _html) {
-					MainContent.optionMenu.open(_html.children[2].children[0], _event);
-				});
-
-
-				return _html;
-			}	
+			}
 }
 
 
