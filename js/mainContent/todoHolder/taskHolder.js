@@ -218,13 +218,8 @@ function TaskHolder_default(_config, _title) {
 
 
 	this.shouldRenderTask = function(_task) {
-		if (
-			_task.groupType != "default" && 
-			!(
-				this.config.title == "Planned" &&
-				_task.groupType == "date"
-			)
-		) return false;
+		if (this.config.title == "Planned" && _task.groupType != "date") return false;
+		if (_task.groupType != "default" && this.config.title != "Planned") return false;
 		
 		if (MainContent.curProjectId && MainContent.curProjectId != _task.projectId) return false;
 
