@@ -146,12 +146,13 @@ function _MainContent_taskHolder() {
 	}
 
 
-	this.closeAllCreateMenus = function() {
+	this.closeAllCreateMenus = function(_ignorerer) {
 		let closedCreateMenu = false;
 		for (taskHolder of this.list)
 		{
 			if (!taskHolder.createMenu) continue;
 			if (!taskHolder.createMenu.openState) continue;
+			if (taskHolder == _ignorerer) continue;
 			taskHolder.createMenu.close();
 			closedCreateMenu = true;
 		}
@@ -322,12 +323,9 @@ function TaskHolder(_config = {}, _type = "default") {
 		MainContent.taskHolder.remove(this.id);
 	}
 
-	this.onTaskFinish = function(_task) {
-		console.warn("FINISH", _task);
-	}
+	this.onTaskFinish = function(_task) {}
 
 	this.onTaskRemove = function(_taskId) {
-		console.warn("REMOVE", _taskId);
 		this.task.removeTask(_taskId);
 	}
 
@@ -652,15 +650,15 @@ function TaskHolder_createMenu(_parent) {
 
 	this.openState = false;
 	this.open = function() {
-		MainContent.taskHolder.closeAllCreateMenus();
+		MainContent.taskHolder.closeAllCreateMenus(Parent);
 		MainContent.searchOptionMenu.openWithInputField(Parent.HTML.inputField);
 
 		this.openState = true;
 
 		Parent.HTML.createMenuHolder.classList.remove("close");
 		Parent.HTML.inputField.focus();
-		Parent.HTML.inputField.value 	= null;
-		Parent.HTML.plannedDateField.value = null;
+		Parent.HTML.inputField.value 		= null;
+		Parent.HTML.plannedDateField.value 	= null;
 
 		let buttonTitle = editData.task ? "Change" : "Add";
 		Parent.HTML.createMenu.children[2].children[0].innerHTML = buttonTitle;	
@@ -672,21 +670,23 @@ function TaskHolder_createMenu(_parent) {
 		let task = await Server.global.tasks.get(_taskId);
 		if (!task || !_taskHTML) return false;
 
+		resetEditMode(false);
+
 		editData.task = task;
 		editData.html = _taskHTML;
 		editData.html.classList.add("hide");
 
 		this.open();
-	
-		Parent.HTML.createMenu.children[0].value = task.title;
-		if (task.groupType == "date") Parent.HTML.createMenu.children[1].value = task.groupValue;
+		
+		Parent.HTML.inputField.value = task.title;
+		if (task.groupType == "date") Parent.HTML.plannedDateField.value = task.groupValue;
 	}
 
 
 	this.close = function() {
 		this.openState = false;
 		Parent.HTML.createMenuHolder.classList.add("close");
-		resetEditMode();
+		resetEditMode(false);
 	}
 
 
