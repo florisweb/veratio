@@ -5,10 +5,11 @@ Version 1.1
 Planned features:
 - [x] Midend / clientside datamanagement redesign
 - [x] Drop-down-menu's for the taskHolders
-- [ ] Drag and drop support for tasks
+- [x] Drag and drop support for tasks (Cross-date)
 - [x] Overdue auto-setter
 - [x] TaskOwnerIndicator: hover to see the task's owner
 - [x] Option to invite using a link
+- [x] Bug Fix: You can now mention members that have an '@' in their name
 
 
 
@@ -16,9 +17,10 @@ Version 1.2
 Planned features:
 - [ ] Tags (Creation, usage, and such)
 - [ ] Project colours
+- [ ] Offline service
+? - [ ] Drag and drop support for tasks (Order?)
 ? - [ ] Sorting and filtering UI
 ?    - [ ] Sort tasks by planned date
-- [ ] Offline service
 
 
 Version 1.3
