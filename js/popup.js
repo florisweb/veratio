@@ -228,6 +228,8 @@ function _Popup_createProject() {
 
 	_popup.call(this, builder);
 	this.HTML.projectTitle = this.HTML.popup.children[2];
+	this.HTML.projectTitle.maxLength = 256;
+
 	let extend_open = this.open;
 
 	this.open = function() {
@@ -361,6 +363,7 @@ function _Popup_renameProject() {
 
 	this.HTML.projectTitle = this.HTML.popup.children[3];
 	this.HTML.newTitleHolder = this.HTML.popup.children[6];
+	this.HTML.newTitleHolder.maxLength = 256;
 
 	let extend_open = this.open;
 
