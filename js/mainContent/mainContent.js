@@ -342,23 +342,29 @@ function _MainContent_searchOptionMenu() {
 				let scores = [];
 				let itemTitle = _item.title ? _item.title : _item.name;
 
-				for (let v = 1; v < valueParts.length; v++)
-				{
-					let cValue = valueParts[v];
-					let valueTillHere = Object.assign([], valueParts).splice(0, v).join("#");
-					let startAt = valueTillHere.length;
 
-					for (let i = 0; i < cValue.length; i++)
+				for (let valI = 1; valI < valueParts.length; valI++)
+				{
+					let cValue = valueParts[valI];
+					for (let valAddI = valI; valAddI < valueParts.length; valAddI++)
 					{
-						let curSubString = cValue.substr(0, i + 1);
-						let item = {
-							startAt: startAt,
-							length: i + 2,
-							str: curSubString,
-							score: similarity(curSubString, itemTitle),
-							item: _item
+						if (valAddI > valI) cValue += _type + valueParts[valAddI];
+
+
+						let startIndex = Object.assign([], valueParts).splice(0, valI).join(_type).length;
+
+						for (let i = 0; i < cValue.length; i++)
+						{
+							let curSubString = cValue.substr(0, i + 1);
+							let item = {
+								startAt: startIndex,
+								length: i + 2,
+								str: curSubString,
+								score: similarity(curSubString, itemTitle),
+								item: _item
+							}
+							scores.push(item);
 						}
-						scores.push(item);
 					}
 				}
 				
@@ -369,7 +375,6 @@ function _MainContent_searchOptionMenu() {
 			    	return 0;
 			    })[0];
 			}
-
 
 
 
