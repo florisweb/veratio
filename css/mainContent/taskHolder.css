@@ -69,7 +69,7 @@
 		margin: -7.5px;
 		
 		opacity: 0;
-		transition: transform 0.2s opacity .3s;
+		transition: transform 0.2s, opacity .3s;
 	}
 	
 	.taskHolder .dropDownButton:hover {

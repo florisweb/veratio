@@ -62,7 +62,7 @@
 		<link rel="stylesheet" type="text/css" href="css/main.css?a=29">
 		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=28">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=58">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=64">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=65">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/header.css?a=1">
 
 		<script type="text/javascript" src="/JS/jQuery.js" asy nc></script>
