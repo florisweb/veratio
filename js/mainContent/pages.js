@@ -379,7 +379,7 @@ function MainContent_settingsPage(_projectId) {
 		let project = Server.getProject(MainContent.curProjectId);
 		
 		let returnVal = await project.users.inviteByLink();
-		if (returnVal !== true) console.error("An error accured while inviting a user:", returnVal);//TODO
+		if (typeof returnVal !== "string") console.error("An error accured while inviting a user:", returnVal);
 
 		Popup.inviteByLinkCopyMenu.open("https://florisweb.tk/git/todo/invite?id=" + returnVal);
 		This.open(MainContent.curProjectId);
