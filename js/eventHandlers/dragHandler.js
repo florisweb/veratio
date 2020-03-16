@@ -14,6 +14,22 @@ function _DragHandler() {
   let list = [];
   let This = this;
 
+  let CurDragId = false;
+  
+  document.body.addEventListener("mousemove", 
+    function (_event) {
+      if (!CurDragId) return;
+      This.dragHandler(CurDragId, _event);
+    }
+  )
+  document.body.addEventListener("mouseup", 
+    function (_event) {
+      if (!CurDragId) return;
+      This.stopDraging(CurDragId, _event);
+    }
+  );
+  
+
   this.register = function(_item, _moveCallBack, _stopDragingCallback) {
     if (!_item) return false;
     let id = newId();
@@ -23,18 +39,7 @@ function _DragHandler() {
         This.startDraging(id, _event);
       }
     );
-    document.body.addEventListener("mousemove", 
-      function (_event) {
-        This.dragHandler(id, _event);
-      }
-    )
-    document.body.addEventListener("mouseup", 
-      function (_event) {
-        This.stopDraging(id, _event);
-      }
-    );
     
-
 
     list.push({
       html: _item,
@@ -65,8 +70,8 @@ function _DragHandler() {
   this.constructor.prototype.startDraging = function(_id, _event) {
     let item = get(_id);
     if (!item) return false;
-
     item.draging = true;
+    CurDragId = _id;
 
     if (!_event) return false;
     let pos = item.html.getBoundingClientRect();
@@ -88,11 +93,12 @@ function _DragHandler() {
     if (!item.dragStarted) if (new Date() - item.startDraging > 100) 
     {
       item.dragStarted = true;
+      
       item.placeHolder = addPlaceHolderItem(item);
-      document.body.classList.add("noselect");
       item.placeHolder.classList.add("draging");
 
       item.html.classList.add("hide");
+      document.body.classList.add("noselect");
     } else return false;
 
 
@@ -102,7 +108,7 @@ function _DragHandler() {
     item.placeHolder.style.top  = item.y + "px";
 
     try {
-      let dropTarget = dropTargetFromEvent(_event);
+      let dropTarget = dropTargetByEvent(_event);
       item.moveCallBack(item, dropTarget);
     }
     catch (e) {console.error("DragHandler: An error accured while trying to handle the moveCallBack", e)}
@@ -111,6 +117,8 @@ function _DragHandler() {
   this.constructor.prototype.stopDraging = function(_id, _event) {
     let item = get(_id);
     if (!item || !item.draging || !item.dragStarted) return false;
+    CurDragId = false;
+
     document.body.classList.remove("noselect");
     item.html.classList.remove("hide");
 
@@ -119,7 +127,7 @@ function _DragHandler() {
    
     let dropCoords = {};
     try {
-      let dropTarget = dropTargetFromEvent(_event);
+      let dropTarget = dropTargetByEvent(_event);
       dropCoords = item.stopDragingCallback(item, dropTarget);
     }
 
@@ -137,7 +145,7 @@ function _DragHandler() {
   }
 
 
-  function dropTargetFromEvent(_event) {
+  function dropTargetByEvent(_event) {
     let hoveringTarget = _event.target;
 
     if (hoveringTarget.classList.contains("dropTarget")) return hoveringTarget;
