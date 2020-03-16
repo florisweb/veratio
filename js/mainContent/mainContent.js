@@ -342,29 +342,23 @@ function _MainContent_searchOptionMenu() {
 				let scores = [];
 				let itemTitle = _item.title ? _item.title : _item.name;
 
-
 				for (let valI = 1; valI < valueParts.length; valI++)
 				{
-					let cValue = valueParts[valI];
-					for (let valAddI = valI; valAddI < valueParts.length; valAddI++)
+					let cValue = Object.assign([], valueParts).splice(valI, valueParts.length).join(_type);
+
+					let startIndex = Object.assign([], valueParts).splice(0, valI).join(_type).length;
+
+					for (let i = 0; i < cValue.length; i++)
 					{
-						if (valAddI > valI) cValue += _type + valueParts[valAddI];
-
-
-						let startIndex = Object.assign([], valueParts).splice(0, valI).join(_type).length;
-
-						for (let i = 0; i < cValue.length; i++)
-						{
-							let curSubString = cValue.substr(0, i + 1);
-							let item = {
-								startAt: startIndex,
-								length: i + 2,
-								str: curSubString,
-								score: similarity(curSubString, itemTitle),
-								item: _item
-							}
-							scores.push(item);
+						let curSubString = cValue.substr(0, i + 1);
+						let item = {
+							startAt: startIndex,
+							length: i + 2,
+							str: curSubString,
+							score: similarity(curSubString, itemTitle),
+							item: _item
 						}
+						scores.push(item);
 					}
 				}
 				
@@ -375,7 +369,6 @@ function _MainContent_searchOptionMenu() {
 			    	return 0;
 			    })[0];
 			}
-
 
 
 		function moveToItem(_characterIndex = 0) {
