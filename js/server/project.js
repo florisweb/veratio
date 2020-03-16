@@ -146,7 +146,7 @@ function _Server_globalProject(_projectId) {
     this.inviteByEmail = function(_email) {
       return REQUEST.send(
         "database/project/" + Type + ".php", 
-        "method=inviteByEmail&parameters=" + _email +
+        "method=inviteByEmail&parameters=" + Encoder.encodeString(_email) +
         "&projectId=" + This.id
       );
     }

@@ -3,9 +3,6 @@
 	require_once __DIR__ . "/../modules/app.php";
 
 
-
-	
-
 	$_projectId 	= (String)$_POST["projectId"];
 	$_method 		= (String)$_POST["method"];
 	$_parameters 	= urldecode((String)$_POST["parameters"]);
