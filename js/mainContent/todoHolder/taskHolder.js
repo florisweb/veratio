@@ -651,8 +651,9 @@ function TaskHolder_createMenu(_parent) {
 	this.openState = false;
 	this.open = function() {
 		MainContent.taskHolder.closeAllCreateMenus(Parent);
+		if (!editData.task) MainContent.searchOptionMenu.curProject = Server.getProject(MainContent.curProjectId);
 		MainContent.searchOptionMenu.openWithInputField(Parent.HTML.inputField);
-
+		
 		this.openState = true;
 
 		Parent.HTML.createMenuHolder.classList.remove("close");
@@ -669,6 +670,9 @@ function TaskHolder_createMenu(_parent) {
 	this.openEdit = async function(_taskHTML, _taskId) {
 		let task = await Server.global.tasks.get(_taskId);
 		if (!task || !_taskHTML) return false;
+
+		let project = Server.getProject(task.projectId);
+		MainContent.searchOptionMenu.curProject = project;
 
 		resetEditMode(false);
 
@@ -708,13 +712,13 @@ function TaskHolder_createMenu(_parent) {
 	}
 
 	this.openTagSelectMenu = function() {
-		openSelectMenu(0, "#", Server.projectList[0].tags.list);
+		openSelectMenu(0, "#");
 	}
 	this.openMemberSelectMenu = function() {
-		openSelectMenu(1, "@", Server.projectList[0].users.getLocalList());
+		openSelectMenu(1, "@");
 	}	
 	this.openProjectSelectMenu = function() {
-		openSelectMenu(2, ".", Server.projectList);
+		openSelectMenu(2, ".");
 	}
 
 
@@ -727,12 +731,11 @@ function TaskHolder_createMenu(_parent) {
 	// if (!project.users.Self.taskActionAllowed("update")) This.disable();
 
 
-
-
-	function openSelectMenu(_iconIndex = 0, _indicator = ".", _items = []) {
+	function openSelectMenu(_iconIndex = 0, _type = ".") {
 		if (!This.openState) return false;
-		let item = Parent.HTML.createMenu.children[3].children[_iconIndex];
-		MainContent.searchOptionMenu.openWithList(item, _items, _indicator);
+		let htmlElement = Parent.HTML.createMenu.children[3].children[_iconIndex];
+		let items = MainContent.searchOptionMenu.getItemListByType(_type);
+		MainContent.searchOptionMenu.openWithList(htmlElement, items, _type);
 	}
 
 

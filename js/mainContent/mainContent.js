@@ -159,9 +159,10 @@ function _MainContent_searchOptionMenu() {
 	let Menu = OptionMenu.create(HTML.mainContentHolder);
 
 
-	let curProject;
 	let inputField;
 	let keyTimeout = 0;
+
+	this.curProject = false;
 
 	this.openState = false;
 	this.openWithInputField = function(_inputField) {
@@ -170,7 +171,6 @@ function _MainContent_searchOptionMenu() {
 		Menu.open(inputField);
 		
 		this.openState = true;
-		curProject = Server.getProject(MainContent.curProjectId);
 
 		inputField = _inputField;
 		keyTimeout = 0;
@@ -186,7 +186,6 @@ function _MainContent_searchOptionMenu() {
 	this.openWithList = function(_button, _list, _indicator) {
 		if (!_button) return;
 		this.openState = true;
-		curProject = Server.getProject(MainContent.curProjectId);
 
 		Menu.removeAllOptions();
 		
@@ -229,8 +228,8 @@ function _MainContent_searchOptionMenu() {
 
 
 
-	function getItemListByType(_type, _project) {
-		if (!_project) _project = curProject;
+	this.getItemListByType = function(_type, _project) {
+		if (!_project) _project = this.curProject;
 		if (!_project) _project = Server.projectList[0];
 		switch (_type)
 		{
@@ -275,7 +274,7 @@ function _MainContent_searchOptionMenu() {
 				let newStr 		= partA + _type + result.title + partB;
 				inputField.value = newStr;
 
-				if (_type == ".") curProject = _item.item;
+				if (_type == ".") This.curProject = _item.item;
 				
 				This.hide();
 				inputField.focus();
@@ -316,8 +315,8 @@ function _MainContent_searchOptionMenu() {
 
 		this.getListByValue = function(_value, _type, _cursorPosition) {
 			let found = [];
-			let itemList = getItemListByType(_type);
-			if (!itemList) itemList = [];													// TEMPORARILY
+			let itemList = this.getItemListByType(_type);
+			if (!itemList) itemList = [];
 
 			for (let i = 0; i < itemList.length; i++)
 			{
