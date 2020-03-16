@@ -8,43 +8,31 @@
 		} else header("Location: welcome");
 	}
 
+	
+	function APP_noAuthHandler() {
+		header("Location: /user/login.php?redirect=/git/todo");
+		die("E_noAuth");
+	}
+
 	$root = realpath($_SERVER["DOCUMENT_ROOT"]);	
 	require_once "$root/git/todo/database/modules/app.php";
 
 
-	$isLinkUser = setLink();
-	if ($isLinkUser == "false") $GLOBALS["SESSION"]->clear("veratio_userLink");
-	if ($isLinkUser == "false" && userNeedsRedirect())
-	{
-		header("Location: /user/login.php?redirect=/git/todo");
-		die("Redirect user");
-	}
-	
-	echo "<script>const IsLinkUser = " . $isLinkUser . "</script>";
+	$isLinkUser = authenticateLink();
+	if ($isLinkUser == false) $GLOBALS["SESSION"]->clear("veratio_userLink");
+	echo "<script>const IsLinkUser = " . ($isLinkUser ? "true" : "false") . "</script>";
 
-
-
-
-	function setLink() {
+	function authenticateLink() {
 		$_link = (string)$_GET["link"];
-		if (!$_link || strlen($_link) > 100) return "false";
+		if (!$_link || strlen($_link) > 100) return false;
 
 		$linkId = "LINKUSER_" . sha1($_link);
 		$GLOBALS["SESSION"]->set("veratio_userLink", $linkId);
 		
 		$GLOBALS["App"] = new _App();
 		$projects = $GLOBALS["App"]->getAllProjects();
-		if (sizeof($projects) > 0) return "true";
-		return "false";
-	}
-
-	function userNeedsRedirect() {
-		$userId = (string)$GLOBALS["SESSION"]->get("userId");
-		if (!$userId)
-		{
-			$userId = $_SESSION["userId"];
-		}
-		return !$userId;
+		if (sizeof($projects) > 0) return true;
+		return false;
 	}
 ?>
 

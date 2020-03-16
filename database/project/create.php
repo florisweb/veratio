@@ -2,8 +2,6 @@
 	$root = realpath($_SERVER["DOCUMENT_ROOT"]);
 	require_once "$root/git/todo/database/modules/app.php";
 	
-	var_dump($_POST["title"]);
-
 	$_projectTitle 	= urldecode((String)$_POST["title"]);
 	if (!$_projectTitle) die("E_invalidTitle");
 

@@ -20,6 +20,20 @@ function _app() {
     }
 	}
 
+  // All request-inteceptor to detect authentication-loss
+  let REQUEST_send = REQUEST.send;
+  REQUEST.send = function(_url, _paramaters, _maxAttempts) {
+    return new Promise(async function (resolve, error) {
+      let result = await REQUEST_send(_url, _paramaters, _maxAttempts);
+      
+      if (result == "E_noAuth") App.promptAuthentication();
+      resolve(result);
+    });
+  }
+
+  this.promptAuthentication = function() {
+    window.location.replace("/user/login.php?redirect=/git/todo");
+  }
 
 
 

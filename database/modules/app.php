@@ -11,22 +11,22 @@
 	session_set_cookie_params(60 * 60 * 24 * 365.25, '/', '.florisweb.tk', TRUE, FALSE);
 	session_start();
 
+	if (!function_exists("APP_noAuthHandler")) 
+	{
+		function APP_noAuthHandler() {
+			die("E_noAuth");
+		}
+	}
+
+	
 
 	class _App {
 		public $userId 		= false;
 		public $isLinkUser 	= false;
 
-		// App settings
-		public $ownerPermissions = ["2", "22", "21", "2"]; // HAS TO HAVE SINGLE QUOTES AROUND IT OTHERWISE THE ESCAPED TEXT GETS LOST
+		public $ownerPermissions = ["2", "22", "21", "2"];
 		
-		
-		public function __construct($_customUserId = false) {
-			if ($_customUserId)
-			{
-				$this->userId = (string)$_customUserId;
-				return;
-			}
-
+		public function __construct() {
 			$linkId = $GLOBALS["SESSION"]->get("veratio_userLink");
 			if ($linkId) 
 			{
@@ -38,13 +38,21 @@
 			$this->userId = (string)$GLOBALS["SESSION"]->get("userId");
 			if (!$this->userId) $this->userId = $_SESSION["userId"];
 
-			if (!$this->userId) return;
+			if (!$this->userId) {$this->throwNoAuthError(); return;}
 			$this->userId = sha1($this->userId);
 		}
 
 
+		private function throwNoAuthError() {
+			try {
+				APP_noAuthHandler();
+			}
+			catch (Exception $_e) {
+			}
+		}
+
 		public function getProject($_id) {
-			if (!$this->userId) return "E_nonAuth";
+			if (!$this->userId) {$this->throwNoAuthError(); return false;}
 
 			$project = new _Project($_id);
 			
@@ -57,7 +65,7 @@
 		}
 
 		public function getAllProjects() {
-			if (!$this->userId) return "E_nonAuth";
+			if (!$this->userId) {$this->throwNoAuthError(); return array();}
 
 			$DBHelper = $GLOBALS["DBHelper"]->getDBInstance(null);
 			$projectIds = $DBHelper->getAllProjectIds();
@@ -75,7 +83,7 @@
 
 
 		public function createProject($_title) {
-			if (!$this->userId) return "E_nonAuth";
+			if (!$this->userId) {$this->throwNoAuthError(); return false;}
 
 			$DBHelper 			= $GLOBALS["DBHelper"]->getDBInstance(null);
 			$projectId 			= $DBHelper->createProject($this->userId);

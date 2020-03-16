@@ -3,10 +3,24 @@
 	require_once "$root/git/todo/database/modules/app.php";
 
 	$projects = $App->getAllProjects();
-	if (sizeof($projects) == 0)
+	if (sizeof($projects) == 0) createWelcomeProject();
+
+	$returnProjects = array();
+	for ($i = 0; $i < sizeof($projects); $i++)
 	{
-		$App->createProject("Introduction");
-		$projects = $App->getAllProjects();
+		$curProject = array();
+		$curProject["id"] 		= $projects[$i]->id;
+		$curProject["title"] 	= urlencode($projects[$i]->title);
+		array_push($returnProjects, $curProject);
+	}
+	echo json_encode($returnProjects);
+
+
+	function createWelcomeProject() {
+		$GLOBALS["App"]->createProject("Introduction");
+		$projects = $GLOBALS["App"]->getAllProjects();
+		if (sizeof($projects) == 0) return;
+
 		$introProject = $projects[0];
 		$introProject->todos->update([
 			"title" => "0: Thanks for using Veratio", "id" => "1", "groupType" => "default"
@@ -27,16 +41,4 @@
 			"title" => "5 - If you have any questions, would like to suggest a feature or report a bug, feel free to mail to: veratio@florisweb.tk", "id" => "6", "groupType" => "default"
 		]);
 	}
-
-
-
-	$returnProjects = array();
-	for ($i = 0; $i < sizeof($projects); $i++)
-	{
-		$curProject = array();
-		$curProject["id"] 		= $projects[$i]->id;
-		$curProject["title"] 	= urlencode($projects[$i]->title);
-		array_push($returnProjects, $curProject);
-	}
-	echo json_encode($returnProjects);
 ?>

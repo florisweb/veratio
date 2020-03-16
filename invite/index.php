@@ -1,13 +1,17 @@
 <?php
+	function APP_noAuthHandler() {} // ignore the noAuthHandler since we're currently inviting someone
+
 	$root = realpath($_SERVER["DOCUMENT_ROOT"]);
 	require_once "$root/git/todo/database/modules/app.php";
-
 	$userNeedsSignIn = !$GLOBALS["App"]->userId;
 
+	
 	$_inviteLink = (string)$_GET["id"];
 	if (!$_inviteLink || strlen($_inviteLink) > 100) die("E_invalidLink");
+	
+
 	$_inviteLinkEnc = sha1($_inviteLink);
-	$App = new _App($_inviteLinkEnc);
+	$App->userId = (string)$_inviteLinkEnc;
 	
 	$projects = $App->getAllProjects();
 	if (sizeof($projects) == 0) die("E_invalidLink");
@@ -15,6 +19,8 @@
 
 	$user = $project->users->get($_inviteLinkEnc);
 	if (!$user || $user["type"] != "invite") die("E_invalidLink");
+
+
 
 	$returnData = array(
 		"projectTitle" 		=> urlencode($project->title),
@@ -166,7 +172,7 @@
 
 
 			#menu_linkFound .joinAsGuestButton::after {
-				content: "Join as guest";
+				content: "Join by link";
 			}
 
 			#menu_linkFound .joinAsGuestButton {
@@ -223,7 +229,7 @@
 
 		<div id="menuHolder">
 			
-			<div class="inviteMenu hi de" id="menu_linkFound">
+			<div class="inviteMenu hide" id="menu_linkFound">
 				<div id="projectTitleHolder" class='text tHeaderLarge'></div>
 				<br>
 				<br>
@@ -247,7 +253,7 @@
 				<div class="button bBoxy text joinAsGuestButton"></div>
 			</div>
 
-			<div class="inviteMenu hide" id="menu_linkNotFound">
+			<div class="inviteMenu" id="menu_linkNotFound">
 				<div class='text tHeaderLarge'>Oops, something went wrong</div>
 				<br>
 				<br>

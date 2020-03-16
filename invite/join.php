@@ -1,4 +1,5 @@
 <?php
+	function APP_noAuthHandler() {}
 	$root = realpath($_SERVER["DOCUMENT_ROOT"]);
 	require_once "$root/git/todo/database/modules/app.php";
 	
@@ -8,7 +9,7 @@
 	if (!$_inviteUser_placeholderId || strlen($_inviteUser_placeholderId) > 50 || !$_joinType) die("E_invalidLink");
 	
 
-	$App = new _App($_inviteUser_placeholderId);
+	$App->userId = (string)$_inviteUser_placeholderId;
 	
 	$projects = $App->getAllProjects();
 	if (sizeof($projects) == 0) die("E_projectNotFound");
