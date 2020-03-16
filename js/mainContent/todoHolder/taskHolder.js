@@ -416,9 +416,9 @@ function TaskHolder_task(_parent) {
 
 
 	this.dropTask = function(_task, _taskIndex) {
+		_task = updateTaskToNewTaskHolder(_task);
 		let task = moveTaskToNewLocalPosition(_task, _taskIndex);
-		updateTaskToNewTaskHolder(_task);
-		this.reRenderTaskList();
+		task.render(_taskIndex);
 	}
 
 	function updateTaskToNewTaskHolder(_task) {
@@ -427,6 +427,7 @@ function TaskHolder_task(_parent) {
 		
 		let project = Server.getProject(_task.projectId);
 		project.tasks.update(_task);
+		return _task;
 	}
 
 
@@ -445,9 +446,7 @@ function TaskHolder_task(_parent) {
 		for (let i = 0; i < TaskHolder.taskList.length; i++)
 		{
 			if (TaskHolder.taskList[i].id != _task.id) continue;
-			let task = TaskHolder.taskList.splice(i, 1)[0];
-			TaskHolder.taskList.splice(_taskIndex, 0, task);
-			return task;
+			TaskHolder.taskList.splice(i, 1);
 		}
 
 		let newTask = new _taskWrapper(_task);
@@ -528,14 +527,8 @@ function TaskHolder_task(_parent) {
 				500 * _animate
 			);
 		}
-
-		let lastTaskIndex = Infinity;
 		
-		function render() {
-			let taskIndex = getTaskListIndex();
-			if (taskIndex == lastTaskIndex) return;
-			lastTaskIndex = taskIndex;
-
+		function render(_insertionIndex) {
 			This.removeHTML(false);
 
 			This.html = MainContent.taskPage.renderer.renderTask(
@@ -543,21 +536,12 @@ function TaskHolder_task(_parent) {
 				Parent.config.renderPreferences
 			);
 
-			if (taskIndex == TaskHolder.taskList.length) return Parent.HTML.todoHolder.append(This.html);
+			if (typeof _insertionIndex != "number" || _insertionIndex == TaskHolder.taskList.length) return Parent.HTML.todoHolder.append(This.html);
 
-			let insertBeforeElement = Parent.HTML.todoHolder.children[taskIndex];
+			let insertBeforeElement = Parent.HTML.todoHolder.children[_insertionIndex];
 			Parent.HTML.todoHolder.insertBefore(This.html, insertBeforeElement);
 		}
-
-		function getTaskListIndex() {
-			for (let i = 0; i < TaskHolder.taskList.length; i++)
-			{
-				if (TaskHolder.taskList[i].id != This.id) continue;
-				return i;
-			}
-			return TaskHolder.taskList.length;
-		}
-
+		
 		return This;
 	}
 }
