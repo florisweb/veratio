@@ -10,7 +10,7 @@ Planned features:
 - [x] TaskOwnerIndicator: hover to see the task's owner
 - [x] Option to invite using a link
 - [x] Bug Fix: You can now mention members that have an '@' in their name
-
+- [x] Bux Fix: When your session expires you will be prompted to login again
 
 
 Version 1.2
