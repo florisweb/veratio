@@ -69,7 +69,7 @@ function _Server_globalProject(_project) {
 
 
   this.users  = new function() {
-    let This = this;
+    let Users = this;
 
     let Type = "user";
     let list = [];
@@ -132,7 +132,7 @@ function _Server_globalProject(_project) {
       for (user of _userList) 
       {
         if (!user.Self) continue;
-        This.Self = new _Server_project_userComponent_Self(user);
+        Users.Self = new _Server_project_userComponent_Self(user);
         break;
       }
     }
