@@ -305,7 +305,7 @@ function _Popup_inviteByEmailMenu() {
 		"<br><br>",
 		"<br><br>",
 		{buttons: [
-			{button: "CANCEL", onclick: This.close},
+			{button: "CANCEL", onclick: function () {This.close()}},
 			{button: "INVITE", onclick: function () {This.inviteUser()}, important: true, color: COLOR.POSITIVE}
 		]}
 	];
@@ -451,7 +451,7 @@ function _Popup_permissionMenu() {
 
 		"<br><br><br><br>",
 		{buttons: [
-			{button: "CANCEL", onclick: This.close},
+			{button: "CANCEL", onclick: function () {This.close()}},
 			{
 				button: "CHANGE", 
 				onclick: function () {Popup.permissionMenu.updatePermissions()}, 
@@ -530,10 +530,12 @@ function _Popup_permissionMenu() {
 		if (!project) return false;
 
 		await project.users.update(curMember);
-		MainContent.settingsPage.open(MainContent.curProjectId);
 		curMember = false;
 
 		This.close();
+
+		await project.users.getAll();
+		MainContent.settingsPage.open(MainContent.curProjectId);
 	}
 }
 
