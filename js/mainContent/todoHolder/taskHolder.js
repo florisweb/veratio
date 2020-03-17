@@ -507,7 +507,7 @@ function TaskHolder_task(_parent) {
 
 		function openEdit() {
 			if (!This.taskHolder.createMenu) return;
-			This.taskHolder.createMenu.openEdit(This.html, This.task.id);
+			This.taskHolder.createMenu.openEdit(This.html, This.task);
 		}
 
 
@@ -653,23 +653,22 @@ function TaskHolder_createMenu(_parent) {
 		if (Parent.date) Parent.HTML.plannedDateField.value = DateNames.toString(Parent.date);
 	}
 
-	this.openEdit = async function(_taskHTML, _taskId) {
-		let task = await Server.global.tasks.get(_taskId);
-		if (!task || !_taskHTML) return false;
+	this.openEdit = async function(_taskHTML, _task) {
+		if (!_task || !_taskHTML) return false;
 
-		let project = Server.getProject(task.projectId);
+		let project = Server.getProject(_task.projectId);
 		MainContent.searchOptionMenu.curProject = project;
 
 		resetEditMode(false);
 
-		editData.task = task;
+		editData.task = _task;
 		editData.html = _taskHTML;
 		editData.html.classList.add("hide");
 
 		this.open();
 		
-		Parent.HTML.inputField.value = task.title;
-		if (task.groupType == "date") Parent.HTML.plannedDateField.value = task.groupValue;
+		Parent.HTML.inputField.value = _task.title;
+		if (_task.groupType == "date") Parent.HTML.plannedDateField.value = _task.groupValue;
 	}
 
 
