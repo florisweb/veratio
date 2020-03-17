@@ -1,6 +1,9 @@
 <?php
 	setcookie("Veratio_hasSeenWelcomeMessage", "1", time() + 60 * 60 * 24 * 365, "/git/veratio");	
-	echo "<script>const LINKUSER_LINK = decodeURIComponent('" . urlencode((string)$_GET["link"]) . "');</script>";
+	
+	$link = false;
+	if (isset($_GET["link"])) $link = (string)$_GET["link"];
+	echo "<script>const LINKUSER_LINK = decodeURIComponent('" . urlencode($link) . "');</script>";
 ?>
 <!DOCTYPE html>
 <html>
