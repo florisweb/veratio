@@ -1,6 +1,6 @@
-function _Server_globalProject(_projectId) {
+function _Server_globalProject(_project) {
   let This    = this;
-  this.id     = String(_projectId);
+  this.id     = String(_project.id);
 
   this.tasks  = new function() {
     let Type = "task";
@@ -68,15 +68,23 @@ function _Server_globalProject(_projectId) {
 
 
 
-
   this.users  = new function() {
+    let This = this;
+
     let Type = "user";
     let list = [];
+    if (_project.users) 
+    {
+      list = _project.users; 
+      setSelf(list);
+    };
 
-    this.Self;// = new _Server_project_userComponent_Self();
+    this.Self;
     
+
+
     let lastSync = new Date();
-    const dateRecensy = 10000; // miliseconds after which the data is considered out of date
+    const dateRecensy = 60 * 1000; // miliseconds after which the data is considered out of date
 
     this.get = async function(_id) {
       let users = await this.getAll();
@@ -96,8 +104,8 @@ function _Server_globalProject(_projectId) {
       );
       if (!Array.isArray(results)) return false;
       results = Encoder.decodeObj(results);
-      
-      for (user of results) if (user.Self) This.users.Self = new _Server_project_userComponent_Self(user);
+
+      setSelf(results);
 
       list = results;
       
@@ -110,7 +118,7 @@ function _Server_globalProject(_projectId) {
       return list;
     }
 
-    this.getLocal = function(_id) {
+    this.getLocal = async function(_id) {
       let users = this.getLocalList();
       for (user of users)
       {
@@ -120,6 +128,14 @@ function _Server_globalProject(_projectId) {
       return false;
     }
 
+    function setSelf(_userList) {
+      for (user of _userList) 
+      {
+        if (!user.Self) continue;
+        This.Self = new _Server_project_userComponent_Self(user);
+        break;
+      }
+    }
 
 
 
@@ -162,7 +178,6 @@ function _Server_globalProject(_projectId) {
 
 
 
-
   this.tags   = new function() {
   }
 }
@@ -172,11 +187,11 @@ function _Server_globalProject(_projectId) {
 
 
 
-function _Server_project(_projectId, _projectTitle) {
-  _Server_globalProject.call(this, _projectId);
+function _Server_project(_project) {
+  _Server_globalProject.call(this, _project);
 
   let This    = this;
-  this.title  = String(_projectTitle);
+  this.title  = String(_project.title);
 
   
   this.sync = function() {
@@ -184,7 +199,6 @@ function _Server_project(_projectId, _projectTitle) {
       this.users.getAll(),
     ]);    
   }
-
 
 
 
@@ -300,8 +314,6 @@ function _Server_project_userComponent_Self(_user) {
     return false;
   }
 }
-
-
 
 
 

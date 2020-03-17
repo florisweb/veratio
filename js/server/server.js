@@ -17,7 +17,7 @@ function _Server() {
 
 
   this.global = new function() {
-    _Server_globalProject.call(this, "*")
+    _Server_globalProject.call(this, {id: "*"})
     delete this.users;
   }
 
@@ -62,14 +62,8 @@ function _Server() {
 
       _project = Encoder.decodeObj(_project);
       
-      let project = new _Server_project(
-        _project.id, 
-        _project.title
-      );
-      project.sync();
-
+      let project = new _Server_project(_project);
       This.projectList.push(project);
     }
-
 }
 

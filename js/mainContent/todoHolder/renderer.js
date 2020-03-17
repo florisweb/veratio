@@ -61,16 +61,16 @@ function _TaskRenderer() {
 		function _createMemberTextByUserIdList(_userIdList, _project) {
 			if (!_project || !_userIdList || !_userIdList.length) return "";
 
-			let projectUsers = _project.users.getLocalList();
+			let users = _project.users.getLocalList();
 
 			let memberList = [];
 			for (id of _userIdList)
 			{
-				for (projectUser of projectUsers)
+				for (user of users)
 				{
-					if (projectUser.id != id) continue;
-					memberList.push(projectUser);
-				}				
+					if (user.id != id) continue;
+					memberList.push(user);
+				}
 			}
 
 			return App.delimitMemberText(memberList, 20);

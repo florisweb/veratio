@@ -464,17 +464,11 @@ function MainContent_settingsPage(_projectId) {
 			"images/icons/changeIconDark.png"
 		);
 
-		this.open = function(_target) {
+		this.open = async function(_target) {
 			curItem 		= _target.parentNode.parentNode;
 			curMemberId 	= DOMData.get(curItem);
 
-			let project = Server.getProject(MainContent.curProjectId);
-			let member = project.users.get(curMemberId);
-			if (!member || !project) return false;
-
 			Menu.enableAllOptions();
-			// if (!project.users.Self.userActionAllowed("remove", member)) Menu.options[0].disable();
-			// if (!project.users.Self.userActionAllowed("update", member)) Menu.options[1].disable();
 
 			return Menu.open(_target, {left: -100, top: -45});
 		}
