@@ -2,7 +2,7 @@
 	$root = realpath($_SERVER["DOCUMENT_ROOT"]);
 	require_once "$root/PHPV2/PacketManager.php";
 	$GLOBALS["PM"]->includePacket("SESSION", "1.0");
-	$GLOBALS["PM"]->includePacket("USER", "1.0");
+	$GLOBALS["PM"]->includePacket("USER", "1.1");
 
 	require_once __DIR__ . "/project.php";
 
