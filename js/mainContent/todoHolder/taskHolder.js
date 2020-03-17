@@ -265,7 +265,7 @@ function TaskHolder_overdue(_config) {
 	}
 
 	this.onTaskRemove = function(_taskId) {
-		this.task.removeTask(_taskId, true);
+		this.task.removeTask(_taskId);
 		if (this.task.taskList.length > 0) return;
 		this.remove();
 	}
@@ -402,7 +402,7 @@ function TaskHolder_task(_parent) {
 	}
 	
 
-	this.removeTask = function(_id, _animate = false) {
+	this.removeTask = function(_id, _animate = true) {
 		for (let i = 0; i < this.taskList.length; i++)
 		{
 			if (this.taskList[i].task.id != _id) continue;
@@ -514,7 +514,7 @@ function TaskHolder_task(_parent) {
 
 
 
-		function removeHTML(_animate) {
+		function removeHTML(_animate = true) {
 			let html = This.html;
 			if (!html) return false;
 
@@ -544,6 +544,8 @@ function TaskHolder_task(_parent) {
 		
 		return This;
 	}
+
+
 }
 
 
