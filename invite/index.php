@@ -2,7 +2,7 @@
 	function APP_noAuthHandler() {} // ignore the noAuthHandler since we're currently inviting someone
 
 	$root = realpath($_SERVER["DOCUMENT_ROOT"]);
-	require_once "$root/git/todo/database/modules/app.php";
+	require_once __DIR__ . "/../database/modules/app.php";
 	$userNeedsSignIn = !$GLOBALS["App"]->userId;
 
 	
@@ -38,7 +38,7 @@
 		<meta name="theme-color" content="#636ad5">
 		<link rel="manifest" href="../manifest.json">
 		<link rel="stylesheet" type="text/css" href="../css/component.css?a=34">
-		<link rel="shortcut icon" href="https://florisweb.tk/git/todo/images/pressSet/favicon.ico">
+		<link rel="shortcut icon" href="https://florisweb.tk/git/veratio/images/pressSet/favicon.ico">
 
 		<style>
 			body {

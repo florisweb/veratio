@@ -1,6 +1,6 @@
 <?php
 	$root = realpath($_SERVER["DOCUMENT_ROOT"]);
-	require_once "$root/git/todo/database/modules/projectHelpers/databaseHelper.php";
+	require_once __DIR__ . "/databaseHelper.php";
 
 
 	class _project_dataTypeTemplate {

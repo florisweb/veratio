@@ -10,12 +10,12 @@
 
 	
 	function APP_noAuthHandler() {
-		header("Location: /user/login.php?redirect=/git/todo");
+		header("Location: /user/login.php?redirect=/git/veratio");
 		die("E_noAuth");
 	}
 
 	$root = realpath($_SERVER["DOCUMENT_ROOT"]);	
-	require_once "$root/git/todo/database/modules/app.php";
+	require_once __DIR__ . "/database/modules/app.php";
 
 
 	$isLinkUser = authenticateLink();

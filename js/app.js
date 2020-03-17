@@ -32,7 +32,7 @@ function _app() {
   }
 
   this.promptAuthentication = function() {
-    window.location.replace("/user/login.php?redirect=/git/todo");
+    window.location.replace("/user/login.php?redirect=/git/veratio");
   }
 
 

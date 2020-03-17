@@ -1,7 +1,7 @@
 <?php
 	$root = realpath($_SERVER["DOCUMENT_ROOT"]);
-	require_once "$root/git/todo/database/modules/projectHelpers/dataTypeTemplate.php";
-	require_once "$root/git/todo/database/modules/projectHelpers/inviteComponent.php";
+	require_once __DIR__ . "/dataTypeTemplate.php";
+	require_once __DIR__ . "/inviteComponent.php";
 
 
 	class _project_userComponent {

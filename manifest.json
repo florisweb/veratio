@@ -8,9 +8,9 @@
       "sizes": "100x100"
     }
   ],
-  "start_url": "/git/todo",
+  "start_url": "/git/veratio",
   "background_color": "#636ad5",
   "display": "standalone",
-  "scope": "/git/todo",
+  "scope": "/git/veratio",
   "theme_color": "#636ad5"
 }

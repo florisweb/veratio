@@ -1,7 +1,7 @@
 <?php
 	function APP_noAuthHandler() {}
 	$root = realpath($_SERVER["DOCUMENT_ROOT"]);
-	require_once "$root/git/todo/database/modules/app.php";
+	require_once __DIR__ . "/../database/modules/app.php";
 	
 
 	$_inviteUser_placeholderId = sha1((string)$_GET["link"]);

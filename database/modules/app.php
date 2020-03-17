@@ -4,12 +4,8 @@
 	$GLOBALS["PM"]->includePacket("SESSION", "1.0");
 	$GLOBALS["PM"]->includePacket("USER", "1.0");
 
-	require_once "$root/git/todo/database/modules/project.php";
+	require_once __DIR__ . "/project.php";
 
-	// backwards compatability
-	$sessionName = session_name("user");
-	session_set_cookie_params(60 * 60 * 24 * 365.25, '/', '.florisweb.tk', TRUE, FALSE);
-	session_start();
 
 	if (!function_exists("APP_noAuthHandler")) 
 	{
@@ -36,7 +32,6 @@
 			}
 
 			$this->userId = (string)$GLOBALS["SESSION"]->get("userId");
-			if (!$this->userId) $this->userId = $_SESSION["userId"];
 
 			if (!$this->userId) {$this->throwNoAuthError(); return;}
 			$this->userId = sha1($this->userId);

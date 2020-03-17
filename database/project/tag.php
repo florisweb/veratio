@@ -4,7 +4,6 @@
 
 
 
-	
 
 	$_projectId 	= (String)$_POST["projectId"];
 	$_method 		= (String)$_POST["method"];

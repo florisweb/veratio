@@ -4,8 +4,8 @@
 		<title>Veratio - Florisweb.tk</title>
 		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0' name='viewport'/>
 		<meta name="theme-color" content="#636ad5">
-		<link rel="manifest" href="https://florisweb.tk/git/todo/manifest.json">
-		<link rel="shortcut icon" href="https://florisweb.tk/git/todo/images/pressSet/favicon.ico">
+		<link rel="manifest" href="https://florisweb.tk/git/veratio/manifest.json">
+		<link rel="shortcut icon" href="https://florisweb.tk/git/veratio/images/pressSet/favicon.ico">
 		<style>
 			#mainContentFrame {
 				position: fixed;
@@ -19,7 +19,7 @@
 	</head>	
 	<body>
 		<?php
-			$link = "https://florisweb.tk/git/todo?link=" . urlencode((string)$_GET["link"]);;
+			$link = "https://florisweb.tk/git/veratio?link=" . urlencode((string)$_GET["link"]);;
 			echo "<iframe id='mainContentFrame' src='" . $link . "'></iframe>";
 		?>
 

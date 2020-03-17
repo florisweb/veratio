@@ -3,9 +3,9 @@
 	require_once "$root/PHPV2/PacketManager.php";
 	$PM->includePacket("SESSION", "1.0");
 
-	require_once "$root/git/todo/database/modules/projectHelpers/userComponent.php";
-	require_once "$root/git/todo/database/modules/projectHelpers/todoComponent.php";
-	require_once "$root/git/todo/database/modules/projectHelpers/tagComponent.php";
+	require_once __DIR__ . "/projectHelpers/userComponent.php";
+	require_once __DIR__ . "/projectHelpers/todoComponent.php";
+	require_once __DIR__ . "/projectHelpers/tagComponent.php";
 	
 
 	class _Project {

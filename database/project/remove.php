@@ -1,6 +1,6 @@
 <?php
 	$root = realpath($_SERVER["DOCUMENT_ROOT"]);
-	require_once "$root/git/todo/database/modules/app.php";
+	require_once __DIR__ . "/../modules/app.php";
 
 	$_projectId 	= (String)$_POST["projectId"];
 	$project 		= $App->getProject($_projectId);

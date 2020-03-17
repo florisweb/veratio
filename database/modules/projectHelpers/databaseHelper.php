@@ -5,13 +5,6 @@
 	$GLOBALS["PM"]->includePacket("DB", "1.0");
 	$GLOBALS["PM"]->includePacket("SESSION", "1.0");
 
-	// backwards compatability
-	$sessionName = session_name("user");
-	session_set_cookie_params(60 * 60 * 24 * 365.25, '/', '.florisweb.tk', TRUE, FALSE);
-	session_start();
-
-
-	
 	global $DBHelper;
 	$DBHelper = new _databaseHelper;
 
@@ -31,11 +24,6 @@
 
 		public function getUserId() {
 			$userId = $GLOBALS["SESSION"]->get("userId");
-			if (!$userId)
-			{
-				$userId = $_SESSION["userId"];
-			}
-
 			if (!$userId) return false;
 			return $userId;
 		}
@@ -54,7 +42,6 @@
 			$this->DB 			= $_DB;
 			$this->projectId 	= (string)$_projectId;
 		}
-
 
 
 
