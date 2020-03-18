@@ -48,7 +48,7 @@
 
 		<link rel="stylesheet" type="text/css" href="css/component.css?a=43">
 		<link rel="stylesheet" type="text/css" href="css/popup.css?a=33">
-		<link rel="stylesheet" type="text/css" href="css/main.css?a=29">
+		<link rel="stylesheet" type="text/css" href="css/main.css?a=30">
 		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=28">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=58">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=66">
@@ -59,7 +59,26 @@
 	
 	</head>	
 	<body class="appLoading">
+
+		<div id="loadScreen">
+			<img class="background" src="/pictures/background.png">
+
+			<div id="page0" class="page">
+				<img class="logo" src="images/pressSet/favicon.ico">
+				<br>
+				<br>
+				<div class="text header">Welcome to Veratio
+					<br>
+					<a style="font-weight: normal !important; line-height: 25px">Updated to version 1.1</a>
+				</div>
+			</div>
+		</div>
+
 		
+
+
+
+
 		<div id="sideBar">
 			<img class="sideBarBackground" src="images/sideBarBackground/?type=sidebar">
 			<div class="navigationHolder">

@@ -1,5 +1,5 @@
 <?php
-	setcookie("Veratio_hasSeenWelcomeMessage", "1", time() + 60 * 60 * 24 * 365, "/git/veratio");	
+	setcookie("Veratio_hasSeenWelcomeMessage", "2", time() + 60 * 60 * 24 * 365, "/git/veratio");	
 	
 	$link = false;
 	if (isset($_GET["link"])) $link = (string)$_GET["link"];
@@ -23,15 +23,27 @@
 				width: 100vw;
 				height: 100vh;
 
-				opacity: .2;
+				opacity: .4;
 				animation: background_popIn 1s 1;
 				transition: all .5s;
 			}
 			
 			body.page1 #backgroundImage {
-				opacity: .4;
+				opacity: .6;
 				transform: scale(1.5);
 			}
+
+			@keyframes background_popIn {
+			    0% {
+			    	opacity: 0;
+			    }
+			   
+			    100% {
+			    	opacity: .4;
+			    }
+			}
+
+
 
 
 			#pageHolder {
@@ -82,6 +94,8 @@
 				width: 100%;
 				text-align: center;
 				opacity: 0;
+				color: #333;
+
 
 				animation: logoText_show .5s 1;
 				animation-delay: 1s;
@@ -133,21 +147,12 @@
 			@keyframes logoText_show {
 			    0% {
 			    	opacity: 0;
-			    	top: -2 0px;
+			    	top: -2px;
 			    }
 			   
 			    100% {
 			    	opacity: .5;
-			    	top: 0px;
-			    }
-			}
-			@keyframes background_popIn {
-			    0% {
-			    	opacity: 0;
-			    }
-			   
-			    100% {
-			    	opacity: .2;
+			    	top: 0;
 			    }
 			}
 
@@ -213,7 +218,7 @@
 					<br>
 					<br>
 					<a style="font-weight: normal !important">Veratio is under active development.<br>
-						<a class="clickable" onclick="window.open('https://github.com/florisweb/veratio/commits/master')" style="text-decoration: underline; color: #999; font-weight: normal !important">View changelogs</a>
+						<a class="clickable" onclick="window.open('https://github.com/florisweb/veratio/commits/master')" style="text-decoration: underline; color: #333; font-weight: normal !important">View changelogs</a>
 					</a>
 				</div>
 				

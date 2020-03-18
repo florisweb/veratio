@@ -24,3 +24,134 @@ html {
 
 #DragHandler_dragObject:not(.draging) {
 }
+
+
+
+
+#loadScreen {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #fff;
+    transition: all .3s;
+}
+
+body:not(.appLoading) #loadScreen {
+    transform: scale(1.2);
+    opacity: 0;
+    pointer-events: none;
+}
+
+#loadScreen .background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    
+    animation: background_popIn 2s 1;
+    animation-fill-mode: forwards;
+}
+
+
+@keyframes background_popIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: .3;
+    }
+}
+
+
+
+
+
+
+    #loadScreen .page {
+        position: relative;
+        margin: auto;
+        
+        top: calc(50vh - 100px);
+
+        width: 200px;
+        height: auto;
+        
+        transition: all 0.3s;
+    }
+
+    #loadScreen .page.hide {
+        transform: scale(0);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+
+
+    #loadScreen .page .logo {
+        position: relative;
+        left: calc(200px / 2 - 50px / 2);
+        top: 45px;
+        height: 50px;
+        width: auto;
+        opacity: 0;
+        transform: scale(0);
+
+        animation: logo_popIn 1s 1;
+        animation-delay: .5s;
+        animation-fill-mode: forwards;
+    }
+
+    #loadScreen .page .text {
+        position: relative;
+        top: 15px;
+        width: 100%;
+        text-align: center;
+        color: #999;
+
+        opacity: 0;
+
+        animation: text_show 1s 1;
+        animation-delay: 1s;
+        animation-fill-mode: forwards;
+    }
+
+    
+    .page .button {
+        position: relative;
+        top: 50px;
+        margin: auto;
+        width: 50px;
+        text-align: center;
+    }
+
+    @keyframes logo_popIn {
+        0% {
+            opacity: 0;
+            transform: scale(0);
+        }
+       
+        50% {
+            opacity: .9;
+            transform: scale(1);
+            top: 45px;
+        }
+        100% {
+            top: 0;
+            transform: scale(1);
+            opacity: .9;
+        }
+    }
+  
+    @keyframes text_show {
+        0% {
+            opacity: 0;
+            top: -5px;
+        }
+       
+        100% {
+            opacity: 1;
+            top: 00;
+        }
+    }
+
