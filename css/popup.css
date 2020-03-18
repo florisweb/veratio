@@ -58,7 +58,12 @@
 	float: left;
 	color: #888;
 	font-family: Arial, Helvetica, sans-serif;
+
+	max-width: 100%;
+	overflow: hidden;
+	white-space: nowrap;
 }
+
 .popup .text.highlighted {
 	font-weight: bolder;
 	color: #777;

@@ -348,7 +348,7 @@ function _Popup_renameProject() {
 		{text: "Rename "},
 		{text: "", highlighted: true},
 		{text: " to:"},
-		"<br><br>",
+		"<br><br><br>",
 		{input: "Project title", value: null, customClass: "text"},
 		"<br><br>",
 		"<br><br>",
