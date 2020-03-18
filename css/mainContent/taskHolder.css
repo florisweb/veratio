@@ -426,6 +426,7 @@
 			.taskItem .functionHolder .projectHolder .projectTitle {
 				color: #777;
 				font-size: 14px;
+				max-width: 20vw;
 			}
 
 			.taskItem .functionHolder .projectHolder .projectIcon {
