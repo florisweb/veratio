@@ -154,7 +154,7 @@ function _TaskRenderer() {
 			function setOwnerIndicator(_taskData, _html) {
 				if (!_taskData.taskOwner || _taskData.taskOwner.id == _taskData.project.users.Self.id) return;
 
-				_html.classList.add("isMyTask");
+				_html.classList.add("isNotMyTask");
 				let ownerIndicator = _html.children[0];
 
 				let onIndicator = false;

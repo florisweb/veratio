@@ -308,7 +308,7 @@
 	opacity: 0;
 }
 
-.taskItem.listItem.isMyTask .taskOwnerIndicator {
+.taskItem.listItem.isNotMyTask .taskOwnerIndicator {
 	opacity: .35;
 }
 
