@@ -118,7 +118,7 @@ function _Server_globalProject(_project) {
       return list;
     }
 
-    this.getLocal = async function(_id) {
+    this.getLocal = function(_id) {
       let users = this.getLocalList();
       for (user of users)
       {
