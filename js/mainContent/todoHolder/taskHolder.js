@@ -685,9 +685,11 @@ function TaskHolder_createMenu(_parent) {
 
 		if (!project) 	return false;
 		if (typeof task != "object") return task;
-		resetEditMode(true);
 
 		let newTask = await project.tasks.update(task);
+		if (editData.task && task.projectId != editData.task.projectId && newTask) removeOldTask(editData.task);
+
+		resetEditMode(true);
 		MainContent.taskHolder.renderTask(newTask);
 		
 		this.close();
@@ -695,6 +697,14 @@ function TaskHolder_createMenu(_parent) {
 		
 		return true;
 	}
+
+	function removeOldTask(_task) {
+		let prevProject = Server.getProject(_task.projectId);
+		if (!prevProject) return false;
+		return prevProject.tasks.remove(_task.id);
+	}
+
+
 
 	this.openTagSelectMenu = function() {
 		openSelectMenu(0, "#");
@@ -764,7 +774,7 @@ function TaskHolder_createMenu(_parent) {
 			id: newId()
 		};
 
-		if (editData.task) task = editData.task;
+		if (editData.task) task = Object.assign({}, editData.task);
 
 		// add projectId
 		let projects = getListByValue(_value, ".");
