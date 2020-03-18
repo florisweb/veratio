@@ -7,7 +7,9 @@
 	class _garbageCollector {
 		public function __construct() {
 			$projects = $GLOBALS["App"]->getAllProjects();
-			foreach ($projects as $project) $this->setTasksToOverdue($project);
+			
+			$overdueTasks = 0;
+			foreach ($projects as $project) $overdueTasks += $this->setTasksToOverdue($project);
 		}
 
 		private function setTasksToOverdue($_project) {
@@ -19,18 +21,20 @@
 			$curDate 		= new DateTime();
 			$curDate 		= strtotime($curDate->format('d-m-Y'));
 
+			$overdueTasks = 0;
+
 			foreach ($dateTasks as $task)
 			{
 				if (!$task["groupValue"]) continue;
 				$taskDate = strtotime($task["groupValue"]);
 				if ($taskDate >= $curDate || $task["finished"]) continue;
 
-				var_dump($task["title"]);
-				echo "<br>";
+				$overdueTasks++;
 
 				$task["groupType"] = "overdue";
 				$_project->todos->update($task);
 			}
+			return $overdueTasks;
 		}
 	}
 
@@ -38,5 +42,4 @@
 
 	global $GarbageCollector;
 	$GarbageCollector = new _garbageCollector();
-
 ?>

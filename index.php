@@ -16,6 +16,7 @@
 
 	$root = realpath($_SERVER["DOCUMENT_ROOT"]);	
 	require_once __DIR__ . "/database/modules/app.php";
+	require_once __DIR__ . "/database/modules/garbageCollector/garbageCollector.php";
 
 
 	$isLinkUser = authenticateLink();
