@@ -481,8 +481,7 @@ function _Popup_permissionMenu() {
 
 
 	function setMemberData(_member) {
-		let memberName = _member.name + (_member.name.substr(_member.name.length - 1, 1).toLowerCase() == "s" ? "'" : "'s");
-		setTextToElement(This.HTML.memberName, memberName);
+		setTextToElement(This.HTML.memberName, _member.name + "'s");
 
 		let permissions = JSON.parse(_member.permissions);
 		let optionGroup = $("#PERMISSIONMENU .optionGroup");
