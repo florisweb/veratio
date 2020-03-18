@@ -24,9 +24,24 @@ const Encoder = new function() {
 
 
     this.decodeObj = function(_jsonObj) {
-      let jsonStr = JSON.stringify(_jsonObj);
-      jsonStr = this.decodeString(jsonStr);
-
-      return JSON.parse(jsonStr);
+      let newObj = JSON.parse(JSON.stringify(_jsonObj));
+      if (!newObj) return false;
+      let result = recursivelyDecodeObj(newObj);
+      this.list.push(result)
+      return result;
     }
+
+
+    function recursivelyDecodeObj(_obj) {
+      let keys = Object.keys(_obj);
+      for (key of keys)
+      {
+        if (typeof _obj[key] == "object") _obj[key] = recursivelyDecodeObj(_obj[key]);
+        if (typeof _obj[key] != "string") continue;
+        _obj[key] = Encoder.decodeString(_obj[key]);
+      }
+      return _obj;
+    }
+
+    this.list = [];
 }
