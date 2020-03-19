@@ -51,14 +51,20 @@
 }
 
 
-
+.popup .fullIcon {
+	position: relative;
+	left: calc((100% - 35%) / 2);
+	width: 35%;
+	height: auto;
+}
 
 
 .popup .text {
 	float: left;
 	color: #888;
 	font-family: Arial, Helvetica, sans-serif;
-
+	line-height: 20px;
+	
 	max-width: 100%;
 	overflow: hidden;
 	white-space: nowrap;
@@ -95,9 +101,10 @@
 	float: right;
 }
 
-.popup .buttonBar .boxButton {
+.popup .boxButton {
 	position: relative;
 	float: right;
+
 	border-radius: 3px;
 	padding: 7px 12px;
 	font-size: 12px;
@@ -105,10 +112,10 @@
 }
 
 
-.popup .buttonBar .boxButton:not(.important) {
+.popup .boxButton:not(.important) {
 	color: #aaa;
 }
-.popup .buttonBar .boxButton.important {
+.popup .boxButton.important {
 	color: rgba(255, 255, 255, .9);
 }
 

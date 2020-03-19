@@ -66,6 +66,8 @@ function _app() {
 
 
   this.setup = async function() {
+    showAvailableMessages();
+
     document.body.addEventListener("keydown", function(_e) {
       KEYS[_e["key"]] = true;
       let preventDefault = KeyHandler.handleKeys(KEYS, _e);
@@ -93,6 +95,15 @@ function _app() {
 
     SideBar.projectList.open();
     setTimeout('document.body.classList.remove("appLoading");', 300);
+  }
+
+  function showAvailableMessages() {
+    const curMessageIndex = 1;
+    let messageIndex = parseInt(localStorage.getItem("veratio_messageIndex"));
+    if (messageIndex >= curMessageIndex) return;
+    
+    localStorage.setItem("veratio_messageIndex", curMessageIndex);
+    Popup.newVersionMenu.open();  
   }
 
 }

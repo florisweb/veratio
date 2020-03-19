@@ -31,6 +31,7 @@ const Popup = new function () {
 		notifcationBox: $("#notificationBox")[0]
 	}
 	
+	this.newVersionMenu 		= new _Popup_newVersionMenu();
 	this.createProjectMenu 	 	= new _Popup_createProject();
 	this.renameProjectMenu	  	= new _Popup_renameProject();
 	this.permissionMenu 		= new _Popup_permissionMenu();
@@ -94,6 +95,7 @@ function _popup(_builder) {
 		if ("text" in _item) 			element = _buildText(_item);
 		if ("subHeader" in _item) 		element = _buildSubHeader(_item);
 		if ("checkBox" in _item) 		element = _buildCheckbox(_item);
+		if ("button" in _item) 			element = _buildButton(_item);
 		if ("buttons" in _item) 		element = _buildButtons(_item.buttons);
 		if ("input" in _item) 			element = _buildInput(_item);
 		if ("options" in _item) 		element = _buildOptionHolder(_item);
@@ -543,7 +545,43 @@ function _Popup_permissionMenu() {
 
 
 
+function _Popup_newVersionMenu() {
+	let This = this;
+	let builder = [
+		"<br>",
+		"<img src='images/icons/updateIcon.png' class='fullIcon'><br>",
+		"<br><div class='text header' style='text-align: center; width: 100%'>UPDATED TO VERSION 1.1</div>",
+		
+		"<br><br><br><br><br><br>",
+		{text: "New Features", highlighted: true},
+		"<br><div style='height: 5px'></div>",
+		{text: "- Drag and drop support for tasks (Cross-date)"},
+		"<br>", {text: "- Option to invite using a link"},
+		"<br>", {text: "- TaskOwnerIndicator: hover to see the task's owner"},
+		"<br>", {text: "- Drop-down-menu's for the taskHolders"},		
+		"<br>", {text: "- Midend / clientside datamanagement redesign"},
+		"<br>", {text: "- Overdue auto-setter"},
+		
+		"<br><br>",
+		"<br>", {text: "Bug Fixes", highlighted: true},
+		"<br>", {text: "- You can now mention members that have an '@' in their name"},
+		"<br>", {text: "- When your session expires you will be prompted to login again"},
+		"<br>", {text: "- A lot of less noteworthy bugs"}, 
+		"<br><br>",
+		{button: "CLOSE", onclick: function () {This.close()}, important: false},
+	];
+
+	_popup.call(this, builder);
+	this.HTML.popup.style.maxHeight = "250px";
+	this.HTML.popup.style.overflow = "auto";
+	this.HTML.popup.children[this.HTML.popup.children.length - 1].style.fontSize = "14px";
 
 
+	let extend_open = this.open;
+
+	this.open = function() {
+		extend_open.apply(this);
+	}	
+}
 
 

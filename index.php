@@ -47,7 +47,7 @@
 		<link rel="shortcut icon" href="images/pressSet/favicon.ico">
 
 		<link rel="stylesheet" type="text/css" href="css/component.css?a=43">
-		<link rel="stylesheet" type="text/css" href="css/popup.css?a=33">
+		<link rel="stylesheet" type="text/css" href="css/popup.css?a=34">
 		<link rel="stylesheet" type="text/css" href="css/main.css?a=30">
 		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=28">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=58">
@@ -59,25 +59,6 @@
 	
 	</head>	
 	<body class="appLoading">
-
-		<div id="loadScreen">
-			<img class="background" src="/pictures/background.png">
-
-			<div id="page0" class="page">
-				<img class="logo" src="images/pressSet/favicon.ico">
-				<br>
-				<br>
-				<div class="text header">Welcome to Veratio
-					<br>
-					<a style="font-weight: normal !important; line-height: 25px">Updated to version 1.1</a>
-				</div>
-			</div>
-		</div>
-
-		
-
-
-
 
 		<div id="sideBar">
 			<img class="sideBarBackground" src="images/sideBarBackground/?type=sidebar">
@@ -213,7 +194,21 @@
 		
 		</script>
 
- 		<!-- <script type="text/javascript" src="js/mainContent/header.js" asy nc></script>
+ 	<!-- 	<script type="text/javascript" src="js/DOMData.js" asy nc></script>
+ 		<script type="text/javascript" src="js/time.js" asy nc></script>
+ 		
+ 		<script type="text/javascript" src="js/constants.js" asy nc></script>
+ 		<script type="text/javascript" src="js/extraFunctions.js" asy nc></script>
+ 		<script type="text/javascript" src="js/optionMenu.js" asy nc></script>
+ 		<script type="text/javascript" src="js/popup.js" asy nc></script>
+
+
+ 		<script type="text/javascript" src="js/eventHandlers/dragHandler.js" asy nc></script>
+ 		<script type="text/javascript" src="js/eventHandlers/keyHandler.js" asy nc></script>
+ 		<script type="text/javascript" src="js/eventHandlers/doubleClickHandler.js" asy nc></script>
+ 		<script type="text/javascript" src="js/eventHandlers/rightClickHandler.js" asy nc></script>
+
+ 		<script type="text/javascript" src="js/mainContent/header.js" asy nc></script>
  		<script type="text/javascript" src="js/mainContent/pages.js" asy nc></script>
 
  		<script type="text/javascript" src="js/mainContent/todoHolder/taskHolder.js" asy nc></script>
@@ -226,7 +221,8 @@
  		<script type="text/javascript" src="js/server/encoder.js" asy nc></script>
  		<script type="text/javascript" src="js/server/project.js" asy nc></script>
  		<script type="text/javascript" src="js/server/server.js" asy nc></script>
- 		<script type ="text/javascript" src="js/app.js" asy nc></script>-->
-
+ 		
+ 		<script type ="text/javascript" src="js/app.js" asy nc></script>
+ -->
 	</body>
 </html>	
