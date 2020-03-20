@@ -54,16 +54,16 @@ function _MainContent_taskHolder() {
 
 	this.addOverdue = async function() {
 		let project = Server.getProject(MainContent.curProjectId);
-		let todoList = []; 
+		let taskList = []; 
 		if (project) 
 		{
-			todoList = await project.tasks.getByGroup("overdue", "*");
+			taskList = await project.tasks.getByGroup("overdue", "*");
 		} else {
 			let projectList = await Server.global.tasks.getByGroup("overdue", "*");
-			for (project of projectList) todoList = todoList.concat(project);
+			for (project of projectList) taskList = taskList.concat(project);
 		}
 	
-		if (!todoList || !todoList.length) return false;
+		if (!taskList || !taskList.length) return false;
 
 		let item = this.add(
 			"overdue", 
@@ -71,7 +71,9 @@ function _MainContent_taskHolder() {
 				displayProjectTitle: !MainContent.curProjectId
 			}
 		);
-		item.task.addTaskList(todoList);
+
+		taskList = TaskSorter.defaultSort(taskList);
+		item.task.addTaskList(taskList);
 	}
 
 

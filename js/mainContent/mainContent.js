@@ -380,3 +380,57 @@ function _MainContent_searchOptionMenu() {
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+const TaskSorter = new _TaskSorter();
+function _TaskSorter() {
+	this.defaultSort = function(_tasks) {
+		_tasks = this.sortAlphabet(_tasks);
+		_tasks = this.sortAssignedToMe(_tasks);
+		return this.sortFinished(_tasks);
+	} 
+
+
+
+	this.sortAlphabet = function(_tasks) {
+		return _tasks.sort(function(a, b) {
+	     	if (a.title > b.title) return 1;
+	    	if (a.title < b.title) return -1;
+		});
+	}
+
+	this.sortFinished = function(_tasks) {
+		return _tasks.sort(function(a, b) {
+	     	if (a.finished) return 1;
+	    	if (b.finished) return -1;
+		});
+	}
+
+	this.sortAssignedToMe = function(_tasks) {
+		return _tasks.sort(function(a, b) {
+			let projectA = Server.getProject(a.projectId);
+			let projectB = Server.getProject(b.projectId);
+
+	     	if (!projectA || !projectA.users.Self.id) return 1;
+	    	if (!projectB || !projectB.users.Self.id) return -1;
+
+	    	if (a.assignedTo.includes(projectA.users.Self.id)) return -1;
+	    	if (b.assignedTo.includes(projectB.users.Self.id)) return 1;
+		});
+	}
+}
+
+
+
+
+
+

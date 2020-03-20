@@ -163,6 +163,7 @@ function taskPage_tab_today() {
 			if (!shouldRenderTask(task)) continue;
 			finalList.push(task);
 		}
+		finalList = TaskSorter.defaultSort(finalList);
 
 		taskHolder.task.addTaskList(finalList);
 	}
@@ -241,6 +242,7 @@ function taskPage_tab_week() {
 			}, 
 			[_date]
 		);
+		_taskList = TaskSorter.defaultSort(_taskList);
 
 		taskHolder.task.addTaskList(_taskList);
 	}
@@ -304,6 +306,7 @@ function taskPage_tab_project() {
 			let dates = Object.keys(plannedTasks);
 			for (date of dates)
 			{
+				plannedTasks[date] = TaskSorter.defaultSort(plannedTasks[date]);
 				taskHolder_planned.task.addTaskList(
 					plannedTasks[date]
 				);
@@ -320,6 +323,7 @@ function taskPage_tab_project() {
 			["Not Planned"]
 		);
 
+		nonPlannedTasks = TaskSorter.defaultSort(nonPlannedTasks);
 		taskHolder_nonPlanned.task.addTaskList(nonPlannedTasks);
 	}
 }
