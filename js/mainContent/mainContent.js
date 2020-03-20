@@ -401,21 +401,21 @@ function _TaskSorter() {
 
 
 
-	this.sortAlphabet = function(_tasks) {
+	this.sortAlphabet = function(_tasks = []) {
 		return _tasks.sort(function(a, b) {
 	     	if (a.title > b.title) return 1;
 	    	if (a.title < b.title) return -1;
 		});
 	}
 
-	this.sortFinished = function(_tasks) {
+	this.sortFinished = function(_tasks = []) {
 		return _tasks.sort(function(a, b) {
 	     	if (a.finished) return 1;
 	    	if (b.finished) return -1;
 		});
 	}
 
-	this.sortAssignedToMe = function(_tasks) {
+	this.sortAssignedToMe = function(_tasks = []) {
 		return _tasks.sort(function(a, b) {
 			let projectA = Server.getProject(a.projectId);
 			let projectB = Server.getProject(b.projectId);
