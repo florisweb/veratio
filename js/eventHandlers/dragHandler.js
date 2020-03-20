@@ -1,10 +1,9 @@
 
-document.body.mouseDown = 0;
 document.onmousedown = function() { 
-  ++document.body.mouseDown;
+  DragHandler.mouseDown = true;
 }
 document.onmouseup = function() {
-  --document.body.mouseDown;
+  DragHandler.mouseDown = false;
 }
 
 
@@ -13,6 +12,8 @@ let DragHandler = new _DragHandler();
 function _DragHandler() {
   let list = [];
   let This = this;
+
+  this.mouseDown = false;
 
   let CurDragId = false;
   
@@ -89,7 +90,7 @@ function _DragHandler() {
   this.constructor.prototype.dragHandler = function(_id, _event) {
     let item = get(_id);
     if (!item || !item.draging) return false;
-    if (!document.body.mouseDown) return This.stopDraging(_id, _event);
+    if (!this.mouseDown) return This.stopDraging(_id, _event);
     if (!item.dragStarted) if (new Date() - item.startDraging > 100) 
     {
       item.dragStarted = true;
