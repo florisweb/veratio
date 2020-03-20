@@ -96,16 +96,6 @@ function _app() {
     SideBar.projectList.open();
     setTimeout('document.body.classList.remove("appLoading");', 300);
   }
-
-  function showAvailableMessages() {
-    const curMessageIndex = 1;
-    let messageIndex = parseInt(localStorage.getItem("veratio_messageIndex"));
-    if (messageIndex >= curMessageIndex) return;
-    
-    localStorage.setItem("veratio_messageIndex", curMessageIndex);
-    Popup.newVersionMenu.open();  
-  }
-
 }
 
 
@@ -116,4 +106,8 @@ window.onload = async function() {
   console.warn("App loaded!");
 }
 
+window.onmessage = function(e) {
+  if (e.origin != "https://veratio.florisweb.tk") return;
+  if (e.data == "showNewVersionMessage") Popup.newVersionMenu.open();
+}
 

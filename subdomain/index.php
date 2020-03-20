@@ -26,6 +26,24 @@
 		<script>
 			document.body.onload = function() {
 				mainContentFrame.focus();
+				showAvailableMessages();
+			}
+
+
+			function showAvailableMessages() {
+			    const curMessageIndex = 1;
+			    let messageIndex = parseInt(localStorage.getItem("messageIndex"));
+			    if (messageIndex >= curMessageIndex) return;
+			    
+			    localStorage.setItem("messageIndex", curMessageIndex);
+
+			    let win;
+			    try {
+			        win = mainContentFrame.contentWindow;
+			    } catch(e) {
+			        win = mainContentFrame.contentWindow;
+			    }
+			    win.postMessage("showNewVersionMessage", "*");
 			}
 		</script>
 	</body>

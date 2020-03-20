@@ -3056,6 +3056,7 @@ case "settings": MainContent.settingsPage.open(MainContent.curProjectId); break;
 default: MainContent.taskPage.reopenCurTab(); break;
 }
 }
+// All request-inteceptor to detect authentication-loss
 let REQUEST_send = REQUEST.send;
 REQUEST.send = function(_url, _paramaters, _maxAttempts) {
 return new Promise(async function (resolve, error) {
@@ -3086,7 +3087,6 @@ if (defaultMemberText.length <= memberText) return defaultMemberText;
 return memberText;
 }
 this.setup = async function() {
-showAvailableMessages();
 document.body.addEventListener("keydown", function(_e) {
 KEYS[_e["key"]] = true;
 let preventDefault = KeyHandler.handleKeys(KEYS, _e);
@@ -3108,16 +3108,13 @@ await this.update();
 SideBar.projectList.open();
 setTimeout('document.body.classList.remove("appLoading");', 300);
 }
-function showAvailableMessages() {
-const curMessageIndex = 1;
-let messageIndex = parseInt(localStorage.getItem("veratio_messageIndex"));
-if (messageIndex >= curMessageIndex) return;
-localStorage.setItem("veratio_messageIndex", curMessageIndex);
-Popup.newVersionMenu.open();  
-}
 }
 window.onload = async function() {
 console.warn("Start loading..."); 
 await App.setup();
 console.warn("App loaded!");
+}
+window.onmessage = function(e) {
+if (e.origin != "https://veratio.florisweb.tk") return;
+if (e.data == "showNewVersionMessage") Popup.newVersionMenu.open();
 }
