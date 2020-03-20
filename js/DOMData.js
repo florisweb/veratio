@@ -1,6 +1,4 @@
 
-
-
 const DOMData = new function () {
 	let Data = [];
 

@@ -402,6 +402,7 @@ function _TaskSorter() {
 
 
 	this.sortAlphabet = function(_tasks = []) {
+		if (!_tasks) return [];
 		return _tasks.sort(function(a, b) {
 	     	if (a.title > b.title) return 1;
 	    	if (a.title < b.title) return -1;
@@ -409,6 +410,7 @@ function _TaskSorter() {
 	}
 
 	this.sortFinished = function(_tasks = []) {
+		if (!_tasks) return [];
 		return _tasks.sort(function(a, b) {
 	     	if (a.finished) return 1;
 	    	if (b.finished) return -1;
@@ -416,6 +418,7 @@ function _TaskSorter() {
 	}
 
 	this.sortAssignedToMe = function(_tasks = []) {
+		if (!_tasks) return [];
 		return _tasks.sort(function(a, b) {
 			let projectA = Server.getProject(a.projectId);
 			let projectB = Server.getProject(b.projectId);
