@@ -46,17 +46,10 @@
 		<link rel="manifest" href="manifest.json">
 		<link rel="shortcut icon" href="images/pressSet/favicon.ico">
 
-		<link rel="stylesheet" type="text/css" href="css/component.css?a=43">
-		<link rel="stylesheet" type="text/css" href="css/popup.css?a=34">
-		<link rel="stylesheet" type="text/css" href="css/main.css?a=30">
-		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=28">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=58">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=66">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/header.css?a=1">
+		<link rel="stylesheet" type="text/css" href="css/main_min.css">
 
 		<script type="text/javascript" src="/JS/jQuery.js" asy nc></script>
 		<script type="text/javascript" src="/JS/request2.js" asy nc></script>
-	
 	</head>	
 	<body class="appLoading">
 
@@ -151,78 +144,6 @@
 				</div>
 			</div>
 		</div>
-
-
-
-		<script>
-			// temporary so things don't get cached
-			let antiCache = Math.round(Math.random() * 100000000);
-			// Modules
-			$.getScript("js/DOMData.js?antiCache=" 									+ antiCache, function() {});
-			$.getScript("js/time.js?antiCache=" 									+ antiCache, function() {});
-			
-			$.getScript("js/constants.js?antiCache=" 								+ antiCache, function() {});
-			$.getScript("js/extraFunctions.js?antiCache=" 							+ antiCache, function() {});
-			$.getScript("js/optionMenu.js?antiCache=" 								+ antiCache, function() {});
-			$.getScript("js/popup.js?antiCache=" 									+ antiCache, function() {});
-
-			// Eventhandlers
-			$.getScript("js/eventHandlers/dragHandler.js?antiCache=" 				+ antiCache, function() {});
-			$.getScript("js/eventHandlers/keyHandler.js?antiCache=" 				+ antiCache, function() {});
-			$.getScript("js/eventHandlers/doubleClickHandler.js?antiCache=" 		+ antiCache, function() {});
-			$.getScript("js/eventHandlers/rightClickHandler.js?antiCache=" 			+ antiCache, function() {});
-
-
-			$.getScript("js/mainContent/header.js?antiCache=" 						+ antiCache, function() {});
-			$.getScript("js/mainContent/pages.js?antiCache=" 						+ antiCache, function() {});
-			
-			$.getScript("js/mainContent/todoHolder/taskHolder.js?antiCache=" 		+ antiCache, function() {});
-			$.getScript("js/mainContent/todoHolder/renderer.js?antiCache=" 			+ antiCache, function() {});
-
-			$.getScript("js/mainContent/mainContent.js?antiCache=" 					+ antiCache, function() {});
-
-
-			$.getScript("js/sideBar.js?antiCache=" 									+ antiCache, function() {});
-			
-
-			$.getScript("js/server/encoder.js?antiCache=" 							+ antiCache, function() {});
-			$.getScript("js/server/project.js?antiCache=" 							+ antiCache, function() {});
-			$.getScript("js/server/server.js?antiCache=" 							+ antiCache, function() {});
-
-
-			$.getScript("js/app.js?antiCache=" 										+ antiCache, function() {});
-		
-		</script>
-
- 	<!-- 	<script type="text/javascript" src="js/DOMData.js" asy nc></script>
- 		<script type="text/javascript" src="js/time.js" asy nc></script>
- 		
- 		<script type="text/javascript" src="js/constants.js" asy nc></script>
- 		<script type="text/javascript" src="js/extraFunctions.js" asy nc></script>
- 		<script type="text/javascript" src="js/optionMenu.js" asy nc></script>
- 		<script type="text/javascript" src="js/popup.js" asy nc></script>
-
-
- 		<script type="text/javascript" src="js/eventHandlers/dragHandler.js" asy nc></script>
- 		<script type="text/javascript" src="js/eventHandlers/keyHandler.js" asy nc></script>
- 		<script type="text/javascript" src="js/eventHandlers/doubleClickHandler.js" asy nc></script>
- 		<script type="text/javascript" src="js/eventHandlers/rightClickHandler.js" asy nc></script>
-
- 		<script type="text/javascript" src="js/mainContent/header.js" asy nc></script>
- 		<script type="text/javascript" src="js/mainContent/pages.js" asy nc></script>
-
- 		<script type="text/javascript" src="js/mainContent/todoHolder/taskHolder.js" asy nc></script>
- 		<script type="text/javascript" src="js/mainContent/todoHolder/renderer.js" asy nc></script>
-
- 		<script type="text/javascript" src="js/mainContent/mainContent.js" asy nc></script>
-
- 		<script type="text/javascript" src="js/sideBar.js" asy nc></script>
-
- 		<script type="text/javascript" src="js/server/encoder.js" asy nc></script>
- 		<script type="text/javascript" src="js/server/project.js" asy nc></script>
- 		<script type="text/javascript" src="js/server/server.js" asy nc></script>
- 		
- 		<script type ="text/javascript" src="js/app.js" asy nc></script>
- -->
+ 		<script type="text/javascript" src="js/main_min.js" asy nc></script>
 	</body>
 </html>	
