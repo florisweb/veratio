@@ -6,7 +6,12 @@
 		{
 			header("Location: welcome?link=" . $_GET["link"]);
 		} else header("Location: welcome");
+		die("Redirecting");
 	}
+	
+	$MessageIndex = $_COOKIE["Veratio_messageIndex"];
+	setcookie("Veratio_messageIndex", 1, time() + (60 * 60 * 24 * 365.25), "/");
+
 
 	$enableRedirect = false;
 	function APP_noAuthHandler() {
@@ -24,7 +29,9 @@
 
 	$isLinkUser = authenticateLink();
 	if ($isLinkUser == false) $GLOBALS["SESSION"]->clear("veratio_userLink");
-	echo "<script>const IsLinkUser = " . ($isLinkUser ? "true" : "false") . "</script>";
+	echo "<script>
+			const IsLinkUser = " . ($isLinkUser ? "true" : "false") . ";
+	</script>";
 
 	function authenticateLink() {
 		$_link = (string)$_GET["link"];
@@ -37,7 +44,7 @@
 		$projects = $GLOBALS["App"]->getAllProjects();
 		if (sizeof($projects) > 0) return true;
 		return false;
-	}
+	}	
 ?>
 
 <!DOCTYPE html>

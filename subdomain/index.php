@@ -23,12 +23,15 @@
 			echo "<iframe id='mainContentFrame' src='" . $link . "'></iframe>";
 		?>
 
+		<link rel="stylesheet" type="text/css" href="popup/popup.css">
+		<script type="text/javascript" src="https://florisweb.tk/JS/jQuery.js"></script>
+		<script type="text/javascript" src="popup/popup.js"></script>
+
 		<script>
 			document.body.onload = function() {
 				mainContentFrame.focus();
 				showAvailableMessages();
 			}
-
 
 			function showAvailableMessages() {
 			    const curMessageIndex = 1;
@@ -36,15 +39,8 @@
 			    if (messageIndex >= curMessageIndex) return;
 			    
 			    localStorage.setItem("messageIndex", curMessageIndex);
-
-			    let win;
-			    try {
-			        win = mainContentFrame.contentWindow;
-			    } catch(e) {
-			        win = mainContentFrame.contentWindow;
-			    }
-			    win.postMessage("showNewVersionMessage", "*");
-			}
+			    Popup.newVersionMenu.open();  
+			 }
 		</script>
 	</body>
 </html>	

@@ -106,8 +106,4 @@ window.onload = async function() {
   console.warn("App loaded!");
 }
 
-window.onmessage = function(e) {
-  if (e.origin != "https://veratio.florisweb.tk") return;
-  if (e.data == "showNewVersionMessage") Popup.newVersionMenu.open();
-}
 
