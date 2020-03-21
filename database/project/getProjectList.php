@@ -3,7 +3,11 @@
 	require_once __DIR__ . "/../modules/app.php";
 
 	$projects = $App->getAllProjects();
-	if (sizeof($projects) == 0) createWelcomeProject();
+	if (sizeof($projects) == 0)
+	{
+		createWelcomeProject();
+		$projects = $App->getAllProjects();
+	}
 
 	$returnProjects = array();
 	for ($i = 0; $i < sizeof($projects); $i++)
