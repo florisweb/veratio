@@ -48,7 +48,7 @@
 				return $data;
 			}
 
-				private function __valueToType($_value, $_type = "int") {
+				private function __valueToType($_value, $_type = "Int") {
 					switch ($_type) 
 					{
 						case "String": 		return (String)$_value; 	break;

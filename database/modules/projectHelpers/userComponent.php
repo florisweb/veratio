@@ -9,6 +9,8 @@
 
 		private $DTTemplate;
 		public $InviteComponent;
+
+		public $Self;
 		
 		public function __construct($_parent, $_projectId) {
 			$this->DTTemplate = new _project_dataTypeTemplate(
@@ -17,13 +19,14 @@
 					"id" 			=> "String",
 					"name" 			=> "String",
 					"permissions" 	=> "String",
-					"isOwner" 		=> "Boolean",
 					"type"			=> "String",
 				]
 			));
 
 			$this->InviteComponent 	= new _project_user_inviteComponent($this, $_parent);
 			$this->Parent 			= $_parent;
+
+			$this->Self = $this->get($GLOBALS["App"]->userId);
 		}
 
 		public function inviteByEmail($_emailAdress) {
@@ -125,36 +128,5 @@
 			return $this->DTTemplate->remove($_id);
 		}
 
-
-
-		public function getPermissions($_type = false) {// gets the current users permissions
-			return $this->getPermissionsByUser($GLOBALS["App"]->userId, $_type);
-		}
-
-		public function getPermissionsByUser($_userId, $_type = false) {
-			$user = $this->get($_userId);
-			if (!$user) return false;
-
-			$permissions = json_decode($user["permissions"], true);
-			if (!$permissions) return false;
-			
-			$permArr = [];
-			switch ($_type) 
-			{
-				case "tags":	$permArr = str_split($permissions[0]); break;
-				case "tasks":	$permArr = str_split($permissions[1]); break;
-				case "users": 	$permArr = str_split($permissions[2]); break;
-				case "project": $permArr = str_split($permissions[3]); break;
-				default: return $permissions; break;
-			}
-
-			for ($i = 0; $i < sizeof($permArr); $i++)
-			{
-				$permArr[$i] = (int)$permArr[$i];
-			}
-			
-			return $permArr;
-		}
-	}
-	
+	}	
 ?>

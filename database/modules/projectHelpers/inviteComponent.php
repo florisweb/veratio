@@ -17,8 +17,7 @@
 				array("users" => [
 					"id" 			=> "String",
 					"name" 			=> "String",
-					"permissions" 	=> "String",
-					"isOwner" 		=> "Boolean",
+					"permissions" 	=> "Int",
 					"type"			=> "String",
 				]
 			));

@@ -105,54 +105,41 @@
 
 		public function update($_newTask) {
 			if (!is_array($_newTask)) return false;
-			$userId = $GLOBALS["App"]->userId;
-
+			$user 					= $this->Parent->users->Self;
+			$permissions 			= (int)$user["permissions"];
 			$oldTask 				= $this->get($_newTask["id"]);
-			$difference 			= $this->getDifferenceBetweenTasks($_newTask, $oldTask, ["creatorId"]);
-		
-			$permissions 			= $this->Parent->users->getPermissions("tasks");
-			if (!$permissions || !$_newTask) return false;
+			
+			if (!$_newTask) return false;
 
-			// only the finished-state is changed
-			if ($difference[0] == "finished" && sizeof($difference) == 1)
+			// Check if the action is allowed
+			if ($permissions < 1)
 			{
-				$allowed = false;
-				if ($permissions[1] >= 0 && $oldTask["creatorId"] === $userId) 			$allowed = true;
-				if ($permissions[1] >= 1 && in_array($userId, $oldTask["assignedTo"])) 	$allowed = true;
-				if ($permissions[1] >= 2)												$allowed = true;
-
-				if ($allowed == false) return "E_actionNotAllowed";
-			} else {
-				$allowed = false;
-				if ($permissions[0] >= 1 && $oldTask["creatorId"] === $userId) 			$allowed = true;
-				if ($permissions[0] >= 1 && !$oldTask) 									$allowed = true;
-				if ($permissions[0] >= 2)												$allowed = true;
-				
-				if ($allowed == false) return "E_actionNotAllowed";	
-
-				$_newTask["creatorId"]	= $userId;
+				$difference = $this->getDifferenceBetweenTasks($_newTask, $oldTask, ["creatorId"]);
+				if ($difference[0] != "finished" || sizeof($difference) != 1)	return "E_actionNotAllowed";
+				if (!in_array($user["id"], $oldTask["assignedTo"])) 			return "E_actionNotAllowed";
 			}
 
+
+			// Content checks
 			if (!$this->groupTypeExists($_newTask["groupType"])) return "E_groupTypeDoesNotExist";
-
-			if ($_newTask["groupType"] == "overdue" && $_newTask["finished"]) 
-			{
-				$_newTask["groupType"] = "date";
-			}
+			if ($_newTask["groupType"] == "overdue" && $_newTask["finished"]) $_newTask["groupType"] = "date";
+			$_newTask["creatorId"] = $user["id"];
 
 			if ($_newTask["groupType"] == "date") 
 			{
 				$curDate 		= new DateTime();
 				$curTime 		= strtotime($curDate->format('d-m-Y'));
 
-				$date 			= $this->_filterDate($_newTask["groupValue"]);
-
+				$date 			= $this->filterDate($_newTask["groupValue"]);
 				if (!$date) return false;
+
 				$_newTask["groupValue"] = $date;
+
 
 				$time = strtotime((new DateTime($date))->format('d-m-Y'));
 				if ($time < $curTime && !$_newTask["finished"]) $_newTask["groupType"] = "overdue";
 			}
+			
 
 			$this->DTTemplate->update($_newTask);
 			return $this->get($_newTask["id"]);
@@ -161,16 +148,10 @@
 
 		public function remove($_id) {
 			$task 			= $this->get($_id);
-			$userId 		= $GLOBALS["App"]->userId;
-			$permissions 	= $this->Parent->users->getPermissions("tasks");
-			if (!$task || !$userId || !$permissions) return false;
-
-			$allowed = false;
-			if ($permissions[1] >= 1 && $task["creatorId"] === $userId) 			$allowed = true;
-			if ($permissions[1] >= 2)												$allowed = true;
-
-			if ($allowed == false) return false;
-
+			$permissions	= (int)$this->Parent->users->Self["permissions"];
+			
+			if (!$task) return false;
+			if ($permissions < 1) return "E_actionNotAllowed";
 
 			return $this->DTTemplate->remove($_id);
 		}
@@ -215,12 +196,11 @@
 			}
 		}
 
-			private function _filterDate($_dateStr) {
-				$dateParts = explode("-", $_dateStr);
-				if (sizeof($dateParts) != 3) return false;
+		private function filterDate($_dateStr) {
+			$dateParts = explode("-", $_dateStr);
+			if (sizeof($dateParts) != 3) return false;
 
-				return (int)substr($dateParts[0], 0, 2) . "-" . (int)substr($dateParts[1], 0, 2) . "-" . (int)substr($dateParts[2], 0, 4);
-			}
-	
+			return (int)substr($dateParts[0], 0, 2) . "-" . (int)substr($dateParts[1], 0, 2) . "-" . (int)substr($dateParts[2], 0, 4);
+		}
 	}
 ?>

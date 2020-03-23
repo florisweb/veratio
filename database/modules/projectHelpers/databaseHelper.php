@@ -57,11 +57,10 @@
 				"id" 			=> $_ownerId,
 				"name"			=> $user["name"],
 				"permissions"	=> "[\"0\", \"22\", \"21\", \"2\"]",
-				"type"			=> "member",
-				"isOwner"		=> true
+				"type"			=> "member"
 			));
 
-			'{"id": "' . (string)$_ownerId . '", "permissions": "[\"0\", \"22\", \"21\", \"2\"]", "isOwner": true, "type": "member"}';
+			'{"id": "' . (string)$_ownerId . '", "permissions": 3, "type": "member"}';
 
 			$DBResult = $this->DB->execute(
 				"INSERT INTO projectList (id, users) VALUES (?, ?)", 
