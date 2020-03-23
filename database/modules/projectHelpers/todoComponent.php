@@ -69,7 +69,7 @@
 		public function getByDateRange($_info) {
 			if (!$_info || !$_info["range"] || !$_info["date"]) return false;
 			
-			$_date 		= $this->_filterDate($_info["date"]);
+			$_date 		= $this->filterDate($_info["date"]);
 			if (!$_date) return false; 
 			$startDate 	= strtotime($_date);
 
@@ -191,7 +191,7 @@
 
 			switch ($_groupType) 
 			{
-				case "date":		return $this->_filterDate($_groupValue); break;
+				case "date":		return $this->filterDate($_groupValue); break;
 				case "default": 	return (String)$_groupValue; break;
 			}
 		}
