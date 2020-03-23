@@ -66,8 +66,6 @@ function _app() {
 
 
   this.setup = async function() {
-    showAvailableMessages();
-
     document.body.addEventListener("keydown", function(_e) {
       KEYS[_e["key"]] = true;
       let preventDefault = KeyHandler.handleKeys(KEYS, _e);
