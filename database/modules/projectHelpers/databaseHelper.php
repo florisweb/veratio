@@ -56,11 +56,9 @@
 			$projectOwner 		= json_encode(array(
 				"id" 			=> $_ownerId,
 				"name"			=> $user["name"],
-				"permissions"	=> "[\"0\", \"22\", \"21\", \"2\"]",
+				"permissions"	=> 3,
 				"type"			=> "member"
 			));
-
-			'{"id": "' . (string)$_ownerId . '", "permissions": 3, "type": "member"}';
 
 			$DBResult = $this->DB->execute(
 				"INSERT INTO projectList (id, users) VALUES (?, ?)", 

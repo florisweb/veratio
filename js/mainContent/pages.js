@@ -361,6 +361,7 @@ function MainContent_settingsPage(_projectId) {
 	let HTML = {
 		Self: $(".mainContentPage.settingsPage")[0],
 		memberHolder: $(".mainContentPage.settingsPage .memberHolder")[0],
+		inviteHolder: $(".mainContentPage.settingsPage .inviteMemberHolder")[0],
 	}
 
 
@@ -370,9 +371,14 @@ function MainContent_settingsPage(_projectId) {
 		if (!_projectId) _projectId = Server.projectList[0].id;
 		let project = Server.getProject(_projectId);
 
+		HTML.inviteHolder.classList.add("hide");
+		if (project.users.Self.permissions.users.invite) HTML.inviteHolder.classList.remove("hide");
+
+
 		MainContent.header.setTitle("Settings - " + project.title);
 
 		let users = await project.users.getAll();
+
 		This.setMemberItemsFromList(users);
 	}
 
@@ -388,9 +394,6 @@ function MainContent_settingsPage(_projectId) {
 		Popup.inviteByLinkCopyMenu.open("https://florisweb.tk/git/veratio/invite?id=" + returnVal);
 		This.open(MainContent.curProjectId);
 	}
-
-
-
 
 
 	this.setMemberItemsFromList = function(_memberList) {
@@ -426,6 +429,7 @@ function MainContent_settingsPage(_projectId) {
 		setTextToElement(html.children[2].children[1], _member.permissions);
 		DoubleClick.register(html.children[2].children[1], function () {
 			let project = Server.getProject(MainContent.curProjectId);
+			if (!project.users.Self.permissions.users.changePermissions(_member)) return false;
 			Popup.permissionMenu.open(_member.id);
 		})
 
@@ -471,8 +475,13 @@ function MainContent_settingsPage(_projectId) {
 		this.open = async function(_target) {
 			curItem 		= _target.parentNode.parentNode;
 			curMemberId 	= DOMData.get(curItem);
+			
+			let project 	= Server.getProject(MainContent.curProjectId);
+			let member 		= project.users.get(curMemberId);
 
 			Menu.enableAllOptions();
+			if (!project.users.Self.permissions.users.remove(member))				Menu.options[0].disable();
+			if (!project.users.Self.permissions.users.changePermissions(member)) 	Menu.options[1].disable();
 
 			return Menu.open(_target, {left: -100, top: -45});
 		}

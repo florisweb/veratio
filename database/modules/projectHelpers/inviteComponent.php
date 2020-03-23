@@ -34,7 +34,7 @@
 			$user = array(
 				"id" 			=> sha1($inviteId),
 				"name"			=> $emailAdress,
-				"permissions" 	=> '["0", "00", "00", 0]',
+				"permissions" 	=> 0,
 				"type"			=> "invite"
 			);
 
@@ -54,7 +54,7 @@
 			$user = array(
 				"id" 			=> sha1($inviteId),
 				"name"			=> "Link " . substr(sha1($inviteId), 0, 4),
-				"permissions" 	=> '["0", "00", "00", 0]',
+				"permissions" 	=> 0,
 				"type"			=> "invite"
 			);
 
