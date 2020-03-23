@@ -3,7 +3,7 @@
 	require_once  __DIR__ . "/dataTypeTemplate.php";
 
 
-	class _project_todoComponent {
+	class _project_taskComponent {
 		private $Parent;
 
 		private $DTTemplate;
@@ -15,7 +15,7 @@
 
 			$this->DTTemplate = new _project_dataTypeTemplate(
 				$_projectId, 
-				array("todos" => [
+				array("tasks" => [
 					"id" 		=> "String",
 					"title" 	=> "String",
 					"groupType" => "String",

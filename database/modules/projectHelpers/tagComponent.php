@@ -26,10 +26,10 @@
 
 
 		public function getAll() {
-			$todos = $this->DTTemplate->getAllData();
+			$tasks = $this->DTTemplate->getAllData();
 			//do some permission stuff 
 			
-			return $todos;
+			return $tasks;
 		}
 
 

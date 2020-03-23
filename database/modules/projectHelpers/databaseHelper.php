@@ -93,11 +93,11 @@
 
 			$project = $data[0];
 			$project["users"] 	= json_decode($project["users"], true);
-			$project["todos"] 	= json_decode($project["todos"], true);
+			$project["tasks"] 	= json_decode($project["tasks"], true);
 			$project["tags"] 	= json_decode($project["tags"], true);
 
 			if ($project["users"] == NULL) 	$project["users"] = array();
-			if ($project["todos"] == NULL) 	$project["todos"] = array();
+			if ($project["tasks"] == NULL) 	$project["tasks"] = array();
 			if ($project["tags"] == NULL) 	$project["tags"] = array();
 
 			return $project;

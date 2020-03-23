@@ -35,7 +35,7 @@
 	function applyActionByProject($_project, $_method, $_parameters, $_AllowedMethods) {	
 		if (!in_array($_method, $_AllowedMethods)) die("E_invalidMethod");	
 
-		$result = $_project->todos->{$_method}($_parameters);
+		$result = $_project->tasks->{$_method}($_parameters);
 		return $result;
 	}
 

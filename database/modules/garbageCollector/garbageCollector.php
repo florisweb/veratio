@@ -13,7 +13,7 @@
 		}
 
 		private function setTasksToOverdue($_project) {
-			$dateTasks = $_project->todos->getByGroup([
+			$dateTasks = $_project->tasks->getByGroup([
 				"type" => "date",
 				"value" => "*"
 			]);
@@ -32,7 +32,7 @@
 				$overdueTasks++;
 
 				$task["groupType"] = "overdue";
-				$_project->todos->update($task);
+				$_project->tasks->update($task);
 			}
 			return $overdueTasks;
 		}

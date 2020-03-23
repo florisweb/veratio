@@ -13,7 +13,7 @@
 		public $id = "";
 		
 		public $users;
-		public $todos;
+		public $tasks;
 
 		private $DB;
 
@@ -24,7 +24,7 @@
 			$this->id = (string)$_projectId;
 
 			$this->users = new _project_userComponent($this, $this->id);
-			$this->todos = new _project_todoComponent($this, $this->id);
+			$this->tasks = new _project_taskComponent($this, $this->id);
 			$this->tags  = new _project_tagComponent($this, $this->id);
 
 			$this->DB 	 = $GLOBALS["DBHelper"]->getDBInstance($this->id);

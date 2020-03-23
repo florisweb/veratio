@@ -268,7 +268,7 @@
 .taskItem.listItem.finished {
 	opacity: 0.4;
 }
-#mainContentHolder:not(.renderFinishedTodos) .todoListHolder .taskItem.finished {
+#mainContentHolder:not(.renderFinishedTasks) .todoListHolder .taskItem.finished {
 	opacity: 0;
 	pointer-events: none;
 	margin-bottom: -35px;

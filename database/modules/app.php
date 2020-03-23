@@ -20,7 +20,7 @@
 		public $userId 		= false;
 		public $isLinkUser 	= false;
 
-		public $ownerPermissions = ["2", "22", "21", "2"];
+		public $ownerPermissions = 3;
 		
 		public function __construct() {
 			$linkId = $GLOBALS["SESSION"]->get("veratio_userLink");
@@ -89,7 +89,7 @@
 
 
 			$user = $project->users->get($this->userId);
-			$user["permissions"] = json_encode($this->ownerPermissions);
+			$user["permissions"] = $this->ownerPermissions;
 			$project->users->update($user);
 
 			$titleChanged 		= $project->rename($_title);
