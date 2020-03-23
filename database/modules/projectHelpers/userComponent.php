@@ -18,7 +18,7 @@
 				array("users" => [
 					"id" 			=> "String",
 					"name" 			=> "String",
-					"permissions" 	=> "String",
+					"permissions" 	=> "Int",
 					"type"			=> "String",
 				]
 			));
@@ -30,14 +30,16 @@
 		}
 
 		public function inviteByEmail($_emailAdress) {
-			$ownPermissions 	= $this->getPermissions("users");
-			if ($ownPermissions[0] < 1) return "E_notAllowedToInvite";
+			$permissions = (int)$this->Self["permissions"];
+			if ($permissions < 2) return "E_notAllowedToInvite";
+
 			return $this->InviteComponent->inviteByEmail($_emailAdress);
 		}
 
 		public function inviteByLink() {
-			$ownPermissions 	= $this->getPermissions("users");
-			if ($ownPermissions[0] < 1) return "E_notAllowedToInvite";
+			$permissions = (int)$this->Self["permissions"];
+			if ($permissions < 2) return "E_notAllowedToInvite";
+
 			return $this->InviteComponent->inviteByLink();
 		}
 
@@ -48,7 +50,7 @@
 			for ($i = 0; $i < sizeof($users); $i++)
 			{
 				$users[$i]["Self"] = false;
-				if ($users[$i]["id"] != $GLOBALS["App"]->userId) continue;
+				if ($users[$i]["id"] != $this->Self["id"]) continue;
 				$users[$i]["Self"] = true;
 				break;
 			}
@@ -61,69 +63,44 @@
 			if (!$user) return false;
 			
 			$user["Self"] = false;
-			if ($user["id"] == $GLOBALS["App"]->userId) $user["Self"] = true;
+			if ($user["id"] == $this->Self["id"]) $user["Self"] = true;
+
 			return $user;
 		}
 
 
 		public function update($_newUser) {
 			if (!is_array($_newUser)) return "E_invalidInput";
-			
-			$oldUser 				= $this->get($_newUser["id"]);
-			$ownPermissions 		= $this->getPermissions();
-			$ownPermissions_users 	= $this->getPermissions("users");
 
-
-			$newUserPermissions 	= json_decode($_newUser["permissions"], true);
-			if (!$newUserPermissions) $newUserPermissions = array();
 			
-			if (!$oldUser && $ownPermissions_users[0] < 1) 	return "E_actionNotAllowed_notAllowedToInvite";
-			if ($ownPermissions_users[1] < 1)				return "E_actionNotAllowed_notAllowedToChangeUserPermissions";
-			$_newUser["isOwner"] 	= $oldUser && $oldUser["isOwner"];
-			$_newUser["type"] = "testType";
+			$ownPermissions 	= (int)$this->Self["permissions"];
+			$oldUser 			= $this->get($_newUser["id"]);
+			$oldUserPermissions = 0;
+			if ($oldUser) $oldUserPermissions = (int)$oldUser["permissions"];
+			
+
+			if ($ownPermissions < 2) 								return "E_actionNotAllowed";  // not allowed to change permissions anyway
+			if ($ownPermissions < $oldUserPermissions) 				return "E_actionNotAllowed";  // don't downgrade someone a superior
+			if ($ownPermissions < (int)$_newUser["permissions"]) 	$_newUser["permissions"] = $ownPermissions;
+
+			$_newUser["type"] = "member";
 			if ($oldUser) $_newUser["type"] = $oldUser["type"];
-
-
-			for ($pt = 0; $pt < sizeof($ownPermissions); $pt++)
-			{
-				$curPermission = str_split($ownPermissions[$pt]);
-				if (!$newUserPermissions[$pt]) $newUserPermissions[$pt] = "0";
-
-				for ($cp = 0; $cp < sizeof($curPermission); $cp++)
-				{
-					if (!$newUserPermissions[$pt][$cp]) $newUserPermissions[$pt][$cp] = "0";
-					if ($newUserPermissions[$pt][$cp] <= $curPermission[$cp]) continue;
-					
-					if ($oldUser &&
-						$newUserPermissions[$pt][$cp] == json_decode($oldUser["permissions"], true)[$pt][$cp]
-					) continue;
-
-					$newUserPermissions[$pt][$cp] = $curPermission[$cp];
-				}
-			}
-
-			$_newUser["permissions"] 	= json_encode($newUserPermissions);
-			if ($_newUser["isOwner"]) $_newUser["permissions"] = json_encode($GLOBALS["App"]->ownerPermissions);
-
-			$successfullyUpdated = $this->DTTemplate->update($_newUser);
-			if (!$successfullyUpdated) return "E_unexpectedError";
+			
+			$this->DTTemplate->update($_newUser);
 			return $this->get($_newUser["id"]);
 		}
 
 
-
-
 		public function remove($_id) {
-			$permissions = $this->getPermissions("users");
-			$user = $this->get($_id);
-			if (!$user) return "E_userDoesnotExist";
+			// when the user wants to leave he can remove himself
+			if ($this->Self["id"] === $_id) return $this->DTTemplate->remove($this->Self["id"]);
 
-			if (!$user["Self"]) // if the user wants to leave, he should be able to remove himself
-			{
-				if ($permissions[0] < 2 ||
-					$user["isOwner"]
-				) return "E_actionNotAllowed";
-			}
+			$ownPermissions = (int)$this->Self["permissions"];
+			if ($ownPermissions < 2) return "E_actionNotAllowed";
+
+			$user = $this->get($_id);
+			if (!$user) return false;
+			if ($ownPermissions < (int)$user["permissions"]) return "E_actionNotAllowed";
 
 			return $this->DTTemplate->remove($_id);
 		}
