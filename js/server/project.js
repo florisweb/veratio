@@ -246,16 +246,26 @@ function _Server_project(_project) {
 function _Server_project_userComponent_Self(_user) {
   let permissions = _user.permissions;
 
+  let This = this;
   this.id           = _user.id;
   this.name         = _user.name;
   this.isOwner      = permissions == 3;
 
 
   this.permissions  = new function () {
+
+    this.project = new function() {
+      this.rename = permissions >= 2;
+      this.remove = permissions >= 3;
+    }
     
     this.tasks = new function() {
-      this.createTasks = permissions >= 1;
-      this.removeTasks = permissions >= 1;
+      this.update  = permissions >= 1;
+      this.remove  = permissions >= 1;
+      this.finish  = function(_task) {
+        if (_task.assignedTo.includes(This.id)) return true;
+        return permissions >= 1;
+      }
     }
 
 

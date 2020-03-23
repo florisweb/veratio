@@ -134,9 +134,14 @@ function _MainContent_optionMenu() {
 
 	this.open = async function(_item, _event) {
 		curDOMData 	= DOMData.get(_item.parentNode.parentNode);
-		// let project = Server.getProject(curDOMData.task.projectId);
+		let project = Server.getProject(curDOMData.task.projectId);
 
 		Menu.enableAllOptions();
+		if (!project.users.Self.permissions.tasks.remove)						Menu.options[0].disable();
+		if (!project.users.Self.permissions.tasks.finish(curDOMData.task))		Menu.options[1].disable();
+		if (!project.users.Self.permissions.tasks.update)						Menu.options[2].disable();
+		console.log(window.c = curDOMData);
+		
 
 		return Menu.open(_item, {top: -20, left: 0}, _event);
 	}
