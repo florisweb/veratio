@@ -114,8 +114,13 @@
 			// Check if the action is allowed
 			if ($permissions < 1)
 			{
-				$difference = $this->getDifferenceBetweenTasks($_newTask, $oldTask, ["creatorId"]);
-				if ($difference[0] != "finished" || sizeof($difference) != 1)	return "E_actionNotAllowed";
+				$difference = $this->getDifferenceBetweenTasks($_newTask, $oldTask, []);
+				foreach ($difference as $key)
+				{
+					if ($key == "finished") continue;
+					$_newTask[$key] = $oldTask[$key];
+				}
+				
 				if (!in_array($user["id"], $oldTask["assignedTo"])) 			return "E_actionNotAllowed";
 			}
 
