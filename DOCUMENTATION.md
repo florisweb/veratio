@@ -1,11 +1,13 @@
 
 
 <h1>Permissions</h1>
-          finish tasks    create/(re)move tasks    invite users    remove users   change user permissions   rename project    remove project
-Owner           x                 x                       x             x               x                         x                 x
-Admin           x                 x                       x             x               x                         x                 /
-Member          x                 x                       /             /               /                         /                 /
-Read-only    assigned             /                       /             /               /                         /                 /
+                       create/   create/
+                      (re)move   remove    invite   remove   change user   rename     remove
+              finish    tasks    tags      users    users    permissions   project    project
+3 Owner       x         x        x         x        x        x             x          x
+2 Admin       x         x        x         x        x        x             x          /
+1 Member      x         x        x?        /        /        /             /          /
+0 Read-only   assigned  /        /         /        /        /             /          /
 
 
 
