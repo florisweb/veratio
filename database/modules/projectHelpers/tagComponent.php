@@ -2,7 +2,6 @@
 	$root = realpath($_SERVER["DOCUMENT_ROOT"]);
 	require_once  __DIR__ . "/dataTypeTemplate.php";
 
-
 	class _project_tagComponent {
 		private $Parent;
 
@@ -25,39 +24,24 @@
 		}
 
 
-		public function getAll() {
-			$tasks = $this->DTTemplate->getAllData();
-			//do some permission stuff 
-			
-			return $tasks;
-		}
-
-
-
-
-
-		public function get($_id) {
-			$todo = $this->DTTemplate->get($_id);
-			//do some permission stuff
-			return $todo;
-		}
-
+		public function getAll() {return $this->DTTemplate->getAllData();}
+		public function get($_id) {return $this->DTTemplate->get($_id);}
 
 
 		public function update($_newTag) {
-			//do some permission stuff
+			$user = $this->Parent->users->Self;
+			if ((int)$user["permissions"] < 1) return "E_actionNotAllowed";
 
-
-			$_newTag["creatorId"] = $GLOBALS["App"]->userId;
-
+			$_newTag["creatorId"] = $user["id"];
 			return $this->DTTemplate->update($_newTag);
 		}
 
 
 		public function remove($_id) {
-			//do some permission stuff
+			$user = $this->Parent->users->Self;
+			if ((int)$user["permissions"] < 1) return "E_actionNotAllowed";
+
 			return $this->DTTemplate->remove($_id);
 		}
-	
 	}
 ?>
