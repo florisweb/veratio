@@ -5,10 +5,11 @@
                       (re)move   remove    invite   remove   change user   rename     remove
               finish    tasks    tags      users    users    permissions   project    project
 3 Owner       x         x        x         x        x        x             x          x
-2 Admin       x         x        x         x        x        x             x          /
+2 Admin       x         x        x         x        <=       <=            x          /
 1 Member      x         x        x         /        /        /             /          /
 0 Read-only   assigned  /        /         /        /        /             /          /
 
+<=: Means that the action is only available on users that have the same or a lower permission-rank
 
 
 
