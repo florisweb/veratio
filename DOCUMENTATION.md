@@ -1,4 +1,15 @@
 
+
+<h1>Permissions</h1>
+          finish tasks    create/(re)move tasks    invite users    remove users   change user permissions   rename project    remove project
+Owner           x                 x                       x             x               x                         x                 x
+Admin           x                 x                       x             x               x                         x                 /
+Member          x                 x                       /             /               /                         /                 /
+Read-only    assigned             /                       /             /               /                         /                 /
+
+
+
+
 <h1>Definitions</h1>
 
     - Task is mine: 
