@@ -118,7 +118,7 @@ function _TaskRenderer() {
 			}
 
 
-			return assignEventHandlers(html, _renderData, _taskWrapper);
+			return assignEventHandlers(html, _taskWrapper);
 		}
 
 
@@ -177,12 +177,16 @@ function _TaskRenderer() {
 
 
 
-			function assignEventHandlers(_html, _taskData, _taskWrapper) {
+			function assignEventHandlers(_html, _taskWrapper) {
+				let project = Server.getProject(_taskWrapper.task.projectId);
+
 				_html.children[1].onclick = async function() {
+					if (!project.users.Self.permissions.tasks.finish(_taskWrapper.task)) return false;
 					_taskWrapper.finish();
 				}
 
 				DoubleClick.register(_html, async function() {
+					if (!project.users.Self.permissions.tasks.update) return false;
 					_taskWrapper.openEdit();
 				});
 
@@ -196,6 +200,10 @@ function _TaskRenderer() {
 
 
 			function assignDragHandler(_html, _taskWrapper) {
+				let project = Server.getProject(_taskWrapper.task.projectId);
+				if (!project.users.Self.permissions.tasks.update) return _html;
+
+
 				let lastDropTarget = false;
 				DragHandler.register(
 					_html, 

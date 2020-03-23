@@ -210,14 +210,12 @@ body.appLoading #mainContent {
 			position: relative;
 			margin: auto;
 			max-width: 650px;
-			padding-top: 40px;
 			padding-bottom: 20px;
 		}
+		.mainContentPage.settingsPage .inviteMemberHolder.hide {
+			display: none;
+		}
 
-			.mainContentPage.settingsPage .inviteMemberHolder .inputField {
-				width: calc(100% - 100px);
-				margin-right: 5px;
-			}
 
 
 
