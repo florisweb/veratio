@@ -407,7 +407,7 @@ function MainContent_settingsPage(_projectId) {
 		HTML.memberHolder.append(html);
 	}
 
-
+	const permissionNames = ["Read-only", "Member", "Admin", "Owner"];
 	function createMemberItemHtml(_member) { 
 		let html = document.createElement("div");
 		html.className = "listItem memberItem";
@@ -422,11 +422,11 @@ function MainContent_settingsPage(_projectId) {
 
 		if (_member.type == "invite") 	html.children[0].setAttribute("src", "images/icons/inviteIconDark.png");
 		if (_member.type == "link") 	html.children[0].setAttribute("src", "images/icons/linkIconDark.png");
-		if (_member.isOwner)			html.children[0].setAttribute("src", "images/icons/ownerIconDark.png");
+		if (_member.permissions === 3)	html.children[0].setAttribute("src", "images/icons/ownerIconDark.png");
 
 		
 		setTextToElement(html.children[1], _member.name);
-		setTextToElement(html.children[2].children[1], _member.permissions);
+		setTextToElement(html.children[2].children[1], permissionNames[parseInt(_member.permissions)]);
 		DoubleClick.register(html.children[2].children[1], function () {
 			let project = Server.getProject(MainContent.curProjectId);
 			if (!project.users.Self.permissions.users.changePermissions(_member)) return false;
@@ -441,6 +441,7 @@ function MainContent_settingsPage(_projectId) {
 		DOMData.set(html, _member.id);
 		return html;
 	}
+
 
 
 

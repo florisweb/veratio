@@ -249,7 +249,6 @@ function _Server_project_userComponent_Self(_user) {
   let This = this;
   this.id           = _user.id;
   this.name         = _user.name;
-  this.isOwner      = permissions == 3;
 
 
   this.permissions  = new function () {
