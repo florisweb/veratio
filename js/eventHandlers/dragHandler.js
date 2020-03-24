@@ -15,23 +15,23 @@ function _DragHandler() {
 
   this.mouseDown = false;
 
-  let CurDragId = false;
+  this.CurDragId = false;
   
   document.body.addEventListener("mousemove", 
     function (_event) {
-      if (!CurDragId) return;
-      This.dragHandler(CurDragId, _event);
+      if (!This.CurDragId) return;
+      This.dragHandler(This.CurDragId, _event);
     }
   )
   document.body.addEventListener("mouseup", 
     function (_event) {
-      if (!CurDragId) return;
-      This.stopDraging(CurDragId, _event);
+      if (!This.CurDragId) return;
+      This.finishDraging(This.CurDragId, _event);
     }
   );
   
 
-  this.register = function(_item, _moveCallBack, _stopDragingCallback) {
+  this.register = function(_item, _moveCallBack, _finishDragingCallback, _cancelDragingCallback) {
     if (!_item) return false;
     let id = newId();
 
@@ -45,7 +45,8 @@ function _DragHandler() {
     list.push({
       html: _item,
       moveCallBack: _moveCallBack, 
-      stopDragingCallback: _stopDragingCallback,
+      finishDragingCallback: _finishDragingCallback,
+      cancelDragingCallback: _cancelDragingCallback,
       id: id,
       draging: false,
       dragStarted: false,
@@ -72,7 +73,7 @@ function _DragHandler() {
     let item = get(_id);
     if (!item) return false;
     item.draging = true;
-    CurDragId = _id;
+    this.CurDragId = _id;
 
     if (!_event) return false;
     let pos = item.html.getBoundingClientRect();
@@ -90,7 +91,7 @@ function _DragHandler() {
   this.constructor.prototype.dragHandler = function(_id, _event) {
     let item = get(_id);
     if (!item || !item.draging) return false;
-    if (!this.mouseDown) return This.stopDraging(_id, _event);
+    if (!this.mouseDown) return This.finishDraging(_id, _event);
     if (!item.dragStarted) if (new Date() - item.startDraging > 100) 
     {
       item.dragStarted = true;
@@ -115,10 +116,10 @@ function _DragHandler() {
     catch (e) {console.error("DragHandler: An error accured while trying to handle the moveCallBack", e)}
   }
 
-  this.constructor.prototype.stopDraging = function(_id, _event) {
+  this.constructor.prototype.finishDraging = function(_id, _event) {
     let item = get(_id);
     if (!item || !item.draging || !item.dragStarted) return false;
-    CurDragId = false;
+    this.CurDragId = false;
 
     document.body.classList.remove("noselect");
     item.html.classList.remove("hide");
@@ -129,7 +130,7 @@ function _DragHandler() {
     let dropCoords = {};
     try {
       let dropTarget = dropTargetByEvent(_event);
-      dropCoords = item.stopDragingCallback(item, dropTarget);
+      dropCoords = item.finishDragingCallback(item, dropTarget);
     }
 
     catch (e) {console.error("DragHandler: An error accured while trying to handle the dropCallBack", e)}
@@ -143,6 +144,32 @@ function _DragHandler() {
     setTimeout(function () {
       removePlaceHolder(item);
     }, 500);
+  }
+
+  this.cancelDraging = function(_id) {    
+    let item = get(_id);
+    if (!item || !item.draging || !item.dragStarted) return false;
+    this.CurDragId = false;
+
+    document.body.classList.remove("noselect");
+    item.html.classList.remove("hide");
+
+    item.draging = false;
+    item.dragStarted = false;
+   
+    item.placeHolder.classList.remove("draging");
+
+    item.placeHolder.style.left = item.startCoords.x + "px";
+    item.placeHolder.style.top  = item.startCoords.y + "px";
+    
+    setTimeout(function () {
+      removePlaceHolder(item);
+    }, 500);
+
+    try {
+      item.cancelDragingCallback(item);
+    }
+    catch (e) {console.error("DragHandler: An error accured while trying to handle the dropCallBack", e)}
   }
 
 

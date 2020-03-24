@@ -243,7 +243,8 @@ function _TaskRenderer() {
 						dropData.taskHolder.task.dropTask(task, dropData.index);
 
 						return dropCoords;
-					}
+					},
+					function () {clearLastDropTarget();}
 				);
 
 				return _html;

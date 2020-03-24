@@ -20,13 +20,13 @@ function _KeyHandler() {
     {
       keys: ["Escape"], 
       event: function () {
+        if (DragHandler.CurDragId)                                 return DragHandler.cancelDraging(DragHandler.CurDragId);
         if (MainContent.searchOptionMenu.openState)                return MainContent.searchOptionMenu.hide();
         if (MainContent.optionMenu.openState)                      return MainContent.optionMenu.close();
         if (MainContent.taskHolder.closeAllCreateMenus())          return true;
       },
       ignoreIfInInputField: false
     },
-
     {
       keys: ["Enter"], 
       event: function (_e) {
