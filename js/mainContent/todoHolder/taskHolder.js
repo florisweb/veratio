@@ -626,7 +626,8 @@ function TaskHolder_createMenuConstructor(_config, _type) {
 				MainContent.taskHolder.dateOptionMenu.open(This.HTML.plannedDateField);
 			}
 			This.HTML.plannedDateField.onfocusout = function() {
-				This.HTML.createMenu.children[0].focus();
+				if (!This.createMenu.openState) return;
+				This.HTML.inputField.focus();
 			}
 		}
 }
@@ -651,6 +652,7 @@ function TaskHolder_createMenu(_parent) {
 	this.openState = false;
 	this.open = function() {
 		if (this.disabled) return false;
+		Parent.HTML.inputField.readOnly = false;
 		
 		MainContent.taskHolder.closeAllCreateMenus(Parent);
 		if (!editData.task) MainContent.searchOptionMenu.curProject = Server.getProject(MainContent.curProjectId);
@@ -690,6 +692,7 @@ function TaskHolder_createMenu(_parent) {
 
 	this.close = function() {
 		this.openState = false;
+		Parent.HTML.inputField.readOnly = true;
 		Parent.HTML.createMenuHolder.classList.add("close");
 		resetEditMode(false);
 	}

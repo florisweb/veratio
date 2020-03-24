@@ -221,6 +221,7 @@ function _MainContent_searchOptionMenu() {
 	}
 
 	this.hide = function() {
+		if (!this.openState) return;
 		this.openState = false;
 		keyTimeout = 5;
 		Menu.close();
