@@ -372,15 +372,14 @@ function MainContent_settingsPage(_projectId) {
 	async function onOpen(_projectId) {
 		if (!_projectId) _projectId = Server.projectList[0].id;
 		let project = Server.getProject(_projectId);
-
+		
 		HTML.inviteHolder.classList.add("hide");
-		if (project.users.Self.permissions.users.invite) HTML.inviteHolder.classList.remove("hide");
-
 
 		MainContent.header.setTitle("Settings - " + project.title);
 
 		let users = await project.users.getAll();
 
+		if (project.users.Self.permissions.users.invite) HTML.inviteHolder.classList.remove("hide");
 		This.setMemberItemsFromList(users);
 	}
 
