@@ -13,14 +13,23 @@ Planned features:
 - [x] Bux Fix: When your session expires you will be prompted to login again
 
 
+
+
 Version 1.2
 Planned features:
 - [ ] Tags (Creation, usage, and such)
+- [x] Edit project-title by doubleclicking on it
+- [ ] Redesigned permission-system
+- [ ] Front-end permission-checking
+
+
 - [ ] Project colours
 - [ ] Offline service
 ? - [ ] Drag and drop support for tasks (Order?)
 ? - [ ] Sorting and filtering UI
 ?    - [ ] Sort tasks by planned date
+
+
 
 
 Version 1.3
