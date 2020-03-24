@@ -363,6 +363,8 @@ function MainContent_settingsPage(_projectId) {
 		memberHolder: $(".mainContentPage.settingsPage .memberHolder")[0],
 		inviteHolder: $(".mainContentPage.settingsPage .inviteMemberHolder")[0],
 	}
+	
+	this.permissionNames = ["Read-only", "Member", "Admin", "Owner"];
 
 
 
@@ -407,7 +409,7 @@ function MainContent_settingsPage(_projectId) {
 		HTML.memberHolder.append(html);
 	}
 
-	const permissionNames = ["Read-only", "Member", "Admin", "Owner"];
+	
 	function createMemberItemHtml(_member) { 
 		let html = document.createElement("div");
 		html.className = "listItem memberItem";
@@ -426,7 +428,7 @@ function MainContent_settingsPage(_projectId) {
 
 		
 		setTextToElement(html.children[1], _member.name);
-		setTextToElement(html.children[2].children[1], permissionNames[parseInt(_member.permissions)]);
+		setTextToElement(html.children[2].children[1], This.permissionNames[parseInt(_member.permissions)]);
 		DoubleClick.register(html.children[2].children[1], function () {
 			let project = Server.getProject(MainContent.curProjectId);
 			if (!project.users.Self.permissions.users.changePermissions(_member)) return false;
@@ -478,7 +480,7 @@ function MainContent_settingsPage(_projectId) {
 			curMemberId 	= DOMData.get(curItem);
 			
 			let project 	= Server.getProject(MainContent.curProjectId);
-			let member 		= project.users.get(curMemberId);
+			let member 		= await project.users.get(curMemberId);
 
 			Menu.enableAllOptions();
 			if (!project.users.Self.permissions.users.remove(member))				Menu.options[0].disable();
