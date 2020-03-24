@@ -140,8 +140,6 @@ function _MainContent_optionMenu() {
 		if (!project.users.Self.permissions.tasks.remove)						Menu.options[0].disable();
 		if (!project.users.Self.permissions.tasks.finish(curDOMData.task))		Menu.options[1].disable();
 		if (!project.users.Self.permissions.tasks.update)						Menu.options[2].disable();
-		console.log(window.c = curDOMData);
-		
 
 		return Menu.open(_item, {top: -20, left: 0}, _event);
 	}
@@ -223,12 +221,17 @@ function _MainContent_searchOptionMenu() {
 	this.hide = function() {
 		if (!this.openState) return;
 		this.openState = false;
-		keyTimeout = 5;
 		Menu.close();
 		
 		if (!inputField) return;
 		inputField.focus();
 	}
+
+	this.userForceHide = function() {
+		if (!this.openState) return;
+		this.hide();
+		keyTimeout = 5;
+	}	
 
 
 
@@ -282,7 +285,7 @@ function _MainContent_searchOptionMenu() {
 
 				if (_type == ".") This.curProject = _item.item;
 				
-				This.hide();
+				This.userForceHide();
 				inputField.focus();
 			}
 
@@ -343,17 +346,16 @@ function _MainContent_searchOptionMenu() {
 		}
 
 			function _checkValueByItem(_value, _item, _type = "#") {
-				let valueParts = _value.split(_type);
+				let valueParts = (_value + " ").split(_type);
 				let scores = [];
 				let itemTitle = _item.title ? _item.title : _item.name;
 
 				for (let valI = 1; valI < valueParts.length; valI++)
 				{
 					let cValue = Object.assign([], valueParts).splice(valI, valueParts.length).join(_type);
-
 					let startIndex = Object.assign([], valueParts).splice(0, valI).join(_type).length;
 
-					for (let i = 0; i < cValue.length; i++)
+					for (let i = 0; i < cValue.length + 1; i++)
 					{
 						let curSubString = cValue.substr(0, i + 1);
 						let item = {
@@ -366,7 +368,7 @@ function _MainContent_searchOptionMenu() {
 						scores.push(item);
 					}
 				}
-				
+
 				if (scores.length < 1) return false;
 				return scores.sort(function(a, b){
 			     	if (a.score < b.score) return 1;

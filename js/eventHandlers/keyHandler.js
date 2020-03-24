@@ -21,7 +21,7 @@ function _KeyHandler() {
       keys: ["Escape"], 
       event: function () {
         if (DragHandler.CurDragId)                                 return DragHandler.cancelDraging(DragHandler.CurDragId);
-        if (MainContent.searchOptionMenu.openState)                return MainContent.searchOptionMenu.hide();
+        if (MainContent.searchOptionMenu.openState)                return MainContent.searchOptionMenu.userForceHide();
         if (MainContent.optionMenu.openState)                      return MainContent.optionMenu.close();
         if (MainContent.taskHolder.closeAllCreateMenus())          return true;
       },
