@@ -178,7 +178,79 @@ function _Server_globalProject(_project) {
 
 
 
-  this.tags   = new function() {
+   this.tags  = new function() {
+
+    let Type = "tag";
+    let list = [];
+    if (_project.tags) 
+    {
+      list = _project.tags; 
+    };
+    
+
+
+    let lastSync = new Date();
+    const dateRecensy = 60 * 1000; // miliseconds after which the data is considered out of date
+
+    this.get = async function(_id) {
+      let tags = await this.getAll();
+      for (tag of tags)
+      {
+        if (tag.id != _id) continue;
+        return tag;
+      }
+      return false;
+    }
+
+    this.getAll = async function() {
+      let results = await REQUEST.send(
+        "database/project/" + Type + ".php", 
+        "method=getAll" + 
+        "&projectId=" + This.id
+      );
+      if (!Array.isArray(results)) return false;
+      results = Encoder.decodeObj(results);
+
+      list = results;
+      lastSync = new Date();
+      return results;
+    }
+
+    this.getLocalList = function() {
+      if (new Date() - lastSync > dateRecensy) this.getAll();
+      return list;
+    }
+
+    this.getLocal = function(_id) {
+      let tags = this.getLocalList();
+      for (tag of tags)
+      {
+        if (tag.id != _id) continue;
+        return tag;
+      }
+      return false;
+    }
+
+
+
+    this.update = async function(_newTag) {
+      let result = REQUEST.send(
+        "database/project/" + Type + ".php", 
+        "method=update&parameters=" + 
+        Encoder.objToString(_newTag) + 
+        "&projectId=" + This.id
+      );
+      return Encoder.decodeObj(result);
+    }
+
+
+    this.remove = function(_id) {
+      return REQUEST.send(
+        "database/project/" + Type + ".php", 
+        "method=remove&parameters=" + _id + 
+        "&projectId=" + This.id
+      );
+    }
   }
 }
 

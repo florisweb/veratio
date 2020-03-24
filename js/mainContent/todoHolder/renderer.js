@@ -11,7 +11,7 @@ function _TaskRenderer() {
 		let project = Server.getProject(_taskWrapper.task.projectId);
 		if (!project) return false;
 
-		let tag 	= false; //project.tags.get(_task.tagId);
+		
 		
 		let todoRenderData = {
 			project: 		project,
@@ -43,6 +43,8 @@ function _TaskRenderer() {
 		} 
 
 		if (_renderSettings.displayProjectTitle !== false) todoRenderData.projectTitle = project.title;
+		
+		let tag = project.tags.getLocal(_taskWrapper.task.tagId);
 		if (tag) todoRenderData.tagColour = tag.colour;
 		
 		let html = createTaskHTML(todoRenderData, _taskWrapper);
@@ -100,7 +102,7 @@ function _TaskRenderer() {
 								'</div>';
 
 			setOwnerIndicator(_renderData, html);
-			if (_renderData.tagColour) setTagColour(_html, _renderData);
+			if (_renderData.tagColour) setTagColour(html, _renderData);
 
 			setTextToElement(html.children[2], _taskWrapper.task.title);
 			if (_renderData.memberText) 		setTextToElement(html.children[3].children[3], _renderData.memberText);
@@ -129,7 +131,7 @@ function _TaskRenderer() {
 					mergeColours(
 						tagColour,
 						{r: 255, g: 255, b: 255, a: 0.1}, 
-						.15
+						.3
 					)
 				);
 				
@@ -137,19 +139,19 @@ function _TaskRenderer() {
 					mergeColours(
 						tagColour,
 						{r: 220, g: 220, b: 220}, 
-						.2
+						.5
 					)
 				);
-
 
 				colorTarget.style.fill = colourToString(
 					mergeColours(
 						tagColour,
 						{r: 130, g: 130, b: 130}, 
-						.2
+						.5
 					)
 				);
 			}
+
 
 			function setOwnerIndicator(_taskData, _html) {
 				if (!_taskData.taskOwner || _taskData.taskOwner.id == _taskData.project.users.Self.id) return;
