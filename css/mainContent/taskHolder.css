@@ -116,6 +116,10 @@
 		
 		overflow: hidden;
 	}
+	.taskHolder .createTaskHolder.hide {
+		display: none;
+	}
+	
 
 		.createTaskHolder .addButtonHolder {
 			height: auto;

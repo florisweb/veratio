@@ -47,7 +47,7 @@ function _MainContent_taskHolder() {
 
 	this.list = [];
 	this.add = function(_type = "default", _renderPreferences = {}, _parameters = []) {
-		let taskHolder = buildDayItem(_type, _renderPreferences, _parameters);
+		let taskHolder = buildTaskHolder(_type, _renderPreferences, _parameters);
 		this.list.push(taskHolder);
 		return taskHolder;
 	}
@@ -83,7 +83,7 @@ function _MainContent_taskHolder() {
 		overdue: 	TaskHolder_overdue
 	}
 
-	function buildDayItem(_type, _renderPreferences, _parameters) {
+	function buildTaskHolder(_type, _renderPreferences, _parameters) {
 		const config = {
 			html: {
 				appendTo: HTML.todoHolder
@@ -217,7 +217,9 @@ function TaskHolder_default(_config, _title) {
 	_config.title = _title;
 	TaskHolder.call(this, _config, "default");
 	TaskHolder_createMenuConstructor.call(this, _config);
-
+	
+	let project = Server.getProject(MainContent.curProjectId);
+	if (project && !project.users.Self.permissions.tasks.update) this.createMenu.disable();
 
 
 	this.shouldRenderTask = function(_task) {
@@ -237,6 +239,10 @@ function TaskHolder_date(_config, _date) {
 
 	TaskHolder.call(this, _config, "date");
 	TaskHolder_createMenuConstructor.call(this, _config);
+
+	let project = Server.getProject(MainContent.curProjectId);
+	if (project && !project.users.Self.permissions.tasks.update) this.createMenu.disable();
+	
 
 	this.shouldRenderTask = function(_task) {
 		if (_task.groupType != "date") return false;
@@ -635,9 +641,17 @@ function TaskHolder_createMenu(_parent) {
 		html: false
 	}
 
+	this.disabled = false;
+	this.disable = function() {
+		this.disabled = true;
+		Parent.HTML.createMenuHolder.classList.add("hide");
+	}
+
 
 	this.openState = false;
 	this.open = function() {
+		if (this.disabled) return false;
+		
 		MainContent.taskHolder.closeAllCreateMenus(Parent);
 		if (!editData.task) MainContent.searchOptionMenu.curProject = Server.getProject(MainContent.curProjectId);
 		MainContent.searchOptionMenu.openWithInputField(Parent.HTML.inputField);
