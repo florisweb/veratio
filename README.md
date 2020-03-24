@@ -21,7 +21,7 @@ Planned features:
 - [x] Edit project-title by doubleclicking on it
 - [ ] Redesigned permission-system
 - [ ] Front-end permission-checking
-
+- [ ] Escape will now allow you to cancel draging
 
 - [ ] Project colours
 - [ ] Offline service
