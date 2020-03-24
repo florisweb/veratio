@@ -65,6 +65,12 @@ function _MainContent_header() {
 	}
 
 
+	DoubleClick.register(HTML.titleHolder, function() {
+		let project = Server.getProject(MainContent.curProjectId);
+		if (!project || !project.users.Self.permissions.project.rename) return false;
+
+		Popup.renameProjectMenu.open(project.id);
+	});
 
 
 
@@ -116,9 +122,6 @@ function _MainContent_header() {
 
 
 	function hideAllFunctionItems() {
-		for (item of HTML.functionItems)
-		{
-			item.classList.add("hide");
-		}
+		for (item of HTML.functionItems) item.classList.add("hide");
 	}
 }
