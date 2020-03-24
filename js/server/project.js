@@ -252,6 +252,7 @@ function _Server_project_userComponent_Self(_user) {
 
 
   this.permissions  = new function () {
+    this.value = permissions;
 
     this.project = new function() {
       this.rename = permissions >= 2;

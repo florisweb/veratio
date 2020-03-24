@@ -57,8 +57,8 @@
 		<link rel="stylesheet" type="text/css" href="css/popup.css?a=34">
 		<link rel="stylesheet" type="text/css" href="css/main.css?a=30">
 		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=28">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=58">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=66">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=59">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=67">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/header.css?a=1">
 <!-- 		<link rel="stylesheet" type="text/css" href="css/main_min.css"> -->
 
@@ -137,6 +137,8 @@
 
 
 				<div class="mainContentPage settingsPage hide">
+					<br>
+					<br>
 					<div class="inviteMemberHolder">
 						<a class="button bDefault bBoxy" onclick="Popup.inviteByEmailMenu.open()">
 							<img src='images/icons/inviteIconLight.png'>

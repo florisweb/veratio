@@ -419,36 +419,7 @@ function _Popup_permissionMenu() {
 		{text: "Member-name", highlighted: true},
 		{text: " permissions to:"},
 		"<br><br><br>",
-		"<div id='PERMISSIONMENU'>" + 
-			"<a class='text optionGroupLabel'>Create and finish tasks</a>" +
-			"<div class='optionGroup'>" + 
-				"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Own</div>" + 
-				"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Assigned to</div>" + 
-				"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>All</div>" + 
-			"</div>" + 
-			'<br><div class="HR"></div>' + 
-			"<a class='text optionGroupLabel'>Invite and remove users</a>" + 
-			"<div class='optionGroup'>" + 
-				"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>None</div>" + 
-				"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Can invite</div>" + 
-				"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Can remove</div>" + 
-			"</div>" + 
-			'<br><div class="HR"></div>' + 
-			
-			"<a class='text optionGroupLabel'>User permissions</a>" +
-			"<div class='optionGroup'>" + 
-				"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>None</div>" + 
-				"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>can change</div>" + 
-			"</div>" +
-			'<br><div class="HR"></div>' + 
-
-			"<a class='text optionGroupLabel'>Rename and remove this project</a>" + 
-			"<div class='optionGroup'>" + 
-				"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>None</div>" + 
-				"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Rename</div>" + 
-				"<div class='optionItem text clickable' onclick='optionGroup_select(this)'>Remove</div>" + 
-			"</div>" +
-		"</div>",
+		"<select></select>",
 
 		"<br><br><br><br>",
 		{buttons: [
@@ -464,6 +435,9 @@ function _Popup_permissionMenu() {
 
 	_popup.call(this, builder);
 	this.HTML.memberName = this.HTML.popup.children[3];
+	this.HTML.selectBox = this.HTML.popup.children[6].children[0];
+
+
 
 	let extend_open = this.open;
 
@@ -480,51 +454,31 @@ function _Popup_permissionMenu() {
 	}
 
 
-
 	function setMemberData(_member) {
 		setTextToElement(This.HTML.memberName, _member.name + "'s");
+		let project = Server.getProject(MainContent.curProjectId);
 
-		let permissions = JSON.parse(_member.permissions);
-		let optionGroup = $("#PERMISSIONMENU .optionGroup");
+		This.HTML.selectBox.innerHTML = "";
 
-		optionGroup_select(
-			optionGroup[0].children[
-				parseInt(permissions[1][0])
-			]
-		);
-		optionGroup_select(
-			optionGroup[1].children[
-				parseInt(permissions[2][0])
-			]
-		);
-		
-		optionGroup_select(
-			optionGroup[2].children[
-				parseInt(permissions[2][1])
-			]
-		);
+		for (let i = MainContent.settingsPage.permissionNames.length - 1; i >= 0; i--) 
+		{
+			if (i > project.users.Self.permissions.value) continue;
 
-		optionGroup_select(
-			optionGroup[3].children[
-				parseInt(permissions[3])
-			]
-		);
+			let option = document.createElement("option");
+			option.value = i;
+			option.innerHTML = MainContent.settingsPage.permissionNames[i];
+
+			if (_member.permissions == i) option.selected = true;
+
+			This.HTML.selectBox.append(option);
+		}
 	}
 
 
 
 	this.updatePermissions = async function() {
 		if (!curMember) return;
-
-		let optionGroup = $("#PERMISSIONMENU .optionGroup");
-		let newPermissions = [
-			"2",
-			String(optionGroup[0].value) + (optionGroup[0].value > 0 ? optionGroup[0].value : 1),
-			String(optionGroup[1].value) + String(optionGroup[2].value),
-			String(optionGroup[3].value)
-		];
-
-		curMember.permissions = JSON.stringify(newPermissions);
+		curMember.permissions = parseInt(this.HTML.selectBox.value);
 		
 		let project = Server.getProject(MainContent.curProjectId);
 		if (!project) return false;
