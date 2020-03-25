@@ -263,6 +263,7 @@ function _MainContent_searchOptionMenu() {
 		function addOptionItemsByValueAndType(_value, _cursorPosition, _type) {
 			let active = 0;
 			let items = This.getListByValue(_value, _type, _cursorPosition);
+		
 			for (let i = 0; i < items.length; i++)
 			{
 				if (!items[i].active) continue;
@@ -275,7 +276,7 @@ function _MainContent_searchOptionMenu() {
 
 
 		function addSearchItem(_item, _type = "@") {
-			var clickHandler = function() {
+			var clickHandler = async function() {
 				if (!inputField) return;
 				let inValue 	= inputField.value;
 				let partA 		= inValue.substr(0, _item.startAt);
@@ -287,6 +288,15 @@ function _MainContent_searchOptionMenu() {
 				
 				This.userForceHide();
 				inputField.focus();
+
+				if (!_item.isCreateItem) return;
+				let newTag = {
+					id: newId(),
+					title: _item.item.title,
+					colour: "rgb(" + Math.round(Math.random() * 255) + ", " + Math.round(Math.random() * 255) + ", " + Math.round(Math.random() * 255) + ")"
+				}
+				await This.curProject.tags.update(newTag);
+				This.curProject.tags.getAll();
 			}
 
 			let result = createSearchItemIconByType(_type, _item);
@@ -295,6 +305,13 @@ function _MainContent_searchOptionMenu() {
 
 		
 		function createSearchItemIconByType(_type, _item) {
+			if (_item.isCreateItem) 
+			{
+				return {
+					title: _item.item.title,
+					src: "images/icons/addIcon.png"
+				}
+			}
 			switch (_type)
 			{
 				case ".": 
@@ -306,7 +323,7 @@ function _MainContent_searchOptionMenu() {
 				case "#": 
 					return {
 						title: _item.item.title,
-						src: "images/icons/projectIconDark.svg"
+						src: "images/icons/tagIcon.png"
 					}
 				default:
 					return {
@@ -338,6 +355,9 @@ function _MainContent_searchOptionMenu() {
 				found.push(item);
 			}
 
+			let createItem = addCreateNewItemOption(_value, _type, _cursorPosition);
+			if (createItem) found.push(createItem);
+
 			return found.sort(function(a, b){
 		     	if (a.score < b.score) return 1;
 		    	if (a.score > b.score) return -1;
@@ -346,7 +366,7 @@ function _MainContent_searchOptionMenu() {
 		}
 
 			function _checkValueByItem(_value, _item, _type = "#") {
-				let valueParts = (_value + " ").split(_type);
+				let valueParts = _value.split(_type);
 				let scores = [];
 				let itemTitle = _item.title ? _item.title : _item.name;
 
@@ -375,6 +395,47 @@ function _MainContent_searchOptionMenu() {
 			    	if (a.score > b.score) return -1;
 			    	return 0;
 			    })[0];
+			}
+
+			function addCreateNewItemOption(_value, _type, _cursorPosition) {
+				if (_type != "#") return false;
+
+				let valueParts = _value.split(_type);
+				if (valueParts.length < 2) return false;
+
+
+				let partIndex = 1;
+				
+				for (let i = 1; i < valueParts.length; i++) 
+				{
+					let curStrIndex = Object.assign([], valueParts).splice(0, i).join(_type).length;
+
+					let curValue = valueParts[i];
+					if (curStrIndex < _cursorPosition && _cursorPosition < curStrIndex + curValue.length + 1)
+					{
+						partIndex = i;
+						break;	
+					}
+				}
+
+
+				let itemTitle = valueParts[partIndex];
+				if (itemTitle.length < 3) return false;
+				let curStrIndex = Object.assign([], valueParts).splice(0, partIndex).join(_type).length;
+
+				let item = {
+					startAt: curStrIndex,
+					length: itemTitle.length + 1,
+					str: itemTitle,
+					score: 0,
+					active: true,
+					isCreateItem: true,
+					item: {
+						title: itemTitle
+					}
+				}
+
+				return item;
 			}
 
 

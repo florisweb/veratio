@@ -140,7 +140,7 @@ function _Server_globalProject(_project) {
 
 
     this.update = async function(_newUser) {
-      let result = REQUEST.send(
+      let result = await REQUEST.send(
         "database/project/" + Type + ".php", 
         "method=update&parameters=" + 
         Encoder.objToString(_newUser) + 
@@ -179,14 +179,9 @@ function _Server_globalProject(_project) {
 
 
    this.tags  = new function() {
-
     let Type = "tag";
     let list = [];
-    if (_project.tags) 
-    {
-      list = _project.tags; 
-    };
-    
+    if (_project.tags) list = _project.tags; 
 
 
     let lastSync = new Date();
@@ -234,7 +229,7 @@ function _Server_globalProject(_project) {
 
 
     this.update = async function(_newTag) {
-      let result = REQUEST.send(
+      let result = await REQUEST.send(
         "database/project/" + Type + ".php", 
         "method=update&parameters=" + 
         Encoder.objToString(_newTag) + 

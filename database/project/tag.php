@@ -1,7 +1,6 @@
 <?php
-	$AllowedMethods = ["get", "getByGroup", "getByDate", "getByDateRange", "update", "remove"];
+	$AllowedMethods = ["get", "getAll", "update", "remove"];
 	require_once __DIR__ . "/../modules/app.php";
-
 
 
 
