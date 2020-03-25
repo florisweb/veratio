@@ -358,7 +358,7 @@ function _MainContent_searchOptionMenu() {
 				found.push(item);
 			}
 
-			let createItem = addCreateNewItemOption(_value, _type, _cursorPosition);
+			let createItem = addCreateNewItemOption(_value, _type, _cursorPosition, itemList);
 			if (createItem) found.push(createItem);
 
 			return found.sort(function(a, b){
@@ -400,7 +400,7 @@ function _MainContent_searchOptionMenu() {
 			    })[0];
 			}
 
-			function addCreateNewItemOption(_value, _type, _cursorPosition) {
+			function addCreateNewItemOption(_value, _type, _cursorPosition, _itemList) {
 				if (_type != "#") return false;
 
 				let valueParts = _value.split(_type);
@@ -425,6 +425,8 @@ function _MainContent_searchOptionMenu() {
 				let itemTitle = valueParts[partIndex];
 				if (itemTitle.length < 3) return false;
 				let curStrIndex = Object.assign([], valueParts).splice(0, partIndex).join(_type).length;
+
+				for (item of _itemList) if (similarity(item.title, itemTitle) > .9) return false;
 
 				let item = {
 					startAt: curStrIndex,
