@@ -88,6 +88,15 @@ function _app() {
       MainContent.searchOptionMenu.hide();
     });
     
+    
+    REQUEST.noConnectionHandler = function() {
+      document.body.classList.add("noConnection");
+    }
+
+    REQUEST.reConnectedHandler = function() {
+      document.body.classList.remove("noConnection");
+    }
+
 
     await this.update();
 

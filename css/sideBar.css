@@ -20,16 +20,17 @@
 
 	padding: 20px;
 
-	/*background: #2B3646;*/
-	/*background: #00b;*/
 	background: #60b;
 	
 	box-shadow: 5px 0 20px 5px rgba(0, 0, 0, 0.08);
 	z-index: 10;
 
-	transition: left .32s, opacity .5s;
+	transition: left .32s, opacity .5s, background .3s;
 }
 
+body.noConnection #sideBar {
+	background: #000;
+}
 
 body.appLoading #sideBar {
 	left: -50px;
@@ -46,7 +47,13 @@ body.appLoading #sideBar {
 		width: 100%;
 		height: 100%;
 		opacity: 0.7;
+		transition: filter .3s;
 	}
+
+	body.noConnection #sideBar .sideBarBackground {
+		filter: grayscale(1);
+	}
+
 
 
 
@@ -115,7 +122,8 @@ body.appLoading #sideBar {
 		overflow: auto;
 		transition: all 0.45s;
 	}
-	
+
+
 	#sideBar .projectListHolder .projectList.hide {
 		transition: all 0.3s;
 		top: -20px;
@@ -124,6 +132,9 @@ body.appLoading #sideBar {
 		pointer-events: none;
 	}
 
+	body.noConnection #sideBar .projectListHolder .projectList {
+		max-height: calc(100vh - 135px - 94px);
+	}
 
 
 
@@ -131,7 +142,23 @@ body.appLoading #sideBar {
 
 
 
+	#sideBar .noConnectionMessage {
+		position: absolute;
+		bottom: 20px;
 
+		width: calc(100% - 30px * 2);
+		height: auto;
+		padding: 12px 0;
+		border-top: 1px solid rgba(255, 255, 255, .1);
+		transition: all .3s;
+	}
+	body:not(.noConnection) #sideBar .noConnectionMessage {
+		bottom: -75px;
+	}
+
+	#sideBar .noConnectionMessage .text {
+		margin-left: 27px;
+	}
 
 
 

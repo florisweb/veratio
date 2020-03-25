@@ -56,9 +56,9 @@
 		<link rel="stylesheet" type="text/css" href="css/component.css?a=43">
 		<link rel="stylesheet" type="text/css" href="css/popup.css?a=34">
 		<link rel="stylesheet" type="text/css" href="css/main.css?a=30">
-		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=28">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=59">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=68">
+		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=29">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=60">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=70">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/header.css?a=1">
 <!-- 		<link rel="stylesheet" type="text/css" href="css/main_min.css"> -->
 
@@ -93,7 +93,15 @@
 						<a class="smallText">Create project</a>
 					</div>
 				</div>
-				
+			</div>
+			<div class="noConnectionMessage">
+				<div class="header"> 
+					<img src="images/icons/noConnectionIconLight.png" class="headerIcon">
+					<div class="headerText">Lost connection</div>
+				</div>
+				<div class="text">
+					0 unsaved changes
+				</div>
 			</div>
 		</div>
 		
