@@ -295,8 +295,11 @@ function _MainContent_searchOptionMenu() {
 					title: _item.item.title,
 					colour: "rgb(" + Math.round(Math.random() * 255) + ", " + Math.round(Math.random() * 255) + ", " + Math.round(Math.random() * 255) + ")"
 				}
-				await This.curProject.tags.update(newTag);
-				This.curProject.tags.getAll();
+				
+				let project = This.curProject;
+				if (!project) project = Server.projectList[0];
+				await project.tags.update(newTag);
+				project.tags.getAll();
 			}
 
 			let result = createSearchItemIconByType(_type, _item);
