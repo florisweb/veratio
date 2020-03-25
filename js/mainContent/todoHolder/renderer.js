@@ -102,7 +102,7 @@ function _TaskRenderer() {
 								'</div>';
 
 			setOwnerIndicator(_renderData, html);
-			if (_renderData.tagColour) setTagColour(html, _renderData);
+			if (_renderData.tagColour) 			setTagColour(html, _renderData);
 
 			setTextToElement(html.children[2], _taskWrapper.task.title);
 			if (_renderData.memberText) 		setTextToElement(html.children[3].children[3], _renderData.memberText);
@@ -148,6 +148,15 @@ function _TaskRenderer() {
 						tagColour,
 						{r: 130, g: 130, b: 130}, 
 						.5
+					)
+				);
+
+
+				_html.children[2].style.color = colourToString(
+					mergeColours(
+						tagColour,
+						{r: 150, g: 150, b: 150}, 
+						.2
 					)
 				);
 			}
