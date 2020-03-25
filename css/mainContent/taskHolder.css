@@ -219,8 +219,8 @@
 			}
 
 			.createMenuHolder .rightHand .icon.tagIcon {
-				top: -2.5px;
-				height: 12px;
+				top: 1px;
+				margin-right: 7px;
 			}
 
 

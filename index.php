@@ -58,7 +58,7 @@
 		<link rel="stylesheet" type="text/css" href="css/main.css?a=30">
 		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=28">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=59">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=67">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=68">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/header.css?a=1">
 <!-- 		<link rel="stylesheet" type="text/css" href="css/main_min.css"> -->
 
