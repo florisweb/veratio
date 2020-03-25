@@ -286,6 +286,8 @@ body.appLoading #mainContent {
 		height: auto;
 			
 		overflow: show;
+
+		margin-bottom: 50px;
 	}
 
 
