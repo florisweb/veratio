@@ -231,6 +231,7 @@ function _MainContent_searchOptionMenu() {
 		if (!this.openState) return;
 		this.hide();
 		keyTimeout = 5;
+		return true;
 	}	
 
 
