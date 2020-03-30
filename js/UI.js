@@ -158,8 +158,13 @@ const UI = new function() {
 			addOption_extender(_title, _iconSrc, function() {
 				This.value = _value;
 				setTextToElement(HTML.buttonText, _title);
+				try {
+					This.onOptionSelected(_value);
+				} catch (e) {};
 			});
 		}
+
+		this.onOptionSelected = function() {}
 	}
 
 }

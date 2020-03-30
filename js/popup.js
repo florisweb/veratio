@@ -426,7 +426,11 @@ function _Popup_permissionMenu() {
 			"</a>" + 
 			"<div class='UI box popup hide'>" + 
 			"</div>" + 
-		"</div>",
+		"</div><br><br>",
+		
+		{text: "Description", highlighted: true},
+		"<br><div style='position: relative; width: 100%; height: 2px; '></div>",
+		"<a class='UI text' style='white-space: normal !important'></a>",
 
 		"<br><br><br><br><br><br>",
 		{buttons: [
@@ -443,8 +447,15 @@ function _Popup_permissionMenu() {
 	_popup.call(this, builder);
 	this.HTML.memberName = this.HTML.popup.children[3];
 	this.HTML.optionMenu = this.HTML.popup.children[6].children[0];
+	this.HTML.descriptionHolder = this.HTML.popup.children[9].children[0];
 	
 	let optionMenu = UI.createOptionMenu(this.HTML.optionMenu.children[0], this.HTML.optionMenu.children[1]);
+	optionMenu.onOptionSelected = function(_value) {
+		setTextToElement(
+			This.HTML.descriptionHolder, 
+			MainContent.settingsPage.permissionData[parseInt(_value)].description
+		);
+	}
 	
 
 
