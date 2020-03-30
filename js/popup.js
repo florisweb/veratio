@@ -419,9 +419,16 @@ function _Popup_permissionMenu() {
 		{text: "Member-name", highlighted: true},
 		{text: " permissions to:"},
 		"<br><br><br>",
-		"<select></select>",
+		"<div class='UI selectBox'>" + 
+			"<a class='button bBoxy bDefault'>" +
+				"<img src='images/icons/dropDownIcon.png' class='dropDownIcon'>" + 
+				"<span>Admin</span>" + 
+			"</a>" + 
+			"<div class='UI box popup hide'>" + 
+			"</div>" + 
+		"</div>",
 
-		"<br><br><br><br>",
+		"<br><br><br><br><br><br>",
 		{buttons: [
 			{button: "CANCEL", onclick: function () {This.close()}},
 			{
@@ -435,7 +442,11 @@ function _Popup_permissionMenu() {
 
 	_popup.call(this, builder);
 	this.HTML.memberName = this.HTML.popup.children[3];
-	this.HTML.selectBox = this.HTML.popup.children[6].children[0];
+	this.HTML.optionMenu = this.HTML.popup.children[6].children[0];
+	
+	let optionMenu = UI.createOptionMenu(this.HTML.optionMenu.children[0], this.HTML.optionMenu.children[1]);
+	
+
 
 
 
@@ -458,19 +469,20 @@ function _Popup_permissionMenu() {
 		setTextToElement(This.HTML.memberName, _member.name + "'s");
 		let project = Server.getProject(MainContent.curProjectId);
 
-		This.HTML.selectBox.innerHTML = "";
-
-		for (let i = MainContent.settingsPage.permissionNames.length - 1; i >= 0; i--) 
+		optionMenu.removeAllOptions();
+		
+		for (let i = MainContent.settingsPage.permissionData.length - 1; i >= 0; i--) 
 		{
 			if (i > project.users.Self.permissions.value) continue;
 
-			let option = document.createElement("option");
-			option.value = i;
-			option.innerHTML = MainContent.settingsPage.permissionNames[i];
+			optionMenu.addOption(
+				MainContent.settingsPage.permissionData[i].name,
+				MainContent.settingsPage.permissionData[i].icon, 
+				i
+			);
 
-			if (_member.permissions == i) option.selected = true;
-
-			This.HTML.selectBox.append(option);
+			if (_member.permissions != i) continue;
+			optionMenu.options[optionMenu.options.length - 1].select();
 		}
 	}
 
@@ -478,7 +490,7 @@ function _Popup_permissionMenu() {
 
 	this.updatePermissions = async function() {
 		if (!curMember) return;
-		curMember.permissions = parseInt(this.HTML.selectBox.value);
+		curMember.permissions = parseInt(optionMenu.value);
 		
 		let project = Server.getProject(MainContent.curProjectId);
 		if (!project) return false;

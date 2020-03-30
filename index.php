@@ -53,7 +53,7 @@
 		<title>Veratio - Florisweb.tk</title>
 		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0' name='viewport'/>
 
-		<link rel="stylesheet" type="text/css" href="css/component.css?a=43">
+		<link rel="stylesheet" type="text/css" href="css/component.css?a=45">
 		<link rel="stylesheet" type="text/css" href="css/popup.css?a=34">
 		<link rel="stylesheet" type="text/css" href="css/main.css?a=30">
 		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=29">
@@ -177,7 +177,8 @@
 			// Modules
 			$.getScript("js/DOMData.js?antiCache=" 									+ antiCache, function() {});
 			$.getScript("js/time.js?antiCache=" 									+ antiCache, function() {});
-			
+			$.getScript("js/UI.js?antiCache=" 										+ antiCache, function() {});
+
 			$.getScript("js/constants.js?antiCache=" 								+ antiCache, function() {});
 			$.getScript("js/extraFunctions.js?antiCache=" 							+ antiCache, function() {});
 			$.getScript("js/optionMenu.js?antiCache=" 								+ antiCache, function() {});
@@ -208,7 +209,6 @@
 
 
 			$.getScript("js/app.js?antiCache=" 										+ antiCache, function() {});
-		
 		</script>
 
  	<!-- 	<script type="text/javascript" src="js/DOMData.js" asy nc></script>

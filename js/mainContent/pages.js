@@ -364,7 +364,12 @@ function MainContent_settingsPage(_projectId) {
 		inviteHolder: $(".mainContentPage.settingsPage .inviteMemberHolder")[0],
 	}
 	
-	this.permissionNames = ["Read-only", "Member", "Admin", "Owner"];
+	this.permissionData = [
+		{name: "Read-only", icon: "images/icons/ownerIconDark.png"},
+		{name: "Member", icon: "images/icons/memberIcon.png"},
+		{name: "Admin", icon: "images/icons/ownerIconDark.png"},
+		{name: "Owner", icon: "images/icons/ownerIconDark.png"}
+	 ];
 
 
 
@@ -427,7 +432,7 @@ function MainContent_settingsPage(_projectId) {
 
 		
 		setTextToElement(html.children[1], _member.name);
-		setTextToElement(html.children[2].children[1], This.permissionNames[parseInt(_member.permissions)]);
+		setTextToElement(html.children[2].children[1], This.permissionData[parseInt(_member.permissions)].name);
 		DoubleClick.register(html.children[2].children[1], function () {
 			let project = Server.getProject(MainContent.curProjectId);
 			if (!project.users.Self.permissions.users.changePermissions(_member)) return false;
