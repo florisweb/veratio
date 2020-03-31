@@ -81,7 +81,6 @@ function _TaskRenderer() {
 
 
 
-
 		function createTaskHTML(_renderData, _taskWrapper) {
 			let html = document.createElement("div");
 			html.className = "listItem taskItem dropTarget";

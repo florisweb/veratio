@@ -25,20 +25,21 @@
 
 .popupBoxHolder .popup {
 	position: relative;
-	top: calc(50vh - 200px);
+	top: calc(50vh);
 	margin: auto;
+	transform: translateY(-50%);
 
-	max-width: 450px;
+	
 	width: calc(95vw - 80px);
+	max-width: 450px;
 	height: auto;
+	max-height: calc(95vh - 40px * 2);
 	padding: 40px;
 
 	border-radius: 5px;
-
 	box-shadow: 5px 5px 30px 10px rgba(0, 0, 0, .05);
-	background: rgb(250, 250, 250);
+	background: #fff;
 	
-
 	overflow: hidden;
 
 	transition: all 0.3s;
@@ -46,7 +47,7 @@
 
 
 .popupBoxHolder.hide .popup {
-	transform: scale(0.5);
+	transform: scale(0.5) translateY(-50%);
 	opacity: 0;
 }
 
@@ -138,3 +139,14 @@
 
 
 
+
+.popup .tagListHolder {
+	position: relative;
+	
+	width: calc(100%);
+	height: auto;
+	padding-right: 20px;
+
+	overflow: auto;
+	max-height: calc(95vh - 2 * 40px - 100px);
+}

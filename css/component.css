@@ -380,6 +380,12 @@ div.optionGroup {
 
 
 
+
+
+
+
+
+
 .UI.box {
 	
 }
@@ -435,6 +441,40 @@ div.optionGroup {
 	}
 
 
+	.UI.listItem .rightHand {
+		position: absolute;
+		float: right;
+		right: 0;
+		top: 3px;
+
+		height: 20px;
+		width: auto;
+		
+		background: #fff;
+		box-shadow: -10px 0 10px 10px #fff;
+	}
+		.UI.listItem .rightHand .item {
+			position: relative;
+			float: right;
+			padding-left: 7px;
+		}
+
+
+
+		.UI.listItem .rightHand .item.optionIcon {
+			height: 100%;
+			width: auto;
+			
+			padding: 10px;
+			margin: -10px;
+
+			opacity: .4;
+
+			padding-left: 15px;
+		}
+
+
+
 
 
 
@@ -465,6 +505,47 @@ div.optionGroup {
 
 	/*border: 1px solid red;*/
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.listItem .icon.colourCircle {
+	position: relative;
+	left: 0;
+	top: 3px;
+
+	width: 11px !important;
+	height: 11px;
+	border-radius: 100%;
+
+	border: 2px solid #ccc;
+	background: rgba(0, 0, 0, 0.02);
+}
+
 
 
 

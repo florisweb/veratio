@@ -25,7 +25,9 @@
 
 
 
-const Popup = new function () {
+
+
+function _Popup() {
 	let HTML = {
 		notificationHolder: $("#notificationBoxHolder")[0],
 		notifcationBox: $("#notificationBox")[0]
@@ -36,6 +38,7 @@ const Popup = new function () {
 	this.permissionMenu 		= new _Popup_permissionMenu();
 	this.inviteByLinkCopyMenu 	= new _Popup_inviteByLinkCopyMenu();
 	this.inviteByEmailMenu 		= new _Popup_inviteByEmailMenu();
+	this.tagMenu 				= new _Popup_tagMenu();
 }
 
 
@@ -514,4 +517,113 @@ function _Popup_permissionMenu() {
 		await project.users.getAll();
 		MainContent.settingsPage.open(MainContent.curProjectId);
 	}
+}
+
+
+
+
+
+
+
+function _Popup_tagMenu() {
+	let This = this;
+	let builder = [
+		{title: "MANAGE TAGS"},
+		"<br><br>",
+		{text: "Tags", highlighted: true},
+		"<br><div class='tagListHolder'>" + 
+		"</div><br>",
+		{button: "+ Add Tag", onclick: function () {This.close()}},
+		
+		"<br><br><br><br><br><br>",
+		{buttons: [
+			{button: "CANCEL", onclick: function () {This.close()}},
+		]}
+	];
+
+	_popup.call(this, builder);
+	this.HTML.tagListHolder = this.HTML.popup.children[3].children[1];
+
+	const Menu = OptionMenu.create(this.HTML.popup);
+	
+	Menu.addOption("Remove", async function () {
+		if (!CurTag) return;
+		let result = await CurProject.tags.remove(CurTag.id);
+
+		Popup.tagMenu.open(CurProject.id);
+		console.log(result);
+		return result;
+	}, "images/icons/removeIcon.png");
+
+	Menu.addOption("Edit", function () {
+		if (!CurTag) return;
+	}, "images/icons/changeIconDark.png");
+
+
+
+
+
+	let extend_open = this.open;
+	let CurTag = false;
+	let CurProject = false;
+	
+	this.open = async function(_projectId) {
+		CurProject	= Server.getProject(_projectId);
+		if (!CurProject) return;
+
+		setTagList(await CurProject.tags.getAll());
+		extend_open.apply(this);
+	}
+
+	function setTagList(_tags) {
+		This.HTML.tagListHolder.innerHTML = "";
+		for (tag of _tags) addTag(tag);
+	}
+
+
+	function addTag(_tag) {
+		let html = document.createElement("div");
+		html.className = "UI listItem clickable";
+		
+		html.appendChild(createTagColourCircle(_tag));
+
+		html.innerHTML += 	"<div class='text'></div>" + 
+							"<div class='rightHand clickable'>" + 
+								"<img src='images/icons/optionIcon.png' class='item optionIcon clickable'>" + 
+							"</div>";
+
+		This.HTML.tagListHolder.append(html);
+
+		html.children[2].onclick = function() {
+			CurTag = _tag;
+			Menu.open(this, {left: -20, top: 0});
+		}
+
+		setTextToElement(html.children[1], _tag.title);
+	}
+
+	function createTagColourCircle(_tag) {
+		let tagColour = stringToColour(_tag.colour);
+
+		let circle = document.createElement("div");
+		circle.className = "icon colourCircle";
+			
+		circle.style.backgroundColor = colourToString(
+			mergeColours(
+				tagColour,
+				{r: 255, g: 255, b: 255, a: 0.1}, 
+				.5
+			)
+		);
+		
+		circle.style.borderColor = colourToString(
+			mergeColours(
+				tagColour,
+				{r: 220, g: 220, b: 220}, 
+				.7
+			)
+		);
+		return circle;
+	}
+
 }
