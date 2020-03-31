@@ -23,7 +23,7 @@
 	pointer-events: none;
 }
 
-.popupBoxHolder .popup {
+.popupBoxHolder .popupWindow {
 	position: relative;
 	top: calc(50vh);
 	margin: auto;
@@ -46,13 +46,13 @@
 }
 
 
-.popupBoxHolder.hide .popup {
+.popupBoxHolder.hide .popupWindow {
 	transform: scale(0.5) translateY(-50%);
 	opacity: 0;
 }
 
 
-.popup .fullIcon {
+.popupBoxHolder .popupWindow .fullIcon {
 	position: relative;
 	left: calc((100% - 35%) / 2);
 	width: 35%;
@@ -60,7 +60,7 @@
 }
 
 
-.popup .text {
+.popupBoxHolder .popupWindow .text {
 	float: left;
 	color: #888;
 	font-family: Arial, Helvetica, sans-serif;
@@ -71,16 +71,16 @@
 	white-space: nowrap;
 }
 
-.popup .text.highlighted {
+.popupBoxHolder .popupWindow .text.highlighted {
 	font-weight: bolder;
 	color: #777;
 }
-.popup .header {
+.popupBoxHolder .popupWindow .header {
 	float: left;
 	font-size: 16px;
 	color: #999;	
 }
-.popup .header.subHeader {
+.popupBoxHolder .popupWindow .header.subHeader {
 	float: left;
 	font-size: 12px;
 	color: #666;	
@@ -89,7 +89,7 @@
 
 
 
-.popup .buttonBar {
+.popupBoxHolder .popupWindow .buttonBar {
 	position: absolute;
 	float: bottom;
 	left: 0;
@@ -102,7 +102,7 @@
 	float: right;
 }
 
-.popup .boxButton {
+.popupBoxHolder .popupWindow .boxButton {
 	position: relative;
 	float: right;
 
@@ -113,14 +113,14 @@
 }
 
 
-.popup .boxButton:not(.important) {
+.popupBoxHolder .popupWindow .boxButton:not(.important) {
 	color: #aaa;
 }
-.popup .boxButton.important {
+.popupBoxHolder .popupWindow .boxButton.important {
 	color: rgba(255, 255, 255, .9);
 }
 
-.popup .inputField {
+.popupBoxHolder .popupWindow .inputField {
 	width: calc(100% - 10px);
 	
 	border-radius: 3px;
@@ -140,7 +140,7 @@
 
 
 
-.popup .tagListHolder {
+.popupBoxHolder .popupWindow .tagListHolder {
 	position: relative;
 	
 	width: calc(100%);

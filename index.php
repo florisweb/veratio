@@ -54,7 +54,7 @@
 		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0' name='viewport'/>
 
 		<link rel="stylesheet" type="text/css" href="css/component.css?a=47">
-		<link rel="stylesheet" type="text/css" href="css/popup.css?a=36">
+		<link rel="stylesheet" type="text/css" href="css/popup.css?a=37">
 		<link rel="stylesheet" type="text/css" href="css/main.css?a=30">
 		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=29">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=60">

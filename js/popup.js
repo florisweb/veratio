@@ -70,7 +70,7 @@ function _popup(_builder) {
 	function buildPopup(_builder) {
 		let popupHolder = document.createElement("div");
 		popupHolder.className = "popupBoxHolder hide";
-		popupHolder.innerHTML = "<div class='popup'></div>";
+		popupHolder.innerHTML = "<div class='popupWindow'></div>";
 		let popup = popupHolder.children[0];
 
 		for (let i = 0; i < _builder.length; i++)
