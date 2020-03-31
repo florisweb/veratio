@@ -24,6 +24,7 @@ function _OptionMenu_menu(_self) {
 		Self: _self,
 		parent: _self.parentNode
 	}
+
 	let This = this;
 	this.options = [];
 
@@ -117,17 +118,24 @@ function _OptionMenu_menu(_self) {
 		});
 	}
 
-
+	const popupMargin = 15;
 	function moveToItem(_item, _relativePosition = {left: 0, top: 0}, _event) {
 		if (!_item) return false;
+
 		let top = _item.getBoundingClientRect().top + HTML.parent.scrollTop + _relativePosition.top;
 		let left = _event ? _event.clientX - 325 :  $("#mainContentHolder")[0].offsetWidth - 180;
 		
 		left += _relativePosition.left;
 
-		let maxLeft = $("#mainContent")[0].offsetWidth - HTML.Self.offsetWidth - 15;
+		let maxLeft = $("#mainContent")[0].offsetWidth - HTML.Self.offsetWidth - popupMargin;
 		if (left > maxLeft) left = maxLeft;
-		
+
+		let ownHeight = HTML.Self.offsetHeight;
+		if (top + _item.offsetHeight + ownHeight + popupMargin > document.body.offsetHeight) 
+		{
+			top -= ownHeight + _item.offsetHeight;
+		}
+
 		HTML.Self.style.left = left + "px";
 		HTML.Self.style.top	 = top + "px";
 	}

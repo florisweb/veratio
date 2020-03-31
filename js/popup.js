@@ -525,6 +525,9 @@ function _Popup_permissionMenu() {
 
 
 
+
+
+
 function _Popup_tagMenu() {
 	let This = this;
 	let builder = [
@@ -544,7 +547,7 @@ function _Popup_tagMenu() {
 	_popup.call(this, builder);
 	this.HTML.tagListHolder = this.HTML.popup.children[3].children[1];
 
-	const Menu = OptionMenu.create(this.HTML.popup);
+	const Menu = OptionMenu.create(this.HTML.Self);
 	
 	Menu.addOption("Remove", async function () {
 		if (!CurTag) return;
@@ -596,7 +599,7 @@ function _Popup_tagMenu() {
 
 		html.children[2].onclick = function() {
 			CurTag = _tag;
-			Menu.open(this, {left: -20, top: 0});
+			Menu.open(this, {left: -20, top: 10});
 		}
 
 		setTextToElement(html.children[1], _tag.title);
