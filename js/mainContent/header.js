@@ -22,6 +22,14 @@ function _MainContent_header() {
 			"images/icons/memberIcon.png"
 		);
 		Menu.addOption(
+			"Manage Tags", 
+			function () {
+				Popup.tagMenu.open(MainContent.curProjectId);
+				return true;
+			}, 
+			"images/icons/tagIcon.png"
+		);
+		Menu.addOption(
 			"Leave project", 
 			function () {
 				MainContent.leaveCurrentProject();
@@ -52,8 +60,8 @@ function _MainContent_header() {
 			let project = Server.getProject(MainContent.curProjectId);
 			
 			Menu.enableAllOptions();
-			if (!project.users.Self.permissions.project.remove)		Menu.options[2].disable();
-			if (!project.users.Self.permissions.project.rename)		Menu.options[3].disable();
+			if (!project.users.Self.permissions.project.remove)		Menu.options[3].disable();
+			if (!project.users.Self.permissions.project.rename)		Menu.options[4].disable();
 
 			return Menu.open(HTML.optionIcon, {top: 45});
 		}

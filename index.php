@@ -120,9 +120,6 @@
 							Back
 						</a>
 					</div>
-					<div class="functionItem clickable" onclick='MainContent.taskPage.reopenCurTab()'>
-						<img src="images/icons/tagIcon.png" class="functionItem icon">
-					</div>
 					<a class="clickable functionItem button bDefault" onclick='MainContent.settingsPage.open(MainContent.curProjectId)'>
 						Share
 					</a>
