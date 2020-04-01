@@ -228,7 +228,7 @@ function _Popup_createProject() {
 		"<br>",
 		{buttons: [
 			{button: "CANCEL", onclick: function () {This.close()}},
-			{button: "CREATE", onclick: function () {This.createProject()}, important: true, color: COLOR.POSITIVE}
+			{button: "CREATE", onclick: function () {This.createProject()}, important: true, color: COLOUR.POSITIVE}
 		]}
 	];
 
@@ -282,7 +282,7 @@ function _Popup_inviteByLinkCopyMenu() {
 		"<br><br>",
 		"<br><br>",
 		{buttons: [
-			{button: "CLOSE", onclick: function () {This.close()}, important: true, color: COLOR.WARNING}
+			{button: "CLOSE", onclick: function () {This.close()}, important: true, color: COLOUR.WARNING}
 		]}
 	];
 
@@ -311,7 +311,7 @@ function _Popup_inviteByEmailMenu() {
 		"<br><br>",
 		{buttons: [
 			{button: "CANCEL", onclick: function () {This.close()}},
-			{button: "INVITE", onclick: function () {This.inviteUser()}, important: true, color: COLOR.POSITIVE}
+			{button: "INVITE", onclick: function () {This.inviteUser()}, important: true, color: COLOUR.POSITIVE}
 		]}
 	];
 
@@ -360,7 +360,7 @@ function _Popup_renameProject() {
 		"<br>",
 		{buttons: [
 			{button: "CANCEL", onclick: function () {This.close()}},
-			{button: "RENAME", onclick: function () {This.renameProject()}, important: true, color: COLOR.DANGEROUS}
+			{button: "RENAME", onclick: function () {This.renameProject()}, important: true, color: COLOUR.DANGEROUS}
 		]}
 	];
 
@@ -442,7 +442,7 @@ function _Popup_permissionMenu() {
 				button: "CHANGE", 
 				onclick: function () {Popup.permissionMenu.updatePermissions()}, 
 				important: true, 
-				color: COLOR.DANGEROUS
+				color: COLOUR.DANGEROUS
 			}
 		]}
 	];
@@ -646,7 +646,7 @@ function _Popup_createTagMenu() {
 		"<br>",
 		{buttons: [
 			{button: "CANCEL", onclick: function () {This.close()}},
-			{button: "CREATE", onclick: function () {This.createTag()}, important: true, color: COLOR.POSITIVE}
+			{button: "CREATE", onclick: function () {This.createTag()}, important: true, color: COLOUR.POSITIVE}
 		]}
 	];
 
@@ -703,19 +703,10 @@ function _Popup_createTagMenu() {
 
 
 	function setOptionMenuColors() {
-		let arr = [
-			{name: "Red", colour: "#ff0000"},
-			{name: "Green", colour: "#00ff00"},
-			{name: "Blue", colour: "#0000ff"},
-			{name: "Yellow", colour: "#ffff00"},
-			{name: "Orange", colour: "#ffaf00"},
-		];
-
 		colourOptionMenu.onOptionSelected = function(_value) {
 		}	
 		
-
-		for (colour of arr)
+		for (colour of COLOUR.list)
 		{
 			let option = colourOptionMenu.addOption(colour.name, "", colour);
 			option.html.removeChild(option.html.children[0]);
