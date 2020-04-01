@@ -25,8 +25,6 @@
 
 
 
-
-
 function _Popup() {
 	let HTML = {
 		notificationHolder: $("#notificationBoxHolder")[0],
@@ -429,7 +427,7 @@ function _Popup_permissionMenu() {
 			"</a>" + 
 			"<div class='UI box popup hide'>" + 
 			"</div>" + 
-		"</div><br><br>",
+		"</div><br><br><br>",
 		
 		{text: "Description", highlighted: true},
 		"<br><div style='position: relative; width: 100%; height: 2px; '></div>",
@@ -454,6 +452,10 @@ function _Popup_permissionMenu() {
 	
 	let optionMenu = UI.createOptionMenu(this.HTML.optionMenu.children[0], this.HTML.optionMenu.children[1]);
 	optionMenu.onOptionSelected = function(_value) {
+		setTextToElement(
+ 			This.HTML.descriptionHolder, 
+ 			MainContent.settingsPage.permissionData[parseInt(_value)].description
+ 		);
 	}
 	
 
