@@ -106,14 +106,17 @@ function stringToColour(_str) {
 	}
 
 	function hexToRgb(_hex) {
-	    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(_hex);
-	    return result ? {
-	        r: parseInt(result[1], 16),
-	        g: parseInt(result[2], 16),
-	        b: parseInt(result[3], 16)
-	    } : null;
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(_hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
 	}
 
+  function stringToRGB(_string) {
+    return colourToString(stringToColour(_string));
+  }
 
 
 // https://stackoverflow.com/questions/10473745/compare-strings-javascript-return-of-likely

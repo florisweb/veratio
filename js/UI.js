@@ -118,15 +118,17 @@ const UI = new function() {
 
 			let option = new _OptionList_option(html, This);
 			This.options.push(option);
+			return option;
 		}
 	}
 
 	function _OptionList_option(_html, _parent) {
+		this.html = _html;
 		this.id = newId();
 		this.select = function() {_html.click();}
 
 		this.remove = function() {
-			_html.parentNode.removeChild(_html);
+			this.html.parentNode.removeChild(this.html);
 
 			for (let i = 0; i < _parent.options.length; i++)
 			{
@@ -155,7 +157,7 @@ const UI = new function() {
 		this.value = false;
 
 		this.addOption = function(_title, _iconSrc, _value) {
-			addOption_extender(_title, _iconSrc, function() {
+			return addOption_extender(_title, _iconSrc, function() {
 				This.value = _value;
 				setTextToElement(HTML.buttonText, _title);
 				try {

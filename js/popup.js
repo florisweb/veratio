@@ -39,6 +39,7 @@ function _Popup() {
 	this.inviteByLinkCopyMenu 	= new _Popup_inviteByLinkCopyMenu();
 	this.inviteByEmailMenu 		= new _Popup_inviteByEmailMenu();
 	this.tagMenu 				= new _Popup_tagMenu();
+	this.createTagMenu 			= new _Popup_createTagMenu();
 }
 
 
@@ -175,6 +176,7 @@ function _popup(_builder) {
 		if (_info.id) input.setAttribute("id", String(_info.id));
 		if (_info.input) input.setAttribute("placeHolder", String(_info.input));
 		if (_info.value) input.value = String(_info.value);
+		if (_info.maxLength) input.maxLength = _info.maxLength;
 
 		return input;
 	}
@@ -220,7 +222,7 @@ function _Popup_createProject() {
 	let builder = [
 		{title: "CREATE PROJECT"},
 		"<br><br>",
-		{input: "Project title", value: null, customClass: "text"},
+		{input: "Project title", value: null, customClass: "text", maxLength: 256},
 		"<br><br>",
 		"<br><br>",
 		"<br>",
@@ -232,7 +234,6 @@ function _Popup_createProject() {
 
 	_popup.call(this, builder);
 	this.HTML.projectTitle = this.HTML.popup.children[2];
-	this.HTML.projectTitle.maxLength = 256;
 
 	let extend_open = this.open;
 
@@ -353,7 +354,7 @@ function _Popup_renameProject() {
 		{text: "", highlighted: true},
 		{text: " to:"},
 		"<br><br><br>",
-		{input: "Project title", value: null, customClass: "text"},
+		{input: "Project title", value: null, customClass: "text", maxLength: 256},
 		"<br><br>",
 		"<br><br>",
 		"<br>",
@@ -367,7 +368,6 @@ function _Popup_renameProject() {
 
 	this.HTML.projectTitle = this.HTML.popup.children[3];
 	this.HTML.newTitleHolder = this.HTML.popup.children[6];
-	this.HTML.newTitleHolder.maxLength = 256;
 
 	let extend_open = this.open;
 
@@ -423,7 +423,7 @@ function _Popup_permissionMenu() {
 		{text: " permissions to:"},
 		"<br><br><br>",
 		"<div class='UI selectBox'>" + 
-			"<a class='button bBoxy bDefault'>" +
+			"<a class='button bBoxy text'>" +
 				"<img src='images/icons/dropDownIcon.png' class='dropDownIcon'>" + 
 				"<span>Admin</span>" + 
 			"</a>" + 
@@ -454,10 +454,6 @@ function _Popup_permissionMenu() {
 	
 	let optionMenu = UI.createOptionMenu(this.HTML.optionMenu.children[0], this.HTML.optionMenu.children[1]);
 	optionMenu.onOptionSelected = function(_value) {
-		setTextToElement(
-			This.HTML.descriptionHolder, 
-			MainContent.settingsPage.permissionData[parseInt(_value)].description
-		);
 	}
 	
 
@@ -536,7 +532,7 @@ function _Popup_tagMenu() {
 		{text: "Tags", highlighted: true},
 		"<br><div class='tagListHolder'>" + 
 		"</div><br>",
-		{button: "+ Add Tag", onclick: function () {This.close()}},
+		{button: "+ Add Tag", onclick: function () {Popup.createTagMenu.open(CurProject.id);}},
 		
 		"<br><br><br><br><br><br>",
 		{buttons: [
@@ -554,7 +550,6 @@ function _Popup_tagMenu() {
 		let result = await CurProject.tags.remove(CurTag.id);
 
 		Popup.tagMenu.open(CurProject.id);
-		console.log(result);
 		return result;
 	}, "images/icons/removeIcon.png");
 
@@ -628,5 +623,125 @@ function _Popup_tagMenu() {
 		);
 		return circle;
 	}
+}
 
+
+
+function _Popup_createTagMenu() {
+	let This = this;
+	let builder = [
+		{title: "CREATE TAG"},
+		"<br><br>",
+		{input: "Tag title", value: null, customClass: "text", maxLength: 256},
+		"<br><br><br>",
+		{text: "Tag Colour", highlighted: true},
+		"<br><br><div class='UI selectBox'>" + 
+			"<a class='button bBoxy bDefault'>" +
+				"<img src='images/icons/dropDownIcon.png' class='dropDownIcon'>" + 
+				"<span>Tag Colour</span>" + 
+			"</a>" + 
+			"<div class='UI box popup hide' style='position: fixed'>" + 
+			"</div>" + 
+		"</div>",
+		"<br>",
+		{buttons: [
+			{button: "CANCEL", onclick: function () {This.close()}},
+			{button: "CREATE", onclick: function () {This.createTag()}, important: true, color: COLOR.POSITIVE}
+		]}
+	];
+
+	_popup.call(this, builder);
+	this.HTML.tagTitle = this.HTML.popup.children[2];
+	this.HTML.optionMenu = this.HTML.popup.children[5].children[2];
+
+	
+	let extend_open = this.open;
+	let colourOptionMenu = UI.createOptionMenu(this.HTML.optionMenu.children[0], this.HTML.optionMenu.children[1]);
+	setOptionMenuColors();
+	
+
+	let CurProject = false;
+	this.open = function(_projectId) {
+		CurProject = Server.getProject(_projectId);
+		if (!CurProject) return;
+
+		extend_open.apply(this);
+		this.HTML.tagTitle.value = null;
+		this.HTML.tagTitle.focus();
+	}
+
+
+
+	this.createTag = async function() {
+		let tag = scrapeTagData();
+		if (typeof tag != "object") return alert(tag);
+		tag.id = newId();
+
+		tag = await CurProject.tags.update(tag);
+		if (!tag) return console.error("Something went wrong while creating a tag:", tag);
+		this.close();
+	} 
+	
+
+	function scrapeTagData() {
+		let tag = {
+			title: This.HTML.tagTitle.value,
+			colour: stringToRGB(colourOptionMenu.value.colour)
+		};
+		
+		if (!tag.title || tag.title.length < 2 || !tag.colour) return "E_invalidData";
+
+		return tag;
+	}
+
+
+
+	function setOptionMenuColors() {
+		let arr = [
+			{name: "Red", colour: "#ff0000"},
+			{name: "Green", colour: "#00ff00"},
+			{name: "Blue", colour: "#0000ff"},
+			{name: "Yellow", colour: "#ffff00"},
+			{name: "Orange", colour: "#ffaf00"},
+		];
+
+		colourOptionMenu.onOptionSelected = function(_value) {
+		}	
+		
+
+		for (colour of arr)
+		{
+			let option = colourOptionMenu.addOption(colour.name, "", colour);
+			option.html.removeChild(option.html.children[0]);
+			
+			let colourCircle = createTagColourCircle(colour);
+			option.html.insertBefore(colourCircle, option.html.children[0]);
+		}
+
+	}
+
+
+	function createTagColourCircle(_tag) {
+		let tagColour = stringToColour(_tag.colour);
+
+		let circle = document.createElement("div");
+		circle.className = "icon colourCircle";
+			
+		circle.style.backgroundColor = colourToString(
+			mergeColours(
+				tagColour,
+				{r: 255, g: 255, b: 255, a: 0.1}, 
+				.3
+			)
+		);
+		
+		circle.style.borderColor = colourToString(
+			mergeColours(
+				tagColour,
+				{r: 220, g: 220, b: 220}, 
+				.5
+			)
+		);
+		return circle;
+	}
 }
