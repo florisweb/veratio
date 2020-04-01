@@ -291,16 +291,9 @@ function _MainContent_searchOptionMenu() {
 				inputField.focus();
 
 				if (!_item.isCreateItem) return;
-				let newTag = {
-					id: newId(),
-					title: _item.item.title,
-					colour: "rgb(" + Math.round(Math.random() * 255) + ", " + Math.round(Math.random() * 255) + ", " + Math.round(Math.random() * 255) + ")"
-				}
-				
 				let project = This.curProject;
 				if (!project) project = Server.projectList[0];
-				await project.tags.update(newTag);
-				project.tags.getAll();
+				Popup.createTagMenu.openWithTagName(_item.item.title, project.id);
 			}
 
 			let result = createSearchItemIconByType(_type, _item);

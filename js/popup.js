@@ -670,6 +670,11 @@ function _Popup_createTagMenu() {
 		this.HTML.tagTitle.focus();
 	}
 
+	this.openWithTagName = function(_tagName, _projectId) {
+		this.open(_projectId);
+		this.HTML.tagTitle.value = _tagName;
+	}
+
 
 
 	this.createTag = async function() {
@@ -679,6 +684,7 @@ function _Popup_createTagMenu() {
 
 		tag = await CurProject.tags.update(tag);
 		if (!tag) return console.error("Something went wrong while creating a tag:", tag);
+		CurProject.tags.getAll();
 		this.close();
 	} 
 	
