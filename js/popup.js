@@ -701,24 +701,10 @@ function _Popup_createTagMenu() {
 
 		setTextToElement(this.HTML.createButton, "EDIT");
 		setTextToElement(this.HTML.title, "EDIT TAG");
-		this.HTML.tagTitle.value = _tag.title;
 
-		let index = getColourIndexByTag(_tag);
-		colourOptionMenu.options[index].select();
+		setTagData(_tag);
 
 		return onclosePromise;
-	}
-
-
-	function getColourIndexByTag(_tag) {
-		let tagColour = stringToRGB(_tag.colour);
-		for (let i = 0; i < COLOUR.list.length; i++)
-		{	
-			let curColour = stringToRGB(COLOUR.list[i].colour);
-			if (curColour != tagColour) continue;
-			return i;
-		}
-		return 0;
 	}
 
 
@@ -768,6 +754,28 @@ function _Popup_createTagMenu() {
 
 
 
+	function setTagData(_tag) {
+		This.HTML.tagTitle.value = _tag.title;
+
+		let index = getColourIndexByTag(_tag);
+		colourOptionMenu.options[index].select();
+	}
+	
+	function getColourIndexByTag(_tag) {
+		let tagColour = stringToRGB(_tag.colour);
+		for (let i = 0; i < COLOUR.list.length; i++)
+		{	
+			let curColour = stringToRGB(COLOUR.list[i].colour);
+			if (curColour != tagColour) continue;
+			return i;
+		}
+		return 0;
+	}
+
+
+
+
+
 	
 	function createColourMenu() {
 		let menu = UI.createOptionMenu(This.HTML.optionMenu.children[0], This.HTML.optionMenu.children[1]);
@@ -798,7 +806,7 @@ function _Popup_createTagMenu() {
 			mergeColours(
 				tagColour,
 				{r: 255, g: 255, b: 255, a: 0.1}, 
-				.3
+				.4
 			)
 		);
 		
@@ -806,7 +814,7 @@ function _Popup_createTagMenu() {
 			mergeColours(
 				tagColour,
 				{r: 220, g: 220, b: 220}, 
-				.5
+				.6
 			)
 		);
 		return circle;
