@@ -291,9 +291,13 @@ function _MainContent_searchOptionMenu() {
 				inputField.focus();
 
 				if (!_item.isCreateItem) return;
+				
 				let project = This.curProject;
 				if (!project) project = Server.projectList[0];
-				Popup.createTagMenu.openWithTagName(_item.item.title, project.id);
+				
+				await Popup.createTagMenu.openWithTagName(_item.item.title, project.id);
+
+				inputField.focus();
 			}
 
 			let result = createSearchItemIconByType(_type, _item);

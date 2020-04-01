@@ -553,13 +553,12 @@ function _Popup_tagMenu() {
 		return result;
 	}, "images/icons/removeIcon.png");
 
-	Menu.addOption("Edit", function () {
+	Menu.addOption("Edit", async function () {
 		if (!CurTag) return;
 		This.close();
 		
-		Popup.createTagMenu.openEdit(CurTag, CurProject.id, function () {
-			This.open(CurProject.id);
-		});
+		await Popup.createTagMenu.openEdit(CurTag, CurProject.id);
+		This.open(CurProject.id);
 	}, "images/icons/changeIconDark.png");
 
 
@@ -656,9 +655,10 @@ function _Popup_createTagMenu() {
 	];
 
 	_popup.call(this, builder);
-	this.HTML.tagTitle = this.HTML.popup.children[2];
-	this.HTML.optionMenu = this.HTML.popup.children[5].children[2];
-	this.HTML.createButton = this.HTML.popup.children[this.HTML.popup.children.length - 1].children[0];
+	this.HTML.title 		= this.HTML.popup.children[0];
+	this.HTML.tagTitle 		= this.HTML.popup.children[2];
+	this.HTML.optionMenu 	= this.HTML.popup.children[5].children[2];
+	this.HTML.createButton 	= this.HTML.popup.children[this.HTML.popup.children.length - 1].children[0];
 	
 	let extend_open = this.open;
 	let extend_close = this.close;
@@ -667,36 +667,48 @@ function _Popup_createTagMenu() {
 
 	let CurProject = false;
 	let EditData = {tag: false}
-	let OnCloseHandler;
+	let OnClosePromiseResolver;
 
-	this.open = function(_projectId, _onClose) {
+	this.open = function(_projectId) {
 		CurProject = Server.getProject(_projectId);
 		if (!CurProject) return;
 
 		resetEditMode();
-		OnCloseHandler = _onClose;
 
 		extend_open.apply(this);
 		this.HTML.tagTitle.value = null;
 		this.HTML.tagTitle.focus();
+
+		return new Promise(function (_resolve, _error) {
+			OnClosePromiseResolver = _resolve;
+		});	
 	}
 
-	this.openWithTagName = function(_tagName, _projectId, _onClose) {
-		this.open(_projectId, _onClose);
+	this.openWithTagName = function(_tagName, _projectId) {
+		let onclosePromise = this.open(_projectId);
 		this.HTML.tagTitle.value = _tagName;
+
+		return onclosePromise;
 	}
 
-	this.openEdit = function(_tag, _projectId, _onClose) {
-		this.open(_projectId, _onClose);
+
+
+	this.openEdit = function(_tag, _projectId) {
+		let onclosePromise = this.open(_projectId);
+		
 		EditData.tag = _tag;
 		if (!EditData.tag) return;
 
 		setTextToElement(this.HTML.createButton, "EDIT");
+		setTextToElement(this.HTML.title, "EDIT TAG");
 		this.HTML.tagTitle.value = _tag.title;
 
 		let index = getColourIndexByTag(_tag);
 		colourOptionMenu.options[index].select();
+
+		return onclosePromise;
 	}
+
 
 	function getColourIndexByTag(_tag) {
 		let tagColour = stringToRGB(_tag.colour);
@@ -710,16 +722,18 @@ function _Popup_createTagMenu() {
 	}
 
 
-	this.close = function() {
+	this.close = function(_tag) {
 		extend_close.apply(this);
 		try {
-			OnCloseHandler();
+			OnClosePromiseResolver(_tag);
 		} catch (e) {}
+		resetEditMode();
 	}
 
 	function resetEditMode() {
 		EditData.tag = false;
 		setTextToElement(This.HTML.createButton, "CREATE");
+		setTextToElement(This.HTML.title, "CREATE TAG");
 	}
 
 
@@ -731,7 +745,7 @@ function _Popup_createTagMenu() {
 		tag = await CurProject.tags.update(tag);
 		if (!tag) return console.error("Something went wrong while creating a tag:", tag);
 		CurProject.tags.getAll();
-		this.close();
+		this.close(tag);
 	} 
 	
 

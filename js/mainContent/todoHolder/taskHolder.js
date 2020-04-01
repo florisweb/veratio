@@ -594,7 +594,7 @@ function TaskHolder_createMenuConstructor(_config, _type) {
 						'</div>' + 
 						'<div class="addButtonHolder smallTextHolder clickable" onclick="MainContent.taskHolder.openCreateMenu(this.parentNode)">' + 
 							'<a class="smallText smallTextIcon">+</a>' + 
-							'<div class="smallText">Add Task</div>' + 
+							'<div class="smallText">Task</div>' + 
 						'</div>';
 
 		This.HTML.createMenuHolder 	= html;
