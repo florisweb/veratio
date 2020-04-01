@@ -7,7 +7,10 @@ const COLOUR = {
 		{name: "Green", colour: "#00ff00"},
 		{name: "Blue", colour: "#0000ff"},
 		{name: "Yellow", colour: "#ffff00"},
-		{name: "Orange", colour: "#ffaf00"},
+		{name: "Orange", colour: "#ff7f00"},
+		{name: "Aqua", colour: "#00afff"},
+		{name: "Pink", colour: "#f000a0"},
+		{name: "Purple", colour: "#9030d0"},
 	]
 }
 

@@ -423,7 +423,7 @@ function _Popup_permissionMenu() {
 		{text: " permissions to:"},
 		"<br><br><br>",
 		"<div class='UI selectBox'>" + 
-			"<a class='button bBoxy text'>" +
+			"<a class='button bBoxy bDefault text'>" +
 				"<img src='images/icons/dropDownIcon.png' class='dropDownIcon'>" + 
 				"<span>Admin</span>" + 
 			"</a>" + 
@@ -549,12 +549,17 @@ function _Popup_tagMenu() {
 		if (!CurTag) return;
 		let result = await CurProject.tags.remove(CurTag.id);
 
-		Popup.tagMenu.open(CurProject.id);
+		This.open(CurProject.id);
 		return result;
 	}, "images/icons/removeIcon.png");
 
 	Menu.addOption("Edit", function () {
 		if (!CurTag) return;
+		This.close();
+		
+		Popup.createTagMenu.openEdit(CurTag, CurProject.id, function () {
+			This.open(CurProject.id);
+		});
 	}, "images/icons/changeIconDark.png");
 
 
@@ -653,26 +658,68 @@ function _Popup_createTagMenu() {
 	_popup.call(this, builder);
 	this.HTML.tagTitle = this.HTML.popup.children[2];
 	this.HTML.optionMenu = this.HTML.popup.children[5].children[2];
-
+	this.HTML.createButton = this.HTML.popup.children[this.HTML.popup.children.length - 1].children[0];
 	
 	let extend_open = this.open;
-	let colourOptionMenu = UI.createOptionMenu(this.HTML.optionMenu.children[0], this.HTML.optionMenu.children[1]);
-	setOptionMenuColors();
-	
+	let extend_close = this.close;
+	let colourOptionMenu = createColourMenu(); 
+
 
 	let CurProject = false;
-	this.open = function(_projectId) {
+	let EditData = {tag: false}
+	let OnCloseHandler;
+
+	this.open = function(_projectId, _onClose) {
 		CurProject = Server.getProject(_projectId);
 		if (!CurProject) return;
+
+		resetEditMode();
+		OnCloseHandler = _onClose;
 
 		extend_open.apply(this);
 		this.HTML.tagTitle.value = null;
 		this.HTML.tagTitle.focus();
 	}
 
-	this.openWithTagName = function(_tagName, _projectId) {
-		this.open(_projectId);
+	this.openWithTagName = function(_tagName, _projectId, _onClose) {
+		this.open(_projectId, _onClose);
 		this.HTML.tagTitle.value = _tagName;
+	}
+
+	this.openEdit = function(_tag, _projectId, _onClose) {
+		this.open(_projectId, _onClose);
+		EditData.tag = _tag;
+		if (!EditData.tag) return;
+
+		setTextToElement(this.HTML.createButton, "EDIT");
+		this.HTML.tagTitle.value = _tag.title;
+
+		let index = getColourIndexByTag(_tag);
+		colourOptionMenu.options[index].select();
+	}
+
+	function getColourIndexByTag(_tag) {
+		let tagColour = stringToRGB(_tag.colour);
+		for (let i = 0; i < COLOUR.list.length; i++)
+		{	
+			let curColour = stringToRGB(COLOUR.list[i].colour);
+			if (curColour != tagColour) continue;
+			return i;
+		}
+		return 0;
+	}
+
+
+	this.close = function() {
+		extend_close.apply(this);
+		try {
+			OnCloseHandler();
+		} catch (e) {}
+	}
+
+	function resetEditMode() {
+		EditData.tag = false;
+		setTextToElement(This.HTML.createButton, "CREATE");
 	}
 
 
@@ -680,7 +727,6 @@ function _Popup_createTagMenu() {
 	this.createTag = async function() {
 		let tag = scrapeTagData();
 		if (typeof tag != "object") return alert(tag);
-		tag.id = newId();
 
 		tag = await CurProject.tags.update(tag);
 		if (!tag) return console.error("Something went wrong while creating a tag:", tag);
@@ -691,10 +737,12 @@ function _Popup_createTagMenu() {
 
 	function scrapeTagData() {
 		let tag = {
+			id: newId(),
 			title: This.HTML.tagTitle.value,
 			colour: stringToRGB(colourOptionMenu.value.colour)
 		};
 		
+		if (EditData.tag) tag.id = EditData.tag.id;
 		if (!tag.title || tag.title.length < 2 || !tag.colour) return "E_invalidData";
 
 		return tag;
@@ -702,20 +750,28 @@ function _Popup_createTagMenu() {
 
 
 
-	function setOptionMenuColors() {
-		colourOptionMenu.onOptionSelected = function(_value) {
+
+
+
+
+	
+	function createColourMenu() {
+		let menu = UI.createOptionMenu(This.HTML.optionMenu.children[0], This.HTML.optionMenu.children[1]);
+		menu.onOptionSelected = function(_value) {
 		}	
 		
 		for (colour of COLOUR.list)
 		{
-			let option = colourOptionMenu.addOption(colour.name, "", colour);
+			let option = menu.addOption(colour.name, "", colour);
 			option.html.removeChild(option.html.children[0]);
 			
 			let colourCircle = createTagColourCircle(colour);
 			option.html.insertBefore(colourCircle, option.html.children[0]);
 		}
 
+		return menu;
 	}
+
 
 
 	function createTagColourCircle(_tag) {
