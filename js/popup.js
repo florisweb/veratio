@@ -533,7 +533,11 @@ function _Popup_tagMenu() {
 		"<br><br>",
 		{text: "Tags", highlighted: true},
 		"<br><div class='tagListHolder'>-</div><br>",
-		{button: "+ Add Tag", onclick: function () {Popup.createTagMenu.open(CurProject.id);}},
+		{button: "+ Add Tag", onclick: async function () {
+			This.close();
+			await Popup.createTagMenu.open(CurProject.id);
+			This.open(CurProject.id);
+		}},
 		
 		"<br><br><br><br><br><br>",
 		{buttons: [
