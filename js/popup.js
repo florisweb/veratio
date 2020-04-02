@@ -532,8 +532,7 @@ function _Popup_tagMenu() {
 		{title: "MANAGE TAGS"},
 		"<br><br>",
 		{text: "Tags", highlighted: true},
-		"<br><div class='tagListHolder'>" + 
-		"</div><br>",
+		"<br><div class='tagListHolder'>-</div><br>",
 		{button: "+ Add Tag", onclick: function () {Popup.createTagMenu.open(CurProject.id);}},
 		
 		"<br><br><br><br><br><br>",
@@ -575,7 +574,8 @@ function _Popup_tagMenu() {
 		CurProject	= Server.getProject(_projectId);
 		if (!CurProject) return;
 
-		setTagList(await CurProject.tags.getAll());
+		setTagList(await CurProject.tags.getAll())
+
 		extend_open.apply(this);
 
 		Menu.enableAllOptions();
@@ -634,6 +634,10 @@ function _Popup_tagMenu() {
 		return circle;
 	}
 }
+
+
+
+
 
 
 
