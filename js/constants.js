@@ -19,6 +19,9 @@ const COLOUR = {
 		
 		{name: "Purple", colour: "rgb(155, 70, 156)"},
 		{name: "Purple", colour: "rgb(255, 177, 0)"},
+		{name: "Black", colour: "#000000"},
+		{name: "Dark Gray", colour: "#444444"},
+		{name: "Light Gray", colour: "#aaaaaa"},
 	]
 }
 

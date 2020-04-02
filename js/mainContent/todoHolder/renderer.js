@@ -149,15 +149,6 @@ function _TaskRenderer() {
 						.5
 					)
 				);
-
-
-				_html.children[2].style.color = colourToString(
-					mergeColours(
-						tagColour,
-						{r: 150, g: 150, b: 150}, 
-						.2
-					)
-				);
 			}
 
 
