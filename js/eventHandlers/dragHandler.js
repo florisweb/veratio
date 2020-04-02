@@ -73,6 +73,7 @@ function _DragHandler() {
     let item = get(_id);
     if (!item) return false;
     item.draging = true;
+    this.CurDragId = _id;
 
     if (!_event) return false;
     let pos = item.html.getBoundingClientRect();
@@ -93,7 +94,6 @@ function _DragHandler() {
     if (!this.mouseDown) return This.finishDraging(_id, _event);
     if (!item.dragStarted) if (new Date() - item.startDraging > 100) 
     {
-      DragHandler.CurDragId = _id;
       item.dragStarted = true;
       
       item.placeHolder = addPlaceHolderItem(item);
@@ -118,8 +118,8 @@ function _DragHandler() {
 
   this.constructor.prototype.finishDraging = function(_id, _event) {
     let item = get(_id);
+    if (_id == this.CurDragId) this.CurDragId = false;
     if (!item || !item.draging || !item.dragStarted) return false;
-    this.CurDragId = false;
 
     document.body.classList.remove("noselect");
     item.html.classList.remove("hide");
@@ -147,11 +147,10 @@ function _DragHandler() {
   }
 
   this.cancelDraging = function(_id) {    
-
     let item = get(_id);
-    console.log(item); 
+    if (_id == this.CurDragId) this.CurDragId = false;
     if (!item || !item.draging || !item.dragStarted) return false;
-    this.CurDragId = false;
+    
 
     document.body.classList.remove("noselect");
     item.html.classList.remove("hide");
