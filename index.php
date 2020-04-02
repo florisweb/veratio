@@ -53,7 +53,7 @@
 		<title>Veratio - Florisweb.tk</title>
 		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0' name='viewport'/>
 
-		<link rel="stylesheet" type="text/css" href="css/component.css?a=48">
+		<link rel="stylesheet" type="text/css" href="css/component.css?a=51">
 		<link rel="stylesheet" type="text/css" href="css/popup.css?a=37">
 		<link rel="stylesheet" type="text/css" href="css/main.css?a=30">
 		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=29">
@@ -66,7 +66,6 @@
 		<script type="text/javascript" src="/JS/request2.js" asy nc></script>
 	</head>	
 	<body class="appLoading">
-
 		<div id="sideBar">
 			<img class="sideBarBackground" src="images/sideBarBackground/?type=sidebar">
 			<div class="navigationHolder">
@@ -170,7 +169,6 @@
 		</div>
 
 
-
 		<script>
 			// temporary so things don't get cached
 			let antiCache = Math.round(Math.random() * 100000000);
@@ -210,6 +208,11 @@
 
 			$.getScript("js/app.js?antiCache=" 										+ antiCache, function() {});
 		</script>
+
+
+		<div class='UI box popup hide' id="optionMenu_colourPopupBox">
+		</div>
+
 
  	<!-- 	<script type="text/javascript" src="js/DOMData.js" asy nc></script>
  		<script type="text/javascript" src="js/time.js" asy nc></script>

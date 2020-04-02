@@ -152,7 +152,7 @@ const UI = new function() {
 			button: _button,
 			buttonText: _button.children[1],
 		}
-		HTML.button.onclick = function () {This.toggle()};
+		HTML.button.addEventListener("click", function () {This.toggle()});
 
 		this.value = false;
 

@@ -646,8 +646,6 @@ function _Popup_createTagMenu() {
 				"<img src='images/icons/dropDownIcon.png' class='dropDownIcon'>" + 
 				"<span>Tag Colour</span>" + 
 			"</a>" + 
-			"<div class='UI box popup hide' style='position: fixed'>" + 
-			"</div>" + 
 		"</div>",
 		"<br>",
 		{buttons: [
@@ -661,7 +659,8 @@ function _Popup_createTagMenu() {
 	this.HTML.tagTitle 		= this.HTML.popup.children[2];
 	this.HTML.optionMenu 	= this.HTML.popup.children[5].children[2];
 	this.HTML.createButton 	= this.HTML.popup.children[this.HTML.popup.children.length - 1].children[0];
-	
+	this.HTML.optionPopup	= document.getElementById("optionMenu_colourPopupBox");
+
 	let extend_open = this.open;
 	let extend_close = this.close;
 	let colourOptionMenu = createColourMenu(); 
@@ -715,6 +714,7 @@ function _Popup_createTagMenu() {
 		try {
 			OnClosePromiseResolver(_tag);
 		} catch (e) {}
+		colourOptionMenu.close();
 		resetEditMode();
 	}
 
@@ -780,9 +780,11 @@ function _Popup_createTagMenu() {
 
 	
 	function createColourMenu() {
-		let menu = UI.createOptionMenu(This.HTML.optionMenu.children[0], This.HTML.optionMenu.children[1]);
+		let menuButton = This.HTML.optionMenu.children[0];
+		let menu = UI.createOptionMenu(menuButton, This.HTML.optionPopup);
 		menu.onOptionSelected = function(_value) {
-		}	
+		}
+
 		
 		for (colour of COLOUR.list)
 		{
@@ -792,6 +794,16 @@ function _Popup_createTagMenu() {
 			let colourCircle = createTagColourCircle(colour);
 			option.html.insertBefore(colourCircle, option.html.children[0]);
 		}
+
+		
+		menuButton.addEventListener("click", function () {
+			This.HTML.optionPopup.style.left = menuButton.getBoundingClientRect().left + "px";
+			This.HTML.optionPopup.style.top = menuButton.getBoundingClientRect().top + "px";
+			
+			let verticalSpaceAvailable = document.body.offsetHeight - menuButton.getBoundingClientRect().top;
+			This.HTML.optionPopup.style.maxHeight = verticalSpaceAvailable + "px";
+		});
+		
 
 		return menu;
 	}

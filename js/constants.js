@@ -11,6 +11,14 @@ const COLOUR = {
 		{name: "Aqua", colour: "#00afff"},
 		{name: "Pink", colour: "#f000a0"},
 		{name: "Purple", colour: "#9030d0"},
+		
+		{name: "Purple", colour: "#006f9f"},
+		{name: "Purple", colour: "rgb(161, 0, 212)"},
+		{name: "Purple", colour: "#11e182"},
+		{name: "Purple", colour: "#e00000"},
+		
+		{name: "Purple", colour: "rgb(155, 70, 156)"},
+		{name: "Purple", colour: "rgb(255, 177, 0)"},
 	]
 }
 
