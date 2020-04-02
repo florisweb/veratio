@@ -577,6 +577,10 @@ function _Popup_tagMenu() {
 
 		setTagList(await CurProject.tags.getAll());
 		extend_open.apply(this);
+
+		Menu.enableAllOptions();
+		if (!CurProject.users.Self.permissions.tags.remove) Menu.options[0].disable();
+		if (!CurProject.users.Self.permissions.tags.update) Menu.options[1].disable();
 	}
 
 	function setTagList(_tags) {

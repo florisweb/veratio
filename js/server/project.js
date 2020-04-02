@@ -335,6 +335,11 @@ function _Server_project_userComponent_Self(_user) {
       }
     }
 
+    this.tags = new function() {
+      this.update = permissions >= 1;
+      this.remove = permissions >= 1;
+    }
+
 
     this.users = new function() {
       this.invite = permissions >= 2;
