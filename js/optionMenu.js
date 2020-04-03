@@ -131,10 +131,11 @@ function _OptionMenu_menu(_self) {
 		if (left > maxLeft) left = maxLeft;
 
 		let ownHeight = HTML.Self.offsetHeight;
-		if (top + _item.offsetHeight + ownHeight + popupMargin > document.body.offsetHeight) 
+		if (top + _item.offsetHeight + ownHeight + popupMargin > window.innerHeight) 
 		{
 			top -= ownHeight + _item.offsetHeight;
 		}
+
 
 		HTML.Self.style.left = left + "px";
 		HTML.Self.style.top	 = top + "px";

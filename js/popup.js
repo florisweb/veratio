@@ -831,7 +831,7 @@ function _Popup_createTagMenu() {
 			This.HTML.optionPopup.style.left = menuButton.getBoundingClientRect().left + "px";
 			This.HTML.optionPopup.style.top = menuButton.getBoundingClientRect().top + "px";
 			
-			let verticalSpaceAvailable = document.body.offsetHeight - menuButton.getBoundingClientRect().top;
+			let verticalSpaceAvailable = window.innerHeight - menuButton.getBoundingClientRect().top;
 			This.HTML.optionPopup.style.maxHeight = verticalSpaceAvailable + "px";
 		});
 		
