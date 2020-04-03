@@ -426,7 +426,7 @@ function _MainContent_searchOptionMenu() {
 
 				for (item of _itemList) if (similarity(item.title, itemTitle) > .9) return false;
 
-				let item = {
+				let itemObject = {
 					startAt: curStrIndex,
 					length: itemTitle.length + 1,
 					str: itemTitle,
@@ -438,7 +438,7 @@ function _MainContent_searchOptionMenu() {
 					}
 				}
 
-				return item;
+				return itemObject;
 			}
 
 
