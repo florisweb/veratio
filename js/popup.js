@@ -759,7 +759,10 @@ function _Popup_createTagMenu() {
 		
 		if (EditData.tag) tag.id = EditData.tag.id;
 		if (!tag.title || tag.title.length < 2 || !tag.colour) return "E_invalidData";
-		if (testIfTagTitleAlreadyExists(tag.title)) return "E_tagNameAlreadyTaken";
+		if (
+			testIfTagTitleAlreadyExists(tag.title) && 
+			(!EditData.tag || tag.title.toLowerCase() != EditData.tag.title.toLowerCase())
+		) return "E_tagNameAlreadyTaken";
 
 		return tag;
 	}
