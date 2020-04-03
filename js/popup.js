@@ -532,21 +532,23 @@ function _Popup_tagMenu() {
 		{title: "MANAGE TAGS"},
 		"<br><br>",
 		{text: "Tags", highlighted: true},
-		"<br><div class='tagListHolder'>-</div><br>",
+		"<br><div class='tagListHolder'>-</div>",
 		{button: "+ Add Tag", onclick: async function () {
 			This.close();
 			await Popup.createTagMenu.open(CurProject.id);
 			This.open(CurProject.id);
 		}},
 		
-		"<br><br><br><br><br><br>",
+		"<br><br><br><br>",
 		{buttons: [
-			{button: "CANCEL", onclick: function () {This.close()}},
+			{button: "CLOSE", onclick: function () {This.close()}},
 		]}
 	];
 
 	_popup.call(this, builder);
 	this.HTML.tagListHolder = this.HTML.popup.children[3].children[1];
+	this.HTML.addTagButton 	= this.HTML.popup.children[4];
+	this.HTML.addTagButton.classList.add("addTagButton");
 
 	const Menu = OptionMenu.create(this.HTML.Self);
 	
@@ -582,9 +584,12 @@ function _Popup_tagMenu() {
 
 		extend_open.apply(this);
 
+		this.HTML.addTagButton.classList.remove("hide");
 		Menu.enableAllOptions();
+
 		if (!CurProject.users.Self.permissions.tags.remove) Menu.options[0].disable();
 		if (!CurProject.users.Self.permissions.tags.update) Menu.options[1].disable();
+		if (!CurProject.users.Self.permissions.tags.update) this.HTML.addTagButton.classList.add("hide");
 	}
 
 	function setTagList(_tags) {

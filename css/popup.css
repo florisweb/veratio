@@ -148,5 +148,16 @@
 	padding-right: 20px;
 
 	overflow: auto;
-	max-height: calc(95vh - 2 * 40px - 100px);
+	min-height: 10px;
+	max-height: calc(95vh - 2 * 40px - 130px);
+	border-bottom: 1px solid #eee;
+}
+
+
+
+.popupBoxHolder .popupWindow .addTagButton {
+	float: left;
+}
+.popupBoxHolder .popupWindow .addTagButton.hide {
+	display: none;
 }
