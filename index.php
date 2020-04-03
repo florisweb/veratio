@@ -53,7 +53,7 @@
 		<title>Veratio - Florisweb.tk</title>
 		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0' name='viewport'/>
 
-		<link rel="stylesheet" type="text/css" href="css/component.css?a=51">
+		<link rel="stylesheet" type="text/css" href="css/component.css?a=52">
 		<link rel="stylesheet" type="text/css" href="css/popup.css?a=38">
 		<link rel="stylesheet" type="text/css" href="css/main.css?a=30">
 		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=29">
