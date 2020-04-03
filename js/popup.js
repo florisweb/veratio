@@ -589,11 +589,11 @@ function _Popup_tagMenu() {
 
 	function setTagList(_tags) {
 		This.HTML.tagListHolder.innerHTML = "";
-		for (tag of _tags) addTag(tag);
+		for (tag of _tags) addTagHTML(tag);
 	}
 
 
-	function addTag(_tag) {
+	function addTagHTML(_tag) {
 		let html = document.createElement("div");
 		html.className = "UI listItem clickable";
 		
@@ -705,7 +705,6 @@ function _Popup_createTagMenu() {
 	}
 
 
-
 	this.openEdit = function(_tag, _projectId) {
 		let onclosePromise = this.open(_projectId);
 		
@@ -738,6 +737,8 @@ function _Popup_createTagMenu() {
 
 
 
+
+
 	this.createTag = async function() {
 		let tag = scrapeTagData();
 		if (typeof tag != "object") return alert(tag);
@@ -752,14 +753,24 @@ function _Popup_createTagMenu() {
 	function scrapeTagData() {
 		let tag = {
 			id: newId(),
-			title: This.HTML.tagTitle.value,
+			title: This.HTML.tagTitle.value.replace(/^\s+|\s+$/g, ''),
 			colour: stringToRGB(colourOptionMenu.value.colour)
 		};
 		
 		if (EditData.tag) tag.id = EditData.tag.id;
 		if (!tag.title || tag.title.length < 2 || !tag.colour) return "E_invalidData";
+		if (testIfTagTitleAlreadyExists(tag.title)) return "E_tagNameAlreadyTaken";
 
 		return tag;
+	}
+
+	function testIfTagTitleAlreadyExists(_tagTitle) {
+		let tags = CurProject.tags.getLocalList();
+		for (tag of tags) 
+		{
+			if (tag.title.toLowerCase() == _tagTitle.toLowerCase()) return true;
+		}
+		return false;
 	}
 
 
