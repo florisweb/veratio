@@ -16,15 +16,8 @@
 
 
 
-
-
 const UI = new function() {
 	let elements = [];
-
-
-
-
-
 
 
 

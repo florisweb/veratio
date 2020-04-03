@@ -83,7 +83,7 @@ function _TaskRenderer() {
 
 		function createTaskHTML(_renderData, _taskWrapper) {
 			let html = document.createElement("div");
-			html.className = "listItem taskItem dropTarget";
+			html.className = "listItem taskItem dropTarget clickable";
 			
 			if (_taskWrapper.task.finished) html.classList.add("finished");
 			if (_renderData.assignedToMe) html.classList.add("isSelf");

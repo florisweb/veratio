@@ -322,7 +322,7 @@
 
 
 
-
+	
 
 	.taskItem .statusCircleHitBox {
 		position: relative;
@@ -355,7 +355,9 @@
 			opacity: 1;
 		}
 
-
+	.taskItem .titleHolder {
+		color: #888;
+	}
 	.taskItem.finished .titleHolder {
 		text-decoration: line-through;
 	}
