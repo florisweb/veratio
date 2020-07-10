@@ -356,6 +356,7 @@
 		}
 
 	.taskItem .titleHolder {
+		pointer-events: none;
 		color: #888;
 	}
 	.taskItem.finished .titleHolder {
