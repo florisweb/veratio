@@ -31,18 +31,12 @@
 			// ];
 			// "rgba(64, 96, 159, 0.2)"
 			let Colors = [
-				"rgb(225, 166, 255)",
-				"rgb(180, 175, 255)",
-				"rgb(128, 204, 228)"
+				"rgba(225, 166, 255, 1)",
+				"rgba(180, 175, 255, 1)",
+				"rgba(128, 204, 228, 1)"
 			];
 
-			// for (let i = 0; i < 200; i++)
-			// {
-			// 	// document.body.append(createCanvasBackground(Colors, 100, 50, 20));
-				
-			// }
-			
-			let canvas = createCanvasBackground(Colors, 300, 300, 10);
+			let canvas = createCanvasBackground(Colors, 1400, 800, 15);
 			document.body.append(canvas);
 
 
@@ -75,7 +69,7 @@
 				canvas.width = width;
 				canvas.height = height;
 				
-				drawBackgroundGradient();
+				// drawBackgroundGradient(colors);
 
 				for (let i = 0; i < 5; i++)
 				{
@@ -122,11 +116,11 @@
 					ctx.fill();
 				}
 
-				function drawBackgroundGradient() {
+				function drawBackgroundGradient(_colors) {
 					let gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-					for (let i = 0; i < colors.length; i++)
+					for (let i = 0; i < _colors.length; i++)
 					{
-						gradient.addColorStop(i / (colors.length - 1), colors[i]);
+						gradient.addColorStop(i / (_colors.length - 1), _colors[i]);
 					}
 					ctx.fillStyle = gradient;
 					ctx.fillRect(0, 0, canvas.width, canvas.height);
