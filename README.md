@@ -1,27 +1,14 @@
 
 
 
-Version 1.1
-Planned features:
-- [x] Midend / clientside datamanagement redesign
-- [x] Drop-down-menu's for the taskHolders
-- [x] Drag and drop support for tasks (Cross-date)
-- [x] Overdue auto-setter
-- [x] TaskOwnerIndicator: hover to see the task's owner
-- [x] Option to invite using a link
-- [x] Bug Fix: You can now mention members that have an '@' in their name
-- [x] Bux Fix: When your session expires you will be prompted to login again
-
-
-
-
 Version 1.2
 Planned features:
-- [ ] Tags (Creation, usage, and such)
+- [x] Tags (Creation, usage, and such)
+- [x] Redesigned permission-system
+- [x] Front-end permission-checking
+- [x] Escape will now allow you to cancel draging
 - [x] Edit project-title by doubleclicking on it
-- [ ] Redesigned permission-system
-- [ ] Front-end permission-checking
-- [ ] Escape will now allow you to cancel draging
+- [x] OptionMenu will now go above the inputfield if there isn't enough space underneath
 
 - [ ] Project colours
 - [ ] Offline service
@@ -40,6 +27,23 @@ Planned features:
 Version 1.4
 Planned features:
 - [ ] Repeatable tasks
+
+
+
+
+====== Released versions ======
+
+Version 1.1
+Planned features:
+- [x] Midend / clientside datamanagement redesign
+- [x] Drop-down-menu's for the taskHolders
+- [x] Drag and drop support for tasks (Cross-date)
+- [x] Overdue auto-setter
+- [x] TaskOwnerIndicator: hover to see the task's owner
+- [x] Option to invite using a link
+- [x] Bug Fix: You can now mention members that have an '@' in their name
+- [x] Bux Fix: When your session expires you will be prompted to login again
+
 
 
 

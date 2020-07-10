@@ -1,3 +1,15 @@
+
+Drag and drop:
+- position drop
+	Todoist: per-project-only
+
+	Microsoft:
+		Today: yes
+		Planned: no
+
+
+
+
 Style:
 - Discord
 - Bol.com: https://klantreactie.bol.com/forms/awgyPK/positive
@@ -34,7 +46,7 @@ Veratio
 
 
 Efficienty:
-push todos at the lists front, this way the most recent will be accessed earlier and it has to loop over less todos
+push tasks at the lists front, this way the most recent will be accessed earlier and it has to loop over less tasks
 
 
 
@@ -142,7 +154,7 @@ Date: 12-5-2019
 Date: 11-5-2019
 ++ Rewrote the @# system and added @users
 	|- Active-checks are functional too
-	|- @users system fully implemented (will be added to the todos assignedTo array)
+	|- @users system fully implemented (will be added to the tasks assignedTo array)
 	\- Use Enter to autocomplete your #@
 
 
@@ -160,7 +172,7 @@ Date: 9-5-2019
 
 Date: 7-5-2019
 +++ Rewrote entire MainContent and rendering engine
-	\- Added: Dynamic adding of todos, so the whole page doesn't have to refresh
+	\- Added: Dynamic adding of tasks, so the whole page doesn't have to refresh
 ++ Added early version of searchOptionMenu which automatically detects tags and members and sugests them in the form of an optionlist.
 
 
@@ -187,9 +199,9 @@ Date: 4-5-2019
 + Added animation when switching between pages
 + Added create-todo-UI
 + Added a 'filter' system, (UI not yet written)
-+ Added the optionMenu so todos can be removed
++ Added the optionMenu so tasks can be removed
 
-* Fixed a backend bug where the getTodosByDateRange wouldn't work (hardcoded the date in instead of using the variable)
+* Fixed a backend bug where the getTasksByDateRange wouldn't work (hardcoded the date in instead of using the variable)
 + Rewrote loads of code in order to improve performance and stability
 
 

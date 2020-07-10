@@ -4,10 +4,11 @@
 <h2>Project-actions</h2>
     API/projects
 
+    - getProjectList       API/project/getProjectList
     - create project       API/project/create       title=
     - remove project       API/project/remove       projectId=
 
-    - leave project        API/project/leave        projectId=
+                                                                            - leave project        API/project/leave        projectId=
     - rename project       API/project/rename       projectId, newTitle
 
 
@@ -20,7 +21,7 @@
   <h3>User</h3>
 
     API/projects/user.php
-    - action: update, remove, getAll
+    - action: update, remove, getAll, inviteByEmail
     - projectId
     - parameters (JSON object)
 
@@ -28,7 +29,8 @@
   <h3>Task</h3>
 
     API/projects/task.php
-    - action: update, remove, get
+    - action:   update, remove, get, getByDate, getByDateRange
+                getByGroup: groupValue defaults to * (any task with this group)
     - projectId
     - parameters (JSON object)
 
