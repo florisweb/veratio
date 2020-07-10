@@ -110,7 +110,7 @@ function _DragHandler() {
     item.placeHolder.style.top  = item.y + "px";
 
     try {
-      let dropTarget = dropTargetByEvent(_event);
+      let dropTarget = getDropTargetByEvent(_event);
       item.moveCallBack(item, dropTarget);
     }
     catch (e) {console.error("DragHandler: An error accured while trying to handle the moveCallBack", e)}
@@ -129,7 +129,7 @@ function _DragHandler() {
    
     let dropCoords = {};
     try {
-      let dropTarget = dropTargetByEvent(_event);
+      let dropTarget = getDropTargetByEvent(_event);
       dropCoords = item.finishDragingCallback(item, dropTarget);
     }
 
@@ -174,10 +174,9 @@ function _DragHandler() {
   }
 
 
-  function dropTargetByEvent(_event) {
-    let hoveringTarget = _event.target;
-
-    if (hoveringTarget.classList.contains("dropTarget")) return hoveringTarget;
+  function getDropTargetByEvent(_event) {
+    let hoverTarget = _event.target;
+    if (hoverTarget.classList.contains("dropTarget")) return hoverTarget;
     return false;
   }
 
