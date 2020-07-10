@@ -185,11 +185,20 @@ function _Server_globalProject(_project) {
   this.tags  = new function() {
     let Type = "tag";
     let list = [];
-    if (_project.tags) list = _project.tags; 
+    if (_project.tags) setList(_project.tags); 
 
 
     let lastSync = new Date();
     const dateRecensy = 60 * 1000; // miliseconds after which the data is considered out of date
+
+
+
+    function setList(_array) {
+      for (let r = 0; r < _array.length; r++) _array[r].colour = new Color(_array[r].colour); 
+      list = _array;
+    }
+
+
 
     this.get = async function(_id) {
       let tags = await this.getAll();
@@ -208,11 +217,10 @@ function _Server_globalProject(_project) {
         "&projectId=" + This.id
       );
       if (!Array.isArray(results)) return false;
-      results = Encoder.decodeObj(results);
+      setList(Encoder.decodeObj(results));
 
-      list = results;
       lastSync = new Date();
-      return results;
+      return list;
     }
 
     this.getLocalList = function() {
@@ -233,6 +241,7 @@ function _Server_globalProject(_project) {
 
 
     this.update = async function(_newTag) {
+      _newTag.colour = _newTag.colour.toHex();
       let result = await REQUEST.send(
         "database/project/" + Type + ".php", 
         "method=update&parameters=" + 

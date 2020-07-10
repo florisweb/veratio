@@ -176,6 +176,7 @@
 			$.getScript("js/DOMData.js?antiCache=" 									+ antiCache, function() {});
 			$.getScript("js/time.js?antiCache=" 									+ antiCache, function() {});
 			$.getScript("js/UI.js?antiCache=" 										+ antiCache, function() {});
+			$.getScript("js/color.js?antiCache=" 									+ antiCache, function() {});
 
 			$.getScript("js/constants.js?antiCache=" 								+ antiCache, function() {});
 			$.getScript("js/extraFunctions.js?antiCache=" 							+ antiCache, function() {});

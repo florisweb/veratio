@@ -45,7 +45,7 @@ function _TaskRenderer() {
 		if (_renderSettings.displayProjectTitle !== false) todoRenderData.projectTitle = project.title;
 		
 		let tag = project.tags.getLocal(_taskWrapper.task.tagId);
-		if (tag) todoRenderData.tagColour = tag.colour;
+		if (tag) todoRenderData.tagColor = tag.colour;
 		
 		let html = createTaskHTML(todoRenderData, _taskWrapper);
 
@@ -101,7 +101,7 @@ function _TaskRenderer() {
 								'</div>';
 
 			setOwnerIndicator(_renderData, html);
-			if (_renderData.tagColour) 			setTagColour(html, _renderData);
+			if (_renderData.tagColor) 			setTagColor(html, _renderData);
 
 			setTextToElement(html.children[2], _taskWrapper.task.title);
 			if (_renderData.memberText) 		setTextToElement(html.children[3].children[3], _renderData.memberText);
@@ -123,32 +123,11 @@ function _TaskRenderer() {
 		}
 
 
-			function setTagColour(_html, _renderData) {
-				let tagColour = stringToColour(_renderData.tagColour);
-				let colorTarget = _html.children[1].children[0]; 
-				colorTarget.style.backgroundColor = colourToString(
-					mergeColours(
-						tagColour,
-						{r: 255, g: 255, b: 255, a: 0.1}, 
-						.3
-					)
-				);
-				
-				colorTarget.style.borderColor = colourToString(
-					mergeColours(
-						tagColour,
-						{r: 220, g: 220, b: 220}, 
-						.5
-					)
-				);
-
-				colorTarget.style.fill = colourToString(
-					mergeColours(
-						tagColour,
-						{r: 130, g: 130, b: 130}, 
-						.5
-					)
-				);
+			function setTagColor(_html, _renderData) {
+				let colorTarget 					= _html.children[1].children[0]; 
+				colorTarget.style.backgroundColor	= _renderData.tagColor.merge(new Color("rgba(255, 255, 255, .1)"), .3).toRGBA();
+				colorTarget.style.borderColor 		= _renderData.tagColor.merge(new Color("#fff"), .5).toRGBA();
+				colorTarget.style.fill 				= _renderData.tagColor.merge(new Color("rgb(130, 130, 130)"), .5).toRGBA();
 			}
 
 

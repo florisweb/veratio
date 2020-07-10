@@ -602,7 +602,7 @@ function _Popup_tagMenu() {
 		let html = document.createElement("div");
 		html.className = "UI listItem clickable";
 		
-		html.appendChild(createTagColourCircle(_tag));
+		html.appendChild(createTagColorCircle(_tag));
 
 		html.innerHTML += 	"<div class='text'></div>" + 
 							"<div class='rightHand clickable'>" + 
@@ -619,27 +619,13 @@ function _Popup_tagMenu() {
 		setTextToElement(html.children[1], _tag.title);
 	}
 
-	function createTagColourCircle(_tag) {
-		let tagColour = stringToColour(_tag.colour);
-
+	function createTagColorCircle(_tag) {
 		let circle = document.createElement("div");
 		circle.className = "icon colourCircle";
 			
-		circle.style.backgroundColor = colourToString(
-			mergeColours(
-				tagColour,
-				{r: 255, g: 255, b: 255, a: 0.1}, 
-				.5
-			)
-		);
-		
-		circle.style.borderColor = colourToString(
-			mergeColours(
-				tagColour,
-				{r: 220, g: 220, b: 220}, 
-				.7
-			)
-		);
+		circle.style.backgroundColor = _tag.colour.merge(new Color("rgba(255, 255, 255, .1)"), .5).toHex();
+		circle.style.borderColor = _tag.colour.merge(new Color("rgba(220, 220, 220, .7)"), .5).toHex();
+
 		return circle;
 	}
 }
@@ -759,9 +745,9 @@ function _Popup_createTagMenu() {
 		let tag = {
 			id: newId(),
 			title: This.HTML.tagTitle.value.replace(/^\s+|\s+$/g, ''),
-			colour: stringToRGB(colourOptionMenu.value.colour)
+			colour: colourOptionMenu.value.colour
 		};
-		
+
 		if (EditData.tag) tag.id = EditData.tag.id;
 		if (!tag.title || tag.title.length < 2 || !tag.colour) return "E_invalidData";
 		if (
@@ -795,10 +781,10 @@ function _Popup_createTagMenu() {
 	}
 	
 	function getColourIndexByTag(_tag) {
-		let tagColour = stringToRGB(_tag.colour);
+		let tagColour = _tag.colour.toRGBA();
 		for (let i = 0; i < COLOUR.list.length; i++)
 		{	
-			let curColour = stringToRGB(COLOUR.list[i].colour);
+			let curColour = COLOUR.list[i].colour.toRGBA();
 			if (curColour != tagColour) continue;
 			return i;
 		}
@@ -816,13 +802,13 @@ function _Popup_createTagMenu() {
 		menu.onOptionSelected = function(_value) {
 		}
 
-		
+
 		for (colour of COLOUR.list)
 		{
 			let option = menu.addOption(colour.name, "", colour);
 			option.html.removeChild(option.html.children[0]);
 			
-			let colourCircle = createTagColourCircle(colour);
+			let colourCircle = createTagColorCircle(colour);
 			option.html.insertBefore(colourCircle, option.html.children[0]);
 		}
 
@@ -840,28 +826,13 @@ function _Popup_createTagMenu() {
 	}
 
 
-
-	function createTagColourCircle(_tag) {
-		let tagColour = stringToColour(_tag.colour);
-
+	function createTagColorCircle(_tag) {
 		let circle = document.createElement("div");
 		circle.className = "icon colourCircle";
 			
-		circle.style.backgroundColor = colourToString(
-			mergeColours(
-				tagColour,
-				{r: 255, g: 255, b: 255, a: 0.1}, 
-				.4
-			)
-		);
-		
-		circle.style.borderColor = colourToString(
-			mergeColours(
-				tagColour,
-				{r: 220, g: 220, b: 220}, 
-				.6
-			)
-		);
+		circle.style.backgroundColor = _tag.colour.merge(new Color("rgba(255, 255, 255, .4)"), .5).toHex();
+		circle.style.borderColor = _tag.colour.merge(new Color("rgba(220, 220, 220, .6)"), .5).toHex();
+
 		return circle;
 	}
 }

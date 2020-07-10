@@ -19,10 +19,9 @@ function isDescendant(parent, child) {
     if (parent == child) return true;
     
      var node = child.parentNode;
-     while (node != null) {
-         if (node == parent) {
-             return true;
-         }
+     while (node != null) 
+     {
+         if (node == parent) return true;
          node = node.parentNode;
      }
      return false;
@@ -55,70 +54,6 @@ function isPromise(_promise) {
   if (_promise.then) return true;
   return false;
 }
-
-function mergeColours(_colourA, _colourB, _colourAPerc = 0.5) {
-  colorBPerc = 1 - _colourAPerc;
-  if (Object.keys(_colourA).length < 3 && Object.keys(_colourB).length < 3) return {r: 255, g: 255, b: 255};
-  if (Object.keys(_colourA).length < 3) return _colourB;
-  if (Object.keys(_colourB).length < 3) return _colourA;
-  
-  let obj = {
-    r: _colourA.r * _colourAPerc + _colourB.r * colorBPerc,
-    g: _colourA.g * _colourAPerc + _colourB.g * colorBPerc,
-    b: _colourA.b * _colourAPerc + _colourB.b * colorBPerc
-  }
-  if (_colourA.a && _colourB.a) obj.a = _colourA.a * _colourAPerc + _colourB.a * colorBPerc;
-  return obj;
-}
-
-function colourToString(_colour) {
-  if (!_colour || typeof _colour.r !== "number" || typeof _colour.g !== "number" || typeof _colour.b !== "number") return false;
-  let color = "rgb(" + parseInt(_colour.r) + ", " + parseInt(_colour.g) + ", " + parseInt(_colour.b) + ")";
-  if (_colour.a) color = "rgba(" + parseInt(_colour.r) + ", " + parseInt(_colour.g) + ", " + parseInt(_colour.b) + ", " + _colour.a + ")";
-  return color;
-}
-
-function stringToColour(_str) {
-  if (!_str || typeof _str !== "string") return false;
-  if (_str.substr(0, 1) == "#") return hexToRgb(_str)
- 
-  let prefix = _str.split("rgba(");
-  if (prefix.length < 2) prefix = _str.split("rgb(");
-  let colors = prefix[1].substr(0, prefix[1].length - 1).split(",");
-
-  return {
-    r: parseFloat(colors[0]),
-    g: parseFloat(colors[1]),
-    b: parseFloat(colors[2]),
-    a: colors[3] ? parseFloat(colors[3]) : 1
-  }
-}
-
-
-	function rgbToHex(_colour) {
-	    return "#" + componentToHex(_colour.r) + componentToHex(_colour.g) + componentToHex(_colour.b);
-
-		function componentToHex(c) {
-		    var hex = c.toString(16);
-		    return hex.length == 1 ? "0" + hex : hex;
-		}
-	}
-
-	function hexToRgb(_hex) {
-    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(_hex);
-    return result ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16),
-        a: 1
-    } : null;
-	}
-
-  function stringToRGB(_string) {
-    return colourToString(stringToColour(_string));
-  }
-
-
 
 
 function removeSpacesFromEnds(_str) {
