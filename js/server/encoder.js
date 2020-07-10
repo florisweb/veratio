@@ -32,11 +32,11 @@ const Encoder = new function() {
 
     function recursivelyDecodeObj(_obj) {
       let keys = Object.keys(_obj);
-      for (let k = 0; k < keys.length; i++)
+      for (let k = 0; k < keys.length; k++)
       {
         if (typeof _obj[keys[k]] == "object") _obj[keys[k]] = recursivelyDecodeObj(_obj[keys[k]]);
         if (typeof _obj[keys[k]] != "string") continue;
-        
+
         _obj[keys[k]] = Encoder.decodeString(_obj[keys[k]]);
       }
       return _obj;
