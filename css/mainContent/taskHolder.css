@@ -380,6 +380,12 @@
 		box-shadow: -10px 0 10px 10px #fff;
 	}
 
+	.taskHolder.overdue .todoHolder .taskItem .functionHolder {
+		background: #fffcfc;
+		box-shadow: -10px 0 10px 10px #fffcfc;
+	}
+
+
 		.taskItem .functionHolder .functionItem {
 			position: relative;
 			float: right;
