@@ -1,6 +1,5 @@
 
-const Server = new _Server;
-function _Server() {
+const Server = new function() {
   let This = this;
   this.projectList = [];
 
@@ -22,9 +21,6 @@ function _Server() {
   }
 
 
-
-
-
   this.sync = async function(_) {
     console.warn("Server.sync()");
     return getProjects();
@@ -37,11 +33,10 @@ function _Server() {
       let result = await REQUEST.send("database/project/create.php", "title=" + Encoder.encodeString(_title));
       if (!result) alert(result);
 
-      _importProject(result);
+      importProject(result);
       resolve(result);
     });
   }
-
 
 
 
@@ -53,11 +48,11 @@ function _Server() {
 
     for (let i = 0; i < results.length; i++)
     {
-      _importProject(results[i]);
+      importProject(results[i]);
     }
   }
 
-    function _importProject(_project) {
+    function importProject(_project) {
       if (!_project || typeof _project != "object") return;
 
       _project = Encoder.decodeObj(_project);

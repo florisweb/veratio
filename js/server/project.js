@@ -1,6 +1,9 @@
+
+
 function _Server_globalProject(_project) {
   let This    = this;
   this.id     = String(_project.id);
+
 
   this.tasks  = new function() {
     let Type = "task";
@@ -63,6 +66,7 @@ function _Server_globalProject(_project) {
       return Encoder.decodeObj(result);
     }
   }
+
 
 
 
@@ -178,7 +182,7 @@ function _Server_globalProject(_project) {
 
 
 
-   this.tags  = new function() {
+  this.tags  = new function() {
     let Type = "tag";
     let list = [];
     if (_project.tags) list = _project.tags; 
@@ -254,6 +258,7 @@ function _Server_globalProject(_project) {
 
 
 
+
 function _Server_project(_project) {
   _Server_globalProject.call(this, _project);
 
@@ -271,13 +276,9 @@ function _Server_project(_project) {
 
 
   this.leave = function() {
-    let users = this.users.getLocalList();
-    for (user of users)
-    {
-      if (!user.Self) continue;
-      App.update()
-      return this.users.remove(user.id);
-    }
+    if (!this.users.Self) return;
+    this.users.remove(this.users.Self.id);
+    return App.update();
   }
 
 
@@ -353,12 +354,7 @@ function _Server_project_userComponent_Self(_user) {
         return permissions >= 2;
       }
     }
-
   }
-
-
-
-
 }
 
 

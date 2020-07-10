@@ -26,22 +26,19 @@ const Encoder = new function() {
     this.decodeObj = function(_jsonObj) {
       let newObj = JSON.parse(JSON.stringify(_jsonObj));
       if (!newObj) return false;
-      let result = recursivelyDecodeObj(newObj);
-      this.list.push(result)
-      return result;
+      return recursivelyDecodeObj(newObj);
     }
 
 
     function recursivelyDecodeObj(_obj) {
       let keys = Object.keys(_obj);
-      for (key of keys)
+      for (let k = 0; k < keys.length; i++)
       {
-        if (typeof _obj[key] == "object") _obj[key] = recursivelyDecodeObj(_obj[key]);
-        if (typeof _obj[key] != "string") continue;
-        _obj[key] = Encoder.decodeString(_obj[key]);
+        if (typeof _obj[keys[k]] == "object") _obj[keys[k]] = recursivelyDecodeObj(_obj[keys[k]]);
+        if (typeof _obj[keys[k]] != "string") continue;
+        
+        _obj[keys[k]] = Encoder.decodeString(_obj[keys[k]]);
       }
       return _obj;
     }
-
-    this.list = [];
 }
