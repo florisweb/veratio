@@ -1,5 +1,4 @@
 
-
 function newId() {return parseInt(Math.round(Math.random() * 100000000) + "" + Math.round(Math.random() * 100000000));}
 
 function setTextToElement(element, text) {
@@ -120,6 +119,68 @@ function stringToColour(_str) {
   }
 
 
+
+
+function removeSpacesFromEnds(_str) {
+  for (let c = 0; c < _str.length; c++)
+  {
+    if (_str[0] !== " ") continue;
+    _str = _str.substr(1, _str.length);
+  }
+
+  for (let c = _str.length; c > 0; c--)
+  {
+    if (_str[_str.length - 1] !== " ") continue;
+    _str = _str.substr(0, _str.length - 1);
+  }
+  return _str;
+} 
+
+
+
+
+
+
+function delimitMemberText(_members, _delimiter = 20) {
+  if (!_members || !_members.length) return "";
+  let defaultMemberText = _members[0].name;
+  for (let i = 1; i < _members.length; i++) defaultMemberText += ", " + _members[i].name;
+
+  let memberText = "";
+  for (let m = 0; m < _members.length; m++)
+  {
+    if (memberText) memberText += ", ";
+    memberText += _members[m].name;
+    
+    if (memberText.length <= _delimiter || m == _members.length - 1) continue;   
+
+    let hiddenMemberCount = _members.length - m - 1;
+    memberText += " and " + hiddenMemberCount + " other";
+    if (hiddenMemberCount > 1) memberText += "s";
+    
+    break;
+  }
+
+  if (defaultMemberText.length <= memberText) return defaultMemberText;
+  return memberText;
+}
+
+
+
+
+
+
+
+// EXTERNAL CODE
+
+// https://stackoverflow.com/questions/6562727/is-there-a-function-to-deselect-all-text-using-javascript
+function clearSelection() {
+  if (window.getSelection) {window.getSelection().removeAllRanges();}
+  else if (document.selection) {document.selection.empty();}
+}
+
+
+
 // https://stackoverflow.com/questions/10473745/compare-strings-javascript-return-of-likely
 function similarity(s1, s2) {
   var longer = s1;
@@ -166,54 +227,3 @@ function similarity(s1, s2) {
   }
 }
 
-
-
-function removeSpacesFromEnds(_str) {
-  for (let c = 0; c < _str.length; c++)
-  {
-    if (_str[0] !== " ") continue;
-    _str = _str.substr(1, _str.length);
-  }
-
-  for (let c = _str.length; c > 0; c--)
-  {
-    if (_str[_str.length - 1] !== " ") continue;
-    _str = _str.substr(0, _str.length - 1);
-  }
-  return _str;
-} 
-
-
-// https://stackoverflow.com/questions/6562727/is-there-a-function-to-deselect-all-text-using-javascript
-function clearSelection() {
-  if (window.getSelection) {window.getSelection().removeAllRanges();}
-  else if (document.selection) {document.selection.empty();}
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function optionGroup_select(_item) {
-  let group = _item.parentNode;
-  for (let i = 0; i < group.children.length; i++)
-  {
-    group.children[i].classList.remove("selected");
-    if (group.children[i] == _item) 
-    {
-      group.value = i;
-    }
-  }
-  _item.classList.add("selected");
-}

@@ -75,7 +75,7 @@ function _TaskRenderer() {
 				}
 			}
 
-			return App.delimitMemberText(memberList, 20);
+			return delimitMemberText(memberList, 20);
 		}
 
 
