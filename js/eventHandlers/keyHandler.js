@@ -19,10 +19,24 @@ function _KeyHandler() {
 
     {
       keys: ["Escape"], 
-      event: function () {
+      event: function () {  
+        //Popup's      
+        if (Popup.createTagMenu.openState)                         return Popup.createTagMenu.close();
+        if (Popup.tagMenu.openState)                               return Popup.tagMenu.close();
+
+        if (Popup.createProjectMenu.openState)                     return Popup.createProjectMenu.close();
+        if (Popup.renameProjectMenu.openState)                     return Popup.renameProjectMenu.close();
+
+        if (Popup.permissionMenu.openState)                        return Popup.permissionMenu.close();
+        if (Popup.inviteByEmailMenu.openState)                     return Popup.inviteByEmailMenu.close();
+        if (Popup.inviteByLinkCopyMenu.openState)                  return Popup.inviteByLinkCopyMenu.close();
+
+
         if (DragHandler.CurDragId)                                 return DragHandler.cancelDraging(DragHandler.CurDragId);
+
         if (MainContent.searchOptionMenu.openState)                return MainContent.searchOptionMenu.userForceHide();
         if (MainContent.optionMenu.openState)                      return MainContent.optionMenu.close();
+        
         if (MainContent.taskHolder.closeAllCreateMenus())          return true;
       },
       ignoreIfInInputField: false
@@ -30,11 +44,21 @@ function _KeyHandler() {
     {
       keys: ["Enter"], 
       event: function (_e) {
-        if (MainContent.taskHolder.dateOptionMenu.openState)       return MainContent.taskHolder.dateOptionMenu.clickFirstOption();
-        if (MainContent.searchOptionMenu.openState)                return MainContent.searchOptionMenu.clickFirstOption();
+        // Popups
+        if (Popup.createTagMenu.openState)                         return Popup.createTagMenu.createTag();
+        if (Popup.tagMenu.openState)                               return Popup.tagMenu.close();
+
         if (Popup.createProjectMenu.openState)                     return Popup.createProjectMenu.createProject();
         if (Popup.renameProjectMenu.openState)                     return Popup.renameProjectMenu.renameProject();
+
+        if (Popup.permissionMenu.openState)                        return Popup.permissionMenu.updatePermissions();
         if (Popup.inviteByEmailMenu.openState)                     return Popup.inviteByEmailMenu.inviteUser();
+        if (Popup.inviteByLinkCopyMenu.openState)                  return Popup.inviteByLinkCopyMenu.close();
+
+
+        // Menu's
+        if (MainContent.taskHolder.dateOptionMenu.openState)       return MainContent.taskHolder.dateOptionMenu.clickFirstOption();
+        if (MainContent.searchOptionMenu.openState)                return MainContent.searchOptionMenu.clickFirstOption();
 
         return MainContent.taskHolder.createTask();
       },
