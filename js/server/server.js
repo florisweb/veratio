@@ -12,12 +12,15 @@ const Server = new function() {
 
   // All request-inteceptor to detect authentication-loss
   let REQUEST_send = REQUEST.send;
-  REQUEST.send = function(_url, _paramaters, _maxAttempts) {
-    return new Promise(async function (resolve, error) {
-      let result = await REQUEST_send(_url, _paramaters, _maxAttempts);
+  REQUEST.send = function(_url, _paramaters, _maxAttempts = 20) {
+    return new Promise(function (resolve, reject) {
+      REQUEST_send(_url, _paramaters, _maxAttempts).then(function (_result) {
+        if (_result == "E_noAuth") App.promptAuthentication();
+        resolve(_result);
       
-      if (result == "E_noAuth") App.promptAuthentication();
-      resolve(result);
+      }, function (_error) {
+        reject(_error);
+      });
     });
   }
 

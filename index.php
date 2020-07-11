@@ -63,7 +63,7 @@
 <!-- 		<link rel="stylesheet" type="text/css" href="css/main_min.css"> -->
 
 		<script type="text/javascript" src="/JS/jQuery.js" asy nc></script>
-		<script type="text/javascript" src="/JS/request2.js" asy nc></script>
+		<script type="text/javascript" src="/JS/request2.js?a=2" asy nc></script>
 	</head>	
 	<body class="appLoading">
 		<div id="sideBar">
