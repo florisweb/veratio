@@ -3,6 +3,43 @@ const Server = new function() {
   let This = this;
   this.projectList = [];
 
+  this.global = new function() {
+    _Server_globalProject.call(this, {id: "*"})
+    delete this.users;
+  }
+
+
+
+  // All request-inteceptor to detect authentication-loss
+  let REQUEST_send = REQUEST.send;
+  REQUEST.send = function(_url, _paramaters, _maxAttempts) {
+    return new Promise(async function (resolve, error) {
+      let result = await REQUEST_send(_url, _paramaters, _maxAttempts);
+      
+      if (result == "E_noAuth") App.promptAuthentication();
+      resolve(result);
+    });
+  }
+
+  REQUEST.noConnectionHandler = function() {
+    document.body.classList.add("noConnection");
+  }
+
+  REQUEST.reConnectedHandler = function() {
+    document.body.classList.remove("noConnection");
+  }
+
+
+
+
+
+
+  this.sync = async function(_) {
+    console.warn("Server.sync()");
+    return getProjects();
+  }
+
+
   this.getProject = function(_id) {
     for (let i = 0; i < this.projectList.length; i++)
     {
@@ -11,21 +48,6 @@ const Server = new function() {
     }
     return false;
   }
-
-
-
-
-  this.global = new function() {
-    _Server_globalProject.call(this, {id: "*"})
-    delete this.users;
-  }
-
-
-  this.sync = async function(_) {
-    console.warn("Server.sync()");
-    return getProjects();
-  }
-
 
 
   this.createProject = function(_title) {

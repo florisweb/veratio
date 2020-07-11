@@ -34,27 +34,6 @@ function _app() {
       MainContent.searchOptionMenu.hide();
     });
     
-    
-
-     // All request-inteceptor to detect authentication-loss
-    let REQUEST_send = REQUEST.send;
-    REQUEST.send = function(_url, _paramaters, _maxAttempts) {
-      return new Promise(async function (resolve, error) {
-        let result = await REQUEST_send(_url, _paramaters, _maxAttempts);
-        
-        if (result == "E_noAuth") App.promptAuthentication();
-        resolve(result);
-      });
-    }
-
-    REQUEST.noConnectionHandler = function() {
-      document.body.classList.add("noConnection");
-    }
-
-    REQUEST.reConnectedHandler = function() {
-      document.body.classList.remove("noConnection");
-    }
-
 
 
     await this.update();
