@@ -528,7 +528,7 @@ function _Popup_permissionMenu() {
 
 function _Popup_tagMenu() {
 	let This = this;
-	let builder = [
+	const builder = [
 		{title: "MANAGE TAGS"},
 		"<br><br>",
 		{text: "Tags", highlighted: true},
@@ -546,9 +546,13 @@ function _Popup_tagMenu() {
 	];
 
 	_popup.call(this, builder);
+
 	this.HTML.tagListHolder = this.HTML.popup.children[3].children[1];
 	this.HTML.addTagButton 	= this.HTML.popup.children[4];
 	this.HTML.addTagButton.classList.add("addTagButton");
+
+
+	
 
 	const Menu = OptionMenu.create(this.HTML.Self);
 	
@@ -560,45 +564,33 @@ function _Popup_tagMenu() {
 		return result;
 	}, "images/icons/removeIcon.png");
 
-	Menu.addOption("Edit", async function () {
-		if (!CurTag) return;
-		This.close();
-		
-		await Popup.createTagMenu.openEdit(CurTag, CurProject.id);
-		This.open(CurProject.id);
-	}, "images/icons/changeIconDark.png");
+	Menu.addOption("Edit", openTagEditMenu, "images/icons/changeIconDark.png");
 
 
 
 
-
+	
 	let extend_open = this.open;
 	let CurTag = false;
 	let CurProject = false;
 	
 	this.open = async function(_projectId) {
-		CurProject	= Server.getProject(_projectId);
+		CurProject = Server.getProject(_projectId);
 		if (!CurProject) return;
 
-		setTagList(await CurProject.tags.getAll())
-
+		setTagList(await CurProject.tags.getAll());
 		extend_open.apply(this);
 
-		this.HTML.addTagButton.classList.remove("hide");
-		Menu.enableAllOptions();
-
-		if (!CurProject.users.Self.permissions.tags.remove) Menu.options[0].disable();
-		if (!CurProject.users.Self.permissions.tags.update) Menu.options[1].disable();
-		if (!CurProject.users.Self.permissions.tags.update) this.HTML.addTagButton.classList.add("hide");
+		enableFeaturesByPermissions();	
 	}
 
 	function setTagList(_tags) {
 		This.HTML.tagListHolder.innerHTML = "";
-		for (tag of _tags) addTagHTML(tag);
+		for (tag of _tags) This.HTML.tagListHolder.append(createTagHTML(tag));
 	}
 
 
-	function addTagHTML(_tag) {
+	function createTagHTML(_tag) {
 		let html = document.createElement("div");
 		html.className = "UI listItem clickable";
 		
@@ -609,14 +601,18 @@ function _Popup_tagMenu() {
 								"<img src='images/icons/optionIcon.png' class='item optionIcon clickable'>" + 
 							"</div>";
 
-		This.HTML.tagListHolder.append(html);
+		DoubleClick.register(html, function () {
+			CurTag = _tag;
+			openTagEditMenu();
+		});
 
+		setTextToElement(html.children[1], _tag.title);
 		html.children[2].onclick = function() {
 			CurTag = _tag;
 			Menu.open(this, {left: -20, top: 10});
 		}
 
-		setTextToElement(html.children[1], _tag.title);
+		return html;
 	}
 
 	function createTagColorCircle(_tag) {
@@ -627,6 +623,27 @@ function _Popup_tagMenu() {
 		circle.style.borderColor = _tag.colour.merge(new Color("rgba(220, 220, 220, .7)"), .5).toHex();
 
 		return circle;
+	}
+
+
+
+	async function openTagEditMenu() {
+		if (!CurTag) return;
+		if (!CurProject.users.Self.permissions.tags.update) return;
+		This.close();
+		
+		await Popup.createTagMenu.openEdit(CurTag, CurProject.id);
+		This.open(CurProject.id);
+	}
+
+
+	function enableFeaturesByPermissions() {
+		This.HTML.addTagButton.classList.remove("hide");
+		Menu.enableAllOptions();
+
+		if (!CurProject.users.Self.permissions.tags.remove) Menu.options[0].disable();
+		if (!CurProject.users.Self.permissions.tags.update) Menu.options[1].disable();
+		if (!CurProject.users.Self.permissions.tags.update) This.HTML.addTagButton.classList.add("hide");
 	}
 }
 
