@@ -5,90 +5,29 @@ function _TaskRenderer() {
 		scrollHolder: $(".mainContentPage")[0]
 	}
 
-
 	this.renderTask = function(_taskWrapper, _renderSettings) {
 		if (!_taskWrapper) return false;
 		let project = Server.getProject(_taskWrapper.task.projectId);
 		if (!project) return false;
 
-		
-		
-		let todoRenderData = {
-			project: 		project,
-
-			assignedToMe: 	_taskWrapper.task.assignedTo.includes(project.users.Self.id),
-			taskOwner: 		project.users.getLocal(_taskWrapper.task.creatorId),
-
-			memberText: 	_createMemberTextByUserIdList(_taskWrapper.task.assignedTo, project),
-		}
-		
-		if (
-			(_taskWrapper.task.groupType == "date" || _taskWrapper.task.groupType == "overdue") && 
-			_renderSettings.displayDate !== false &&
-			new Date().stringIsDate(_taskWrapper.task.groupValue)
-		) {
-			let date = new Date().setDateFromStr(_taskWrapper.task.groupValue);
-			todoRenderData.plannedDateText = DateNames.toString(
-				date,
-				true
-			);
-
-			let dateIndex = date.getDateInDays(true);
-			let todayIndex =  new Date().getDateInDays(true);
-
-
-			if (dateIndex > todayIndex + 1 && dateIndex <= todayIndex + 7) 	todoRenderData.plannedDateClass = "thisWeek";
-			if (dateIndex == todayIndex + 1) 								todoRenderData.plannedDateClass = "tomorrow";
-			if (dateIndex == todayIndex) 									todoRenderData.plannedDateClass = "today";
-		} 
-
-		if (_renderSettings.displayProjectTitle !== false) todoRenderData.projectTitle = project.title;
-		
-		let tag = project.tags.getLocal(_taskWrapper.task.tagId);
-		if (tag) todoRenderData.tagColor = tag.colour;
-		
-		let html = createTaskHTML(todoRenderData, _taskWrapper);
+		let html = createTaskHTMLTemplate();
+		fillInTaskData(html, _taskWrapper.task, project, _renderSettings);
+		setHtmlClasses(html, _taskWrapper.task, project);
 
 		DOMData.set(html, _taskWrapper);
+		assignEventHandlers(html, _taskWrapper);
 
 		return html;
 	}
-
-
-
-
-
-
-
-		function _createMemberTextByUserIdList(_userIdList, _project) {
-			if (!_project || !_userIdList || !_userIdList.length) return "";
-
-			let users = _project.users.getLocalList();
-
-			let memberList = [];
-			for (id of _userIdList)
-			{
-				for (user of users)
-				{
-					if (user.id != id) continue;
-					memberList.push(user);
-				}
-			}
-
-			return delimitMemberText(memberList, 20);
+		function setHtmlClasses(html, task, project) {
+			if (task.finished) 										html.classList.add("finished");
+			if (task.assignedTo.includes(project.users.Self.id)) 	html.classList.add("isSelf");
 		}
 
-
-
-
-		function createTaskHTML(_renderData, _taskWrapper) {
+		function createTaskHTMLTemplate() {
 			let html = document.createElement("div");
 			html.className = "listItem taskItem dropTarget clickable";
 			
-			if (_taskWrapper.task.finished) html.classList.add("finished");
-			if (_renderData.assignedToMe) html.classList.add("isSelf");
-			
-
 			const statusCircleSVG = '<?xml version="1.0" standalone="no"?><svg class="statusCircle clickable" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="isolation:isolate" viewBox="0 0 83 83" width="83" height="83"><defs><clipPath id="_clipPath_EvyxEBqQoipdaXxIJMEjCjvXV7edc1qw"><rect width="83" height="83"/></clipPath></defs><g clip-path="url(#_clipPath_EvyxEBqQoipdaXxIJMEjCjvXV7edc1qw)"><rect x="0.729" y="42.389" width="43.308" height="20" transform="matrix(0.707,0.707,-0.707,0.707,43.601,-0.482)"/><rect x="16.22" y="30.02" width="70" height="20" transform="matrix(0.707,-0.707,0.707,0.707,-13.296,47.939)"/></g></svg>';
 			html.innerHTML = 	"<div class='taskOwnerIndicator'></div>" + 
 								"<div class='statusCircleHitBox'>" + statusCircleSVG + "</div>" + 
@@ -99,46 +38,55 @@ function _TaskRenderer() {
 									'<div class="functionItem plannedDateHolder userText"></div>' +
 									'<div class="functionItem memberList userText"></div>' +
 								'</div>';
-
-			setOwnerIndicator(_renderData, html);
-			if (_renderData.tagColor) 			setTagColor(html, _renderData);
-
-			setTextToElement(html.children[2], _taskWrapper.task.title);
-			if (_renderData.memberText) 		setTextToElement(html.children[3].children[3], _renderData.memberText);
-			
-			if (_renderData.plannedDateText) 	setTextToElement(html.children[3].children[2], _renderData.plannedDateText);
-			if (_renderData.plannedDateClass) html.children[3].children[2].classList.add(_renderData.plannedDateClass);
-
-			if (_renderData.projectTitle) 
-			{
-				let projectTitleHolder = html.children[3].children[1];
-				let projectTitleHtml =  '<img src="images/icons/projectIconDark.svg" class="functionItem projectIcon">' +
-										'<div class="functionItem projectTitle userText"></div>';
-				projectTitleHolder.innerHTML = projectTitleHtml;
-				setTextToElement(projectTitleHolder.children[1], _renderData.projectTitle);
-			}
-
-
-			return assignEventHandlers(html, _taskWrapper);
+			return html;
 		}
 
+		function fillInTaskData(html, task, project, renderSettings) {			
+			
+			setTextToElement(html.children[2], task.title);
+			setMemberText(html, task, project);
+			setOwnerIndicator(html, task, project);
 
-			function setTagColor(_html, _renderData) {
-				let colorTarget 					= _html.children[1].children[0]; 
-				colorTarget.style.backgroundColor	= _renderData.tagColor.merge(new Color("rgba(255, 255, 255, .1)"), .3).toRGBA();
-				colorTarget.style.borderColor 		= _renderData.tagColor.merge(new Color("#fff"), .5).toRGBA();
-				colorTarget.style.fill 				= _renderData.tagColor.merge(new Color("rgb(130, 130, 130)"), .5).toRGBA();
+			if (task.tagId) 									setTagColor(html, task, project);
+			if (renderSettings.displayDate !== false) 			setPlannedDateText(html, task);
+			if (renderSettings.displayProjectTitle !== false) 	setProjectTitle(html, project);
+
+		}
+
+	
+			function setMemberText(html, task, project) {
+				setTextToElement(
+					html.children[3].children[3], 
+					createMemberText(task.assignedTo, project)
+				);
+			
+				function createMemberText(_userIdList, _project) {
+					if (!_project || !_userIdList || !_userIdList.length) return "";
+					let users = _project.users.getLocalList();
+
+					let memberList = [];
+					for (id of _userIdList)
+					{
+						for (user of users)
+						{
+							if (user.id != id) continue;
+							memberList.push(user);
+						}
+					}
+
+					return delimitMemberText(memberList, 20);
+				}
 			}
 
 
-			function setOwnerIndicator(_taskData, _html) {
-				if (!_taskData.taskOwner || _taskData.taskOwner.id == _taskData.project.users.Self.id) return;
+			function setOwnerIndicator(html, task, project) {
+				let taskOwner = project.users.getLocal(task.creatorId)
+				if (!taskOwner || taskOwner.Self) return;
 
-				_html.classList.add("isNotMyTask");
-				let ownerIndicator = _html.children[0];
+				html.classList.add("isNotMyTask");
+				let ownerIndicator = html.children[0];
 
 				let onIndicator = false;
-
 				ownerIndicator.onmouseleave = function() {
 					onIndicator = false;
 					MainContent.userIndicatorMenu.close();
@@ -147,12 +95,51 @@ function _TaskRenderer() {
 					onIndicator = true;	
 					setTimeout(function () {
 						if (!onIndicator) return;
-						MainContent.userIndicatorMenu.open(_taskData.taskOwner, ownerIndicator, _event);
+						MainContent.userIndicatorMenu.open(taskOwner, ownerIndicator, _event);
 					}, 500);
 				}
 			}
 
 
+			function setTagColor(html, task, project) {
+				let tag = project.tags.getLocal(task.tagId);
+				if (!tag) return;
+
+				let colorTarget 					= html.children[1].children[0]; 
+				colorTarget.style.backgroundColor	= tag.colour.merge(new Color("rgba(255, 255, 255, .1)"), .3).toRGBA();
+				colorTarget.style.borderColor 		= tag.colour.merge(new Color("#fff"), .5).toRGBA();
+				colorTarget.style.fill 				= tag.colour.merge(new Color("rgb(130, 130, 130)"), .5).toRGBA();
+			}
+
+
+			function setPlannedDateText(html, task) {
+				if (!["date", "overdue"].includes(task.groupType)) return;
+				if (!new Date().stringIsDate(task.groupValue)) return;
+					
+				let date = new Date().setDateFromStr(task.groupValue);
+				let plannedDateText = DateNames.toString(date, true);
+				setTextToElement(html.children[3].children[2], plannedDateText);
+
+
+				let dateIndex = date.getDateInDays(true);
+				let todayIndex =  new Date().getDateInDays(true);
+
+				let plannedDateClass = false;
+				if (dateIndex > todayIndex + 1 && dateIndex <= todayIndex + 7) 	plannedDateClass = "thisWeek";
+				if (dateIndex == todayIndex + 1) 								plannedDateClass = "tomorrow";
+				if (dateIndex == todayIndex) 									plannedDateClass = "today";
+
+				if (plannedDateClass) html.children[3].children[2].classList.add(plannedDateClass);
+			}
+
+
+			function setProjectTitle(html, project) {
+				let projectTitleHolder = html.children[3].children[1];
+				let projectTitleHtml =  '<img src="images/icons/projectIconDark.svg" class="functionItem projectIcon">' +
+										'<div class="functionItem projectTitle userText"></div>';
+				projectTitleHolder.innerHTML = projectTitleHtml;
+				setTextToElement(projectTitleHolder.children[1], project.title);
+			}
 
 
 
