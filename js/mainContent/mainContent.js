@@ -139,7 +139,8 @@ function _MainContent_optionMenu() {
 		Menu.enableAllOptions();
 		if (!project.users.Self.permissions.tasks.remove)						Menu.options[0].disable();
 		if (!project.users.Self.permissions.tasks.finish(curDOMData.task))		Menu.options[1].disable();
-		if (!project.users.Self.permissions.tasks.update)						Menu.options[2].disable();
+		if (!project.users.Self.permissions.tasks.update || 
+			 curDOMData.task.groupType == "overdue")							Menu.options[2].disable();
 
 		return Menu.open(_item, {top: -20, left: 0}, _event);
 	}
