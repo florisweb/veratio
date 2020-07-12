@@ -622,12 +622,15 @@ function TaskHolder_createMenuConstructor(_config, _type) {
 
 			This.HTML.plannedDateField = This.HTML.createMenu.children[1];
 			
-			This.HTML.plannedDateField.onfocusin = function() {
+		
+			This.HTML.plannedDateField.onfocus = This.HTML.plannedDateField.onfocusin = function() {
 				MainContent.taskHolder.dateOptionMenu.open(This.HTML.plannedDateField);
 			}
-			This.HTML.plannedDateField.onfocusout = function() {
+
+			This.HTML.plannedDateField.onblur = This.HTML.plannedDateField.onfocusout = function() {;
 				if (!This.createMenu.openState) return;
-				This.HTML.inputField.focus();
+				This.HTML.inputField.focus();				
+				setTimeout(function () {MainContent.taskHolder.dateOptionMenu.close()}, 1);
 			}
 		}
 }
