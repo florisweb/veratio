@@ -58,7 +58,6 @@ function _KeyHandler() {
 
 
         // Menu's
-        console.log(MainContent.taskHolder.dateOptionMenu.openState);
         if (MainContent.taskHolder.dateOptionMenu.openState)       return MainContent.taskHolder.dateOptionMenu.clickFirstOption();
         if (MainContent.searchOptionMenu.openState)                return MainContent.searchOptionMenu.clickFirstOption();
 
