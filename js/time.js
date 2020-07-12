@@ -186,17 +186,17 @@ Date.prototype.moveMinutes = function(_minutes = 0) {
 
 const DateNames = function() {
     const dateNames = [
-      {name: "Yesterday",   date: new Date().moveDay(-1)},
-      {name: "Today",       date: new Date()},
-      {name: "Tomorrow",    date: new Date().moveDay(1)},
-      {name: "Next week",   date: new Date().moveDay(7)},
-      {name: "Sunday",  	date: new Date().getFirstDayDate(0)},
-      {name: "Monday",  	date: new Date().getFirstDayDate(1)},
-      {name: "Tuesday",  	date: new Date().getFirstDayDate(2)},
-      {name: "Wednesday",  	date: new Date().getFirstDayDate(3)},
-      {name: "Thursday",  	date: new Date().getFirstDayDate(4)},
-      {name: "Friday",  	date: new Date().getFirstDayDate(5)},
-      {name: "Saturday",  	date: new Date().getFirstDayDate(6)}
+      {name: "Yesterday",   getDate: function () {return new Date().moveDay(-1)}},
+      {name: "Today",       getDate: function () {return new Date()}},
+      {name: "Tomorrow",    getDate: function () {return new Date().moveDay(1)}},
+      {name: "Next week",   getDate: function () {return new Date().moveDay(7)}},
+      {name: "Sunday",  	getDate: function () {return new Date().getFirstDayDate(0)}},
+      {name: "Monday",  	getDate: function () {return new Date().getFirstDayDate(1)}},
+      {name: "Tuesday",  	getDate: function () {return new Date().getFirstDayDate(2)}},
+      {name: "Wednesday",  	getDate: function () {return new Date().getFirstDayDate(3)}},
+      {name: "Thursday",  	getDate: function () {return new Date().getFirstDayDate(4)}},
+      {name: "Friday",  	getDate: function () {return new Date().getFirstDayDate(5)}},
+      {name: "Saturday",  	getDate: function () {return new Date().getFirstDayDate(6)}}
     ];
 
     return {
@@ -209,7 +209,7 @@ const DateNames = function() {
     	if (!_date) return "";
     	for (obj of dateNames)
       	{
-        	if (!obj.date.compareDate(_date)) continue;
+        	if (!obj.getDate().compareDate(_date)) continue;
         	return obj.name;
       	}
       	return "";
@@ -242,7 +242,7 @@ const DateNames = function() {
 
 		// relative date: Today, Tomorrow
 		date = relativeStrToDate(_str)
-		if (date) return date.date;
+		if (date) return date.getDate();
 
 		// spelled date: 15 august 2019
 		date = spelledStrToDate(_str)
