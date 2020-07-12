@@ -325,7 +325,8 @@ function _MainContent_searchOptionMenu() {
 				case "#": 
 					return {
 						title: _item.item.title,
-						src: "images/icons/tagIcon.png"
+						src: "images/tagIcon?tagId=" + _item.item.id
+						// src: "images/icons/tagIcon.png"
 					}
 				default:
 					return {
