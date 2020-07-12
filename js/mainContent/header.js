@@ -124,7 +124,7 @@ function _MainContent_header() {
 	this.setMemberList = function(_members) {
 		setTextToElement(
 			HTML.memberList, 
-			delimitMemberText(_members, 20)
+			TextFormater.memberListToString(_members, 20)
 		);
 	}
 

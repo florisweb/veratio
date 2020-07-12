@@ -74,7 +74,7 @@ function _TaskRenderer() {
 						}
 					}
 
-					return delimitMemberText(memberList, 20);
+					return TextFormater.memberListToString(memberList, 20);
 				}
 			}
 

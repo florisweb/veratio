@@ -76,32 +76,6 @@ function removeSpacesFromEnds(_str) {
 
 
 
-function delimitMemberText(_members, _delimiter = 20) {
-  if (!_members || !_members.length) return "";
-  let defaultMemberText = _members[0].name;
-  for (let i = 1; i < _members.length; i++) defaultMemberText += ", " + _members[i].name;
-
-  let memberText = "";
-  for (let m = 0; m < _members.length; m++)
-  {
-    if (memberText) memberText += ", ";
-    memberText += _members[m].name;
-    
-    if (memberText.length <= _delimiter || m == _members.length - 1) continue;   
-
-    let hiddenMemberCount = _members.length - m - 1;
-    memberText += " and " + hiddenMemberCount + " other";
-    if (hiddenMemberCount > 1) memberText += "s";
-    
-    break;
-  }
-
-  if (defaultMemberText.length <= memberText) return defaultMemberText;
-  return memberText;
-}
-
-
-
 
 
 
