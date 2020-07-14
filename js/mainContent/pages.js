@@ -26,6 +26,7 @@ function MainContent_page(_config) {
 
 		onOpen(_projectId);
 
+		SideBar.updateTabIndicator();
 		setTimeout('mainContent.classList.remove("loading");', 100);
 	}
 
@@ -108,7 +109,7 @@ function taskPage_tab(_settings) {
 		onOpen(_projectId);
 
 		MainContent.stopLoadingAnimation();
-		
+		SideBar.updateTabIndicator();
 
 		applySettings(_settings);
 	}

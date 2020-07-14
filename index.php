@@ -56,7 +56,7 @@
 		<link rel="stylesheet" type="text/css" href="css/component.css?a=52">
 		<link rel="stylesheet" type="text/css" href="css/popup.css?a=38">
 		<link rel="stylesheet" type="text/css" href="css/main.css?a=30">
-		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=29">
+		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=30">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=60">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=75">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/header.css?a=1">
@@ -69,11 +69,11 @@
 		<div id="sideBar">
 			<img class="sideBarBackground" src="images/sideBarBackground/?type=sidebar">
 			<div class="navigationHolder">
-				<div class="header clickable" onclick="MainContent.taskPage.todayTab.open()">
+				<div class="header clickable tab tabOpen" onclick="MainContent.taskPage.todayTab.open()">
 					<img src="images/icons/todayIcon.png" class="headerIcon">
 					<div class="headerText">Today</div>
 				</div>
-				<div class="header clickable" onclick="MainContent.taskPage.weekTab.open()">
+				<div class="header clickable tab" onclick="MainContent.taskPage.weekTab.open()">
 					<img src="images/icons/weekIcon.png" class="headerIcon">
 					<div class="headerText">This Week</div>
 				</div>
