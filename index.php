@@ -56,7 +56,7 @@
 		<link rel="stylesheet" type="text/css" href="css/component.css?a=52">
 		<link rel="stylesheet" type="text/css" href="css/popup.css?a=38">
 		<link rel="stylesheet" type="text/css" href="css/main.css?a=30">
-		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=30">
+		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=31">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=60">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=75">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/header.css?a=1">
@@ -80,14 +80,14 @@
 			</div>
 			<br>
 			<div class="projectListHolder hide">
-				<div class="header clickable" onclick="SideBar.projectList.toggleOpenState()">
+				<div class="header clickable tab" onclick="SideBar.projectList.toggleOpenState()">
 					<img src="images/icons/dropDownIcon.png" class="headerIcon dropDownButton close dropTarget">
 					<div class="headerText">Projects</div>
 				</div>
 				<div class="projectList hide">
 					<div>
 					</div>
-					<div class="smallTextHolder clickable" onclick="Popup.createProjectMenu.open()"> 
+					<div class="smallTextHolder tab projectTab clickable" onclick="Popup.createProjectMenu.open()"> 
 						<a class="smallText smallTextIcon">+</a>
 						<a class="smallText">Create project</a>
 					</div>

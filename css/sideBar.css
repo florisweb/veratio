@@ -15,10 +15,10 @@
 	left: 0;
 	top: 0;
 
-	width: calc(300px - 20px * 2);
+	width: 300px;
 	height: calc(100vh - 20px * 2);
 
-	padding: 20px;
+	padding: 20px 0;
 
 	background: #60b;
 	
@@ -59,12 +59,22 @@ body.appLoading #sideBar {
 
 
 	#sideBar .tab {
+		position: relative;
+		height: 20px;
+		
+		padding: 6px 20px;
+
 		opacity: .9;
 
-		transition: all .2s;
+		transition: all .2s, background-position .2s;
+		background: linear-gradient(to right, rgba(255, 255, 255, .15), rgba(255, 255, 255, .0));
+		background-repeat: no-repeat;
+		background-position: -300px 0;
 	}
+
 	#sideBar .tab.tabOpen {
 		opacity: 1;
+		background-position: 0 0;
 	}
 
 	#sideBar .tab.tabOpen div {
@@ -72,15 +82,6 @@ body.appLoading #sideBar {
 	}
 
 
-
-
-
-	#sideBar .header {
-		position: relative;
-		height: 20px;
-		
-		padding: 6px 0;
-	}
 
 		#sideBar .header .headerIcon {
 			position: relative;
@@ -114,25 +115,25 @@ body.appLoading #sideBar {
 		}
 
 
-	#sideBar .header.small {
-		padding: 7px 0;
+
+
+	#sideBar .tab.projectTab {
+		padding: 7px 20px;
+		padding-left: 29px;
 	}
 
-		#sideBar .header.small .headerIcon {
+		#sideBar .tab.projectTab .headerIcon {
 			top: 1px;
 			height: 16px;
 		}
-		#sideBar .header.small .headerText {
+		#sideBar .tab.projectTab .headerText {
 			font-size: 14px;
 		}
 
 
 
-
-
 	#sideBar .projectListHolder .projectList {
 		position: relative;
-		padding-left: 9px;
 		
 		overflow: hidden;
 		top: 0;
@@ -156,10 +157,6 @@ body.appLoading #sideBar {
 
 
 
-
-
-
-
 	#sideBar .noConnectionMessage {
 		position: absolute;
 		bottom: 20px;
@@ -177,6 +174,8 @@ body.appLoading #sideBar {
 	#sideBar .noConnectionMessage .text {
 		margin-left: 27px;
 	}
+
+
 
 
 
