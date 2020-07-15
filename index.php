@@ -53,14 +53,14 @@
 		<title>Veratio - Florisweb.tk</title>
 		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0' name='viewport'/>
 
-		<link rel="stylesheet" type="text/css" href="css/component.css?a=52">
+		<!-- <link rel="stylesheet" type="text/css" href="css/component.css?a=52">
 		<link rel="stylesheet" type="text/css" href="css/popup.css?a=39">
 		<link rel="stylesheet" type="text/css" href="css/main.css?a=30">
-		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=31">
+		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=32">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=60">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=75">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/header.css?a=1">
-<!-- 		<link rel="stylesheet" type="text/css" href="css/main_min.css"> -->
+		<link rel="stylesheet" type="text/css" href="css/mainContent/header.css?a=1"> -->
+		<link rel="stylesheet" type="text/css" href="css/main_min.css">
 
 		<script type="text/javascript" src="/JS/jQuery.js" asy nc></script>
 		<script type="text/javascript" src="/JS/request2.js?a=2" asy nc></script>
@@ -94,12 +94,12 @@
 				</div>
 			</div>
 			<div class="noConnectionMessage">
-				<div class="header"> 
+				<div class="header tab"> 
 					<img src="images/icons/noConnectionIconLight.png" class="headerIcon">
 					<div class="headerText">Lost connection</div>
 				</div>
 				<div class="text">
-					0 unsaved changes
+					? Unsaved changes <br>- Coming soon -
 				</div>
 			</div>
 		</div>
@@ -216,36 +216,6 @@
 		</div>
 
 
- 	<!-- 	<script type="text/javascript" src="js/DOMData.js" asy nc></script>
- 		<script type="text/javascript" src="js/time.js" asy nc></script>
- 		
- 		<script type="text/javascript" src="js/constants.js" asy nc></script>
- 		<script type="text/javascript" src="js/extraFunctions.js" asy nc></script>
- 		<script type="text/javascript" src="js/optionMenu.js" asy nc></script>
- 		<script type="text/javascript" src="js/popup.js" asy nc></script>
-
-
- 		<script type="text/javascript" src="js/eventHandlers/dragHandler.js" asy nc></script>
- 		<script type="text/javascript" src="js/eventHandlers/keyHandler.js" asy nc></script>
- 		<script type="text/javascript" src="js/eventHandlers/doubleClickHandler.js" asy nc></script>
- 		<script type="text/javascript" src="js/eventHandlers/rightClickHandler.js" asy nc></script>
-
- 		<script type="text/javascript" src="js/mainContent/header.js" asy nc></script>
- 		<script type="text/javascript" src="js/mainContent/pages.js" asy nc></script>
-
- 		<script type="text/javascript" src="js/mainContent/todoHolder/taskHolder.js" asy nc></script>
- 		<script type="text/javascript" src="js/mainContent/todoHolder/renderer.js" asy nc></script>
-
- 		<script type="text/javascript" src="js/mainContent/mainContent.js" asy nc></script>
-
- 		<script type="text/javascript" src="js/sideBar.js" asy nc></script>
-
- 		<script type="text/javascript" src="js/server/encoder.js" asy nc></script>
- 		<script type="text/javascript" src="js/server/project.js" asy nc></script>
- 		<script type="text/javascript" src="js/server/server.js" asy nc></script>
- 		
- 		<script type ="text/javascript" src="js/app.js" asy nc></script>
- -->
- 		<!-- <script type="text/javascript" src="js/main_min.js" asy nc></script> -->
+		<!-- <script type="text/javascript" src="js/main_min.js?a=3" asy nc></script> -->
 	</body>
 </html>	
