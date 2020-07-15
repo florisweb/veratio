@@ -52,10 +52,10 @@
 	<head>
 		<title>Veratio - Florisweb.tk</title>
 		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0' name='viewport'/>
-		<link rel="stylesheet" type="text/css" href="css/main_min.css">
+		<link rel="stylesheet" type="text/css" href="css/main_min.css?v=2">
 
 		<script type="text/javascript" src="/JS/jQuery.js" asy nc></script>
-		<script type="text/javascript" src="/JS/request2.js?a=2" asy nc></script>
+		<script type="text/javascript" src="/JS/request2.js?a=3" asy nc></script>
 	</head>	
 	<body class="appLoading">
 		<div id="sideBar">
@@ -159,6 +159,6 @@
 		<div class='UI box popup hide' id="optionMenu_colourPopupBox">
 		</div>
 
-		<script type="text/javascript" src="js/main_min.js?a=3" asy nc></script>
+		<script type="text/javascript" src="js/main_min.js?a=4" asy nc></script>
 	</body>
 </html>	

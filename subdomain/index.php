@@ -6,6 +6,9 @@
 		<meta name="theme-color" content="#636ad5">
 		<link rel="manifest" href="https://florisweb.tk/git/veratio/manifest.json">
 		<link rel="shortcut icon" href="https://florisweb.tk/git/veratio/images/pressSet/favicon.ico">
+
+		<link rel="stylesheet" type="text/css" href="popup/popup.css">
+		
 		<style>
 			#mainContentFrame {
 				position: fixed;
@@ -23,9 +26,10 @@
 			echo "<iframe id='mainContentFrame' src='" . $link . "'></iframe>";
 		?>
 
-		<link rel="stylesheet" type="text/css" href="popup/popup.css">
+
+
 		<script type="text/javascript" src="https://florisweb.tk/JS/jQuery.js"></script>
-		<script type="text/javascript" src="popup/popup.js"></script>
+		<script type="text/javascript" src="popup/popup.js?v=2"></script>
 
 		<script>
 			document.body.onload = function() {
