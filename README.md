@@ -5,16 +5,16 @@ Version 1.2
 Planned features:
 - [x] Tags (Creation, usage, and such)
 - [x] Redesigned permission-system
-- [x] Front-end permission-checking
+- [x] Curtab indicator
+
 - [x] Escape will now allow you to cancel draging
 - [x] Edit project-title by doubleclicking on it
 - [x] OptionMenu will now go above the inputfield if there isn't enough space underneath
 
-- [ ] Project colours
-- [ ] Offline service
-? - [ ] Drag and drop support for tasks (Order?)
-? - [ ] Sorting and filtering UI
-?    - [ ] Sort tasks by planned date
+
+- [x] Front-end permission-checking
+- [x] Offline-indicator
+
 
 
 
@@ -23,6 +23,13 @@ Version 1.3
 Planned features:
 - [ ] Tooltips to indicate what button does what
 - [ ] Subtasks
+- [ ] Project colours
+- [ ] Offline service
+? - [ ] Drag and drop support for tasks (Order?)
+? - [ ] Sorting and filtering UI
+?    - [ ] Sort tasks by planned date
+
+
 
 Version 1.4
 Planned features:

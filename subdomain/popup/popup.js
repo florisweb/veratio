@@ -216,23 +216,19 @@ function _Popup_newVersionMenu() {
 	let builder = [
 		"<br>",
 		"<img src='https://florisweb.tk/git/veratio/images/icons/updateIcon.png' class='fullIcon'><br>",
-		"<br><div class='text header' style='text-align: center; width: 100%'>UPDATED TO VERSION 1.1</div>",
+		"<br><div class='text header' style='text-align: center; width: 100%'>UPDATED TO VERSION 1.2</div>",
 		
 		"<br><br><br><br><br><br>",
 		{text: "New Features", highlighted: true},
 		"<br><div style='height: 5px'></div>",
-		{text: "- Drag and drop support for tasks (Cross-date)"},
-		"<br>", {text: "- Option to invite someone using a link"},
-		"<br>", {text: "- Hover on the little dot next to a task to see the task's owner"},
-		"<br>", {text: "- Drop-down-menu's for the taskHolders"},		
-		"<br>", {text: "- Midend / clientside datamanagement redesign"},
-		"<br>", {text: "- Full-overdue history"},
-		
-		"<br><br>",
-		"<br>", {text: "Bug Fixes", highlighted: true},
-		"<br>", {text: "- You can now mention members that have an '@' in their name"},
-		"<br>", {text: "- When your session expires you will be prompted to login again"},
-		"<br>", {text: "- A lot of less noteworthy bugs"}, 
+		{text: "- Added Tags (Creation, usage, and such)"},
+		"<br>", {text: "- Redesigned the permission-system"},
+		"<br>", {text: "- Current-project-indicator: In the sidebar you will now be able"},
+		"<br>", {text: "to see in what project you are."},
+		 
+		"<br>", {text: "- Stability: A lot of revamping and refactoring of the code."},		
+		"<br>", {text: "- Accesibility and usability: A ton of little tweaks and bug fixes"},		
+
 		"<br><br>",
 		{button: "CLOSE", onclick: function () {This.close()}, important: false},
 	];

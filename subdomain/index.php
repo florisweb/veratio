@@ -34,12 +34,12 @@
 			}
 
 			function showAvailableMessages() {
-			    const curMessageIndex = 1;
+			    const curMessageIndex = 2;
 			    let messageIndex = parseInt(localStorage.getItem("messageIndex"));
 			    if (messageIndex >= curMessageIndex) return;
 			    
 			    localStorage.setItem("messageIndex", curMessageIndex);
-			    Popup.newVersionMenu.open();  
+			    Popup.newVersionMenu.open();
 			 }
 		</script>
 	</body>
