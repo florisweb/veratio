@@ -52,14 +52,6 @@
 	<head>
 		<title>Veratio - Florisweb.tk</title>
 		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0' name='viewport'/>
-
-		<!-- <link rel="stylesheet" type="text/css" href="css/component.css?a=52">
-		<link rel="stylesheet" type="text/css" href="css/popup.css?a=39">
-		<link rel="stylesheet" type="text/css" href="css/main.css?a=30">
-		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=32">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=60">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=75">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/header.css?a=1"> -->
 		<link rel="stylesheet" type="text/css" href="css/main_min.css">
 
 		<script type="text/javascript" src="/JS/jQuery.js" asy nc></script>
@@ -140,9 +132,6 @@
 					</div>
 				</div>
 
-
-
-
 				<div class="mainContentPage settingsPage hide">
 					<br>
 					<br>
@@ -167,55 +156,9 @@
 				</div>
 			</div>
 		</div>
-
-
-		<script>
-			// temporary so things don't get cached
-			let antiCache = Math.round(Math.random() * 100000000);
-			// Modules
-			$.getScript("js/DOMData.js?antiCache=" 									+ antiCache, function() {});
-			$.getScript("js/time.js?antiCache=" 									+ antiCache, function() {});
-			$.getScript("js/UI.js?antiCache=" 										+ antiCache, function() {});
-			$.getScript("js/color.js?antiCache=" 									+ antiCache, function() {});
-			$.getScript("js/textFormater.js?antiCache=" 							+ antiCache, function() {});
-
-			$.getScript("js/constants.js?antiCache=" 								+ antiCache, function() {});
-			$.getScript("js/extraFunctions.js?antiCache=" 							+ antiCache, function() {});
-			$.getScript("js/optionMenu.js?antiCache=" 								+ antiCache, function() {});
-			$.getScript("js/popup.js?antiCache=" 									+ antiCache, function() {});
-
-			// Eventhandlers
-			$.getScript("js/eventHandlers/dragHandler.js?antiCache=" 				+ antiCache, function() {});
-			$.getScript("js/eventHandlers/keyHandler.js?antiCache=" 				+ antiCache, function() {});
-			$.getScript("js/eventHandlers/doubleClickHandler.js?antiCache=" 		+ antiCache, function() {});
-			$.getScript("js/eventHandlers/rightClickHandler.js?antiCache=" 			+ antiCache, function() {});
-
-
-			$.getScript("js/mainContent/header.js?antiCache=" 						+ antiCache, function() {});
-			$.getScript("js/mainContent/pages.js?antiCache=" 						+ antiCache, function() {});
-			
-			$.getScript("js/mainContent/todoHolder/taskHolder.js?antiCache=" 		+ antiCache, function() {});
-			$.getScript("js/mainContent/todoHolder/renderer.js?antiCache=" 			+ antiCache, function() {});
-
-			$.getScript("js/mainContent/mainContent.js?antiCache=" 					+ antiCache, function() {});
-
-
-			$.getScript("js/sideBar.js?antiCache=" 									+ antiCache, function() {});
-			
-
-			$.getScript("js/server/encoder.js?antiCache=" 							+ antiCache, function() {});
-			$.getScript("js/server/project.js?antiCache=" 							+ antiCache, function() {});
-			$.getScript("js/server/server.js?antiCache=" 							+ antiCache, function() {});
-
-
-			$.getScript("js/app.js?antiCache=" 										+ antiCache, function() {});
-		</script>
-
-
 		<div class='UI box popup hide' id="optionMenu_colourPopupBox">
 		</div>
 
-
-		<!-- <script type="text/javascript" src="js/main_min.js?a=3" asy nc></script> -->
+		<script type="text/javascript" src="js/main_min.js?a=3" asy nc></script>
 	</body>
 </html>	
