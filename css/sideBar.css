@@ -152,14 +152,14 @@ body.appLoading #sideBar {
 	}
 
 	body.noConnection #sideBar .projectListHolder .projectList {
-		max-height: calc(100vh - 135px - 112px);
+		max-height: calc(100vh - 135px - 102px);
 	}
 
 
 
 	#sideBar .noConnectionMessage {
 		position: absolute;
-		bottom: 20px;
+		bottom: 10px;
 
 		width: calc(100% - 30px * 2);
 		height: auto;
@@ -168,7 +168,7 @@ body.appLoading #sideBar {
 		transition: all .3s;
 	}
 	body:not(.noConnection) #sideBar .noConnectionMessage {
-		bottom: -75px;
+		bottom: -100px;
 	}
 
 	#sideBar .noConnectionMessage .text {
