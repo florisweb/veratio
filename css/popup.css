@@ -25,7 +25,7 @@
 
 .popupBoxHolder .popupWindow {
 	position: relative;
-	top: calc(50vh);
+	top: 45vh;
 	margin: auto;
 	transform: translateY(-50%);
 
