@@ -152,7 +152,7 @@ body.appLoading #sideBar {
 	}
 
 	body.noConnection #sideBar .projectListHolder .projectList {
-		max-height: calc(100vh - 135px - 94px);
+		max-height: calc(100vh - 135px - 112px);
 	}
 
 
@@ -172,7 +172,7 @@ body.appLoading #sideBar {
 	}
 
 	#sideBar .noConnectionMessage .text {
-		margin-left: 27px;
+		margin-left: 47px;
 	}
 
 
