@@ -1,40 +1,22 @@
 
 
 
-Version 1.2
-Planned features:
-- [x] Tags (Creation, usage, and such)
-- [x] Redesigned permission-system
-- [x] Curtab indicator
-
-- [x] Escape will now allow you to cancel draging
-- [x] Edit project-title by doubleclicking on it
-- [x] OptionMenu will now go above the inputfield if there isn't enough space underneath
-
-
-- [x] Front-end permission-checking
-- [x] Offline-indicator
-
-
-
-
-
 Version 1.3
 Planned features:
-- [ ] Tooltips to indicate what button does what
-- [ ] Subtasks
-- [ ] Project colours
 - [ ] Offline service
-? - [ ] Drag and drop support for tasks (Order?)
-? - [ ] Sorting and filtering UI
-?    - [ ] Sort tasks by planned date
+
 
 
 
 Version 1.4
 Planned features:
 - [ ] Repeatable tasks
-
+- [ ] Tooltips to indicate what button does what
+- [ ] Subtasks
+- [ ] Project colours
+? - [ ] Drag and drop support for tasks (Order?)
+? - [ ] Sorting and filtering UI
+?    - [ ] Sort tasks by planned date
 
 
 
@@ -50,6 +32,21 @@ Planned features:
 - [x] Option to invite using a link
 - [x] Bug Fix: You can now mention members that have an '@' in their name
 - [x] Bux Fix: When your session expires you will be prompted to login again
+
+
+Version 1.2
+Planned features:
+- [x] Tags (Creation, usage, and such)
+- [x] Redesigned permission-system
+- [x] Curtab indicator
+
+- [x] Escape will now allow you to cancel draging
+- [x] Edit project-title by doubleclicking on it
+- [x] OptionMenu will now go above the inputfield if there isn't enough space underneath
+
+- [x] Front-end permission-checking
+- [x] Offline-indicator
+
 
 
 
