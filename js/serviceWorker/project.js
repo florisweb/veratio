@@ -12,12 +12,18 @@ function _Server_globalProject(_project) {
     let Type = "task";
 
     this.get = async function(_id) {
-      let result = await REQUEST.send(
+      let result = await fetchData(
         "database/project/" + Type + ".php", 
         "method=get&parameters=" + _id +  
         "&projectId=" + This.id
       );
-      return Encoder.decodeObj(result);
+
+      let task = Encoder.decodeObj(result);
+    
+
+
+
+      return task;
     }
 
     this.getByDate = function(_date) {
@@ -25,7 +31,7 @@ function _Server_globalProject(_project) {
     }
 
     this.getByDateRange = async function(_date, _range = 1) {
-      let result = await REQUEST.send(
+      let result =  await fetchData(
         "database/project/" + Type + ".php", 
         "method=getByDateRange&parameters=" + 
         Encoder.objToString({
@@ -38,7 +44,7 @@ function _Server_globalProject(_project) {
     }
 
     this.getByGroup = async function(_groupType, _groupValue = "*") {
-      let result = await REQUEST.send(
+      let result =  await fetchData(
         "database/project/" + Type + ".php", 
         "method=getByGroup&parameters=" + 
         Encoder.objToString({
@@ -51,8 +57,8 @@ function _Server_globalProject(_project) {
     }
 
 
-    this.remove = function(_id) {
-      return REQUEST.send(
+    this.remove = async function(_id) {
+      return await fetchData(
         "database/project/" + Type + ".php", 
         "method=remove&parameters=" + _id + 
         "&projectId=" + This.id
@@ -60,7 +66,7 @@ function _Server_globalProject(_project) {
     }
 
     this.update = async function(_newTask) {
-      let result = await REQUEST.send(
+      let result = await fetchData(
         "database/project/" + Type + ".php", 
         "method=update&parameters=" + 
         Encoder.objToString(_newTask) + 
