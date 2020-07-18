@@ -145,7 +145,6 @@ Client
 
 - task
   - get
-  - getByDate
   - getByDateRange
   - getByGroup
   - remove

@@ -99,9 +99,7 @@ function LocalDB_Project(_projectId, _DB) {
     const Key = "tasks";
 
     this.update = async function(_newTask) {
-      let data = await This.getData(Key);
-      if (!data) data = [];
-      
+      let tasks = await getAllTasks();
       let foundTask = false;
 
       for (let i = 0; i < data.length; i++)
@@ -116,6 +114,66 @@ function LocalDB_Project(_projectId, _DB) {
       return This.setData(Key, data);
     }
 
+    this.get = async function(_id) {
+      let tasks = await getAllTasks();
+    
+      for (let i = 0; i < tasks.length; i++)
+      {
+        if (tasks[i].id != _id) continue;
+        return tasks[i];
+      }
+      return false;
+    }
+
+    this.getByDateRange = async function({date, range}) {
+      let tasks = await getAllTasks();
+      let response = [];
+      
+      for (let i = 0; i < tasks.length; i++)
+      {
+        if (tasks[i].groupType != "date") continue;
+        let date = new Date(tasks[i].groupValue);
+        if (!date || !date.dateIsBetween(date, date.moveDay(range))) continue;
+        
+        response.push(tasks[i]);
+      }
+      return response;
+    }
+
+    this.getByGroup = async function({type, value = "*"}) {
+      let tasks = await getAllTasks();
+      let response = [];
+      
+      for (let i = 0; i < tasks.length; i++)
+      {
+        if (tasks[i].groupType != type) continue;
+        if (value != "*" && tasks[i].groupValue != value) continue;
+        
+        response.push(tasks[i]);
+      }
+      return response;
+    }
+
+
+    this.remove = async function(_id) {
+      let tasks = await getAllTasks();
+      
+      for (let i = 0; i < tasks.length; i++)
+      {
+        if (tasks[i].id != _id) continue;
+        tasks.splice(i, 1);
+        
+        return This.setData(Key, tasks);
+      }
+      return false;
+    } 
+
+
+    async function getAllTasks() {
+      let tasks = await This.getData(Key);
+      if (!tasks) return [];
+      return tasks;
+    }
   }
 
 
@@ -155,7 +213,7 @@ function LocalDB_ProjectInterface(_projectId, _DB) {
 
       _value.id = This.id;
       let trans2 = store.put(_value, This.id);
-      trans2.transaction.onsuccess = function () {console.log("uscc"); resolve()};
+      resolve();//TODO actual success-checking
     });
   }
 }
