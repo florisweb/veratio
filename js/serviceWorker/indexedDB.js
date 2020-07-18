@@ -10,6 +10,8 @@ const LocalDB = new function() {
 
   let DB; getDB();
 
+  this.projectList = [];
+
 
 
   function getDB() {
@@ -26,6 +28,8 @@ const LocalDB = new function() {
 
     request.onsuccess = function(_e) {
       DB = _e.target.result;
+
+      updateProjectList();
     }
 
     request.onerror = function(_e) {
@@ -34,7 +38,24 @@ const LocalDB = new function() {
   }
 
 
-  this.getProjectIdList = getProjectIdList;
+
+  async function updateProjectList() {
+    LocalDB.projectList = [];
+
+    let ids = await getProjectIdList();
+
+    for (let i = 0; i < ids.length; i++)
+    {
+      let project = new LocalDB_Project(ids[i], DB);
+      LocalDB.projectList.push(project);
+    }
+  }
+
+
+
+
+
+
   function getProjectIdList() {
     return new Promise(function (resolve, error) {
       let store = DB.transaction("metaData", "readonly").objectStore("metaData");
@@ -52,10 +73,23 @@ const LocalDB = new function() {
 
 
 
-
-
   this.getProject = function(_projectId) {
-    return new LocalDB_Project(_projectId, DB);
+    for (let i = 0; i < this.projectList.length; i++)
+    {
+      if (this.projectList[i].id != _projectId) continue;
+      return this.projectList[i];
+    }
+    return false;
+  }
+
+
+  this.addProject = async function(_id, _title = "A nameless project") {
+    let project = new LocalDB_Project(_id, DB);
+
+    await project.setData("metaData", {title: _title});
+    console.log(project);
+    this.projectList.push(project);
+    return project;
   }
 }
 
@@ -67,9 +101,6 @@ function LocalDB_Project(_projectId, _DB) {
   let This = this;
   let DB = _DB;
   this.id = _projectId;
-
-
-
 
 
 
@@ -96,7 +127,7 @@ function LocalDB_Project(_projectId, _DB) {
 
       _value.id = This.id;
       let trans2 = store.put(_value, This.id);
-      trans2.transaction.onsuccess = resolve;
+      trans2.transaction.onsuccess = function () {console.log("uscc"); resolve()};
     });
   }
 }
