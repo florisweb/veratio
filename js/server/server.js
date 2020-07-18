@@ -1,4 +1,47 @@
 
+
+
+const SW = new function() {
+  let ServiceWorker;
+  if ('serviceWorker' in navigator) {} else return;
+
+  window.addEventListener('load', async function() {
+    navigator.serviceWorker.register('serviceWorker.js').then(function(registration) {
+      ServiceWorker = registration.active;
+      
+      ServiceWorker.onmessage = function(_e) {
+        console.log("Client.onMessage", _e.data);
+      }
+
+      console.log('ServiceWorker registration successful');
+    }, function(err) {
+      console.log('ServiceWorker registration failed: ', err);
+    });
+  });
+
+
+
+  this.send = function(_message) {
+    return new Promise(function(resolve, reject) {
+      var messageChannel = new MessageChannel();
+      messageChannel.port1.onmessage = function(event) {
+        if (event.data.error) return reject(event.data.error);
+        resolve(event.data);
+      };
+
+      navigator.serviceWorker.controller.postMessage(_message, [messageChannel.port2]);
+    });
+  }
+}
+
+
+
+
+
+
+
+
+
 const Server = new function() {
   let This = this;
   this.projectList = [];
@@ -6,30 +49,6 @@ const Server = new function() {
   this.global = new function() {
     _Server_globalProject.call(this, {id: "*"})
     delete this.users;
-  }
-
-
-
-  // All request-inteceptor to detect authentication-loss
-  let REQUEST_send = REQUEST.send;
-  REQUEST.send = function(_url, _paramaters, _maxAttempts = 20) {
-    return new Promise(function (resolve, reject) {
-      REQUEST_send(_url, _paramaters, _maxAttempts).then(function (_result) {
-        if (_result == "E_noAuth") App.promptAuthentication();
-        resolve(_result);
-      
-      }, function (_error) {
-        reject(_error);
-      });
-    });
-  }
-
-  REQUEST.noConnectionHandler = function() {
-    document.body.classList.add("noConnection");
-  }
-
-  REQUEST.reConnectedHandler = function() {
-    document.body.classList.remove("noConnection");
   }
 
 
@@ -53,14 +72,15 @@ const Server = new function() {
   }
 
 
-  this.createProject = function(_title) {
-    return new Promise(async function (resolve, error) {
-      let result = await REQUEST.send("database/project/create.php", "title=" + Encoder.encodeString(_title));
-      if (!result) alert(result);
-
-      importProject(result);
-      resolve(result);
+  this.createProject = async function(_title) {
+    let result = await SW.send({
+      type: "project",
+      action: "create",
+      parameters: _title,
     });
+
+    if (!result) return false;
+    importProject(result);
   }
 
 

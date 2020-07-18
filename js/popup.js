@@ -776,7 +776,7 @@ function _Popup_createTagMenu() {
 	}
 
 	function testIfTagTitleAlreadyExists(_tagTitle) {
-		let tags = CurProject.tags.getLocalList();
+		let tags = CurProject.tags.getAll();
 		for (tag of tags) 
 		{
 			if (tag.title.toLowerCase() == _tagTitle.toLowerCase()) return true;

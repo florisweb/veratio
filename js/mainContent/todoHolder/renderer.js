@@ -62,7 +62,7 @@ function _TaskRenderer() {
 			
 				function createMemberText(_userIdList, _project) {
 					if (!_project || !_userIdList || !_userIdList.length) return "";
-					let users = _project.users.getLocalList();
+					let users = _project.users.getAll();
 
 					let memberList = [];
 					for (id of _userIdList)
@@ -80,7 +80,7 @@ function _TaskRenderer() {
 
 
 			function setOwnerIndicator(html, task, project) {
-				let taskOwner = project.users.getLocal(task.creatorId)
+				let taskOwner = project.users.get(task.creatorId)
 				if (!taskOwner || taskOwner.Self) return;
 
 				html.classList.add("isNotMyTask");
@@ -102,7 +102,7 @@ function _TaskRenderer() {
 
 
 			function setTagColor(html, task, project) {
-				let tag = project.tags.getLocal(task.tagId);
+				let tag = project.tags.get(task.tagId);
 				if (!tag) return;
 
 				let colorTarget 					= html.children[1].children[0]; 

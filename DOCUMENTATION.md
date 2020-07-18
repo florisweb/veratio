@@ -90,3 +90,78 @@
     render            function
 
 
+
+
+
+
+
+
+
+
+
+
+
+<h1>Connection</h1>
+    Client
+      /\  
+      |       - Postmessage
+      \/
+  ServiceWorker
+      |
+      |      - Fetch
+      \/
+    Server
+
+
+
+<h2>Client - ServiceWorker</h2>
+To SW: {
+  type: "" of ["task", "tag", "user", "project"]
+  action: "" of - see Actions -
+  projectId: "",
+  parameters: {},
+
+  sendId: 123432432124..
+}
+
+From SW: {
+  response: {}
+  returnId: /\
+}
+
+
+
+
+
+Actions
+Client                                        
+- project
+  m leave = user.remove(self)               
+  - remove
+  - rename
+  - create
+  - getAll
+
+- task
+  - get
+  - getByDate
+  - getByDateRange
+  - getByGroup
+  - remove
+  - update
+
+- users
+  - get
+  - getAll
+  - update
+  - remove
+  - inviteByEmail
+  - inviteByLink
+
+- tags
+  - get
+  - getAll
+  - update
+  - remove
+
+

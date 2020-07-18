@@ -87,6 +87,9 @@ function _Server_globalProject(_project) {
     
 
 
+    let lastSync = new Date();
+    const dateRecensy = 60 * 1000; // miliseconds after which the data is considered out of date
+
     this.get = async function(_id) {
       let users = await this.getAll();
       for (user of users)
@@ -114,7 +117,20 @@ function _Server_globalProject(_project) {
       return results;
     }
 
-  
+    this.getLocalList = function() {
+      if (new Date() - lastSync > dateRecensy) this.getAll();
+      return list;
+    }
+
+    this.getLocal = function(_id) {
+      let users = this.getLocalList();
+      for (user of users)
+      {
+        if (user.id != _id) continue;
+        return user;
+      }
+      return false;
+    }
 
     function setSelf(_userList) {
       for (user of _userList) 
@@ -171,6 +187,12 @@ function _Server_globalProject(_project) {
     let list = [];
     if (_project.tags) setList(_project.tags); 
 
+
+    let lastSync = new Date();
+    const dateRecensy = 60 * 1000; // miliseconds after which the data is considered out of date
+
+
+
     function setList(_array) {
       for (let r = 0; r < _array.length; r++) _array[r].colour = new Color(_array[r].colour); 
       list = _array;
@@ -201,7 +223,22 @@ function _Server_globalProject(_project) {
       return list;
     }
 
-    
+    this.getLocalList = function() {
+      if (new Date() - lastSync > dateRecensy) this.getAll();
+      return list;
+    }
+
+    this.getLocal = function(_id) {
+      let tags = this.getLocalList();
+      for (tag of tags)
+      {
+        if (tag.id != _id) continue;
+        return tag;
+      }
+      return false;
+    }
+
+
 
     this.update = async function(_newTag) {
       _newTag.colour = _newTag.colour.toHex();

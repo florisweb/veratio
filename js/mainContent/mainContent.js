@@ -244,9 +244,9 @@ function _MainContent_searchOptionMenu() {
 		if (!_project) _project = Server.projectList[0];
 		switch (_type)
 		{
-			case "#": 	return _project.tags.getLocalList();	break;
-			case ".": 	return Server.projectList; 				break;
-			default: 	return _project.users.getLocalList(); 	break;
+			case "#": 	return _project.tags.getAll();		break;
+			case ".": 	return Server.projectList; 			break;
+			default: 	return _project.users.getAll(); 	break;
 		}
 	}
 	
