@@ -4,6 +4,9 @@ function _Server_globalProject(_project) {
   let This    = this;
   this.id     = String(_project.id);
 
+  let Local   = LocalDB.getProject(this.id);
+
+
 
   this.tasks  = new function() {
     let Type = "task";

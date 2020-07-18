@@ -124,6 +124,8 @@ To SW: {
   sendId: 123432432124..
 }
 
+
+
 From SW: {
   response: {}
   returnId: /\
@@ -136,7 +138,6 @@ From SW: {
 Actions
 Client                                        
 - project
-  m leave = user.remove(self)               
   - remove
   - rename
   - create
