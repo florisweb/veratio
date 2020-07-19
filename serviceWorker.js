@@ -1,3 +1,8 @@
+// await SW.send({action: "getAll", type: "project", projectId: "test", parameters: ""})
+
+
+
+
 let antiCache = Math.random() * 1000000000000;
 importScripts("js/time.js?a=" 						+ antiCache);
 importScripts("js/serviceWorker/indexedDB.js?a=" 	+ antiCache);
@@ -58,8 +63,12 @@ self.addEventListener('message', async function(_e) {
 	let result = false;
 	try {
 		result = await messageFunction(message.parameters);
+		result = serializeResult(result);
 	} catch (e) {console.error("An error accured", e)};
 
+	console.warn(result);
+
+	// let serializedResult = JSON.parse(JSON.stringify(result));
 	_e.ports[0].postMessage(result);
 
 
@@ -88,6 +97,23 @@ self.addEventListener('message', async function(_e) {
 	
   	// _e.ports[0].postMessage(result);
 });
+
+function serializeResult(_result) {
+	if (_result.serialize) return _result.serialize();
+
+	if (typeof _result == "object")
+	{
+		let results = [];
+		for (let i = 0; i < _result.length; i++) 
+		{	
+			results[i] = _result[i];
+			if (_result[i].serialize) results[i] = _result[i].serialize();
+		}
+		return results;
+	}
+
+	return _result;
+}
 
 
 

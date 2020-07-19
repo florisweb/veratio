@@ -48,7 +48,7 @@ const Server = new function() {
 
       _project = Encoder.decodeObj(_project);
       
-      return new _Server_project(_project);
+      return new Project(_project);
     }
 }
 

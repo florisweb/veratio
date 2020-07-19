@@ -120,19 +120,7 @@ To SW: {
   action: "" of - see Actions -
   projectId: "",
   parameters: {},
-
-  sendId: 123432432124..
 }
-
-
-
-From SW: {
-  response: {}
-  returnId: /\
-}
-
-
-
 
 
 Actions

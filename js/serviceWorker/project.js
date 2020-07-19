@@ -1,10 +1,17 @@
 
 
-function _Server_globalProject(_project) {
+function GlobalProject(_project) {
   let This    = this;
   this.id     = String(_project.id);
 
   let Local   = LocalDB.getProject(this.id);
+
+
+  this.serialize = function() {
+    return {
+      id: this.id
+    }
+  }
 
 
 
@@ -20,8 +27,6 @@ function _Server_globalProject(_project) {
 
       let task = Encoder.decodeObj(result);
     
-
-
 
       return task;
     }
@@ -145,7 +150,7 @@ function _Server_globalProject(_project) {
       for (user of _userList) 
       {
         if (!user.Self) continue;
-        Users.Self = new _Server_project_userComponent_Self(user);
+        Users.Self = new Project_userComponent_Self(user);
         break;
       }
     }
@@ -277,8 +282,8 @@ function _Server_globalProject(_project) {
 
 
 
-function _Server_project(_project) {
-  _Server_globalProject.call(this, _project);
+function Project(_project) {
+  GlobalProject.call(this, _project);
 
   let This    = this;
   this.title  = String(_project.title);
@@ -329,7 +334,7 @@ function _Server_project(_project) {
 
 
 
-function _Server_project_userComponent_Self(_user) {
+function Project_userComponent_Self(_user) {
   let permissions = _user.permissions;
 
   let This = this;
