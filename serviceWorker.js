@@ -31,6 +31,54 @@ const Client = new function() {
 
 
 
+const functionTable = {
+	"project": {
+		remove: function(_projectId) {
+
+
+		}
+
+	},
+	"tasks": {
+
+	},
+	"users": {
+
+	},
+	"tags": {
+
+	}
+}
+
+// - project
+//   - remove
+//   - rename
+//   - create
+//   - getAll
+
+// - task
+//   - get
+//   - getByDateRange
+//   - getByGroup
+//   - remove
+//   - update
+
+// - users
+//   - get
+//   - getAll
+//   - update
+//   - remove
+//   - inviteByEmail
+//   - inviteByLink
+
+// - tags
+//   - get
+//   - getAll
+//   - update
+//   - remove
+
+
+
 self.addEventListener('message', async function(_e) {
 	console.log("SW:message", _e);
 	let message = _e.data;

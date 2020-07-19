@@ -70,7 +70,6 @@ const LocalDB = new function() {
 
 
 
-
   function getProjectIdList() {
     return new Promise(function (resolve, error) {
       let store = DB.transaction("metaData", "readonly").objectStore("metaData");
@@ -97,34 +96,9 @@ function LocalDB_Project(_projectId, _DB) {
 
   this.tasks = new function() {
     const Key = "tasks";
+    TypeBaseClass.call(this, Key);
 
-    this.update = async function(_newTask) {
-      let tasks = await getAllTasks();
-      let foundTask = false;
-
-      for (let i = 0; i < data.length; i++)
-      {
-        if (data[i].id != _newTask.id) continue;
-        data[i] = _newTask;
-        foundTask = true;
-      }
-
-      if (!foundTask) data.push(_newTask);
-
-      return This.setData(Key, data);
-    }
-
-    this.get = async function(_id) {
-      let tasks = await getAllTasks();
-    
-      for (let i = 0; i < tasks.length; i++)
-      {
-        if (tasks[i].id != _id) continue;
-        return tasks[i];
-      }
-      return false;
-    }
-
+   
     this.getByDateRange = async function({date, range}) {
       let tasks = await getAllTasks();
       let response = [];
@@ -153,27 +127,17 @@ function LocalDB_Project(_projectId, _DB) {
       }
       return response;
     }
+  }
 
 
-    this.remove = async function(_id) {
-      let tasks = await getAllTasks();
-      
-      for (let i = 0; i < tasks.length; i++)
-      {
-        if (tasks[i].id != _id) continue;
-        tasks.splice(i, 1);
-        
-        return This.setData(Key, tasks);
-      }
-      return false;
-    } 
+  this.tags = new function() {
+    const Key = "tags";
+    TypeBaseClass.call(this, Key);
+  }
 
-
-    async function getAllTasks() {
-      let tasks = await This.getData(Key);
-      if (!tasks) return [];
-      return tasks;
-    }
+  this.users = new function() {
+    const Key = "users";
+    TypeBaseClass.call(this, Key);
   }
 
 
@@ -181,6 +145,60 @@ function LocalDB_Project(_projectId, _DB) {
 
 
 
+
+
+  function TypeBaseClass(_key) {
+    let Key = _key;
+
+    this.update = async function(_newItem) {
+      let item = await this.getAll();
+      let found = false;
+
+      for (let i = 0; i < data.length; i++)
+      {
+        if (data[i].id != _newItem.id) continue;
+        data[i] = _newItem;
+        found = true;
+      }
+
+      if (!found) data.push(_newItem);
+
+      return This.setData(Key, data);
+    }
+
+
+    this.get = async function(_id) {
+      let items = await this.getAll();
+    
+      for (let i = 0; i < items.length; i++)
+      {
+        if (items[i].id != _id) continue;
+        return items[i];
+      }
+      return false;
+    }
+
+
+    this.remove = async function(_id) {
+      let items = await this.getAll();
+      
+      for (let i = 0; i < items.length; i++)
+      {
+        if (items[i].id != _id) continue;
+        items.splice(i, 1);
+        
+        return This.setData(Key, items);
+      }
+      return false;
+    } 
+
+
+    this.getAll = async function() {
+      let items = await This.getData(Key);
+      if (!items) return [];
+      return items;
+    }
+  }
 }
 
 
