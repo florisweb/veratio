@@ -14,11 +14,16 @@ const Server = new function() {
   this.getProjectList = async function() {
     let projects = await fetchProjects();
 
+    if (projects === false) return await LocalDB.getProjectList();
+    LocalDB.updateProjectList(projects);
+
     return projects;
   }
 
-  this.removeProject = function(_id) {
-    
+  this.removeProject = async function(_id) {
+    let result = await fetchData("database/project/remove.php", "projectId=" + _id);
+    // if (!result) return false;
+    return result;
   }
 
 

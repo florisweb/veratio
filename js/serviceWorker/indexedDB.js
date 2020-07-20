@@ -60,6 +60,26 @@ const LocalDB = new function() {
   }
 
 
+  this.updateProjectList = async function(_newList) {
+    let invalidProjects = await this.getProjectList();
+
+    for (let i = 0; i < _newList.length; i++)
+    {
+      let index = invalidProjects.findIndex(function (v) {return v.id == _newList[i].id});
+      if (index != -1) invalidProjects.splice(index, 1);
+
+      let project = await this.getProject(_newList[i].id);
+      if (project) continue;
+      this.addProject(_newList[i].id, _newList[i].title);
+    }
+
+    for (project of invalidProjects) project.remove();
+  }
+
+  
+
+
+
   this.addProject = async function(_id, _title = "A nameless project") {
     let project = new LocalDB_Project(_id, DB);
     await project.setData("metaData", {title: _title});
