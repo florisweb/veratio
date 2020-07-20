@@ -128,20 +128,6 @@ function GlobalProject(_project) {
       return results;
     }
 
-    this.getLocalList = function() {
-      if (new Date() - lastSync > dateRecensy) this.getAll();
-      return list;
-    }
-
-    this.getLocal = function(_id) {
-      let users = this.getLocalList();
-      for (user of users)
-      {
-        if (user.id != _id) continue;
-        return user;
-      }
-      return false;
-    }
 
     function setSelf(_userList) {
       for (user of _userList) 

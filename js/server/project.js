@@ -5,7 +5,7 @@ function _Server_globalProject(_project) {
   this.id     = String(_project.id);
 
 
-  this.tasks  = new function() {
+  this.tasks = new function() {
     let Type = "tasks";
 
     this.get = async function(_id) {
@@ -73,13 +73,8 @@ function _Server_globalProject(_project) {
   this.users  = new function() {
     let Users = this;
 
-    let Type = "user";
-    let list = [];
-    if (_project.users) 
-    {
-      list = _project.users; 
-      setSelf(list);
-    };
+    let Type = "users";
+    if (_project.users) setSelf(_project.users);
 
     this.Self;
     
@@ -96,19 +91,17 @@ function _Server_globalProject(_project) {
     }
 
     this.getAll = async function() {
-      let results = await REQUEST.send(
-        "database/project/" + Type + ".php", 
-        "method=getAll" + 
-        "&projectId=" + This.id
-      );
+      let result = await SW.send({
+        action: "getAll", 
+        type: Type, 
+        projectId: This.id, 
+        parameters: ""
+      });
+     
       if (!Array.isArray(results)) return false;
-      results = Encoder.decodeObj(results);
 
       setSelf(results);
-
-      list = results;
       
-      lastSync = new Date();
       return results;
     }
 
@@ -126,39 +119,41 @@ function _Server_globalProject(_project) {
 
 
     this.update = async function(_newUser) {
-      let result = await REQUEST.send(
-        "database/project/" + Type + ".php", 
-        "method=update&parameters=" + 
-        Encoder.objToString(_newUser) + 
-        "&projectId=" + This.id
-      );
-      return Encoder.decodeObj(result);
+      return await SW.send({
+        action: "update", 
+        type: Type, 
+        projectId: This.id, 
+        parameters: _newUser
+      });
     }
 
 
-    this.remove = function(_id) {
-      return REQUEST.send(
-        "database/project/" + Type + ".php", 
-        "method=remove&parameters=" + _id + 
-        "&projectId=" + This.id
-      );
+    this.remove = async function(_id) {
+      return await SW.send({
+        action: "remove", 
+        type: Type, 
+        projectId: This.id, 
+        parameters: _id
+      });
     }
 
 
-    this.inviteByEmail = function(_email) {
-      return REQUEST.send(
-        "database/project/" + Type + ".php", 
-        "method=inviteByEmail&parameters=" + Encoder.encodeString(_email) +
-        "&projectId=" + This.id
-      );
+    this.inviteByEmail = async function(_email) {
+      return await SW.send({
+        action: "inviteByEmail", 
+        type: Type, 
+        projectId: This.id, 
+        parameters: _email
+      });
     }
 
-    this.inviteByLink = function() {
-      return REQUEST.send(
-        "database/project/" + Type + ".php", 
-        "method=inviteByLink" + 
-        "&projectId=" + This.id
-      );
+    this.inviteByLink = async function() {
+      return await SW.send({
+        action: "inviteByLink", 
+        type: Type, 
+        projectId: This.id, 
+        parameters: ""
+      });
     }
   }
 
