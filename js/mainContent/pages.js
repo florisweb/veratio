@@ -13,7 +13,7 @@ function MainContent_page(_config) {
 
 	this.isOpen = function() {return this.name == MainContent.curPage.name}
 
-	this.open = function(_projectId) {
+	this.open = async function(_projectId) {
 		HTML.mainContent.classList.add("loading");
 
 		resetPage();
@@ -26,7 +26,7 @@ function MainContent_page(_config) {
 
 		onOpen(_projectId);
 
-		SideBar.updateTabIndicator();
+		await SideBar.updateTabIndicator();
 		setTimeout('mainContent.classList.remove("loading");', 100);
 	}
 
@@ -109,7 +109,7 @@ function taskPage_tab(_settings) {
 		onOpen(_projectId);
 
 		MainContent.stopLoadingAnimation();
-		SideBar.updateTabIndicator();
+		await SideBar.updateTabIndicator();
 
 		applySettings(_settings);
 	}
@@ -376,7 +376,7 @@ function MainContent_settingsPage(_projectId) {
 
 
 	async function onOpen(_projectId) {
-		if (!_projectId) _projectId = Server.projectList[0].id;
+		if (!_projectId) _projectId = (await Server.getProjectList())[0].id;
 		let project = Server.getProject(_projectId);
 		
 		HTML.inviteHolder.classList.add("hide");

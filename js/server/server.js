@@ -44,66 +44,42 @@ const SW = new function() {
 
 const Server = new function() {
   let This = this;
-  this.projectList = [];
-
+  
   this.global = new function() {
     _Server_globalProject.call(this, {id: "*"})
     delete this.users;
   }
 
 
+  this.getProjectList = async function() {
+    let list = await SW.send({
+      action: "getAll", 
+      type: "project", 
+      projectId: "", 
+      parameters: ""
+    });
 
-
-
-
-  this.sync = async function(_) {
-    console.warn("Server.sync()");
-    return getProjects();
+    return list.map(function(_project) {return new _Server_project(_project);});
   }
 
 
-  this.getProject = function(_id) {
-    for (let i = 0; i < this.projectList.length; i++)
+  this.getProject = async function(_id) {
+    let projects = await this.getProjectList();
+    for (let i = 0; i < projects.length; i++)
     {
-      if (this.projectList[i].id != _id) continue;
-      return this.projectList[i];
+      if (projects[i].id != _id) continue;
+      return projects[i];
     }
     return false;
   }
 
 
   this.createProject = async function(_title) {
-    let result = await SW.send({
+    return await SW.send({
       type: "project",
       action: "create",
       parameters: _title,
-    });
-
-    if (!result) return false;
-    importProject(result);
+    });    
   }
-
-
-
-
-  async function getProjects() {
-    let results = await REQUEST.send("database/project/getProjectList.php");
-    if (!results) return false;
-    This.projectList = [];
-
-    for (let i = 0; i < results.length; i++)
-    {
-      importProject(results[i]);
-    }
-  }
-
-    function importProject(_project) {
-      if (!_project || typeof _project != "object") return;
-
-      _project = Encoder.decodeObj(_project);
-      
-      let project = new _Server_project(_project);
-      This.projectList.push(project);
-    }
 }
 

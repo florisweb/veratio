@@ -180,9 +180,9 @@ function _MainContent_searchOptionMenu() {
 		keyTimeout = 0;
 		Menu.removeAllOptions();
 
-		inputField.onkeyup = function() {
+		inputField.onkeyup = async function() {
 			if (keyTimeout > 0) return keyTimeout--;
-			addOptionItemsByValue(this.value, this.selectionStart);
+			await addOptionItemsByValue(this.value, this.selectionStart);
 			moveToItem(this.selectionStart);
 		}
 	}
@@ -239,32 +239,32 @@ function _MainContent_searchOptionMenu() {
 
 
 
-	this.getItemListByType = function(_type, _project) {
+	this.getItemListByType = async function(_type, _project) {
 		if (!_project) _project = this.curProject;
-		if (!_project) _project = Server.projectList[0];
+		if (!_project) _project = (await Server.getProjectList())[0];
 		switch (_type)
 		{
-			case "#": 	return _project.tags.getAll();		break;
-			case ".": 	return Server.projectList; 			break;
-			default: 	return _project.users.getAll(); 	break;
+			case "#": 	return _project.tags.getAll();			break;
+			case ".": 	return await Server.getProjectList(); 	break;
+			default: 	return _project.users.getAll(); 		break;
 		}
 	}
 	
 
 
-	function addOptionItemsByValue(_value, _cursorPosition) {
+	async function addOptionItemsByValue(_value, _cursorPosition) {
 		Menu.removeAllOptions();
 		
-		if (addOptionItemsByValueAndType(_value, _cursorPosition, "#")) return;
-		if (addOptionItemsByValueAndType(_value, _cursorPosition, "@")) return;
-		if (addOptionItemsByValueAndType(_value, _cursorPosition, ".")) return;
+		if (await addOptionItemsByValueAndType(_value, _cursorPosition, "#")) return;
+		if (await addOptionItemsByValueAndType(_value, _cursorPosition, "@")) return;
+		if (await addOptionItemsByValueAndType(_value, _cursorPosition, ".")) return;
 	
 		This.hide();
 	}	
 
-		function addOptionItemsByValueAndType(_value, _cursorPosition, _type) {
+		async function addOptionItemsByValueAndType(_value, _cursorPosition, _type) {
 			let active = 0;
-			let items = This.getListByValue(_value, _type, _cursorPosition);
+			let items = await This.getListByValue(_value, _type, _cursorPosition);
 		
 			for (let i = 0; i < items.length; i++)
 			{
@@ -294,7 +294,7 @@ function _MainContent_searchOptionMenu() {
 				if (!_item.isCreateItem) return;
 				
 				let project = This.curProject;
-				if (!project) project = Server.projectList[0];
+				if (!project) project = (await Server.getProjectList())[0];
 				
 				await Popup.createTagMenu.openWithTagName(_item.item.title, project.id);
 
@@ -342,9 +342,9 @@ function _MainContent_searchOptionMenu() {
 
 
 
-		this.getListByValue = function(_value, _type, _cursorPosition) {
+		this.getListByValue = async function(_value, _type, _cursorPosition) {
 			let found = [];
-			let itemList = this.getItemListByType(_type);
+			let itemList = await this.getItemListByType(_type);
 			if (!itemList) itemList = [];
 
 			for (let i = 0; i < itemList.length; i++)

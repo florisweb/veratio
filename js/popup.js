@@ -249,7 +249,6 @@ function _Popup_createProject() {
 
 		project = await Server.createProject(project.title);
 		if (!project) return console.error("Something went wrong while creating a project:", project);
-		await Server.sync();
 		
 		SideBar.projectList.fillProjectHolder();
 		MainContent.taskPage.open();

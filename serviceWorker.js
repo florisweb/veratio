@@ -1,8 +1,5 @@
 // await SW.send({action: "getAll", type: "project", projectId: "test", parameters: ""})
 
-
-
-
 let antiCache = Math.random() * 1000000000000;
 importScripts("js/time.js?a=" 						+ antiCache);
 importScripts("js/serviceWorker/indexedDB.js?a=" 	+ antiCache);

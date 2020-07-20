@@ -9,23 +9,24 @@ function _SideBar() {
 	this.projectList = new _SideBar_projectList();
 
 
-	this.updateTabIndicator = function() {
-		if (MainContent.settingsPage.isOpen()) return setProjectTabOnOpenById(MainContent.curProjectId);
+	this.updateTabIndicator = async function() {
+		if (MainContent.settingsPage.isOpen()) return await setProjectTabOnOpenById(MainContent.curProjectId);
 	
 		switch (MainContent.taskPage.curTab.name)
 		{
 			case "today": setTabOpenIndicator(HTML.todayTab); break;
 			case "week": setTabOpenIndicator(HTML.weekTab); break;
-			default: setProjectTabOnOpenById(MainContent.curProjectId); break;
+			default: await setProjectTabOnOpenById(MainContent.curProjectId); break;
 		}
 	}
 	
 
-	function setProjectTabOnOpenById(_id) {
+	async function setProjectTabOnOpenById(_id) {
 		let tabs = $("#sideBar .tab.projectTab");
-		for (let i = 0; i < Server.projectList.length; i++)
+		let projectList = await Server.getProjectList();
+		for (let i = 0; i < projectList.length; i++)
 		{
-			if (Server.projectList[i].id != _id) continue;
+			if (projectList[i].id != _id) continue;
 			setTabOpenIndicator(tabs[i]);
 			return;
 		}
@@ -73,9 +74,10 @@ function _SideBar_projectList() {
 
 
 
-	this.fillProjectHolder = function() {
+	this.fillProjectHolder = async function() {
 		HTML.projectsHolder.innerHTML = "";
-		for (project of Server.projectList) createProjectHTML(project);
+		let projects = await Server.getProjectList();
+		for (project of projects) createProjectHTML(project);
 	}
 
 	function createProjectHTML(_project) {

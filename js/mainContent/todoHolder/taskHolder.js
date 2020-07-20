@@ -702,7 +702,7 @@ function TaskHolder_createMenu(_parent) {
 
 
 	this.createTask = async function() {
-		let task 		= scrapeTaskData();
+		let task 		= await scrapeTaskData();
 		let project 	= Server.getProject(task.projectId);
 
 		if (!project) 	return false;
@@ -748,10 +748,10 @@ function TaskHolder_createMenu(_parent) {
 	// if (!project.users.Self.taskActionAllowed("update")) This.disable();
 
 
-	function openSelectMenu(_iconIndex = 0, _type = ".") {
+	async function openSelectMenu(_iconIndex = 0, _type = ".") {
 		if (!This.openState) return false;
 		let htmlElement = Parent.HTML.createMenu.children[3].children[_iconIndex];
-		let items = MainContent.searchOptionMenu.getItemListByType(_type);
+		let items = await MainContent.searchOptionMenu.getItemListByType(_type);
 		MainContent.searchOptionMenu.openWithList(htmlElement, items, _type);
 	}
 
@@ -768,11 +768,11 @@ function TaskHolder_createMenu(_parent) {
 
 
 
-	function scrapeTaskData() {
+	async function scrapeTaskData() {
 		let createMenuItems = Parent.HTML.createMenu.children;
 		if (!createMenuItems[0]) return false;
 
-		let task = _inputValueToData(createMenuItems[0].value);
+		let task = await _inputValueToData(createMenuItems[0].value);
 		let taskDate = filterDate(createMenuItems[1].value);
 
 		if (!task.title || task.title.split(" ").join("").length < 1) return "E_InvalidTitle";
@@ -790,7 +790,7 @@ function TaskHolder_createMenu(_parent) {
 		return task;
 	}
 
-	function _inputValueToData(_value) {
+	async function _inputValueToData(_value) {
 		let task = {
 			assignedTo: [],
 			id: newId()
@@ -799,7 +799,7 @@ function TaskHolder_createMenu(_parent) {
 		if (editData.task) task = Object.assign({}, editData.task);
 
 		// add projectId
-		let projects = getListByValue(_value, ".");
+		let projects = await getListByValue(_value, ".");
 		task.title 	= projects.value;
 		if (projects.list[0]) 
 		{
@@ -807,18 +807,18 @@ function TaskHolder_createMenu(_parent) {
 		} else if (!editData.task) 
 		{
 			let project 	= Server.getProject(MainContent.curProjectId);
-			task.projectId 	= project ? project.id : Server.projectList[0].id;
+			task.projectId 	= project ? project.id : (await Server.getProjectList)[0].id;
 		}
 
 		
 		// add tagId
-		let tags = getListByValue(task.title, "#");
+		let tags = await getListByValue(task.title, "#");
 		task.title 	= tags.value;
 		if (tags.list[0]) task.tagId = tags.list[0].id;
 
 
 		// add assignedTo-list
-		let members = getListByValue(task.title, "@");
+		let members = await getListByValue(task.title, "@");
 		task.title 	= members.value;
 		for (member of members.list)
 		{

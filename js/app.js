@@ -45,7 +45,6 @@ function _app() {
 
 
   this.update = async function() {
-    await Server.sync();
     SideBar.projectList.fillProjectHolder();
     
     switch (MainContent.curPage.name)
