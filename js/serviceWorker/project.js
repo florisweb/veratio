@@ -2,6 +2,7 @@
 
 function GlobalProject(_project) {
   let This    = this;
+
   this.id     = String(_project.id);
   this.title  = String(_project.title);
 
@@ -37,27 +38,21 @@ function GlobalProject(_project) {
       return this.getByDateRange(_date, 1);
     }
 
-    this.getByDateRange = async function(_date, _range = 1) {
+    this.getByDateRange = async function(_info = {date: false, range: 1}) {
       let result =  await fetchData(
         "database/project/" + Type + ".php", 
         "method=getByDateRange&parameters=" + 
-        Encoder.objToString({
-          date: _date.toString(),
-          range: _range
-        }) + 
+        Encoder.objToString(_info) + 
         "&projectId=" + This.id
       );
       return Encoder.decodeObj(result);
     }
 
-    this.getByGroup = async function(_groupType, _groupValue = "*") {
-      let result =  await fetchData(
+    this.getByGroup = async function(_info = {type: "", value: "*"}) {
+      let result = await fetchData(
         "database/project/" + Type + ".php", 
         "method=getByGroup&parameters=" + 
-        Encoder.objToString({
-          type: _groupType, 
-          value: _groupValue
-        }) + 
+        Encoder.objToString(_info) + 
         "&projectId=" + This.id
       );
       return Encoder.decodeObj(result);

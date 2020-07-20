@@ -21,10 +21,6 @@ self.addEventListener('fetch', function(event) {
 
 
 
-// fetch(url, {
-//   credentials: 'include'
-// })
-
 
 console.log(self);
 const Client = new function() {
@@ -36,7 +32,7 @@ const Client = new function() {
 
 self.addEventListener('message', async function(_e) {	
 	let message = _e.data;
-	let project = new Project(message.projectId);
+	let project = new Project({id: message.projectId});
 
 	let messageFunction = false;
 	if (message.type == "project")
@@ -48,7 +44,6 @@ self.addEventListener('message', async function(_e) {
 			case "create": messageFunction = Server.createProject; 	break;
 			case "getAll": messageFunction = Server.getProjectList; break;
 		}
-
 	} else {
 		messageFunction = project[message.type][message.action];
 	}
@@ -87,7 +82,7 @@ function serializeResult(_result) {
 
 
 
-async function fetchData(_url, _parameters = "") {
+async function fetchData(_url, _parameters = "") {	
 	let response = await fetch(_url, {
 		method: 'POST', 
 		body: _parameters,
@@ -97,12 +92,15 @@ async function fetchData(_url, _parameters = "") {
 		credentials: 'include'
 	});
 
+
 	if (!response.ok) return console.error("HTTP-Error: " + response.status, response);
 	
 	let result = await response.text();
 	try {
 		result = JSON.parse(result);
 	} catch (e) {}
+
+	// console.log("SW: Fetched data:", _url, _parameters, "Result:", result);
 	  
 	return result;
 }
