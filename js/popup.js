@@ -324,7 +324,7 @@ function _Popup_inviteByEmailMenu() {
 
 	this.inviteUser = async function() {
 		let email = this.HTML.emailAdressHolder.value;
-		let project = Server.getProject(MainContent.curProjectId);
+		let project = await Server.getProject(MainContent.curProjectId);
 		
 		let returnVal = await project.users.inviteByEmail(email);
 		if (returnVal !== true) console.error("An error accured while inviting a user:", returnVal);
@@ -371,8 +371,8 @@ function _Popup_renameProject() {
 	this.curProjectId = false;
 
 
-	this.open = function(_projectId) {
-		let project = Server.getProject(_projectId);
+	this.open = async function(_projectId) {
+		let project = await Server.getProject(_projectId);
 		if (!project) return false;
 		this.curProjectId = project.id;
 
@@ -384,8 +384,8 @@ function _Popup_renameProject() {
 		this.HTML.newTitleHolder.focus();
 	}	
 
-	this.renameProject = function() {
-		let project = Server.getProject(this.curProjectId);
+	this.renameProject = async function() {
+		let project = await Server.getProject(this.curProjectId);
 
 		let newTitle = this.HTML.newTitleHolder.value;
 		if (!newTitle || newTitle.length < 3) return false;
@@ -469,16 +469,16 @@ function _Popup_permissionMenu() {
 	this.open = async function(_memberId) {
 		extend_open.apply(this);
 
-		let project	= Server.getProject(MainContent.curProjectId);
+		let project	= await Server.getProject(MainContent.curProjectId);
 		let member 	= await project.users.get(_memberId);
 		curMember 	= member;
 		setMemberData(member);
 	}
 
 
-	function setMemberData(_member) {
+	async function setMemberData(_member) {
 		setTextToElement(This.HTML.memberName, _member.name + "'s");
-		let project = Server.getProject(MainContent.curProjectId);
+		let project = await Server.getProject(MainContent.curProjectId);
 
 		optionMenu.removeAllOptions();
 		
@@ -503,7 +503,7 @@ function _Popup_permissionMenu() {
 		if (!curMember) return;
 		curMember.permissions = parseInt(optionMenu.value);
 		
-		let project = Server.getProject(MainContent.curProjectId);
+		let project = await Server.getProject(MainContent.curProjectId);
 		if (!project) return false;
 
 		await project.users.update(curMember);
@@ -574,7 +574,7 @@ function _Popup_tagMenu() {
 	let CurProject = false;
 	
 	this.open = async function(_projectId) {
-		CurProject = Server.getProject(_projectId);
+		CurProject = await Server.getProject(_projectId);
 		if (!CurProject) return;
 
 		setTagList(await CurProject.tags.getAll());
@@ -689,8 +689,8 @@ function _Popup_createTagMenu() {
 	let EditData = {tag: false}
 	let OnClosePromiseResolver;
 
-	this.open = function(_projectId) {
-		CurProject = Server.getProject(_projectId);
+	this.open = async function(_projectId) {
+		CurProject = await Server.getProject(_projectId);
 		if (!CurProject) return;
 
 		resetEditMode();

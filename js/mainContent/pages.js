@@ -161,7 +161,7 @@ function taskPage_tab_today() {
 		let finalList = [];
 		for (task of taskList)
 		{
-			if (!shouldRenderTask(task)) continue;
+			if (!(await shouldRenderTask(task))) continue;
 			finalList.push(task);
 		}
 		finalList = TaskSorter.defaultSort(finalList);
@@ -169,14 +169,14 @@ function taskPage_tab_today() {
 		taskHolder.task.addTaskList(finalList);
 	}
 
-	function shouldRenderTask(_task) {
+	async function shouldRenderTask(_task) {
 		if (_task.finished) return false;
-		return This.taskIsMine(_task);
+		return await This.taskIsMine(_task);
 	}
 
 
-	this.taskIsMine = function(_task) {
-		let project = Server.getProject(_task.projectId);
+	this.taskIsMine = async function(_task) {
+		let project = await Server.getProject(_task.projectId);
 		let userId = project.users.Self.id;
 
 		if (_task.assignedTo.length == 0 && _task.creatorId != userId) return false;
@@ -221,7 +221,7 @@ function taskPage_tab_week() {
 			{
 				for (task of taskList)
 				{
-					if (!shouldRenderTask(task)) continue;
+					if (!(await shouldRenderTask(task))) continue;
 					finalList.push(task);
 				}
 			}
@@ -230,8 +230,8 @@ function taskPage_tab_week() {
 		}
 	}
 
-	function shouldRenderTask(_task) {
-		return MainContent.taskPage.todayTab.taskIsMine(_task);
+	async function shouldRenderTask(_task) {
+		return await MainContent.taskPage.todayTab.taskIsMine(_task);
 	}
 
 	function addTaskHolder(_date, _taskList) {
@@ -285,7 +285,7 @@ function taskPage_tab_project() {
 
 
 	async function onOpen(_projectId) {
-		let project = Server.getProject(_projectId);
+		let project = await Server.getProject(_projectId);
 		if (!project) return;
 		
 		MainContent.header.showItemsByPage("project");
@@ -377,7 +377,7 @@ function MainContent_settingsPage(_projectId) {
 
 	async function onOpen(_projectId) {
 		if (!_projectId) _projectId = (await Server.getProjectList())[0].id;
-		let project = Server.getProject(_projectId);
+		let project = await Server.getProject(_projectId);
 		
 		HTML.inviteHolder.classList.add("hide");
 
@@ -393,7 +393,7 @@ function MainContent_settingsPage(_projectId) {
 
 
 	this.inviteUserByLink = async function() {
-		let project = Server.getProject(MainContent.curProjectId);
+		let project = await Server.getProject(MainContent.curProjectId);
 		
 		let returnVal = await project.users.inviteByLink();
 		if (typeof returnVal !== "string") console.error("An error accured while inviting a user:", returnVal);
@@ -434,8 +434,8 @@ function MainContent_settingsPage(_projectId) {
 		
 		setTextToElement(html.children[1], _member.name);
 		setTextToElement(html.children[2].children[1], This.permissionData[parseInt(_member.permissions)].name);
-		DoubleClick.register(html.children[2].children[1], function () {
-			let project = Server.getProject(MainContent.curProjectId);
+		DoubleClick.register(html.children[2].children[1], async function () {
+			let project = await Server.getProject(MainContent.curProjectId);
 			if (!project.users.Self.permissions.users.changePermissions(_member)) return false;
 			Popup.permissionMenu.open(_member.id);
 		})
@@ -459,8 +459,8 @@ function MainContent_settingsPage(_projectId) {
 
 		Menu.addOption(
 			"Remove user", 
-			function () {
-				let project 	= Server.getProject(MainContent.curProjectId);
+			async function () {
+				let project 	= await Server.getProject(MainContent.curProjectId);
 				if (!project || !curMemberId) return false;
 
 				let removed = project.users.remove(curMemberId);
@@ -484,7 +484,7 @@ function MainContent_settingsPage(_projectId) {
 			curItem 		= _target.parentNode.parentNode;
 			curMemberId 	= DOMData.get(curItem);
 			
-			let project 	= Server.getProject(MainContent.curProjectId);
+			let project 	= await Server.getProject(MainContent.curProjectId);
 			let member 		= await project.users.get(curMemberId);
 
 			Menu.enableAllOptions();

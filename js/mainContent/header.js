@@ -56,8 +56,8 @@ function _MainContent_header() {
 		);
 
 
-		this.open = function() {
-			let project = Server.getProject(MainContent.curProjectId);
+		this.open = async function() {
+			let project = await Server.getProject(MainContent.curProjectId);
 			
 			Menu.enableAllOptions();
 			if (!project.users.Self.permissions.project.remove)		Menu.options[3].disable();
@@ -73,8 +73,8 @@ function _MainContent_header() {
 	}
 
 
-	DoubleClick.register(HTML.titleHolder, function() {
-		let project = Server.getProject(MainContent.curProjectId);
+	DoubleClick.register(HTML.titleHolder, async function() {
+		let project = await Server.getProject(MainContent.curProjectId);
 		if (!project || !project.users.Self.permissions.project.rename) return false;
 
 		Popup.renameProjectMenu.open(project.id);

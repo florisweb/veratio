@@ -53,7 +53,7 @@ function _MainContent_taskHolder() {
 	}
 
 	this.addOverdue = async function() {
-		let project = Server.getProject(MainContent.curProjectId);
+		let project = await Server.getProject(MainContent.curProjectId);
 		let taskList = []; 
 		if (project) 
 		{
@@ -214,12 +214,17 @@ function _MainContent_taskHolder() {
 
 // Types
 function TaskHolder_default(_config, _title) {
+	let This = this;
 	_config.title = _title;
 	TaskHolder.call(this, _config, "default");
 	TaskHolder_createMenuConstructor.call(this, _config);
 	
-	let project = Server.getProject(MainContent.curProjectId);
-	if (project && !project.users.Self.permissions.tasks.update) this.createMenu.disable();
+	let project; 
+	Server.getProject(MainContent.curProjectId).then(function (_result) {
+		project = _result;
+		if (project && !project.users.Self.permissions.tasks.update) This.createMenu.disable();
+	});
+	
 
 
 	this.shouldRenderTask = function(_task) {
@@ -240,9 +245,12 @@ function TaskHolder_date(_config, _date) {
 	TaskHolder.call(this, _config, "date");
 	TaskHolder_createMenuConstructor.call(this, _config);
 
-	let project = Server.getProject(MainContent.curProjectId);
-	if (project && !project.users.Self.permissions.tasks.update) this.createMenu.disable();
 	
+	let project; 
+	Server.getProject(MainContent.curProjectId).then(function (_result) {
+		project = _result;
+		if (project && !project.users.Self.permissions.tasks.update) This.createMenu.disable();
+	});
 
 	this.shouldRenderTask = function(_task) {
 		if (_task.groupType != "date") return false;
@@ -429,11 +437,11 @@ function TaskHolder_task(_parent) {
 		task.render(_taskIndex);
 	}
 
-	function updateTaskToNewTaskHolder(_task) {
+	async function updateTaskToNewTaskHolder(_task) {
 		_task.groupType = Parent.type;
 		if (Parent.type == "date") _task.groupValue = Parent.date.toString();
 		
-		let project = Server.getProject(_task.projectId);
+		let project = await Server.getProject(_task.projectId);
 		project.tasks.update(_task);
 		return _task;
 	}
@@ -496,7 +504,7 @@ function TaskHolder_task(_parent) {
 				this.task.finished = true;
 			}
 
-			let project = Server.getProject(This.task.projectId);
+			let project = await Server.getProject(This.task.projectId);
 			project.tasks.update(This.task, true);
 
 			//notify the taskHolder
@@ -505,7 +513,7 @@ function TaskHolder_task(_parent) {
 
 
 		async function remove() {					
-			let project = Server.getProject(This.task.projectId);
+			let project = await Server.getProject(This.task.projectId);
 			await project.tasks.remove(This.task.id);
 
 			//notify the taskHolder
@@ -653,12 +661,12 @@ function TaskHolder_createMenu(_parent) {
 
 
 	this.openState = false;
-	this.open = function() {
+	this.open = async function() {
 		if (this.disabled) return false;
 		Parent.HTML.inputField.readOnly = false;
 		
 		MainContent.taskHolder.closeAllCreateMenus(Parent);
-		if (!editData.task) MainContent.searchOptionMenu.curProject = Server.getProject(MainContent.curProjectId);
+		if (!editData.task) MainContent.searchOptionMenu.curProject = await Server.getProject(MainContent.curProjectId);
 		MainContent.searchOptionMenu.openWithInputField(Parent.HTML.inputField);
 		
 		this.openState = true;
@@ -677,7 +685,7 @@ function TaskHolder_createMenu(_parent) {
 	this.openEdit = async function(_taskHTML, _task) {
 		if (!_task || !_taskHTML) return false;
 
-		let project = Server.getProject(_task.projectId);
+		let project = await Server.getProject(_task.projectId);
 		MainContent.searchOptionMenu.curProject = project;
 
 		resetEditMode(false);
@@ -703,7 +711,7 @@ function TaskHolder_createMenu(_parent) {
 
 	this.createTask = async function() {
 		let task 		= await scrapeTaskData();
-		let project 	= Server.getProject(task.projectId);
+		let project 	= await Server.getProject(task.projectId);
 
 		if (!project) 	return false;
 		if (typeof task != "object") return task;
@@ -720,8 +728,8 @@ function TaskHolder_createMenu(_parent) {
 		return true;
 	}
 
-	function removeOldTask(_task) {
-		let prevProject = Server.getProject(_task.projectId);
+	async function removeOldTask(_task) {
+		let prevProject = await Server.getProject(_task.projectId);
 		if (!prevProject) return false;
 		return prevProject.tasks.remove(_task.id);
 	}
@@ -742,10 +750,6 @@ function TaskHolder_createMenu(_parent) {
 
 	// Setup
 	This.close(false);
-
-	// let project = Server.getProject(MainContent.curProjectId);
-	// if (!project || !project.users.Self) return;
-	// if (!project.users.Self.taskActionAllowed("update")) This.disable();
 
 
 	async function openSelectMenu(_iconIndex = 0, _type = ".") {
@@ -806,7 +810,7 @@ function TaskHolder_createMenu(_parent) {
 			task.projectId = projects.list[0].id;
 		} else if (!editData.task) 
 		{
-			let project 	= Server.getProject(MainContent.curProjectId);
+			let project 	= await Server.getProject(MainContent.curProjectId);
 			task.projectId 	= project ? project.id : (await Server.getProjectList)[0].id;
 		}
 

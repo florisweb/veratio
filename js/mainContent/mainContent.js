@@ -37,7 +37,7 @@ function _MainContent() {
 
 
 	this.leaveCurrentProject = async function() {
-		let project = Server.getProject(this.curProjectId);
+		let project = await Server.getProject(this.curProjectId);
 		if (!project) return false;
 		await project.leave();
 		MainContent.taskPage.weekTab.open();
@@ -45,7 +45,7 @@ function _MainContent() {
 	}
 
 	this.removeCurrentProject = async function() {
-		let project = Server.getProject(this.curProjectId);
+		let project = await Server.getProject(this.curProjectId);
 		if (!project) return false;
 		await project.remove();
 		
@@ -134,7 +134,7 @@ function _MainContent_optionMenu() {
 
 	this.open = async function(_item, _event) {
 		curDOMData 	= DOMData.get(_item.parentNode.parentNode);
-		let project = Server.getProject(curDOMData.task.projectId);
+		let project = await Server.getProject(curDOMData.task.projectId);
 
 		Menu.enableAllOptions();
 		if (!project.users.Self.permissions.tasks.remove)						Menu.options[0].disable();
@@ -493,9 +493,9 @@ function _TaskSorter() {
 
 	this.sortAssignedToMe = function(_tasks = []) {
 		if (!_tasks) return [];
-		return _tasks.sort(function(a, b) {
-			let projectA = Server.getProject(a.projectId);
-			let projectB = Server.getProject(b.projectId);
+		return _tasks.sort(async function(a, b) {
+			let projectA = await Server.getProject(a.projectId);
+			let projectB = await Server.getProject(b.projectId);
 
 	     	if (!projectA || !projectA.users.Self.id) return 1;
 	    	if (!projectB || !projectB.users.Self.id) return -1;
