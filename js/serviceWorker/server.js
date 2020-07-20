@@ -17,6 +17,10 @@ const Server = new function() {
     return projects;
   }
 
+  this.removeProject = function(_id) {
+    
+  }
+
 
   this.createProject = function(_title) {
     return new Promise(async function (resolve, error) {

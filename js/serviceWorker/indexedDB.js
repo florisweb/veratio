@@ -68,6 +68,11 @@ const LocalDB = new function() {
   }
 
 
+  this.removeProject = async function(_id) {
+
+  }
+
+
 
 
   function getProjectIdList() {
@@ -232,6 +237,22 @@ function LocalDB_ProjectInterface(_projectId, _DB) {
       _value.id = This.id;
       let trans2 = store.put(_value, This.id);
       resolve();//TODO actual success-checking
+    });
+  }
+
+
+  this.removeData = function(_key) {
+    return new Promise(function (resolve, error) {
+      const transaction = DB.transaction(_storeKey, "readwrite");
+      transaction.onerror = error;
+
+      const store = transaction.objectStore(_storeKey);
+
+      let request = store.delete(This.id);
+      request.onerror = error;
+      request.onsuccess = function(event) {
+        resolve(true);
+      }
     });
   }
 }

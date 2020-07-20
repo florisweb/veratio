@@ -15,7 +15,7 @@ function GlobalProject(_project) {
 
 
 
-  this.tasks  = new function() {
+  this.tasks = new function() {
     let Type = "task";
 
     this.get = async function(_id) {
