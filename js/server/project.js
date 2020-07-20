@@ -6,15 +6,15 @@ function _Server_globalProject(_project) {
 
 
   this.tasks  = new function() {
-    let Type = "task";
+    let Type = "tasks";
 
     this.get = async function(_id) {
-      let result = await REQUEST.send(
-        "database/project/" + Type + ".php", 
-        "method=get&parameters=" + _id +  
-        "&projectId=" + This.id
-      );
-      return Encoder.decodeObj(result);
+      return await SW.send({
+        action: "get", 
+        type: Type, 
+        projectId: This.id, 
+        parameters: ""
+      });
     }
 
     this.getByDate = function(_date) {
@@ -22,48 +22,46 @@ function _Server_globalProject(_project) {
     }
 
     this.getByDateRange = async function(_date, _range = 1) {
-      let result = await REQUEST.send(
-        "database/project/" + Type + ".php", 
-        "method=getByDateRange&parameters=" + 
-        Encoder.objToString({
+      return await SW.send({
+        action: "getByDateRange", 
+        type: Type, 
+        projectId: This.id, 
+        parameters: {
           date: _date.toString(),
           range: _range
-        }) + 
-        "&projectId=" + This.id
-      );
-      return Encoder.decodeObj(result);
+        }
+      });
     }
 
     this.getByGroup = async function(_groupType, _groupValue = "*") {
-      let result = await REQUEST.send(
-        "database/project/" + Type + ".php", 
-        "method=getByGroup&parameters=" + 
-        Encoder.objToString({
+      return await SW.send({
+        type: Type, 
+        projectId: This.id, 
+        action: "getByGroup", 
+        parameters: {
           type: _groupType, 
           value: _groupValue
-        }) + 
-        "&projectId=" + This.id
-      );
-      return Encoder.decodeObj(result);
+        }
+      });
     }
 
 
-    this.remove = function(_id) {
-      return REQUEST.send(
-        "database/project/" + Type + ".php", 
-        "method=remove&parameters=" + _id + 
-        "&projectId=" + This.id
-      );
+    this.remove = async function(_id) {
+      return await SW.send({
+        type: Type, 
+        projectId: This.id, 
+        action: "remove", 
+        parameters: _id
+      });
     }
 
     this.update = async function(_newTask) {
-      let result = await REQUEST.send(
-        "database/project/" + Type + ".php", 
-        "method=update&parameters=" + 
-        Encoder.objToString(_newTask) + 
-        "&projectId=" + This.id
-      );
-      return Encoder.decodeObj(result);
+      return await SW.send({
+        type: Type, 
+        projectId: This.id, 
+        action: "update", 
+        parameters: _newTask
+      });
     }
   }
 
