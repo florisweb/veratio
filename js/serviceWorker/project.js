@@ -3,13 +3,15 @@
 function GlobalProject(_project) {
   let This    = this;
   this.id     = String(_project.id);
+  this.title  = String(_project.title);
 
   let Local   = LocalDB.getProject(this.id);
 
 
   this.serialize = function() {
     return {
-      id: this.id
+      id: this.id,
+      title: this.title
     }
   }
 
