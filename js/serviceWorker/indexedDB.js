@@ -69,7 +69,9 @@ const LocalDB = new function() {
 
 
   this.removeProject = async function(_id) {
-
+    let project = await this.getProject(_id);
+    if (!project) return false;
+    return await project.remove();
   }
 
 
@@ -97,6 +99,21 @@ const LocalDB = new function() {
 function LocalDB_Project(_projectId, _DB) {
   let This = this;
   LocalDB_ProjectInterface.call(this, _projectId, _DB);
+
+
+
+  this.remove = async function() {
+    let result = await Promise.all([
+      this.removeData("metaData"),
+      this.removeData("tasks"),
+      this.removeData("users"),
+      this.removeData("tags")
+    ]);
+
+    return result[0] && result[1] && result[2] && result[3];
+  }
+
+
 
 
   this.tasks = new function() {
@@ -243,10 +260,10 @@ function LocalDB_ProjectInterface(_projectId, _DB) {
 
   this.removeData = function(_key) {
     return new Promise(function (resolve, error) {
-      const transaction = DB.transaction(_storeKey, "readwrite");
+      const transaction = DB.transaction(_key, "readwrite");
       transaction.onerror = error;
 
-      const store = transaction.objectStore(_storeKey);
+      const store = transaction.objectStore(_key);
 
       let request = store.delete(This.id);
       request.onerror = error;
