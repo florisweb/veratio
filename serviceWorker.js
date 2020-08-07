@@ -10,7 +10,8 @@ importScripts("js/serviceWorker/server.js?a=" 		+ antiCache);
 
 
 self.addEventListener('install', function(event) {
-  console.warn("SW: Installed");
+  console.warn("SW: Installed", "V0.8.8");
+  return self.skipWaiting();
 });
 
 
@@ -18,8 +19,6 @@ self.addEventListener('fetch', function(event) {
   // console.log(event.request.method, event.request.headers);
  
 });
-
-
 
 
 console.log(self);
@@ -31,6 +30,8 @@ const Client = new function() {
 
 
 self.addEventListener('message', async function(_e) {	
+    console.log("SW: message", _e.data);
+
 	let message = _e.data;
 	let project = new Project({id: message.projectId});
 
@@ -63,20 +64,7 @@ self.addEventListener('message', async function(_e) {
 
 
 function serializeResult(_result) {
-	if (_result.serialize) return _result.serialize();
-
-	if (typeof _result == "object")
-	{
-		let results = [];
-		for (let i = 0; i < _result.length; i++) 
-		{	
-			results[i] = _result[i];
-			if (_result[i].serialize) results[i] = _result[i].serialize();
-		}
-		return results;
-	}
-
-	return _result;
+	return JSON.parse(JSON.stringify(_result));
 }
 
 

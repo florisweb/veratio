@@ -1,39 +1,35 @@
 
 
-
 const SW = new function() {
-  let ServiceWorker;
   if ('serviceWorker' in navigator) {} else return;
 
   window.addEventListener('load', async function() {
     navigator.serviceWorker.register('serviceWorker.js').then(function(registration) {
-      ServiceWorker = registration.active;
-      
-      ServiceWorker.onmessage = function(_e) {
-        console.log("Client.onMessage", _e.data);
+      console.log("Serviceworker installed with scope", registration.scope);
+
+
+      navigator.serviceWorker.controller.onmessage = function(_e) {
+        console.log("Client.onMessage2", _e);
       }
 
-      console.log('ServiceWorker registration successful');
     }, function(err) {
       console.log('ServiceWorker registration failed: ', err);
     });
   });
 
 
-
-  this.send = function(_message) {
-    return new Promise(function(resolve, reject) {
-      var messageChannel = new MessageChannel();
-      messageChannel.port1.onmessage = function(event) {
+  this.send = function(_data) {
+    return new Promise(function (resolve, reject) {
+      let channel = new MessageChannel();
+      channel.port1.onmessage = function(_e) {        
         if (event.data.error) return reject(event.data.error);
-        resolve(event.data);
-      };
+        resolve(_e.data)
+      }
 
-      navigator.serviceWorker.controller.postMessage(_message, [messageChannel.port2]);
+      navigator.serviceWorker.controller.postMessage(_data, [channel.port2]);
     });
   }
 }
-
 
 
 
