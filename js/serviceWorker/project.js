@@ -96,11 +96,6 @@ function GlobalProject(_project) {
 
     this.Self;
     
-
-
-    let lastSync = new Date();
-    const dateRecensy = 60 * 1000; // miliseconds after which the data is considered out of date
-
     this.get = async function(_id) {
       let users = await this.getAll();
       for (user of users)
@@ -112,7 +107,7 @@ function GlobalProject(_project) {
     }
 
     this.getAll = async function() {
-      let results = await REQUEST.send(
+      let results = await fetchData(
         "database/project/" + Type + ".php", 
         "method=getAll" + 
         "&projectId=" + This.id
@@ -141,7 +136,7 @@ function GlobalProject(_project) {
 
 
     this.update = async function(_newUser) {
-      let result = await REQUEST.send(
+      let result = await fetchData(
         "database/project/" + Type + ".php", 
         "method=update&parameters=" + 
         Encoder.objToString(_newUser) + 
@@ -152,7 +147,7 @@ function GlobalProject(_project) {
 
 
     this.remove = function(_id) {
-      return REQUEST.send(
+      return fetchData(
         "database/project/" + Type + ".php", 
         "method=remove&parameters=" + _id + 
         "&projectId=" + This.id
@@ -161,7 +156,7 @@ function GlobalProject(_project) {
 
 
     this.inviteByEmail = function(_email) {
-      return REQUEST.send(
+      return fetchData(
         "database/project/" + Type + ".php", 
         "method=inviteByEmail&parameters=" + Encoder.encodeString(_email) +
         "&projectId=" + This.id
@@ -169,7 +164,7 @@ function GlobalProject(_project) {
     }
 
     this.inviteByLink = function() {
-      return REQUEST.send(
+      return fetchData(
         "database/project/" + Type + ".php", 
         "method=inviteByLink" + 
         "&projectId=" + This.id
@@ -182,18 +177,11 @@ function GlobalProject(_project) {
   this.tags  = new function() {
     let Type = "tag";
     let list = [];
-    if (_project.tags) setList(_project.tags); 
+    if (_project.tags) list = _project.tags;
 
 
     let lastSync = new Date();
     const dateRecensy = 60 * 1000; // miliseconds after which the data is considered out of date
-
-
-
-    function setList(_array) {
-      for (let r = 0; r < _array.length; r++) _array[r].colour = new Color(_array[r].colour); 
-      list = _array;
-    }
 
 
 
@@ -208,13 +196,13 @@ function GlobalProject(_project) {
     }
 
     this.getAll = async function() {
-      let results = await REQUEST.send(
+      let results = await fetchData(
         "database/project/" + Type + ".php", 
         "method=getAll" + 
         "&projectId=" + This.id
       );
       if (!Array.isArray(results)) return false;
-      setList(Encoder.decodeObj(results));
+      list = Encoder.decodeObj(results);
 
       lastSync = new Date();
       return list;
@@ -238,8 +226,7 @@ function GlobalProject(_project) {
 
 
     this.update = async function(_newTag) {
-      _newTag.colour = _newTag.colour.toHex();
-      let result = await REQUEST.send(
+      let result = await fetchData(
         "database/project/" + Type + ".php", 
         "method=update&parameters=" + 
         Encoder.objToString(_newTag) + 
@@ -250,7 +237,7 @@ function GlobalProject(_project) {
 
 
     this.remove = function(_id) {
-      return REQUEST.send(
+      return fetchData(
         "database/project/" + Type + ".php", 
         "method=remove&parameters=" + _id + 
         "&projectId=" + This.id
@@ -291,7 +278,7 @@ function Project(_project) {
   this.rename = async function(_newTitle) {
     if (!_newTitle) return false;
     
-    let result = await REQUEST.send(
+    let result = await fetchData(
       "database/project/rename.php",
       "projectId=" + This.id + "&newTitle=" + Encoder.encodeString(_newTitle)
     );
@@ -301,7 +288,7 @@ function Project(_project) {
 
 
   this.remove = async function() {
-    let result = await REQUEST.send(
+    let result = await fetchData(
       "database/project/remove.php",
       "projectId=" + This.id
     );

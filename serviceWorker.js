@@ -10,7 +10,7 @@ importScripts("js/serviceWorker/server.js?a=" 		+ antiCache);
 
 
 self.addEventListener('install', function(event) {
-  console.warn("SW: Installed", "V0.8.8");
+  console.warn("SW: Installed", "V0.8.10");
   return self.skipWaiting();
 });
 
@@ -21,7 +21,6 @@ self.addEventListener('fetch', function(event) {
 });
 
 
-console.log(self);
 const Client = new function() {
 
 }
@@ -87,8 +86,6 @@ async function fetchData(_url, _parameters = "") {
 	try {
 		result = JSON.parse(result);
 	} catch (e) {}
-
-	// console.log("SW: Fetched data:", _url, _parameters, "Result:", result);
 	  
 	return result;
 }

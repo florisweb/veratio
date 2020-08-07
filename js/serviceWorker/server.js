@@ -29,7 +29,7 @@ const Server = new function() {
 
   this.createProject = function(_title) {
     return new Promise(async function (resolve, error) {
-      let result = await REQUEST.send("database/project/create.php", "title=" + Encoder.encodeString(_title));
+      let result = await fetchData("database/project/create.php", "title=" + Encoder.encodeString(_title));
       if (!result) alert(result);
 
       importProject(result);

@@ -74,11 +74,10 @@ function _Server_globalProject(_project) {
     let Users = this;
 
     let Type = "users";
-    if (_project.users) setSelf(_project.users);
-
     this.Self;
-    
+    if (_project.users) this.Self = _project.users.Self;
 
+  
 
     this.get = async function(_id) {
       let users = await this.getAll();
@@ -98,7 +97,7 @@ function _Server_globalProject(_project) {
         parameters: ""
       });
      
-      if (!Array.isArray(results)) return false;
+      if (!result || !Array.isArray(results)) return false;
 
       setSelf(results);
       
@@ -162,10 +161,9 @@ function _Server_globalProject(_project) {
   this.tags  = new function() {
     let Type = "tag";
     let list = [];
-    if (_project.tags) setList(_project.tags); 
 
     function setList(_array) {
-      for (let r = 0; r < _array.length; r++) _array[r].colour = new Color(_array[r].colour); 
+      for (let r = 0; r < _array.length; r++) _array[r].colour = new Color(_array[r].colour);  // SW will only give the data not the object
       list = _array;
     }
 
@@ -197,7 +195,7 @@ function _Server_globalProject(_project) {
     
 
     this.update = async function(_newTag) {
-      _newTag.colour = _newTag.colour.toHex();
+      _newTag.colour = _newTag.colour.toHex(); // SW can't convert so client has to
       let result = await REQUEST.send(
         "database/project/" + Type + ".php", 
         "method=update&parameters=" + 

@@ -19,6 +19,7 @@ const SW = new function() {
 
 
   this.send = function(_data) {
+    console.log("Client send to SW: ", _data);
     return new Promise(function (resolve, reject) {
       let channel = new MessageChannel();
       channel.port1.onmessage = function(_e) {        
