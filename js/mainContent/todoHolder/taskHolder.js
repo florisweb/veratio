@@ -811,7 +811,7 @@ function TaskHolder_createMenu(_parent) {
 		} else if (!editData.task) 
 		{
 			let project 	= await Server.getProject(MainContent.curProjectId);
-			task.projectId 	= project ? project.id : (await Server.getProjectList)[0].id;
+			task.projectId 	= project ? project.id : (await Server.getProjectList())[0].id;
 		}
 
 		
@@ -836,8 +836,8 @@ function TaskHolder_createMenu(_parent) {
 	}
 
 
-	function getListByValue(_value, _type) {
-		let items = MainContent.searchOptionMenu.getListByValue(_value, _type);
+	async function getListByValue(_value, _type) {
+		let items = await MainContent.searchOptionMenu.getListByValue(_value, _type);
 		let found = [];
 		for (item of items)
 		{

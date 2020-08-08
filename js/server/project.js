@@ -188,7 +188,7 @@ function _Server_globalProject(_project) {
       });
 
       if (!Array.isArray(results)) return false;
-      setList(Encoder.decodeObj(results));
+      setList(results);
 
       return list;
     }

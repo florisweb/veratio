@@ -199,7 +199,6 @@
 			$.getScript("js/sideBar.js?antiCache=" 									+ antiCache, function() {});
 			
 
-			// $.getScript("js/server/encoder.js?antiCache=" 							+ antiCache, function() {});
 			$.getScript("js/server/project.js?antiCache=" 							+ antiCache, function() {});
 			$.getScript("js/server/server.js?antiCache=" 							+ antiCache, function() {});
 
