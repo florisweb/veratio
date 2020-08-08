@@ -10,7 +10,7 @@ importScripts("js/serviceWorker/server.js?a=" 		+ antiCache);
 
 
 self.addEventListener('install', function(event) {
-  console.warn("SW: Installed", "V0.9.18");
+  console.warn("SW: Installed", "V0.9.3");
   return self.skipWaiting();
 });
 

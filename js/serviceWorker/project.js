@@ -38,13 +38,15 @@ function GlobalProject(_project) {
           "&projectId=" + This.id
         )
       );
-      // Store data Localily
-      if (Local)
+     
+
+      if (Local) // Store data Localily
       {
-        (await Local.tasks.getByDateRange(_info)).forEach(function(_task) {Local.tasks.remove(_task.id)});
+        let foundTasks = await Local.tasks.getByDateRange(_info);
+        for (let i = 0; i < foundTasks.length; i++) await Local.tasks.remove(foundTasks[i]);
         for (date in result)
         {
-          result[date].forEach(function(_task) {Local.tasks.update(_task)});
+          for (let i = 0; i < result[date].length; i++) await Local.tasks.update(result[date][i]);
         }
       }
 
@@ -61,14 +63,19 @@ function GlobalProject(_project) {
         )
       );
       
-      if (Local)
+      if (Local) // Store data Localily
       {
-        console.warn(result);
-        (await Local.tasks.getByGroup(_info)).forEach(function(_task) {Local.tasks.remove(_task.id)});
-        result.forEach(function(_task) {Local.tasks.update(_task)});
+        overWriteLocalData(result, await Local.tasks.getByGroup(_info));
       }
 
       return result;
+    }
+
+
+
+    async function overWriteLocalData(_result, _localEquivalant) {
+      for (let i = 0; i < _localEquivalant.length; i++) await Local.tasks.remove(_localEquivalant[i].id);
+      for (let i = 0; i < result.length; i++)           await Local.tasks.update(result[i]);
     }
   }
 
@@ -338,7 +345,4 @@ function Project(_project) {
     return result;
   }
 }
-
-
-
 
