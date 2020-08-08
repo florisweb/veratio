@@ -54,15 +54,15 @@ function _TaskRenderer() {
 		}
 
 	
-			function setMemberText(html, task, project) {
+			async function setMemberText(html, task, project) {
 				setTextToElement(
 					html.children[3].children[3], 
-					createMemberText(task.assignedTo, project)
+					await createMemberText(task.assignedTo, project)
 				);
 			
-				function createMemberText(_userIdList, _project) {
+				async function createMemberText(_userIdList, _project) {
 					if (!_project || !_userIdList || !_userIdList.length) return "";
-					let users = _project.users.getAll();
+					let users = await _project.users.getAll();
 
 					let memberList = [];
 					for (id of _userIdList)

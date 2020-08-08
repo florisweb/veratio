@@ -90,14 +90,14 @@ function _Server_globalProject(_project) {
     }
 
     this.getAll = async function() {
-      let result = await SW.send({
+      let results = await SW.send({
         action: "getAll", 
         type: Type, 
         projectId: This.id, 
         parameters: ""
       });
      
-      if (!result || !Array.isArray(results)) return false;
+      if (!results || !Array.isArray(results)) return false;
 
       setSelf(results);
       
@@ -180,15 +180,16 @@ function _Server_globalProject(_project) {
     }
 
     this.getAll = async function() {
-      let results = await REQUEST.send(
-        "database/project/" + Type + ".php", 
-        "method=getAll" + 
-        "&projectId=" + This.id
-      );
+      let results = await SW.send({
+        action: "getAll", 
+        type: Type, 
+        projectId: This.id, 
+        parameters: ""
+      });
+
       if (!Array.isArray(results)) return false;
       setList(Encoder.decodeObj(results));
 
-      lastSync = new Date();
       return list;
     }
 
@@ -196,22 +197,25 @@ function _Server_globalProject(_project) {
 
     this.update = async function(_newTag) {
       _newTag.colour = _newTag.colour.toHex(); // SW can't convert so client has to
-      let result = await REQUEST.send(
-        "database/project/" + Type + ".php", 
-        "method=update&parameters=" + 
-        Encoder.objToString(_newTag) + 
-        "&projectId=" + This.id
-      );
-      return Encoder.decodeObj(result);
+      
+      let result = await SW.send({
+        action: "update", 
+        type: Type, 
+        projectId: This.id, 
+        parameters: _newTag
+      });
+      
+      return result;
     }
 
 
-    this.remove = function(_id) {
-      return REQUEST.send(
-        "database/project/" + Type + ".php", 
-        "method=remove&parameters=" + _id + 
-        "&projectId=" + This.id
-      );
+    this.remove = async function(_id) {
+      return await SW.send({
+        action: "remove", 
+        type: Type, 
+        projectId: This.id,
+        parameters: _id
+      });
     }
   }
 }
@@ -247,21 +251,26 @@ function _Server_project(_project) {
 
   this.rename = async function(_newTitle) {
     if (!_newTitle) return false;
-    
-    let result = await REQUEST.send(
-      "database/project/rename.php",
-      "projectId=" + This.id + "&newTitle=" + Encoder.encodeString(_newTitle)
-    );
+
+    let result = await SW.send({
+      action: "rename", 
+      type: "project", 
+      projectId: This.id, 
+      parameters: _newTitle
+    });
+
     this.title = _newTitle;
     return result;
   }
 
 
   this.remove = async function() {
-    let result = await REQUEST.send(
-      "database/project/remove.php",
-      "projectId=" + This.id
-    );
+    let result = await SW.send({
+      action: "remove", 
+      type: "project", 
+      projectId: This.id, 
+      parameters: This.id,
+    });
 
     return result;
   }
