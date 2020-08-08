@@ -544,14 +544,14 @@ function TaskHolder_task(_parent) {
 			);
 		}
 		
-		function render(_insertionIndex) {
+		async function render(_insertionIndex) {
 			This.removeHTML(false);
 
-			This.html = MainContent.taskPage.renderer.renderTask(
+			This.html = await MainContent.taskPage.renderer.renderTask(
 				This, 
 				Parent.config.renderPreferences
 			);
-
+			
 			if (typeof _insertionIndex != "number" || _insertionIndex == TaskHolder.taskList.length) return Parent.HTML.todoHolder.append(This.html);
 
 			let insertBeforeElement = Parent.HTML.todoHolder.children[_insertionIndex];

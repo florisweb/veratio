@@ -13,9 +13,9 @@ function _TaskRenderer() {
 		let html = createTaskHTMLTemplate();
 		fillInTaskData(html, _taskWrapper.task, project, _renderSettings);
 		setHtmlClasses(html, _taskWrapper.task, project);
-
+		
 		DOMData.set(html, _taskWrapper);
-		assignEventHandlers(html, _taskWrapper);
+		assignEventHandlers(html, _taskWrapper, project);
 
 		return html;
 	}
@@ -142,16 +142,14 @@ function _TaskRenderer() {
 
 
 
-			function assignEventHandlers(_html, _taskWrapper) {
-				let project = Server.getProject(_taskWrapper.task.projectId);
-
+			function assignEventHandlers(_html, _taskWrapper, _project) {
 				_html.children[1].onclick = async function() {
-					if (!project.users.Self.permissions.tasks.finish(_taskWrapper.task)) return false;
+					if (!_project.users.Self.permissions.tasks.finish(_taskWrapper.task)) return false;
 					_taskWrapper.finish();
 				}
 
 				DoubleClick.register(_html, async function() {
-					if (!project.users.Self.permissions.tasks.update) return false;
+					if (!_project.users.Self.permissions.tasks.update) return false;
 					_taskWrapper.openEdit();
 				});
 
@@ -159,15 +157,12 @@ function _TaskRenderer() {
 					MainContent.optionMenu.open(_html.children[2].children[0], _event);
 				});
 
-
-				return assignDragHandler(_html, _taskWrapper);
+				return assignDragHandler(_html, _taskWrapper, _project);
 			}
 
 
-			function assignDragHandler(_html, _taskWrapper) {
-				let project = Server.getProject(_taskWrapper.task.projectId);
-				if (!project.users.Self.permissions.tasks.update) return _html;
-
+			function assignDragHandler(_html, _taskWrapper, _project) {
+				if (!_project.users.Self.permissions.tasks.update) return _html;
 
 				let lastDropTarget = false;
 				DragHandler.register(

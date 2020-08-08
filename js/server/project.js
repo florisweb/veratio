@@ -75,7 +75,7 @@ function _Server_globalProject(_project) {
 
     let Type = "users";
     this.Self;
-    if (_project.users) this.Self = _project.users.Self;
+    if (_project.users) setSelf([_project.users.Self]);
 
   
 
