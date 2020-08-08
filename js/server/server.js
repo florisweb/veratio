@@ -48,7 +48,13 @@ const Server = new function() {
   }
 
 
+  let lastProjectListUpdate = false;
+  this.projectList = [];
+
   this.getProjectList = async function() {
+    if (new Date() - lastProjectListUpdate < 10000) return this.projectList;
+    lastProjectListUpdate = new Date();
+
     let list = await SW.send({
       action: "getAll", 
       type: "project", 
@@ -56,7 +62,8 @@ const Server = new function() {
       parameters: ""
     });
 
-    return list.map(function(_project) {return new _Server_project(_project);});
+    this.projectList = list.map(function(_project) {return new _Server_project(_project);});
+    return this.projectList;
   }
 
 
