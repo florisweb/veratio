@@ -77,8 +77,8 @@ function _TaskRenderer() {
 			}
 
 
-			function setOwnerIndicator(html, task, project) {
-				let taskOwner = project.users.get(task.creatorId)
+			async function setOwnerIndicator(html, task, project) {
+				let taskOwner = await project.users.get(task.creatorId);
 				if (!taskOwner || taskOwner.Self) return;
 
 				html.classList.add("isNotMyTask");
