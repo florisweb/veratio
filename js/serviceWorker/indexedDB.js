@@ -228,7 +228,11 @@ function LocalDB_Project(_projectId, _DB) {
         return This.setData(Key, items);
       }
       return false;
-    } 
+    }
+
+    this.removeAll = async function() {
+      return This.setData(Key, []);
+    }
 
 
     this.getAll = async function() {

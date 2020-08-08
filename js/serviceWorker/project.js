@@ -118,6 +118,12 @@ function GlobalProject(_project) {
       if (!Array.isArray(results)) return false;
       results = Encoder.decodeObj(results);
 
+      Local.users.removeAll();
+      for (let i = 0; i < results.length; i++)
+      {
+        await Local.users.update(results[i]);
+      }
+
       setSelf(results);
 
       list = results;
@@ -139,22 +145,28 @@ function GlobalProject(_project) {
 
 
     this.update = async function(_newUser) {
-      let result = await fetchData(
+      let result = Encoder.decodeObj(await fetchData(
         "database/project/" + Type + ".php", 
         "method=update&parameters=" + 
         Encoder.objToString(_newUser) + 
         "&projectId=" + This.id
-      );
-      return Encoder.decodeObj(result);
+      ));
+
+      if (result && typeof result != "string") Local.users.update(result);
+
+      return result;
     }
 
 
     this.remove = function(_id) {
-      return fetchData(
+      let result = fetchData(
         "database/project/" + Type + ".php", 
         "method=remove&parameters=" + _id + 
         "&projectId=" + This.id
       );
+      if (result) Local.users.remove(_id);
+
+      return result;
     }
 
 
