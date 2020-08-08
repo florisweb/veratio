@@ -1,9 +1,6 @@
 
 
 
-
-
-
 const LocalDB = new function() {
   const DBName = "veratioDB";
   let DBVersion = 3;
@@ -32,8 +29,6 @@ const LocalDB = new function() {
       console.warn("error", _e);
     }
   }
-
-
 
   this.getProjectList = async function() {
     let ids = await getProjectIdList();
@@ -142,7 +137,7 @@ function LocalDB_Project(_projectId, _DB) {
 
    
     this.getByDateRange = async function({date, range}) {
-      let tasks = await getAllTasks();
+      let tasks = await this.getAll();
       let response = [];
       
       for (let i = 0; i < tasks.length; i++)
@@ -151,13 +146,14 @@ function LocalDB_Project(_projectId, _DB) {
         let date = new Date(tasks[i].groupValue);
         if (!date || !date.dateIsBetween(date, date.moveDay(range))) continue;
         
-        response.push(tasks[i]);
+        if (typeof response[tasks[i].groupValue] != "object") response[tasks[i].groupValue] = [];
+        response[tasks[i].groupValue].push(tasks[i]);
       }
       return response;
     }
 
     this.getByGroup = async function({type, value = "*"}) {
-      let tasks = await getAllTasks();
+      let tasks = await this.getAll();
       let response = [];
       
       for (let i = 0; i < tasks.length; i++)
@@ -193,7 +189,7 @@ function LocalDB_Project(_projectId, _DB) {
     let Key = _key;
 
     this.update = async function(_newItem) {
-      let item = await this.getAll();
+      let data = await this.getAll();
       let found = false;
 
       for (let i = 0; i < data.length; i++)

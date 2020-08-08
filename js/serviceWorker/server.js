@@ -14,7 +14,7 @@ const Server = new function() {
   this.getProjectList = async function() {
     let projects = await fetchProjects();
 
-    if (projects === false) return await LocalDB.getProjectList();
+    // if (projects === false) return await LocalDB.getProjectList();
     LocalDB.updateProjectList(projects);
 
     return projects;

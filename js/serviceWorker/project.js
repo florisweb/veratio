@@ -6,7 +6,10 @@ function GlobalProject(_project) {
   this.id     = String(_project.id);
   this.title  = String(_project.title);
 
-  let Local   = LocalDB.getProject(this.id);
+  let Local;
+  this.setup = async function() {
+    Local = await LocalDB.getProject(this.id);
+  }
 
 
   this.serialize = function() {
@@ -20,61 +23,52 @@ function GlobalProject(_project) {
 
   this.tasks = new function() {
     let Type = "task";
-
-    this.get = async function(_id) {
-      let result = await fetchData(
-        "database/project/" + Type + ".php", 
-        "method=get&parameters=" + _id +  
-        "&projectId=" + This.id
-      );
-
-      let task = Encoder.decodeObj(result);
-    
-
-      return task;
-    }
+    TypeBaseClass.call(this, Type);
 
     this.getByDate = function(_date) {
       return this.getByDateRange(_date, 1);
     }
 
     this.getByDateRange = async function(_info = {date: false, range: 1}) {
-      let result =  await fetchData(
-        "database/project/" + Type + ".php", 
-        "method=getByDateRange&parameters=" + 
-        Encoder.objToString(_info) + 
-        "&projectId=" + This.id
+      let result = Encoder.decodeObj(
+        await fetchData(
+          "database/project/" + Type + ".php", 
+          "method=getByDateRange&parameters=" + 
+          Encoder.objToString(_info) + 
+          "&projectId=" + This.id
+        )
       );
-      return Encoder.decodeObj(result);
+      // Store data Localily
+      if (Local)
+      {
+        (await Local.tasks.getByDateRange(_info)).forEach(function(_task) {Local.tasks.remove(_task.id)});
+        for (date in result)
+        {
+          result[date].forEach(function(_task) {Local.tasks.update(_task)});
+        }
+      }
+
+      return result;
     }
 
     this.getByGroup = async function(_info = {type: "", value: "*"}) {
-      let result = await fetchData(
-        "database/project/" + Type + ".php", 
-        "method=getByGroup&parameters=" + 
-        Encoder.objToString(_info) + 
-        "&projectId=" + This.id
+      let result = Encoder.decodeObj(
+        await fetchData(
+          "database/project/" + Type + ".php", 
+          "method=getByGroup&parameters=" + 
+          Encoder.objToString(_info) + 
+          "&projectId=" + This.id
+        )
       );
-      return Encoder.decodeObj(result);
-    }
+      
+      if (Local)
+      {
+        console.warn(result);
+        (await Local.tasks.getByGroup(_info)).forEach(function(_task) {Local.tasks.remove(_task.id)});
+        result.forEach(function(_task) {Local.tasks.update(_task)});
+      }
 
-
-    this.remove = async function(_id) {
-      return await fetchData(
-        "database/project/" + Type + ".php", 
-        "method=remove&parameters=" + _id + 
-        "&projectId=" + This.id
-      );
-    }
-
-    this.update = async function(_newTask) {
-      let result = await fetchData(
-        "database/project/" + Type + ".php", 
-        "method=update&parameters=" + 
-        Encoder.objToString(_newTask) + 
-        "&projectId=" + This.id
-      );
-      return Encoder.decodeObj(result);
+      return result;
     }
   }
 
@@ -87,6 +81,8 @@ function GlobalProject(_project) {
     let Users = this;
 
     let Type = "user";
+    TypeBaseClass.call(this, Type);
+
     let list = [];
     if (_project.users) 
     {
@@ -176,6 +172,8 @@ function GlobalProject(_project) {
 
   this.tags  = new function() {
     let Type = "tag";
+    TypeBaseClass.call(this, Type);
+
     let list = [];
     if (_project.tags) list = _project.tags;
 
@@ -242,6 +240,50 @@ function GlobalProject(_project) {
         "method=remove&parameters=" + _id + 
         "&projectId=" + This.id
       );
+    }
+  }
+
+
+
+  function TypeBaseClass(_type) {
+    let Type = _type;
+
+    this.get = async function(_id) {
+      let result = await fetchData(
+        "database/project/" + Type + ".php", 
+        "method=get&parameters=" + _id +  
+        "&projectId=" + This.id
+      );
+
+      let item = Encoder.decodeObj(result);
+      Local[Type + "s"].update(item); // TEMP naming scheme should always use the plural
+
+      return item;
+    }
+
+    this.remove = async function(_id) {
+      let result = await fetchData(
+        "database/project/" + Type + ".php", 
+        "method=remove&parameters=" + _id + 
+        "&projectId=" + This.id
+      );
+      if (result && Local) Local[Type + "s"].remove(_id);
+
+      return result;
+    }
+
+    this.update = async function(_newItem) {
+      let result = Encoder.decodeObj(
+        await fetchData(
+          "database/project/" + Type + ".php", 
+          "method=update&parameters=" + 
+          Encoder.objToString(_newItem) + 
+          "&projectId=" + This.id
+        )
+      );
+
+      if (Local && result) Local[This + "s"].update(result);
+      return result;
     }
   }
 }

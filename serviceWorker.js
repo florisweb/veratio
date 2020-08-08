@@ -10,7 +10,7 @@ importScripts("js/serviceWorker/server.js?a=" 		+ antiCache);
 
 
 self.addEventListener('install', function(event) {
-  console.warn("SW: Installed", "V0.8.11");
+  console.warn("SW: Installed", "V0.9.18");
   return self.skipWaiting();
 });
 
@@ -33,6 +33,7 @@ self.addEventListener('message', async function(_e) {
 
 	let message = _e.data;
 	let project = new Project({id: message.projectId});
+	await project.setup();
 
 	let messageFunction = false;
 	if (message.type == "project")
