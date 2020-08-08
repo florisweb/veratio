@@ -41,8 +41,7 @@ function _TaskRenderer() {
 			return html;
 		}
 
-		function fillInTaskData(html, task, project, renderSettings) {			
-			
+		function fillInTaskData(html, task, project, renderSettings) {
 			setTextToElement(html.children[2], task.title);
 			setMemberText(html, task, project);
 			setOwnerIndicator(html, task, project);
@@ -50,7 +49,6 @@ function _TaskRenderer() {
 			if (task.tagId) 									setTagColor(html, task, project);
 			if (renderSettings.displayDate !== false) 			setPlannedDateText(html, task);
 			if (renderSettings.displayProjectTitle !== false) 	setProjectTitle(html, project);
-
 		}
 
 	
@@ -101,8 +99,8 @@ function _TaskRenderer() {
 			}
 
 
-			function setTagColor(html, task, project) {
-				let tag = project.tags.get(task.tagId);
+			async function setTagColor(html, task, project) {
+				let tag = await project.tags.get(task.tagId);
 				if (!tag) return;
 
 				let colorTarget 					= html.children[1].children[0]; 

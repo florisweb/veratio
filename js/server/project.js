@@ -159,7 +159,7 @@ function _Server_globalProject(_project) {
 
 
   this.tags  = new function() {
-    let Type = "tag";
+    let Type = "tags";
     let list = [];
 
     function setList(_array) {
