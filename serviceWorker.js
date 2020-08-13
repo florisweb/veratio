@@ -10,7 +10,7 @@ importScripts("js/serviceWorker/server.js?a=" 		+ antiCache);
 
 
 self.addEventListener('install', function(event) {
-  console.warn("SW: Installed", "V0.9.5");
+  console.warn("SW: Installed", "V0.10.0");
   return self.skipWaiting();
 });
 
@@ -69,18 +69,23 @@ function serializeResult(_result) {
 
 
 
-
-async function fetchData(_url, _parameters = "") {	
-	let response = await fetch(_url, {
-		method: 'POST', 
-		body: _parameters,
-		headers: {
-			'Content-Type': 'application/x-www-form-urlencoded'
-		},
-		credentials: 'include'
+async function fetchData(_url, _parameters = "") {
+	let response = await new Promise(function (resolve) {
+		fetch(_url, {
+			method: 'POST', 
+			body: _parameters,
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded'
+			},
+			credentials: 'include'
+		}).then(function (_result) {
+			resolve(_result);
+		}, function (_error) {
+			resolve("E_noConnection");
+		});
 	});
 
-
+	if (response == "E_noConnection") return "E_noConnection";
 	if (!response.ok) return console.error("HTTP-Error: " + response.status, response);
 	
 	let result = await response.text();

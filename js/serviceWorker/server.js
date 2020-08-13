@@ -14,7 +14,7 @@ const Server = new function() {
   this.getProjectList = async function() {
     let projects = await fetchProjects();
 
-    // if (projects === false) return await LocalDB.getProjectList();
+    if (projects === "E_noConnection") return await LocalDB.getProjectList();
     LocalDB.updateProjectList(projects);
 
     return projects;
@@ -41,6 +41,7 @@ const Server = new function() {
   async function fetchProjects() {
     let results = await fetchData("database/project/getProjectList.php");
     if (!results) return false;
+    if (results == "E_noConnection") return results;
     
     let projectList = [];
     for (let i = 0; i < results.length; i++)
