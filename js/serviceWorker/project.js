@@ -12,15 +12,6 @@ function GlobalProject(_project) {
   }
 
 
-  this.serialize = function() {
-    return {
-      id: this.id,
-      title: this.title
-    }
-  }
-
-
-
   this.tasks = new function() {
     let Type = "task";
     TypeBaseClass.call(this, Type);
@@ -30,15 +21,15 @@ function GlobalProject(_project) {
     }
 
     this.getByDateRange = async function(_info = {date: false, range: 1}) {
-      let result = Encoder.decodeObj(
-        await fetchData(
-          "database/project/" + Type + ".php", 
-          "method=getByDateRange&parameters=" + 
-          Encoder.objToString(_info) + 
-          "&projectId=" + This.id
-        )
+      let result = await fetchData(
+        "database/project/" + Type + ".php", 
+        "method=getByDateRange&parameters=" + 
+        Encoder.objToString(_info) + 
+        "&projectId=" + This.id
       );
-     
+
+      if (result == "E_noConnection") return await Local[Type + "s"].getByDateRange(_info);
+      result = Encoder.decodeObj(result);
 
       if (Local) // Store data Localily
       {
@@ -54,15 +45,16 @@ function GlobalProject(_project) {
     }
 
     this.getByGroup = async function(_info = {type: "", value: "*"}) {
-      let result = Encoder.decodeObj(
-        await fetchData(
-          "database/project/" + Type + ".php", 
-          "method=getByGroup&parameters=" + 
-          Encoder.objToString(_info) + 
-          "&projectId=" + This.id
-        )
+      let result = await fetchData(
+        "database/project/" + Type + ".php", 
+        "method=getByGroup&parameters=" + 
+        Encoder.objToString(_info) + 
+        "&projectId=" + This.id
       );
-      
+
+      if (result == "E_noConnection") return await Local[Type + "s"].getByGroup(_info);
+      result = Encoder.decodeObj(result);
+
       if (Local) // Store data Localily
       {
         overWriteLocalData(result, await Local.tasks.getByGroup(_info));
@@ -75,7 +67,7 @@ function GlobalProject(_project) {
 
     async function overWriteLocalData(_result, _localEquivalant) {
       for (let i = 0; i < _localEquivalant.length; i++) await Local.tasks.remove(_localEquivalant[i].id);
-      for (let i = 0; i < result.length; i++)           await Local.tasks.update(result[i]);
+      for (let i = 0; i < _result.length; i++)           await Local.tasks.update(_result[i]);
     }
   }
 
@@ -115,6 +107,9 @@ function GlobalProject(_project) {
         "method=getAll" + 
         "&projectId=" + This.id
       );
+
+      if (results == "E_noConnection") return await Local.users.getAll();
+
       if (!Array.isArray(results)) return false;
       results = Encoder.decodeObj(results);
 
@@ -213,6 +208,9 @@ function GlobalProject(_project) {
         "method=getAll" + 
         "&projectId=" + This.id
       );
+      
+      if (results == "E_noConnection") return await Local.tags.getAll();
+
       if (!Array.isArray(results)) return false;
       list = Encoder.decodeObj(results);
 
@@ -240,7 +238,7 @@ function GlobalProject(_project) {
 
       if (result && typeof result != "string") Local.tags.update(result);
 
-      return Encoder.decodeObj(result);
+      return result;
     }
 
 
@@ -268,6 +266,8 @@ function GlobalProject(_project) {
         "&projectId=" + This.id
       );
 
+      if (result == "E_noConnection") return await Local[Type + "s"].get(_id);
+
       let item = Encoder.decodeObj(result);
       Local[Type + "s"].update(item); // TEMP naming scheme should always use the plural
 
@@ -280,6 +280,7 @@ function GlobalProject(_project) {
         "method=remove&parameters=" + _id + 
         "&projectId=" + This.id
       );
+
       if (result && Local) Local[Type + "s"].remove(_id);
 
       return result;
