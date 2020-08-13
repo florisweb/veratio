@@ -17,7 +17,7 @@ function GlobalProject(_project) {
     TypeBaseClass.call(this, Type);
 
     this.getByDate = function(_date) {
-      return this.getByDateRange(_date, 1);
+      return this.getByDateRange({date: _date, range: 1});
     }
 
     this.getByDateRange = async function(_info = {date: false, range: 1}) {
@@ -28,7 +28,7 @@ function GlobalProject(_project) {
         "&projectId=" + This.id
       );
 
-      if (result == "E_noConnection") return await Local[Type + "s"].getByDateRange(_info);
+      if (result == "E_noConnection") return await Local.tasks.getByDateRange(_info);
       result = Encoder.decodeObj(result);
 
       if (Local) // Store data Localily

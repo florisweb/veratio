@@ -10,7 +10,7 @@ importScripts("js/serviceWorker/server.js?a=" 		+ antiCache);
 
 
 self.addEventListener('install', function(event) {
-  console.warn("SW: Installed", "V0.11.0");
+  console.warn("SW: Installed", "V0.12.0");
   return self.skipWaiting();
 });
 
@@ -27,10 +27,7 @@ const Client = new function() {
 
 
 
-
 self.addEventListener('message', async function(_e) {	
-    console.log("SW: message", _e.data);
-
 	let message = _e.data;
 	let project = new Project({id: message.projectId});
 	await project.setup();
@@ -56,7 +53,6 @@ self.addEventListener('message', async function(_e) {
 		result = await messageFunction(message.parameters);
 		result = serializeResult(result);
 	} catch (e) {console.error("An error accured", e)};
-
 
 	_e.ports[0].postMessage(result);
 });

@@ -28,7 +28,7 @@ function _Server_globalProject(_project) {
         projectId: This.id, 
         parameters: {
           date: _date.toString(),
-          range: _range
+          range: parseInt(_range)
         }
       });
     }

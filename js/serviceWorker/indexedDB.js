@@ -153,17 +153,19 @@ function LocalDB_Project(_projectId, _DB) {
    
     this.getByDateRange = async function({date, range}) {
       let tasks = await this.getAll();
-      let response = [];
-      
+      let response = {};
+      date = new Date().setDateFromStr(date);
+
       for (let i = 0; i < tasks.length; i++)
       {
         if (tasks[i].groupType != "date") continue;
-        let date = new Date(tasks[i].groupValue);
-        if (!date || !date.dateIsBetween(date, date.moveDay(range))) continue;
+        let taskDate = new Date().setDateFromStr(tasks[i].groupValue);
+        if (!taskDate || !taskDate.dateIsBetween(date, date.copy().moveDay(range))) continue;
         
         if (typeof response[tasks[i].groupValue] != "object") response[tasks[i].groupValue] = [];
         response[tasks[i].groupValue].push(tasks[i]);
       }
+
       return response;
     }
 
