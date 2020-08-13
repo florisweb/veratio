@@ -37,6 +37,8 @@ const LocalDB = new function() {
     for (let i = 0; i < ids.length; i++)
     {
       let project = new LocalDB_Project(ids[i], DB);
+      await project.setMetaData();
+
       projectList.push(project);
     }
 
@@ -114,8 +116,21 @@ const LocalDB = new function() {
 function LocalDB_Project(_projectId, _DB) {
   let This = this;
   LocalDB_ProjectInterface.call(this, _projectId, _DB);
+  this.title = "Loading..";
 
 
+  this.setMetaData = async function() {
+    let users = await this.users.getAll();
+    for (let i = 0; i < users.length; i++)
+    {
+      if (!users[i].Self) continue;
+      this.users.Self = users[i];
+      break;
+    }
+
+    let metaData = await this.getData("metaData");
+    this.title = metaData.title;
+  }
 
   this.remove = async function() {
     let result = await Promise.all([
@@ -176,6 +191,8 @@ function LocalDB_Project(_projectId, _DB) {
   this.users = new function() {
     const Key = "users";
     TypeBaseClass.call(this, Key);
+
+    this.Self = false;
   }
 
 
