@@ -153,3 +153,22 @@ Client
   - remove
 
 
+
+
+
+
+<h2>ServiceWorker</h2>
+
+<h3>LocalDB</h3>
+
+
+- cachedOperations = []
+  {
+    action,
+    type,
+    parameters,
+  }
+
+
+
+

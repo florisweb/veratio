@@ -747,7 +747,7 @@ function _Popup_createTagMenu() {
 
 
 	this.createTag = async function() {
-		let tag = scrapeTagData();
+		let tag = await scrapeTagData();
 		if (typeof tag != "object") return alert(tag);
 
 		tag = await CurProject.tags.update(tag);
@@ -757,7 +757,7 @@ function _Popup_createTagMenu() {
 	} 
 	
 
-	function scrapeTagData() {
+	async function scrapeTagData() {
 		let tag = {
 			id: newId(),
 			title: This.HTML.tagTitle.value.replace(/^\s+|\s+$/g, ''),
@@ -767,15 +767,15 @@ function _Popup_createTagMenu() {
 		if (EditData.tag) tag.id = EditData.tag.id;
 		if (!tag.title || tag.title.length < 2 || !tag.colour) return "E_invalidData";
 		if (
-			testIfTagTitleAlreadyExists(tag.title) && 
+			await testIfTagTitleAlreadyExists(tag.title) && 
 			(!EditData.tag || tag.title.toLowerCase() != EditData.tag.title.toLowerCase())
 		) return "E_tagNameAlreadyTaken";
 
 		return tag;
 	}
 
-	function testIfTagTitleAlreadyExists(_tagTitle) {
-		let tags = CurProject.tags.getAll();
+	async function testIfTagTitleAlreadyExists(_tagTitle) {
+		let tags = await CurProject.tags.getAll();
 		for (tag of tags) 
 		{
 			if (tag.title.toLowerCase() == _tagTitle.toLowerCase()) return true;

@@ -139,33 +139,6 @@ function GlobalProject(_project) {
     }
 
 
-
-    this.update = async function(_newUser) {
-      let result = Encoder.decodeObj(await fetchData(
-        "database/project/" + Type + ".php", 
-        "method=update&parameters=" + 
-        Encoder.objToString(_newUser) + 
-        "&projectId=" + This.id
-      ));
-
-      if (result && typeof result != "string") Local.users.update(result);
-
-      return result;
-    }
-
-
-    this.remove = function(_id) {
-      let result = fetchData(
-        "database/project/" + Type + ".php", 
-        "method=remove&parameters=" + _id + 
-        "&projectId=" + This.id
-      );
-      if (result) Local.users.remove(_id);
-
-      return result;
-    }
-
-
     this.inviteByEmail = function(_email) {
       return fetchData(
         "database/project/" + Type + ".php", 
@@ -225,34 +198,6 @@ function GlobalProject(_project) {
       lastSync = new Date();
       return list;
     }
-
-
-    this.update = async function(_newTag) {
-      let result = Encoder.decodeObj(
-        await fetchData(
-          "database/project/" + Type + ".php", 
-          "method=update&parameters=" + 
-          Encoder.objToString(_newTag) + 
-          "&projectId=" + This.id
-        )
-      );
-
-      if (result && typeof result != "string") Local.tags.update(result);
-
-      return result;
-    }
-
-
-    this.remove = function(_id) {
-      let result = fetchData(
-        "database/project/" + Type + ".php", 
-        "method=remove&parameters=" + _id + 
-        "&projectId=" + This.id
-      );
-      
-      if (result) Local.users.remove(_id);
-      return result;
-    }
   }
 
 
@@ -282,6 +227,16 @@ function GlobalProject(_project) {
         "&projectId=" + This.id
       );
 
+      if (result == "E_noConnection" && Local) 
+      {
+        Local[Type + "s"].remove(_id);
+        Local.addCachedOperation({
+          action: "remove",
+          type: Type + "s",
+          parameters: _id
+        });
+        return true;
+      } 
       if (result && Local) Local[Type + "s"].remove(_id);
 
       return result;
@@ -297,7 +252,18 @@ function GlobalProject(_project) {
         )
       );
 
-      if (Local && result) Local[This + "s"].update(result);
+      if (result == "E_noConnection" && Local) 
+      {
+        Local[Type + "s"].update(_newItem);
+        Local.addCachedOperation({
+          action: "update",
+          type: Type + "s",
+          parameters: _newItem
+        });
+        return _newItem;
+      }
+      if (result && Local) Local[Type + "s"].update(result);
+
       return result;
     }
   }

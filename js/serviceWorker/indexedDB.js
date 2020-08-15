@@ -3,7 +3,7 @@
 
 const LocalDB = new function() {
   const DBName = "veratioDB";
-  let DBVersion = 3;
+  let DBVersion = 1;
 
   let DB; getDB();
 
@@ -15,10 +15,11 @@ const LocalDB = new function() {
     request.onupgradeneeded = function(_e) { // create object stores
       DB = _e.target.result;
 
-      const metaData  = DB.createObjectStore("metaData");
-      const tasks     = DB.createObjectStore("tasks");
-      const users     = DB.createObjectStore("users");
-      const tags      = DB.createObjectStore("tags");
+      const metaData          = DB.createObjectStore("metaData");
+      const tasks             = DB.createObjectStore("tasks");
+      const users             = DB.createObjectStore("users");
+      const tags              = DB.createObjectStore("tags");
+      const cachedOperations  = DB.createObjectStore("cachedOperations");
     }
 
     request.onsuccess = function(_e) {
@@ -311,5 +312,16 @@ function LocalDB_ProjectInterface(_projectId, _DB) {
       }
     });
   }
+
+
+  this.addCachedOperation = async function(_operation) {
+    let data = await this.getData("cachedOperations");
+    if (!data) data = [];
+    data.push(_operation);
+
+    return await this.setData("cachedOperations", data);
+  }
+
+
 }
 
