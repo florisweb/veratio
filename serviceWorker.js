@@ -10,7 +10,7 @@ importScripts("js/serviceWorker/server.js?a=" 		+ antiCache);
 
 
 self.addEventListener('install', function(event) {
-  console.warn("SW: Installed", "V0.12.3");
+  console.warn("SW: Installed", "V0.12.4");
   return self.skipWaiting();
 });
 
@@ -29,38 +29,49 @@ const Client = new function() {
 
 self.addEventListener('message', async function(_e) {	
 	let message = _e.data;
-	let project = new Project({id: message.projectId});
-	await project.setup();
+		
+	let result = await executeMessageRequest(message);
 
-	let messageFunction = false;
-	if (message.type == "project")
-	{
-		switch (message.action)
-		{
-			case "remove": messageFunction = Server.removeProject;	break;
-			case "rename": messageFunction = project.rename; 		break;
-			case "create": messageFunction = Server.createProject; 	break;
-			case "getAll": messageFunction = Server.getProjectList; break;
-		}
-	} else {
-		messageFunction = project[message.type][message.action];
-	}
-
-	if (!messageFunction) return false;
-
-	let result = false;
-	try {
-		result = await messageFunction(message.parameters);
-		result = serializeResult(result);
-	} catch (e) {console.error("An error accured", e)};
-
-	_e.ports[0].postMessage(result);
+	_e.ports[0].postMessage(serializeResult(result));
 });
 
 
 
 function serializeResult(_result) {
 	return JSON.parse(JSON.stringify(_result));
+}
+
+
+
+async function executeMessageRequest(_message) {
+	let messageFunction = await getMessageFunction(_message);
+	if (!messageFunction) return false;
+
+	let result = false;
+	try {
+		result = await messageFunction(_message.parameters);
+	} catch (e) {console.error("An error accured", e)};
+
+	return result;
+}
+
+
+
+async function getMessageFunction(_message) {
+	let project = new Project({id: _message.projectId});
+	await project.setup();
+
+	let messageFunction = false;
+	if (_message.type == "project")
+	{
+		switch (_message.action)
+		{
+			case "remove": return Server.removeProject;		break;
+			case "rename": return project.rename; 			break;
+			case "create": return Server.createProject; 	break;
+			case "getAll": return Server.getProjectList; 	break;
+		}
+	} else return project[_message.type][_message.action];
 }
 
 

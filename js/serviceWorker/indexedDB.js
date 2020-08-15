@@ -93,6 +93,10 @@ const LocalDB = new function() {
   }
 
 
+  this.sendCachedOperations = async function() {
+    let projects = await this.getProjectList();
+    for (project of projects) await project.sendCachedOperations();
+  }
 
 
   function getProjectIdList() {
@@ -118,6 +122,23 @@ function LocalDB_Project(_projectId, _DB) {
   let This = this;
   LocalDB_ProjectInterface.call(this, _projectId, _DB);
   this.title = "Loading..";
+
+
+  this.sendCachedOperations = async function() {
+    let operations = await this.getData("cachedOperations");
+    for (let o = 0; o < operations.length; o++) 
+    {
+      let operation = operations[o];
+      operation.projectId = this.id;
+      
+      await executeMessageRequest(operation);
+    }
+
+    let newOperations = await this.getData("cachedOperations");
+    newOperations.splice(0, operations.length);
+    this.setData("cachedOperations", newOperations);
+  }
+
 
 
   this.setMetaData = async function() {
