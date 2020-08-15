@@ -18,7 +18,7 @@ function _Server_globalProject(_project) {
     }
 
     this.getByDate = function(_date) {
-      return this.getByDateRange(_date, 1);
+      return this.getByDateRange(_date, 0);
     }
 
     this.getByDateRange = async function(_date, _range = 1) {
