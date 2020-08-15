@@ -8,6 +8,7 @@ function GlobalProject(_project) {
 
   let Local;
   this.setup = async function() {
+    if (this.id == "*") return;
     Local = await LocalDB.getProject(this.id);
   }
 
