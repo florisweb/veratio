@@ -144,6 +144,12 @@ function LocalDB_Project(_projectId, _DB) {
     return result[0] && result[1] && result[2] && result[3];
   }
 
+  this.rename = async function(_newTitle) {
+    let data = await this.getData("metaData");
+    data.title = _newTitle;
+    return await this.setData("metaData", data);
+  }
+
 
 
 

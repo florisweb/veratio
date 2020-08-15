@@ -7,9 +7,10 @@ function GlobalProject(_project) {
   this.title  = String(_project.title);
 
   let Local;
+  this.Local = false;
   this.setup = async function() {
     if (this.id == "*") return;
-    Local = await LocalDB.getProject(this.id);
+    this.Local = Local = await LocalDB.getProject(this.id);
   }
 
 
@@ -281,21 +282,6 @@ function Project(_project) {
   let This    = this;
   this.title  = String(_project.title);
 
-  
-  this.sync = function() {
-    return Promise.all([
-      this.users.getAll(),
-    ]);    
-  }
-
-
-
-
-  this.leave = function() {
-    if (!this.users.Self) return;
-    this.users.remove(this.users.Self.id);
-    return App.update();
-  }
 
 
   this.rename = async function(_newTitle) {
@@ -305,7 +291,19 @@ function Project(_project) {
       "database/project/rename.php",
       "projectId=" + This.id + "&newTitle=" + Encoder.encodeString(_newTitle)
     );
-    this.title = _newTitle;
+
+    if (result == "E_noConnection") 
+    {
+      This.Local.rename(_newTitle);
+      This.Local.addCachedOperation({
+        action: "rename",
+        type: "project",
+        parameters: _newTitle
+      });
+      return true;
+    }
+    
+    if (result) This.Local.rename(_newTitle);
     return result;
   }
 
@@ -313,9 +311,10 @@ function Project(_project) {
   this.remove = async function() {
     let result = await fetchData(
       "database/project/remove.php",
-      "projectId=" + This.id
+      "projectId=" + this.id
     );
 
+    if (result && result != "E_noConnection") this.Local.remove();
     return result;
   }
 }
