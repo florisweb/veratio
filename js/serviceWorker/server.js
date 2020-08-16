@@ -21,7 +21,7 @@ const Server = new function() {
   }
 
   this.removeProject = async function(_id) {
-    let result = await fetchData("database/project/remove.php", "projectId=" + _id);
+    let result = await App.fetchData("database/project/remove.php", "projectId=" + _id);
     // if (!result) return false;
     return result;
   }
@@ -29,7 +29,7 @@ const Server = new function() {
 
   this.createProject = function(_title) {
     return new Promise(async function (resolve, error) {
-      let result = await fetchData("database/project/create.php", "title=" + Encoder.encodeString(_title));
+      let result = await App.fetchData("database/project/create.php", "title=" + Encoder.encodeString(_title));
       if (!result) alert(result);
 
       importProject(result);
@@ -39,7 +39,7 @@ const Server = new function() {
 
 
   async function fetchProjects() {
-    let results = await fetchData("database/project/getProjectList.php");
+    let results = await App.fetchData("database/project/getProjectList.php");
     if (!results) return false;
     if (results == "E_noConnection") return results;
     

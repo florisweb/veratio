@@ -131,7 +131,7 @@ function LocalDB_Project(_projectId, _DB) {
       let operation = operations[o];
       operation.projectId = this.id;
       
-      await executeMessageRequest(operation);
+      await App.executeMessageRequest(operation);
     }
 
     let newOperations = await this.getData("cachedOperations");

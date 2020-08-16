@@ -23,7 +23,7 @@ function GlobalProject(_project) {
     }
 
     this.getByDateRange = async function(_info = {date: false, range: 1}) {
-      let result = await fetchData(
+      let result = await App.fetchData(
         "database/project/" + Type + ".php", 
         "method=getByDateRange&parameters=" + 
         Encoder.objToString(_info) + 
@@ -47,7 +47,7 @@ function GlobalProject(_project) {
     }
 
     this.getByGroup = async function(_info = {type: "", value: "*"}) {
-      let result = await fetchData(
+      let result = await App.fetchData(
         "database/project/" + Type + ".php", 
         "method=getByGroup&parameters=" + 
         Encoder.objToString(_info) + 
@@ -104,7 +104,7 @@ function GlobalProject(_project) {
     }
 
     this.getAll = async function() {
-      let results = await fetchData(
+      let results = await App.fetchData(
         "database/project/" + Type + ".php", 
         "method=getAll" + 
         "&projectId=" + This.id
@@ -141,7 +141,7 @@ function GlobalProject(_project) {
 
 
     this.inviteByEmail = function(_email) {
-      return fetchData(
+      return App.fetchData(
         "database/project/" + Type + ".php", 
         "method=inviteByEmail&parameters=" + Encoder.encodeString(_email) +
         "&projectId=" + This.id
@@ -149,7 +149,7 @@ function GlobalProject(_project) {
     }
 
     this.inviteByLink = function() {
-      return fetchData(
+      return App.fetchData(
         "database/project/" + Type + ".php", 
         "method=inviteByLink" + 
         "&projectId=" + This.id
@@ -178,7 +178,7 @@ function GlobalProject(_project) {
     }
 
     this.getAll = async function() {
-      let results = await fetchData(
+      let results = await App.fetchData(
         "database/project/" + Type + ".php", 
         "method=getAll" + 
         "&projectId=" + This.id
@@ -207,7 +207,7 @@ function GlobalProject(_project) {
     let Type = _type;
 
     this.get = async function(_id) {
-      let result = await fetchData(
+      let result = await App.fetchData(
         "database/project/" + Type + ".php", 
         "method=get&parameters=" + _id +  
         "&projectId=" + This.id
@@ -222,7 +222,7 @@ function GlobalProject(_project) {
     }
 
     this.remove = async function(_id) {
-      let result = await fetchData(
+      let result = await App.fetchData(
         "database/project/" + Type + ".php", 
         "method=remove&parameters=" + _id + 
         "&projectId=" + This.id
@@ -245,7 +245,7 @@ function GlobalProject(_project) {
 
     this.update = async function(_newItem) {
       let result = Encoder.decodeObj(
-        await fetchData(
+        await App.fetchData(
           "database/project/" + Type + ".php", 
           "method=update&parameters=" + 
           Encoder.objToString(_newItem) + 
@@ -287,7 +287,7 @@ function Project(_project) {
   this.rename = async function(_newTitle) {
     if (!_newTitle) return false;
     
-    let result = await fetchData(
+    let result = await App.fetchData(
       "database/project/rename.php",
       "projectId=" + This.id + "&newTitle=" + Encoder.encodeString(_newTitle)
     );
@@ -309,7 +309,7 @@ function Project(_project) {
 
 
   this.remove = async function() {
-    let result = await fetchData(
+    let result = await App.fetchData(
       "database/project/remove.php",
       "projectId=" + this.id
     );
