@@ -60,8 +60,10 @@ function _MainContent_header() {
 			let project = await Server.getProject(MainContent.curProjectId);
 			
 			Menu.enableAllOptions();
-			if (!project.users.Self.permissions.project.remove)		Menu.options[3].disable();
-			if (!project.users.Self.permissions.project.rename)		Menu.options[4].disable();
+
+			if (!SW.connected)														Menu.options[2].disable();
+			if (!project.users.Self.permissions.project.remove || !SW.connected)	Menu.options[3].disable();
+			if (!project.users.Self.permissions.project.rename)						Menu.options[4].disable();
 
 			return Menu.open(HTML.optionIcon, {top: 45});
 		}

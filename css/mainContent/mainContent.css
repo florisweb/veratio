@@ -216,6 +216,13 @@ body.appLoading #mainContent {
 			display: none;
 		}
 
+		body.noConnection .mainContentPage.settingsPage .inviteMemberHolder {
+			pointer-events: none;
+			opacity: .6;
+			filter: grayscale(1);
+		}
+
+
 
 
 
@@ -260,6 +267,11 @@ body.appLoading #mainContent {
 			width: auto;
 		}
 
+		body.noConnection .mainContentPage.settingsPage .leaveButton {
+			pointer-events: none;
+			opacity: .3;
+			filter: grayscale(1);
+		}
 
 
 

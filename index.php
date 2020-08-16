@@ -56,15 +56,15 @@
 		<link rel="stylesheet" type="text/css" href="css/component.css?a=52">
 		<link rel="stylesheet" type="text/css" href="css/popup.css?a=39">
 		<link rel="stylesheet" type="text/css" href="css/main.css?a=30">
-		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=32">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=60">
+		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=33">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=61">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=75">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/header.css?a=1">
 
 		<script type="text/javascript" src="/JS/jQuery.js" asy nc></script>
 		<script type="text/javascript" src="/JS/request2.js" asy nc></script>
 	</head>	
-	<body class="appLoading">
+	<body class="appLoading noConnection">
 		<div id="sideBar">
 			<img class="sideBarBackground" src="images/sideBarBackground/?type=sidebar">
 			<div class="navigationHolder">
@@ -86,7 +86,7 @@
 				<div class="projectList hide">
 					<div>
 					</div>
-					<div class="smallTextHolder tab projectTab clickable" onclick="Popup.createProjectMenu.open()"> 
+					<div class="smallTextHolder tab projectTab clickable createProjectButton" onclick="Popup.createProjectMenu.open()"> 
 						<a class="smallText smallTextIcon">+</a>
 						<a class="smallText">Create project</a>
 					</div>

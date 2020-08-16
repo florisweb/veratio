@@ -179,6 +179,13 @@ body.appLoading #sideBar {
 
 
 
+	body.noConnection #sideBar .createProjectButton {
+		pointer-events: none;
+		opacity: .2;
+	}
+
+
+
 
 
 
