@@ -21,14 +21,41 @@ self.addEventListener('fetch', function(event) {
 });
 
 
-const Client = new function() {
+const Clients = new function() {
+	this.list = [];
+	this.addClient = function(_port) {
+		let client = {
+			port: _port,
+			send: function(_data) {
+				this.port.postMessage(_data);
+			}
+		}
+		this.list.push(client);
+		return client;
+	}
 
+ 	this.broadcast = function(_message) {
+ 		for (client of this.list) client.send(_message);
+ 	}
+
+
+ 	let prevConnectionStatus = false;
+ 	this.updateConnectionStatus = function(_connected = false) {
+ 		if (prevConnectionStatus == _connected) return;
+ 		if (_connected) App.onReConnect();
+ 		
+ 		this.broadcast({
+ 			action: "connectionStatusUpdate",
+ 			connected: _connected
+ 		});
+ 		prevConnectionStatus = _connected;
+ 	}
 }
-
 
 
 self.addEventListener('message', async function(_e) {	
 	let message = _e.data;
+	if (message.action == "giveSWConnection") return Clients.addClient(_e.ports[0])
 		
 	let result = await App.executeMessageRequest(message);
 
@@ -39,6 +66,13 @@ self.addEventListener('message', async function(_e) {
 
 
 const App = new function() {
+
+	this.onReConnect = function() {
+		LocalDB.sendCachedOperations();
+	}
+
+
+
 
 	this.fetchData = async function(_url, _parameters = "") {
 		let response = await new Promise(function (resolve) {
@@ -55,6 +89,8 @@ const App = new function() {
 				resolve("E_noConnection");
 			});
 		});
+
+		Clients.updateConnectionStatus(response != "E_noConnection");
 
 		if (response == "E_noConnection") return "E_noConnection";
 		if (!response.ok) return console.error("HTTP-Error: " + response.status, response);

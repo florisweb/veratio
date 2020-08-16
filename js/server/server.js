@@ -2,15 +2,14 @@
 
 const SW = new function() {
   if ('serviceWorker' in navigator) {} else return;
+  this.connected = false;
+
 
   window.addEventListener('load', async function() {
     navigator.serviceWorker.register('serviceWorker.js').then(function(registration) {
       console.log("Serviceworker installed with scope", registration.scope);
-
-
-      navigator.serviceWorker.controller.onmessage = function(_e) {
-        console.log("Client.onMessage2", _e);
-      }
+      
+      attachSWMessageListener();
 
     }, function(err) {
       console.log('ServiceWorker registration failed: ', err);
@@ -29,9 +28,26 @@ const SW = new function() {
       navigator.serviceWorker.controller.postMessage(_data, [channel.port2]);
     });
   }
+
+  function attachSWMessageListener() {
+    let channel = new MessageChannel();
+    channel.port1.onmessage = function(_e) {    
+      let message = _e.data;    
+
+      if (message.action == "connectionStatusUpdate")
+      {
+        SW.connected = message.connected;
+        let action = message.connected ? "remove" : "add";
+        document.body.classList[action]("noConnection");
+      }
+    }
+
+    navigator.serviceWorker.controller.postMessage(
+      {action: "giveSWConnection"}, 
+      [channel.port2]
+    );
+  }
 }
-
-
 
 
 
