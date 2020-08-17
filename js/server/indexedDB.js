@@ -308,7 +308,9 @@ function LocalDB_ProjectInterface(_projectId, _DB) {
       let request = store.get(This.id);
       
       request.onsuccess = function(_e) {
-        resolve(request.result);
+        let data = request.result;
+        if (typeof data != "object") data = [];
+        resolve(data);
       }
     });
   }

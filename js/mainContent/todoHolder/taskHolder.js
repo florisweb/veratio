@@ -57,9 +57,9 @@ function _MainContent_taskHolder() {
 		let taskList = []; 
 		if (project) 
 		{
-			taskList = await project.tasks.getByGroup("overdue", "*");
+			taskList = await project.tasks.getByGroup({type: "overdue", value: "*"});
 		} else {
-			let projectList = await Server.global.tasks.getByGroup("overdue", "*");
+			let projectList = await Server.global.tasks.getByGroup({type: "overdue", value: "*"});
 			for (project of projectList) taskList = taskList.concat(project);
 		}
 	

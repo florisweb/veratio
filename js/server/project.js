@@ -92,7 +92,7 @@ function GlobalProject(_project) {
     TypeBaseClass.call(this, Type);
 
     let list = [];
-    if (_project.users) 
+    if (_project.users && _project.users.length !== undefined) 
     {
       list = _project.users; 
       setSelf(list);
@@ -117,7 +117,14 @@ function GlobalProject(_project) {
         "&projectId=" + This.id
       );
 
-      if (results == "E_noConnection") return await Local.users.getAll();
+      if (results == "E_noConnection") 
+      {
+        let users = await Local.users.getAll();
+        setSelf(users);
+        return users;
+      }
+
+
 
       if (!Array.isArray(results)) return false;
       results = Encoder.decodeObj(results);
@@ -137,11 +144,11 @@ function GlobalProject(_project) {
     }
 
 
-    function setSelf(_userList) {
+    function setSelf(_userList = []) {
       for (user of _userList) 
       {
         if (!user.Self) continue;
-        Users.Self = Project_userComponent_Self(user);
+        Users.Self = new Project_userComponent_Self(user);
         break;
       }
     }

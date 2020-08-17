@@ -25,14 +25,13 @@ const Server = new function() {
   this.connected = false;
   
   this.global = new function() {
-    GlobalProject.call(this, {id: "*"})
+    GlobalProject.call(this, {id: "*"});
     delete this.users;
   }
 
-
+ 
   let lastProjectListUpdate = false;
   this.projectList = [];
-
   this.getProjectList = async function() {
     if (new Date() - lastProjectListUpdate < 10000) return this.projectList;
     lastProjectListUpdate = new Date();
@@ -84,10 +83,17 @@ const Server = new function() {
 
   async function getProjectList() {
     let projects = await fetchProjects();
+    let noConnection = projects == "E_noConnection";
 
-    if (projects === "E_noConnection") return (await LocalDB.getProjectList()).map(function(_project) {return new Project(_project);});
+    projects = (await LocalDB.getProjectList()).map(function(_project) {return new Project(_project);});
 
-    LocalDB.updateProjectList(projects);
+    let promises = [];
+    for (project of projects) promises.push(project.setup());
+
+    await Promise.all(promises);
+
+
+    if (!noConnection) LocalDB.updateProjectList(projects);
 
     return projects;
   }

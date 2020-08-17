@@ -164,6 +164,7 @@ function taskPage_tab_today() {
 			if (!(await shouldRenderTask(task))) continue;
 			finalList.push(task);
 		}
+
 		finalList = TaskSorter.defaultSort(finalList);
 
 		taskHolder.task.addTaskList(finalList);
@@ -208,7 +209,7 @@ function taskPage_tab_week() {
 		MainContent.header.setMemberList([]);
 
 		let startDate = new Date();
-		let dateList = await Server.global.tasks.getByDateRange(startDate, 7);
+		let dateList = await Server.global.tasks.getByDateRange({date: startDate, range: 7});
 
 		for (let i = 0; i < 7; i++)
 		{
@@ -255,7 +256,7 @@ function taskPage_tab_week() {
 		loadingMoreDays = true;
 		
 		let startDate = getNewDate();
-		let dateList = await Server.global.tasks.getByDateRange(startDate.copy().moveDay(1), _days);
+		let dateList = await Server.global.tasks.getByDateRange({date: startDate.copy().moveDay(1), range: _days});
 
 		for (let i = 1; i < _days + 1; i++)
 		{
@@ -293,7 +294,7 @@ function taskPage_tab_project() {
 		MainContent.header.setMemberList(project.users.getAll());
 
 
-		let plannedTasks 		= await project.tasks.getByDateRange(new Date(), 1000);
+		let plannedTasks 		= await project.tasks.getByDateRange({date: new Date(), range: 1000});
 		if (Object.keys(plannedTasks).length)
 		{
 			let taskHolder_planned = MainContent.taskHolder.add(
@@ -315,7 +316,7 @@ function taskPage_tab_project() {
 		}
 
 
-		let nonPlannedTasks = await project.tasks.getByGroup("default");
+		let nonPlannedTasks = await project.tasks.getByGroup({type: "default", value: "*"});
 		let taskHolder_nonPlanned = MainContent.taskHolder.add(
 			"default",
 			{
