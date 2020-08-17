@@ -322,7 +322,7 @@ function LocalDB_ProjectInterface(_projectId, _DB) {
       const store = transaction.objectStore(_key);
 
       _value.id = This.id;
-      let trans2 = store.put(_value, This.id);
+      let trans2 = store.put(JSON.parse(JSON.stringify(_value)), This.id);
       resolve();//TODO actual success-checking
     });
   }

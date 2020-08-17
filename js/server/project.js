@@ -198,7 +198,7 @@ function GlobalProject(_project) {
         "&projectId=" + This.id
       );
       
-      if (results == "E_noConnection") return await Local.tags.getAll();
+      if (results == "E_noConnection") return (await Local.tags.getAll()).map(function(tag) {tag.colour = new Color(tag.colour); return tag});
 
       if (!Array.isArray(results)) return false;
       list = Encoder.decodeObj(results);
@@ -206,6 +206,7 @@ function GlobalProject(_project) {
       await Local.tags.removeAll();
       for (let i = 0; i < list.length; i++)
       {
+        list[i].colour = new Color(list[i].colour);
         await Local.tags.update(list[i]);
       }
 
