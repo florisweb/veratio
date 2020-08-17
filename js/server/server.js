@@ -79,13 +79,25 @@ const Server = new function() {
 
  
 
-
+  this.get = getProjectList;
 
   async function getProjectList() {
     let projects = await fetchProjects();
     let noConnection = projects == "E_noConnection";
 
-    projects = (await LocalDB.getProjectList()).map(function(_project) {return new Project(_project);});
+    if (noConnection) 
+    {
+      projects = [];
+      let localDBProjects = await LocalDB.getProjectList();
+      for (localProject of localDBProjects) 
+      {
+        await localProject.setMetaData();
+        if (localProject.users.Self) localProject.users = [localProject.users.Self];
+        projects.push(new Project(localProject));
+      }
+    }
+     
+
 
     let promises = [];
     for (project of projects) promises.push(project.setup());

@@ -92,11 +92,12 @@ function GlobalProject(_project) {
     TypeBaseClass.call(this, Type);
 
     let list = [];
+    
     if (_project.users && _project.users.length !== undefined) 
     {
-      list = _project.users; 
+      list = _project.users;
       setSelf(list);
-    };
+    }
 
     this.Self;
     
