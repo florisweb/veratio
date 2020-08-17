@@ -1,67 +1,82 @@
 
 
-function _Server_globalProject(_project) {
+
+
+
+
+
+
+
+function GlobalProject(_project) {
   let This    = this;
+
   this.id     = String(_project.id);
+  this.title  = String(_project.title);
+
+  let Local;
+  this.Local = false;
+  this.setup = async function() {
+    if (this.id == "*") return;
+    this.Local = Local = await LocalDB.getProject(this.id);
+  }
 
 
   this.tasks = new function() {
-    let Type = "tasks";
-
-    this.get = async function(_id) {
-      return await SW.send({
-        action: "get", 
-        type: Type, 
-        projectId: This.id, 
-        parameters: ""
-      });
-    }
+    let Type = "task";
+    TypeBaseClass.call(this, Type);
 
     this.getByDate = function(_date) {
-      return this.getByDateRange(_date, 0);
+      return this.getByDateRange({date: _date, range: 0});
     }
 
-    this.getByDateRange = async function(_date, _range = 1) {
-      return await SW.send({
-        action: "getByDateRange", 
-        type: Type, 
-        projectId: This.id, 
-        parameters: {
-          date: _date.toString(),
-          range: parseInt(_range)
+    this.getByDateRange = async function(_info = {date: false, range: 1}) {
+      let result = await Server.fetchData(
+        "database/project/" + Type + ".php", 
+        "method=getByDateRange&parameters=" + 
+        Encoder.objToString(_info) + 
+        "&projectId=" + This.id
+      );
+
+      if (result == "E_noConnection") return await Local.tasks.getByDateRange(_info);
+      result = Encoder.decodeObj(result);
+
+      if (Local) // Store data Localily
+      {
+        let foundTasks = await Local.tasks.getByDateRange(_info);
+        for (let i = 0; i < foundTasks.length; i++) await Local.tasks.remove(foundTasks[i]);
+        for (date in result)
+        {
+          for (let i = 0; i < result[date].length; i++) await Local.tasks.update(result[date][i]);
         }
-      });
+      }
+
+      return result;
     }
 
-    this.getByGroup = async function(_groupType, _groupValue = "*") {
-      return await SW.send({
-        type: Type, 
-        projectId: This.id, 
-        action: "getByGroup", 
-        parameters: {
-          type: _groupType, 
-          value: _groupValue
-        }
-      });
+    this.getByGroup = async function(_info = {type: "", value: "*"}) {
+      let result = await Server.fetchData(
+        "database/project/" + Type + ".php", 
+        "method=getByGroup&parameters=" + 
+        Encoder.objToString(_info) + 
+        "&projectId=" + This.id
+      );
+
+      if (result == "E_noConnection") return await Local[Type + "s"].getByGroup(_info);
+      result = Encoder.decodeObj(result);
+
+      if (Local) // Store data Localily
+      {
+        overWriteLocalData(result, await Local.tasks.getByGroup(_info));
+      }
+
+      return result;
     }
 
 
-    this.remove = async function(_id) {
-      return await SW.send({
-        type: Type, 
-        projectId: This.id, 
-        action: "remove", 
-        parameters: _id
-      });
-    }
 
-    this.update = async function(_newTask) {
-      return await SW.send({
-        type: Type, 
-        projectId: This.id, 
-        action: "update", 
-        parameters: _newTask
-      });
+    async function overWriteLocalData(_result, _localEquivalant) {
+      for (let i = 0; i < _localEquivalant.length; i++) await Local.tasks.remove(_localEquivalant[i].id);
+      for (let i = 0; i < _result.length; i++)           await Local.tasks.update(_result[i]);
     }
   }
 
@@ -73,12 +88,18 @@ function _Server_globalProject(_project) {
   this.users  = new function() {
     let Users = this;
 
-    let Type = "users";
+    let Type = "user";
+    TypeBaseClass.call(this, Type);
+
+    let list = [];
+    if (_project.users) 
+    {
+      list = _project.users; 
+      setSelf(list);
+    };
+
     this.Self;
-    if (_project.users) setSelf([_project.users.Self]);
-
-  
-
+    
     this.get = async function(_id) {
       let users = await this.getAll();
       for (user of users)
@@ -90,83 +111,67 @@ function _Server_globalProject(_project) {
     }
 
     this.getAll = async function() {
-      let results = await SW.send({
-        action: "getAll", 
-        type: Type, 
-        projectId: This.id, 
-        parameters: ""
-      });
-     
-      if (!results || !Array.isArray(results)) return false;
+      let results = await Server.fetchData(
+        "database/project/" + Type + ".php", 
+        "method=getAll" + 
+        "&projectId=" + This.id
+      );
+
+      if (results == "E_noConnection") return await Local.users.getAll();
+
+      if (!Array.isArray(results)) return false;
+      results = Encoder.decodeObj(results);
+
+      await Local.users.removeAll();
+      for (let i = 0; i < results.length; i++)
+      {
+        await Local.users.update(results[i]);
+      }
 
       setSelf(results);
+
+      list = results;
       
+      lastSync = new Date();
       return results;
     }
 
-  
 
     function setSelf(_userList) {
       for (user of _userList) 
       {
         if (!user.Self) continue;
-        Users.Self = new _Server_project_userComponent_Self(user);
+        Users.Self = Project_userComponent_Self(user);
         break;
       }
     }
 
 
-
-    this.update = async function(_newUser) {
-      return await SW.send({
-        action: "update", 
-        type: Type, 
-        projectId: This.id, 
-        parameters: _newUser
-      });
+    this.inviteByEmail = function(_email) {
+      return Server.fetchData(
+        "database/project/" + Type + ".php", 
+        "method=inviteByEmail&parameters=" + Encoder.encodeString(_email) +
+        "&projectId=" + This.id
+      );
     }
 
-
-    this.remove = async function(_id) {
-      return await SW.send({
-        action: "remove", 
-        type: Type, 
-        projectId: This.id, 
-        parameters: _id
-      });
-    }
-
-
-    this.inviteByEmail = async function(_email) {
-      return await SW.send({
-        action: "inviteByEmail", 
-        type: Type, 
-        projectId: This.id, 
-        parameters: _email
-      });
-    }
-
-    this.inviteByLink = async function() {
-      return await SW.send({
-        action: "inviteByLink", 
-        type: Type, 
-        projectId: This.id, 
-        parameters: ""
-      });
+    this.inviteByLink = function() {
+      return Server.fetchData(
+        "database/project/" + Type + ".php", 
+        "method=inviteByLink" + 
+        "&projectId=" + This.id
+      );
     }
   }
 
 
 
   this.tags  = new function() {
-    let Type = "tags";
+    let Type = "tag";
+    TypeBaseClass.call(this, Type);
+
     let list = [];
-
-    function setList(_array) {
-      for (let r = 0; r < _array.length; r++) _array[r].colour = new Color(_array[r].colour);  // SW will only give the data not the object
-      list = _array;
-    }
-
+    if (_project.tags) list = _project.tags;
 
 
     this.get = async function(_id) {
@@ -180,42 +185,94 @@ function _Server_globalProject(_project) {
     }
 
     this.getAll = async function() {
-      let results = await SW.send({
-        action: "getAll", 
-        type: Type, 
-        projectId: This.id, 
-        parameters: ""
-      });
+      let results = await Server.fetchData(
+        "database/project/" + Type + ".php", 
+        "method=getAll" + 
+        "&projectId=" + This.id
+      );
+      
+      if (results == "E_noConnection") return await Local.tags.getAll();
 
       if (!Array.isArray(results)) return false;
-      setList(results);
+      list = Encoder.decodeObj(results);
 
+      await Local.tags.removeAll();
+      for (let i = 0; i < list.length; i++)
+      {
+        await Local.tags.update(list[i]);
+      }
+
+
+      lastSync = new Date();
       return list;
     }
+  }
 
-    
 
-    this.update = async function(_newTag) {
-      _newTag.colour = _newTag.colour.toHex(); // SW can't convert so client has to
-      
-      let result = await SW.send({
-        action: "update", 
-        type: Type, 
-        projectId: This.id, 
-        parameters: _newTag
-      });
-      
+
+  function TypeBaseClass(_type) {
+    let Type = _type;
+
+    this.get = async function(_id) {
+      let result = await Server.fetchData(
+        "database/project/" + Type + ".php", 
+        "method=get&parameters=" + _id +  
+        "&projectId=" + This.id
+      );
+
+      if (result == "E_noConnection") return await Local[Type + "s"].get(_id);
+
+      let item = Encoder.decodeObj(result);
+      Local[Type + "s"].update(item); // TEMP naming scheme should always use the plural
+
+      return item;
+    }
+
+    this.remove = async function(_id) {
+      let result = await Server.fetchData(
+        "database/project/" + Type + ".php", 
+        "method=remove&parameters=" + _id + 
+        "&projectId=" + This.id
+      );
+
+      if (result == "E_noConnection" && Local) 
+      {
+        Local[Type + "s"].remove(_id);
+        Local.addCachedOperation({
+          action: "remove",
+          type: Type + "s",
+          parameters: _id
+        });
+        return true;
+      } 
+      if (result && Local) Local[Type + "s"].remove(_id);
+
       return result;
     }
 
+    this.update = async function(_newItem) {
+      let result = Encoder.decodeObj(
+        await Server.fetchData(
+          "database/project/" + Type + ".php", 
+          "method=update&parameters=" + 
+          Encoder.objToString(_newItem) + 
+          "&projectId=" + This.id
+        )
+      );
 
-    this.remove = async function(_id) {
-      return await SW.send({
-        action: "remove", 
-        type: Type, 
-        projectId: This.id,
-        parameters: _id
-      });
+      if (result == "E_noConnection" && Local) 
+      {
+        Local[Type + "s"].update(_newItem);
+        Local.addCachedOperation({
+          action: "update",
+          type: Type + "s",
+          parameters: _newItem
+        });
+        return _newItem;
+      }
+      if (result && Local) Local[Type + "s"].update(result);
+
+      return result;
     }
   }
 }
@@ -226,53 +283,51 @@ function _Server_globalProject(_project) {
 
 
 
-function _Server_project(_project) {
-  _Server_globalProject.call(this, _project);
+function Project(_project) {
+  GlobalProject.call(this, _project);
 
   let This    = this;
   this.title  = String(_project.title);
 
-  
-  this.sync = function() {
-    return Promise.all([
-      this.users.getAll(),
-    ]);    
-  }
-
-
-
-
-  this.leave = function() {
-    if (!this.users.Self) return;
-    this.users.remove(this.users.Self.id);
-    return App.update();
-  }
 
 
   this.rename = async function(_newTitle) {
     if (!_newTitle) return false;
+    
+    let result = await Server.fetchData(
+      "database/project/rename.php",
+      "projectId=" + This.id + "&newTitle=" + Encoder.encodeString(_newTitle)
+    );
 
-    let result = await SW.send({
-      action: "rename", 
-      type: "project", 
-      projectId: This.id, 
-      parameters: _newTitle
-    });
-
-    this.title = _newTitle;
+    if (result == "E_noConnection") 
+    {
+      This.Local.rename(_newTitle);
+      This.Local.addCachedOperation({
+        action: "rename",
+        type: "project",
+        parameters: _newTitle
+      });
+      return true;
+    }
+    
+    if (result) This.Local.rename(_newTitle);
     return result;
   }
 
 
   this.remove = async function() {
-    let result = await SW.send({
-      action: "remove", 
-      type: "project", 
-      projectId: This.id, 
-      parameters: This.id,
-    });
+    let result = await Server.fetchData(
+      "database/project/remove.php",
+      "projectId=" + this.id
+    );
 
+    if (result && result != "E_noConnection") this.Local.remove();
     return result;
+  }
+
+  this.leave = async function() {
+    if (!this.users.Self) return;
+    return await this.users.remove(this.users.Self.id);
   }
 }
 
@@ -281,9 +336,7 @@ function _Server_project(_project) {
 
 
 
-
-
-function _Server_project_userComponent_Self(_user) {
+function Project_userComponent_Self(_user) {
   let permissions = _user.permissions;
 
   let This = this;
@@ -328,7 +381,4 @@ function _Server_project_userComponent_Self(_user) {
     }
   }
 }
-
-
-
 

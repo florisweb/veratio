@@ -61,9 +61,9 @@ function _MainContent_header() {
 			
 			Menu.enableAllOptions();
 
-			if (!SW.connected)														Menu.options[2].disable();
-			if (!project.users.Self.permissions.project.remove || !SW.connected)	Menu.options[3].disable();
-			if (!project.users.Self.permissions.project.rename)						Menu.options[4].disable();
+			if (!Server.connected)														Menu.options[2].disable();
+			if (!project.users.Self.permissions.project.remove || !Server.connected)	Menu.options[3].disable();
+			if (!project.users.Self.permissions.project.rename)							Menu.options[4].disable();
 
 			return Menu.open(HTML.optionIcon, {top: 45});
 		}

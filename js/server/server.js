@@ -2,51 +2,17 @@
 
 const SW = new function() {
   if ('serviceWorker' in navigator) {} else return;
-  this.connected = false;
+  this.connected = true;
 
 
   window.addEventListener('load', async function() {
     navigator.serviceWorker.register('serviceWorker.js').then(function(registration) {
       console.log("Serviceworker installed with scope", registration.scope);
       
-      attachSWMessageListener();
-
     }, function(err) {
       console.log('ServiceWorker registration failed: ', err);
     });
   });
-
-
-  this.send = function(_data) {
-    return new Promise(function (resolve, reject) {
-      let channel = new MessageChannel();
-      channel.port1.onmessage = function(_e) {        
-        if (event.data.error) return reject(event.data.error);
-        resolve(_e.data)
-      }
-
-      navigator.serviceWorker.controller.postMessage(_data, [channel.port2]);
-    });
-  }
-
-  function attachSWMessageListener() {
-    let channel = new MessageChannel();
-    channel.port1.onmessage = function(_e) {    
-      let message = _e.data;    
-
-      if (message.action == "connectionStatusUpdate")
-      {
-        SW.connected = message.connected;
-        let action = message.connected ? "remove" : "add";
-        document.body.classList[action]("noConnection");
-      }
-    }
-
-    navigator.serviceWorker.controller.postMessage(
-      {action: "giveSWConnection"}, 
-      [channel.port2]
-    );
-  }
 }
 
 
@@ -56,9 +22,10 @@ const SW = new function() {
 
 const Server = new function() {
   let This = this;
+  this.connected = false;
   
   this.global = new function() {
-    _Server_globalProject.call(this, {id: "*"})
+    GlobalProject.call(this, {id: "*"})
     delete this.users;
   }
 
@@ -70,18 +37,12 @@ const Server = new function() {
     if (new Date() - lastProjectListUpdate < 10000) return this.projectList;
     lastProjectListUpdate = new Date();
 
-    let list = await SW.send({
-      action: "getAll", 
-      type: "project", 
-      projectId: "", 
-      parameters: ""
-    });
+    this.projectList = await getProjectList();
 
-    this.projectList = list.map(function(_project) {return new _Server_project(_project);});
     return this.projectList;
   }
 
-
+ 
   this.getProject = async function(_id) {
     let projects = await this.getProjectList();
     for (let i = 0; i < projects.length; i++)
@@ -93,12 +54,159 @@ const Server = new function() {
   }
 
 
-  this.createProject = async function(_title) {
-    return await SW.send({
-      type: "project",
-      action: "create",
-      parameters: _title,
-    });    
+
+
+  this.removeProject = async function(_id) {
+    let result = await Server.fetchData("database/project/remove.php", "projectId=" + _id);
+    // if (!result) return false;
+    return result;
   }
+
+
+  this.createProject = function(_title) {
+    return new Promise(async function (resolve, error) {
+      let result = await Server.fetchData("database/project/create.php", "title=" + Encoder.encodeString(_title));
+      if (!result) alert(result);
+
+      importProject(result);
+      resolve(result);
+    });
+  }
+
+
+
+ 
+
+
+ 
+
+
+
+  async function getProjectList() {
+    let projects = await fetchProjects();
+
+    if (projects === "E_noConnection") return (await LocalDB.getProjectList()).map(function(_project) {return new Project(_project);});
+
+    LocalDB.updateProjectList(projects);
+
+    return projects;
+  }
+
+
+  async function fetchProjects() {
+    let results = await Server.fetchData("database/project/getProjectList.php");
+    if (!results) return false;
+    if (results == "E_noConnection") return results;
+    
+    let projectList = [];
+    for (let i = 0; i < results.length; i++)
+    {
+      let project = importProject(results[i]);
+      if (!project) continue;
+      projectList.push(project);
+    }
+    return projectList;
+  }
+
+    function importProject(_project) {
+      if (!_project || typeof _project != "object") return;
+      _project = Encoder.decodeObj(_project);
+      
+      return new Project(_project);
+    }
+
+
+
+
+
+
+
+
+
+
+
+  let prevConnectionStatus = false;
+  this.updateConnectionStatus = function(_connected = false) {
+    console.log("UpdateStatus", prevConnectionStatus, "->", _connected);
+    if (prevConnectionStatus == _connected) return;
+    if (_connected) this.onReConnect();
+    
+    this.connected =_connected;
+    let action = _connected ? "remove" : "add";
+    document.body.classList[action]("noConnection");
+
+    prevConnectionStatus = _connected;
+  }
+
+
+
+  this.onReConnect = function() {
+    LocalDB.sendCachedOperations();
+  }
+
+
+
+  this.fetchData = async function(_url, _parameters = "") {
+    let response = await new Promise(function (resolve) {
+      fetch(_url, {
+        method: 'POST', 
+        body: _parameters,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        credentials: 'include'
+      }).then(function (_result) {
+        resolve(_result);
+      }, function (_error) {
+        resolve("E_noConnection");
+      });
+    });
+
+    Server.updateConnectionStatus(response != "E_noConnection");
+
+    if (response == "E_noConnection") return "E_noConnection";
+    if (!response.ok) return console.error("HTTP-Error: " + response.status, response);
+    
+    let result = await response.text();
+    try {
+      result = JSON.parse(result);
+    } catch (e) {}
+      
+    return result;
+  }
+
+
+
+
+
+  // this.executeMessageRequest = async function(_message) {
+  //   let messageFunction = await getMessageFunction(_message);
+  //   if (!messageFunction) return false;
+
+  //   let result = false;
+  //   try {
+  //     result = await messageFunction(_message.parameters);
+  //   } catch (e) {console.error("An error accured", e)};
+
+  //   return result;
+  // }
+
+
+  // async function getMessageFunction(_message) {
+  //   let project = new Project({id: _message.projectId});
+  //   await project.setup();
+
+  //   let messageFunction = false;
+  //   if (_message.type == "project")
+  //   {
+  //     switch (_message.action)
+  //     {
+  //       case "remove": return Server.removeProject;   break;
+  //       case "rename": return project.rename;       break;
+  //       case "create": return Server.createProject;   break;
+  //       case "getAll": return Server.getProjectList;  break;
+  //     }
+  //   } else return project[_message.type][_message.action];
+  // }
 }
 

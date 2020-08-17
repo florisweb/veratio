@@ -64,7 +64,7 @@
 		<script type="text/javascript" src="/JS/jQuery.js" asy nc></script>
 		<script type="text/javascript" src="/JS/request2.js" asy nc></script>
 	</head>	
-	<body class="appLoading noConnection">
+	<body class="appLoading">
 		<div id="sideBar">
 			<img class="sideBarBackground" src="images/sideBarBackground/?type=sidebar">
 			<div class="navigationHolder">
@@ -199,14 +199,14 @@
 			$.getScript("js/sideBar.js?antiCache=" 									+ antiCache, function() {});
 			
 
+			$.getScript("js/server/encoder.js?antiCache=" 							+ antiCache, function() {});
+			$.getScript("js/server/indexedDB.js?antiCache=" 						+ antiCache, function() {});
 			$.getScript("js/server/project.js?antiCache=" 							+ antiCache, function() {});
 			$.getScript("js/server/server.js?antiCache=" 							+ antiCache, function() {});
+			
 
 
 			$.getScript("js/app.js?antiCache=" 										+ antiCache, function() {});
-
-
-			$.getScript("js/serviceWorker/indexedDB.js?antiCache=" 					+ antiCache, function() {});
 		</script>
 
 

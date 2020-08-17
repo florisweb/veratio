@@ -3,7 +3,7 @@
 
 const LocalDB = new function() {
   const DBName = "veratioDB";
-  let DBVersion = 1;
+  let DBVersion = 2;
 
   let DB; getDB();
 
@@ -28,6 +28,7 @@ const LocalDB = new function() {
 
     request.onerror = function(_e) {
       console.warn("error", _e);
+      indexedDB.deleteDatabase("veratioDB");
     }
   }
 
