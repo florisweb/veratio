@@ -178,10 +178,6 @@ function GlobalProject(_project) {
     let Type = "tag";
     TypeBaseClass.call(this, Type);
 
-    let list = [];
-    if (_project.tags) list = _project.tags;
-
-
     this.get = async function(_id) {
       let tags = await this.getAll();
       for (tag of tags)
@@ -202,17 +198,15 @@ function GlobalProject(_project) {
       if (results == "E_noConnection") return (await Local.tags.getAll()).map(function(tag) {tag.colour = new Color(tag.colour); return tag});
 
       if (!Array.isArray(results)) return false;
-      list = Encoder.decodeObj(results);
+      let list = Encoder.decodeObj(results);
 
       await Local.tags.removeAll();
       for (let i = 0; i < list.length; i++)
       {
-        list[i].colour = new Color(list[i].colour);
         await Local.tags.update(list[i]);
+        list[i].colour = new Color(list[i].colour);
       }
 
-
-      lastSync = new Date();
       return list;
     }
   }
