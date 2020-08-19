@@ -91,7 +91,7 @@ function taskPage_tab(_settings) {
 	
 
 
-	this.open = async function(_projectId) {
+	this.open = async function(_projectId = false) {
 		MainContent.startLoadingAnimation();
 
 		HTML.loadMoreButton.classList.add("hide");
@@ -106,7 +106,7 @@ function taskPage_tab(_settings) {
 
 		await MainContent.taskHolder.addOverdue();
 
-		onOpen(_projectId);
+		await onOpen(_projectId);
 
 		MainContent.stopLoadingAnimation();
 		await SideBar.updateTabIndicator();

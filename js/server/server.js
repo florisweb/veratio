@@ -24,10 +24,14 @@ const Server = new function() {
   let This = this;
   this.connected = false;
   
-  this.global = new function() {
-    GlobalProject.call(this, {id: "*"});
-    delete this.users;
+  this.setup = async function() {
+    this.global = new function() {
+      GlobalProject.call(this, {id: "*"});
+      this.setup();
+      delete this.users;
+    }
   }
+
 
  
   let lastProjectListUpdate = false;
@@ -91,7 +95,6 @@ const Server = new function() {
       let localDBProjects = await LocalDB.getProjectList();
       for (localProject of localDBProjects) 
       {
-        await localProject.setMetaData();
         if (localProject.users.Self) localProject.users = [localProject.users.Self];
         projects.push(new Project(localProject));
       }

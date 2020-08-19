@@ -35,7 +35,7 @@ function _app() {
     });
     
 
-
+    await Server.setup();
     await this.update();
 
     SideBar.projectList.open();
