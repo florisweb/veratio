@@ -625,7 +625,7 @@ function TaskHolder_createMenuConstructor(_config, _type) {
 			
 			
 			This.HTML.inputField = This.HTML.createMenu.children[0];
-			This.HTML.inputField.placeholder = PLACEHOLDERTEXTS.randomItem();
+			This.HTML.inputField.placeholder = getRandomItem(PLACEHOLDERTEXTS);
 
 
 			This.HTML.plannedDateField = This.HTML.createMenu.children[1];

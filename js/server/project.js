@@ -16,29 +16,40 @@ function GlobalProject() {
     this.getByDateRange = async function(_info = {date: false, range: 1}) {
       let projects = await Server.getProjectList();
       let returnValue = {};
+      let promises = [];
       for (let i = 0; i < projects.length; i++)
       {
-        let result = await projects[i].tasks.getByDateRange(_info);
-        if (!result) continue;
-        for (key in result)
-        {
-          if (!returnValue[key]) returnValue[key] = [];
-          returnValue[key] = returnValue[key].concat(result[key]);
-        }
+        let promise = projects[i].tasks.getByDateRange(_info).then(function(_result) {
+          if (!_result) return;
+          for (key in _result)
+          {
+            if (!returnValue[key]) returnValue[key] = [];
+            returnValue[key] = returnValue[key].concat(_result[key]);
+          }
+        });
+        promises.push(promise);
       }
+      await Promise.all(promises);
 
       return returnValue;
     }
 
-    this.getByGroup = async function(_info = {type: "", value: "*"}) {
+    this.getByGroup = async function(_info = {type: "", value: "*"}) { 
       let projects = await Server.getProjectList();
       let returnValue = [];
+
+      let promises = [];
       for (let i = 0; i < projects.length; i++)
       {
-        let result = await projects[i].tasks.getByGroup(_info);
-        if (!result) continue;
-        returnValue = returnValue.concat(result);
+        let promise = projects[i].tasks.getByGroup(_info).then(function(_result) {
+          if (!_result) return;
+          returnValue = returnValue.concat(_result);
+        });
+
+        promises.push(promise);
       }
+      await Promise.all(promises);
+
       return returnValue;
     }
   }
@@ -65,12 +76,20 @@ function GlobalProject() {
     this.getAll = async function() {
       let projects = await Server.getProjectList();
       let returnValue = [];
+
+      let promises = [];
       for (let i = 0; i < projects.length; i++)
       {
-        let result = await projects[i].users.getAll();
-        if (!result) continue;
-        returnValue = returnValue.concat(result);
+        let promise = projects[i].users.getAll().then(function(_result) {
+          if (!_result) return;
+          returnValue = returnValue.concat(_result);
+        });
+
+        promises.push(promise);
       }
+
+      await Promise.all(promises);
+
       return returnValue;
     }
   }
@@ -94,12 +113,20 @@ function GlobalProject() {
     this.getAll = async function() {
       let projects = await Server.getProjectList();
       let returnValue = [];
+
+      let promises = [];
       for (let i = 0; i < projects.length; i++)
       {
-        let result = await projects[i].tags.getAll();
-        if (!result) continue;
-        returnValue = returnValue.concat(result);
+        let promise = projects[i].tags.getAll().then(function(_result) {
+          if (!_result) return;
+          returnValue = returnValue.concat(_result);
+        });
+
+        promises.push(promise);
       }
+
+      await Promise.all(promises);
+
       return returnValue;
     }
   }
