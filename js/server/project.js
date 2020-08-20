@@ -189,7 +189,7 @@ function Project(_project) {
 
   let Local;
   this.setup = async function() {
-    Local = await LocalDB.getProject(this.id);
+    Local = await LocalDB.getProject(this.id, true);
   }
 
   this.rename = async function(_newTitle) {
@@ -228,7 +228,8 @@ function Project(_project) {
 
   this.leave = async function() {
     if (!this.users.Self) return;
-    return await this.users.remove(this.users.Self.id);
+    await this.users.remove(this.users.Self.id);
+    Server.clearCache();
   }
 
 

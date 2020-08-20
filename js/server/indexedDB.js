@@ -32,7 +32,7 @@ const LocalDB = new function() {
 
 
 
-  this.getProjectList = async function() {
+  this.getProjectList = async function(_ignoreUserAbsence = false) {
     let ids = await this.getProjectIdList();
 
     let projectList = [];
@@ -41,7 +41,7 @@ const LocalDB = new function() {
       let project = new LocalDB_Project(ids[i], DB);
       await project.setMetaData();
       
-      if (!project.users.Self) continue; // project.remove(); -- should remove after some time, but we still need to keep it around for storing the cachedoperation of removing oneself
+      if (!project.users.Self && !_ignoreUserAbsence) continue; // project.remove(); -- should remove after some time, but we still need to keep it around for storing the cachedoperation of removing oneself
 
       projectList.push(project);
     }
@@ -50,8 +50,8 @@ const LocalDB = new function() {
   }
 
 
-  this.getProject = async function(_id) {
-    let projectList = await this.getProjectList();
+  this.getProject = async function(_id, _ignoreUserAbsence = false) {
+    let projectList = await this.getProjectList(_ignoreUserAbsence);
     for (let i = 0; i < projectList.length; i++)
     {
       if (projectList[i].id != _id) continue;

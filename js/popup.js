@@ -392,6 +392,7 @@ function _Popup_renameProject() {
 
 		project.rename(newTitle).then(function () {
 			This.close();
+			Server.clearCache(); 
 			App.update();
 		});
 	}

@@ -23,23 +23,21 @@ const SW = new function() {
 const Server = new function() {
   let This = this;
   this.connected = false;
+  const cacheLifeTime = 20000; // ms
   
-  this.setup = async function() {
-    // this.global = new function() {
-    //   GlobalProject.call(this, {id: "*"});
-    //   this.setup();
-    //   delete this.users;
-    // }
-  }
-
   this.global = new GlobalProject();
+
+  this.clearCache = function() {
+    this.projectList = [];
+    lastProjectListUpdate = new Date().setDateFromStr("0-0-0");
+  }
 
 
  
   let lastProjectListUpdate = false;
   this.projectList = [];
   this.getProjectList = async function() {
-    if (new Date() - lastProjectListUpdate < 10000) return this.projectList;
+    if (new Date() - lastProjectListUpdate < cacheLifeTime) return this.projectList;
     lastProjectListUpdate = new Date();
 
     this.projectList = await getProjectList();
