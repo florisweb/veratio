@@ -170,7 +170,6 @@ function GlobalProject() {
       // return false;
     }
   }
-
 }
 
 
@@ -242,8 +241,9 @@ function Project(_project) {
     let Type = "task";
     TypeBaseClass.call(this, Type);
 
-    this.getByDate = function(_date) {
-      return this.getByDateRange({date: _date, range: 0});
+    this.getByDate = async function(_date) {
+      let tasks = await this.getByDateRange({date: _date, range: 0});
+      return tasks[_date.toString()];
     }
 
     this.getByDateRange = async function(_info = {date: false, range: 1}) {
@@ -257,15 +257,18 @@ function Project(_project) {
       if (result == "E_noConnection") return await Local.tasks.getByDateRange(_info);
       result = Encoder.decodeObj(result);
 
-      if (Local) // Store data Localily
-      {
+      if (Local) new Promise(async function () { // Store data Localily  
         let foundTasks = await Local.tasks.getByDateRange(_info);
+        
         for (let i = 0; i < foundTasks.length; i++) await Local.tasks.remove(foundTasks[i]);
+
         for (date in result)
         {
-          for (let i = 0; i < result[date].length; i++) await Local.tasks.update(result[date][i]);
+          let data = result[date];
+          for (let i = 0; i < data.length; i++) await Local.tasks.update(data[i]);
         }
-      }
+      });
+
 
       return result;
     }

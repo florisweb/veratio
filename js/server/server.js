@@ -211,34 +211,34 @@ const Server = new function() {
 
 
 
-  // this.executeMessageRequest = async function(_message) {
-  //   let messageFunction = await getMessageFunction(_message);
-  //   if (!messageFunction) return false;
+  this.executeMessageRequest = async function(_message) {
+    let messageFunction = await getMessageFunction(_message);
+    if (!messageFunction) return false;
 
-  //   let result = false;
-  //   try {
-  //     result = await messageFunction(_message.parameters);
-  //   } catch (e) {console.error("An error accured", e)};
+    let result = false;
+    try {
+      result = await messageFunction(_message.parameters);
+    } catch (e) {console.error("An error accured", e)};
 
-  //   return result;
-  // }
+    return result;
+  }
 
 
-  // async function getMessageFunction(_message) {
-  //   let project = new Project({id: _message.projectId});
-  //   await project.setup();
+  async function getMessageFunction(_message) {
+    let project = new Project({id: _message.projectId});
+    await project.setup();
 
-  //   let messageFunction = false;
-  //   if (_message.type == "project")
-  //   {
-  //     switch (_message.action)
-  //     {
-  //       case "remove": return Server.removeProject;   break;
-  //       case "rename": return project.rename;       break;
-  //       case "create": return Server.createProject;   break;
-  //       case "getAll": return Server.getProjectList;  break;
-  //     }
-  //   } else return project[_message.type][_message.action];
-  // }
+    let messageFunction = false;
+    if (_message.type == "project")
+    {
+      switch (_message.action)
+      {
+        case "remove": return Server.removeProject;   break;
+        case "rename": return project.rename;       break;
+        case "create": return Server.createProject;   break;
+        case "getAll": return Server.getProjectList;  break;
+      }
+    } else return project[_message.type][_message.action];
+  }
 }
 
