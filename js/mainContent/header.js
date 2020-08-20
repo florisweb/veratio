@@ -61,7 +61,6 @@ function _MainContent_header() {
 			
 			Menu.enableAllOptions();
 
-			if (!Server.connected)														Menu.options[2].disable();
 			if (!project.users.Self.permissions.project.remove || !Server.connected)	Menu.options[3].disable();
 			if (!project.users.Self.permissions.project.rename)							Menu.options[4].disable();
 

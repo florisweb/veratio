@@ -267,13 +267,6 @@ body.appLoading #mainContent {
 			width: auto;
 		}
 
-		body.noConnection .mainContentPage.settingsPage .leaveButton {
-			pointer-events: none;
-			opacity: .3;
-			filter: grayscale(1);
-		}
-
-
 
 
 
