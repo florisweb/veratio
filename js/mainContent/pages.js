@@ -291,7 +291,7 @@ function taskPage_tab_project() {
 		
 		MainContent.header.showItemsByPage("project");
 		MainContent.header.setTitle(project.title);
-		MainContent.header.setMemberList(project.users.getAll());
+		MainContent.header.setMemberList(await project.users.getAll());
 
 
 		let plannedTasks 		= await project.tasks.getByDateRange({date: new Date(), range: 1000});
