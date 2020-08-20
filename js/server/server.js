@@ -27,20 +27,30 @@ const Server = new function() {
   
   this.global = new GlobalProject();
 
-  this.clearCache = function() {
+  this.clearCache = async function() {
     this.projectList = [];
-    lastProjectListUpdate = new Date().setDateFromStr("0-0-0");
+    lastProjectListUpdate = false;
   }
 
 
  
   let lastProjectListUpdate = false;
+  let curFetchPromise = false;
+  
   this.projectList = [];
-  this.getProjectList = async function() {
-    if (new Date() - lastProjectListUpdate < cacheLifeTime) return this.projectList;
-    lastProjectListUpdate = new Date();
 
-    this.projectList = await getProjectList();
+  this.getProjectList = async function() {
+    if (new Date() - lastProjectListUpdate < cacheLifeTime) 
+    {
+      if (curFetchPromise) return await curFetchPromise;
+      return this.projectList;
+    }
+
+    curFetchPromise = getProjectList();
+    this.projectList = await curFetchPromise;
+    
+    lastProjectListUpdate = new Date();
+    curFetchPromise = false;
 
     return this.projectList;
   }
@@ -148,9 +158,10 @@ const Server = new function() {
 
   let prevConnectionStatus = false;
   this.updateConnectionStatus = function(_connected = false) {
-    console.log("UpdateStatus", prevConnectionStatus, "->", _connected);
     if (prevConnectionStatus == _connected) return;
     if (_connected) this.onReConnect();
+
+    console.log("UpdateStatus", prevConnectionStatus, "->", _connected);
     
     this.connected =_connected;
     let action = _connected ? "remove" : "add";

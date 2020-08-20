@@ -228,8 +228,7 @@ function Project(_project) {
 
   this.leave = async function() {
     if (!this.users.Self) return;
-    await this.users.remove(this.users.Self.id);
-    Server.clearCache();
+    return await this.users.remove(this.users.Self.id);
   }
 
 

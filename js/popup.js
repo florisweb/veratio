@@ -390,9 +390,9 @@ function _Popup_renameProject() {
 		let newTitle = this.HTML.newTitleHolder.value;
 		if (!newTitle || newTitle.length < 3) return false;
 
-		project.rename(newTitle).then(function () {
+		project.rename(newTitle).then(async function () {
 			This.close();
-			Server.clearCache(); 
+			await Server.clearCache(); 
 			App.update();
 		});
 	}

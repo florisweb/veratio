@@ -40,7 +40,8 @@ function _MainContent() {
 		let project = await Server.getProject(this.curProjectId);
 		if (!project) return false;
 		await project.leave();
-		Server.clearCache();
+		
+		await Server.clearCache();
 		MainContent.taskPage.weekTab.open();
 		App.update();
 	}
