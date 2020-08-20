@@ -1,5 +1,5 @@
 <?php
-	$AllowedMethods = ["get", "getByGroup", "getByDate", "getByDateRange", "update", "remove"];
+	$AllowedMethods = ["get", "getByGroup", "getByDateRange", "update", "remove"];
 	require_once __DIR__ . "/../modules/app.php";
 
 
@@ -27,7 +27,7 @@
 		array_push($results, $projectResult);
 	}
 
-	if ($_method == "getByDate" || $_method == "getByDateRange") die(json_encode(mergeDateArrays($results)));
+	if ($_method == "getByDateRange") die(json_encode(mergeDateArrays($results)));
 	if ($_projectId == "*" && $_method != "get") die(json_encode($results));
 	echo json_encode($results[0]);
 

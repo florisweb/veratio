@@ -61,24 +61,16 @@
 		}
 
 
-		public function getByDate($_date) {
-			return $this->getByGroup(["type" => "date", "value" => $_date]);
-		}
-
 
 		public function getByDateRange($_info) {
-			if (!$_info || !$_info["range"] || !$_info["date"]) return false;
+			if (!$_info || (!$_info["range"] && !is_int($_info["range"])) || !$_info["date"]) return false;
 			
 			$_date 		= $this->filterDate($_info["date"]);
 			if (!$_date) return false; 
 			$startDate 	= strtotime($_date);
-
 			$_range		= (int)$_info["range"];
-			$endDate 	= new DateTime($_date . " + $_range day");
-			$endDate 	= strtotime($endDate->format('d-m-Y'));
 
-
-			$tasks 				= $this->getAll();
+			$tasks 		= $this->getAll();
 
 			$foundTasks = array();
 			foreach ($tasks as $task) 
@@ -87,8 +79,9 @@
 				$curDate = $task["groupValue"];
 				$curTime = new DateTime($curDate);
 				$curTime = strtotime($curTime->format('d-m-Y'));
-
-				if ($startDate > $curTime || $curTime > $endDate) continue;
+				
+				$deltaSeconds = $curTime - $startDate;
+				if ($deltaSeconds < 0 || $deltaSeconds > 86400 * $_range) continue;
 
 				if (!$foundTasks[$curDate]) $foundTasks[$curDate] = [];
 
