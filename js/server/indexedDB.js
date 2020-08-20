@@ -49,13 +49,6 @@ const LocalDB = new function() {
 
 
   this.getProject = async function(_id) {
-    if (_id == "*") 
-    {
-      let project = new LocalDB_Project("*", DB);
-      await project.setInterfacesUp();
-      return project;
-    }
-
     let projectList = await this.getProjectList();
     for (let i = 0; i < projectList.length; i++)
     {
@@ -88,7 +81,6 @@ const LocalDB = new function() {
 
   this.addProject = async function(_id, _title = "A nameless project") {
     let project = new LocalDB_Project(_id, DB);
-    await project.setup();
     await project.setData("metaData", {title: _title});
 
     return project;
@@ -131,12 +123,8 @@ const LocalDB = new function() {
 
 function LocalDB_Project(_projectId, _DB) {
   let This = this;
-  if (_projectId != "*") 
-  {
-    LocalDB_ProjectInterface.call(this, _projectId, _DB);
-  } else {
-    LocalDB_GlobalProjectInterface.call(this, _DB);
-  }
+  LocalDB_ProjectInterface.call(this, _projectId, _DB);
+ 
 
   this.title = "Loading..";
 
@@ -369,64 +357,3 @@ function LocalDB_ProjectInterface(_projectId, _DB) {
     return await this.setData("cachedOperations", data);
   }
 }
-
-
-
-
-function LocalDB_GlobalProjectInterface(_DB) {
-  let This = this;
-  let DB = _DB;
-
-  let Interfaces = [];
-
-
-  this.setInterfacesUp = async function() {
-    let projectIds = await LocalDB.getProjectIdList();
-    for (id of projectIds)
-    {
-      Interfaces.push(new LocalDB_ProjectInterface(id, DB));
-    }
-    this.Interfaces = Interfaces;
-  }
-
-
-
-
-  this.getData = async function(_key) {
-    let returnArr = [];
-
-    for (let i = 0; i < Interfaces.length; i++)
-    {
-      let result = await Interfaces[i].getData(_key);
-
-      returnArr = returnArr.concat(result);
-    }
-    return returnArr;
-  }
-
-
-  this.removeData = async function(_key) {
-    let success = true;
-
-    for (let i = 0; i < Interfaces.length; i++)
-    {
-      let result = await Interfaces[i].removeData(_key);
-      if (!result) success = false;
-    }
-    
-    return success;
-  }
-
-
-  // this.addCachedOperation = async function(_operation) {
-  //   let data = await this.getData("cachedOperations");
-  //   if (!data) data = [];
-  //   data.push(_operation);
-
-  //   return await this.setData("cachedOperations", data);
-  // }
-}
-
-
-
-

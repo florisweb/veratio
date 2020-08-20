@@ -25,12 +25,14 @@ const Server = new function() {
   this.connected = false;
   
   this.setup = async function() {
-    this.global = new function() {
-      GlobalProject.call(this, {id: "*"});
-      this.setup();
-      delete this.users;
-    }
+    // this.global = new function() {
+    //   GlobalProject.call(this, {id: "*"});
+    //   this.setup();
+    //   delete this.users;
+    // }
   }
+
+  this.global = new GlobalProject();
 
 
  

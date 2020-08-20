@@ -4,20 +4,211 @@
 
 
 
+function GlobalProject() {
+  this.tasks = new function() {
+    let Type = "task";
+    TypeBaseClass.call(this, Type);
+
+    this.getByDate = function(_date) {
+      return this.getByDateRange({date: _date, range: 0});
+    }
+
+    this.getByDateRange = async function(_info = {date: false, range: 1}) {
+      let projects = await Server.getProjectList();
+      let returnValue = {};
+      for (let i = 0; i < projects.length; i++)
+      {
+        let result = await projects[i].tasks.getByDateRange(_info);
+        if (!result) continue;
+        for (key in result)
+        {
+          if (!returnValue[key]) returnValue[key] = [];
+          returnValue[key] = returnValue[key].concat(result[key]);
+        }
+      }
+
+      return returnValue;
+    }
+
+    this.getByGroup = async function(_info = {type: "", value: "*"}) {
+      let projects = await Server.getProjectList();
+      let returnValue = [];
+      for (let i = 0; i < projects.length; i++)
+      {
+        let result = await projects[i].tasks.getByGroup(_info);
+        if (!result) continue;
+        returnValue = returnValue.concat(result);
+      }
+      return returnValue;
+    }
+  }
+
+
+  this.users = new function() {
+    let Users = this;
+
+    let Type = "user";
+    TypeBaseClass.call(this, Type);
+
+
+    
+    this.get = async function(_id) {
+      let users = await this.getAll();
+      for (user of users)
+      {
+        if (user.id != _id) continue;
+        return user;
+      }
+      return false;
+    }
+
+    this.getAll = async function() {
+      let projects = await Server.getProjectList();
+      let returnValue = [];
+      for (let i = 0; i < projects.length; i++)
+      {
+        let result = await projects[i].users.getAll();
+        if (!result) continue;
+        returnValue = returnValue.concat(result);
+      }
+      return returnValue;
+    }
+  }
 
 
 
-function GlobalProject(_project) {
+  this.tags = new function() {
+    let Type = "tag";
+    TypeBaseClass.call(this, Type);
+
+    this.get = async function(_id) {
+      let tags = await this.getAll();
+      for (tag of tags)
+      {
+        if (tag.id != _id) continue;
+        return tag;
+      }
+      return false;
+    }
+
+    this.getAll = async function() {
+      let projects = await Server.getProjectList();
+      let returnValue = [];
+      for (let i = 0; i < projects.length; i++)
+      {
+        let result = await projects[i].tags.getAll();
+        if (!result) continue;
+        returnValue = returnValue.concat(result);
+      }
+      return returnValue;
+    }
+  }
+
+
+
+  function TypeBaseClass(_type) {
+    let Type = _type;
+
+    this.get = async function(_id) {
+      let projects = await Server.getProjectList();
+      for (let i = 0; i < projects.length; i++)
+      {
+        let result = await projects[i][Type].get(_id);
+        if (!result) continue;
+        return result;
+      }
+      return false;
+    }
+
+    this.remove = async function(_id) {
+      let projects = await Server.getProjectList();
+      for (let i = 0; i < projects.length; i++)
+      {
+        let result = await projects[i][Type].remove(_id);
+        if (!result) continue;
+        return result;
+      }
+      return false;
+    }
+
+    this.update = async function(_newItem) {
+      console.warn("Global.update", _newItem, Type);
+      // let projects = await Server.getProjectList();
+      // for (let i = 0; i < projects.length; i++)
+      // {
+      //   let result = await projects[i][Type].get(_id);
+      //   if (!result) continue;
+      //   return result;
+      // }
+      // return false;
+    }
+  }
+
+}
+
+
+
+
+
+
+
+
+
+function Project(_project) {
   let This    = this;
 
   this.id     = String(_project.id);
   this.title  = String(_project.title);
 
   let Local;
-  this.Local = false;
   this.setup = async function() {
-    this.Local = Local = await LocalDB.getProject(this.id);
+    Local = await LocalDB.getProject(this.id);
   }
+
+  this.rename = async function(_newTitle) {
+    if (!_newTitle) return false;
+    
+    let result = await Server.fetchData(
+      "database/project/rename.php",
+      "projectId=" + This.id + "&newTitle=" + Encoder.encodeString(_newTitle)
+    );
+
+    if (result == "E_noConnection") 
+    {
+      Local.rename(_newTitle);
+      Local.addCachedOperation({
+        action: "rename",
+        type: "project",
+        parameters: _newTitle
+      });
+      return true;
+    }
+    
+    if (result) Local.rename(_newTitle);
+    return result;
+  }
+
+
+  this.remove = async function() {
+    let result = await Server.fetchData(
+      "database/project/remove.php",
+      "projectId=" + this.id
+    );
+
+    if (result && result != "E_noConnection") Local.remove();
+    return result;
+  }
+
+  this.leave = async function() {
+    if (!this.users.Self) return;
+    return await this.users.remove(this.users.Self.id);
+  }
+
+
+
+
+
+
 
 
   this.tasks = new function() {
@@ -80,11 +271,7 @@ function GlobalProject(_project) {
   }
 
 
-
-
-
-
-  this.users  = new function() {
+  this.users = new function() {
     let Users = this;
 
     let Type = "user";
@@ -173,7 +360,7 @@ function GlobalProject(_project) {
 
 
 
-  this.tags  = new function() {
+  this.tags = new function() {
     let Type = "tag";
     TypeBaseClass.call(this, Type);
 
@@ -203,6 +390,7 @@ function GlobalProject(_project) {
       for (let i = 0; i < list.length; i++)
       {
         await Local.tags.update(list[i]);
+        if (list[i].colour == "Array") console.warn(list[i], results);
         list[i].colour = new Color(list[i].colour);
       }
 
@@ -280,58 +468,6 @@ function GlobalProject(_project) {
 }
 
 
-
-
-
-
-
-function Project(_project) {
-  GlobalProject.call(this, _project);
-
-  let This    = this;
-  this.title  = String(_project.title);
-
-
-
-  this.rename = async function(_newTitle) {
-    if (!_newTitle) return false;
-    
-    let result = await Server.fetchData(
-      "database/project/rename.php",
-      "projectId=" + This.id + "&newTitle=" + Encoder.encodeString(_newTitle)
-    );
-
-    if (result == "E_noConnection") 
-    {
-      This.Local.rename(_newTitle);
-      This.Local.addCachedOperation({
-        action: "rename",
-        type: "project",
-        parameters: _newTitle
-      });
-      return true;
-    }
-    
-    if (result) This.Local.rename(_newTitle);
-    return result;
-  }
-
-
-  this.remove = async function() {
-    let result = await Server.fetchData(
-      "database/project/remove.php",
-      "projectId=" + this.id
-    );
-
-    if (result && result != "E_noConnection") this.Local.remove();
-    return result;
-  }
-
-  this.leave = async function() {
-    if (!this.users.Self) return;
-    return await this.users.remove(this.users.Self.id);
-  }
-}
 
 
 
