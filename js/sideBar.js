@@ -75,8 +75,8 @@ function _SideBar_projectList() {
 
 
 	this.fillProjectHolder = async function() {
-		HTML.projectsHolder.innerHTML = "";
 		let projects = await Server.getProjectList();
+		HTML.projectsHolder.innerHTML = "";
 		for (project of projects) createProjectHTML(project);
 	}
 
