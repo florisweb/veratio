@@ -165,7 +165,8 @@ Client
 - cachedOperations = []
   {
     action,
-    type,
+    type, ["tasks", "tags", "users", "project"]
+    projectId,
     parameters,
   }
 
