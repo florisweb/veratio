@@ -1,8 +1,7 @@
 
 function Color(_str) {
-  const InvalidStr_responseValue = [0, 0, 0, -0];
+  const InvalidStr_responseValue = [0, 0, 0, 0];
   this.value = setColorValue(_str); // [r, g, b, a]
-
 
   function setColorValue(_str) {
     if (!_str || typeof _str !== "string") return InvalidStr_responseValue;

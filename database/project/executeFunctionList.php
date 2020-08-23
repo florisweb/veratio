@@ -78,6 +78,9 @@
 				case "getAll": 
 					return $GLOBALS["App"]->getAllProjects();
 				break;
+				case "create": 
+					return $GLOBALS["App"]->createProject($_functionData["parameters"]);
+				break;
 			}
 			return "E_invalidAction";
 		}

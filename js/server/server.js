@@ -201,7 +201,7 @@ const Server = new function() {
     setTimeout(async function () {
       console.warn("Send:", requests.length, requests);
       let results = await Server.fetchFunctionRequestList(requests);
-
+      console.log(results);
       for (let r = 0; r < results.length; r++) requests[r].resolve(results[r]);
       
       requests = [];

@@ -17,8 +17,8 @@
 
 		public function getAllData() {
 			$data = $this->DBHelper->getProjectData();
-			if (!$data) return false;
-			if (!$data[$this->dataType]) return array();
+			if (!$data) 						return array();
+			if (!$data[$this->dataType]) 		return array();
 			return $data[$this->dataType];
 		}
 
@@ -67,7 +67,7 @@
 
 		public function get($_id) {
 			$data = $this->getAllData();
-			
+
 			for ($i = 0; $i < sizeof($data); $i++)
 			{
 				$curDataItem = $data[$i];
