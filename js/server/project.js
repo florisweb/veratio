@@ -193,20 +193,20 @@ function Project(_project) {
 
   this.rename = async function(_newTitle) {
     if (!_newTitle) return false;
-    
-    let result = await Server.fetchData(
-      "database/project/rename.php",
-      "projectId=" + This.id + "&newTitle=" + Encoder.encodeString(_newTitle)
-    );
+
+    let functionRequest = {
+      action: "rename",
+      type: "project",
+      parameters: _newTitle,
+      projectId: this.id,
+    };
+
+    let result = await Server.fetchFunctionRequest(functionRequest);
 
     if (result == "E_noConnection") 
     {
       Local.rename(_newTitle);
-      Local.addCachedOperation({
-        action: "rename",
-        type: "project",
-        parameters: _newTitle
-      });
+      Local.addCachedOperation(functionRequest);
       return true;
     }
     
@@ -216,10 +216,13 @@ function Project(_project) {
 
 
   this.remove = async function() {
-    let result = await Server.fetchData(
-      "database/project/remove.php",
-      "projectId=" + this.id
-    );
+    let functionRequest = {
+      action: "remove",
+      type: "project",
+      projectId: this.id,
+    };
+
+    let result = await Server.fetchFunctionRequest(functionRequest);
 
     if (result && result != "E_noConnection") Local.remove();
     return result;
@@ -247,15 +250,16 @@ function Project(_project) {
     }
 
     this.getByDateRange = async function(_info = {date: false, range: 1}) {
-      let result = await Server.fetchData(
-        "database/project/" + Type + ".php", 
-        "method=getByDateRange&parameters=" + 
-        Encoder.objToString(_info) + 
-        "&projectId=" + This.id
-      );
+      let functionRequest = {
+        action:       "getByDateRange",
+        type:         "tasks",
+        parameters:   _info,
+        projectId:  This.id,
+      };
+
+      let result = await Server.fetchFunctionRequest(functionRequest);
 
       if (result == "E_noConnection") return await Local.tasks.getByDateRange(_info);
-      result = Encoder.decodeObj(result);
 
       if (Local) new Promise(async function () { // Store data Localily  
         let foundTasks = await Local.tasks.getByDateRange(_info);
@@ -274,15 +278,16 @@ function Project(_project) {
     }
 
     this.getByGroup = async function(_info = {type: "", value: "*"}) {
-      let result = await Server.fetchData(
-        "database/project/" + Type + ".php", 
-        "method=getByGroup&parameters=" + 
-        Encoder.objToString(_info) + 
-        "&projectId=" + This.id
-      );
+      let functionRequest = {
+        action:       "getByGroup",
+        type:         "tasks",
+        parameters:   _info,
+        projectId:    This.id,
+      };
+
+      let result = await Server.fetchFunctionRequest(functionRequest);
 
       if (result == "E_noConnection") return await Local[Type + "s"].getByGroup(_info);
-      result = Encoder.decodeObj(result);
 
       if (Local) // Store data Localily
       {
@@ -328,11 +333,13 @@ function Project(_project) {
     }
 
     this.getAll = async function() {
-      let results = await Server.fetchData(
-        "database/project/" + Type + ".php", 
-        "method=getAll" + 
-        "&projectId=" + This.id
-      );
+      let functionRequest = {
+        action:       "getAll",
+        type:         "users",
+        projectId:    This.id,
+      };
+
+      let results = await Server.fetchFunctionRequest(functionRequest);
 
       if (results == "E_noConnection") 
       {
@@ -371,20 +378,25 @@ function Project(_project) {
     }
 
 
-    this.inviteByEmail = function(_email) {
-      return Server.fetchData(
-        "database/project/" + Type + ".php", 
-        "method=inviteByEmail&parameters=" + Encoder.encodeString(_email) +
-        "&projectId=" + This.id
-      );
+    this.inviteByEmail = async function(_email) {
+      let functionRequest = {
+        action:       "inviteByEmail",
+        type:         "users",
+        parameters:   _email,
+        projectId:    This.id
+      }
+
+      return await Server.fetchFunctionRequest(functionRequest);
     }
 
-    this.inviteByLink = function() {
-      return Server.fetchData(
-        "database/project/" + Type + ".php", 
-        "method=inviteByLink" + 
-        "&projectId=" + This.id
-      );
+    this.inviteByLink = async function() {
+      let functionRequest = {
+        action:       "inviteByLink",
+        type:         "users",
+        projectId:    This.id,
+      };
+
+      return await Server.fetchFunctionRequest(functionRequest);
     }
   }
 
@@ -405,12 +417,14 @@ function Project(_project) {
     }
 
     this.getAll = async function() {
-      let results = await Server.fetchData(
-        "database/project/" + Type + ".php", 
-        "method=getAll" + 
-        "&projectId=" + This.id
-      );
-      
+      let functionRequest = {
+          action: "getAll",
+          type: Type + "s",
+          projectId: This.id,
+      };
+
+      let results = await Server.fetchFunctionRequest(functionRequest);
+
       if (results == "E_noConnection") return (await Local.tags.getAll()).map(function(tag) {tag.colour = new Color(tag.colour); return tag});
 
       if (!Array.isArray(results)) return false;
@@ -434,11 +448,14 @@ function Project(_project) {
     let Type = _type;
 
     this.get = async function(_id) {
-      let result = await Server.fetchData(
-        "database/project/" + Type + ".php", 
-        "method=get&parameters=" + _id +  
-        "&projectId=" + This.id
-      );
+      let functionRequest = {
+          action: "get",
+          type: Type + "s",
+          parameters: _id,
+          projectId: This.id,
+      };
+
+      let result = await Server.fetchFunctionRequest(functionRequest);
 
       if (result == "E_noConnection") return await Local[Type + "s"].get(_id);
 
@@ -449,20 +466,19 @@ function Project(_project) {
     }
 
     this.remove = async function(_id) {
-      let result = await Server.fetchData(
-        "database/project/" + Type + ".php", 
-        "method=remove&parameters=" + _id + 
-        "&projectId=" + This.id
-      );
+      let functionRequest = {
+          action: "remove",
+          type: Type + "s",
+          parameters: _id,
+          projectId: This.id,
+      };
+
+      let result = await Server.fetchFunctionRequest(functionRequest);
 
       if (result == "E_noConnection" && Local) 
       {
         Local[Type + "s"].remove(_id);
-        Local.addCachedOperation({
-          action: "remove",
-          type: Type + "s",
-          parameters: _id
-        });
+        Local.addCachedOperation(functionRequest);
         return true;
       } 
       if (result && Local) Local[Type + "s"].remove(_id);
@@ -471,23 +487,20 @@ function Project(_project) {
     }
 
     this.update = async function(_newItem) {
-      let result = Encoder.decodeObj(
-        await Server.fetchData(
-          "database/project/" + Type + ".php", 
-          "method=update&parameters=" + 
-          Encoder.objToString(_newItem) + 
-          "&projectId=" + This.id
-        )
-      );
+      let functionRequest = {
+          action: "update",
+          type: Type + "s",
+          parameters: _newItem,
+          projectId: This.id,
+      };
+
+      let result = await Server.fetchFunctionRequest(functionRequest);
 
       if (result == "E_noConnection" && Local) 
       {
         Local[Type + "s"].update(_newItem);
-        Local.addCachedOperation({
-          action: "update",
-          type: Type + "s",
-          parameters: _newItem
-        });
+        Local.addCachedOperation(functionRequest);
+
         return _newItem;
       }
       if (result && Local) Local[Type + "s"].update(result);

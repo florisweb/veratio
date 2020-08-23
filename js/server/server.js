@@ -70,15 +70,25 @@ const Server = new function() {
 
 
   this.removeProject = async function(_id) {
-    let result = await Server.fetchData("database/project/remove.php", "projectId=" + _id);
-    // if (!result) return false;
-    return result;
+    let functionRequest = {
+      action:       "remove",
+      type:         "project",
+      parameters:   _id,
+    };
+
+    return await Server.fetchFunctionRequest(functionRequest);
   }
 
 
   this.createProject = function(_title) {
     return new Promise(async function (resolve, error) {
-      let result = await Server.fetchData("database/project/create.php", "title=" + Encoder.encodeString(_title));
+      let functionRequest = {
+        action:       "create",
+        type:         "project",
+        parameters:   _title
+      };
+
+      let result =  await Server.fetchFunctionRequest(functionRequest);
       if (!result) alert(result);
 
       importProject(result);
@@ -92,8 +102,6 @@ const Server = new function() {
 
 
  
-
-  this.get = getProjectList;
 
   async function getProjectList() {
     let projects = await fetchProjects();
@@ -178,6 +186,13 @@ const Server = new function() {
 
 
 
+  this.fetchFunctionRequest = async function(_functionRequest) {
+    let paramString = Encoder.objToString([_functionRequest]);
+    let result = await this.fetchData("database/project/executeFunctionList.php", "functions=" + paramString);
+    return result[0];
+  }
+
+
   this.fetchData = async function(_url, _parameters = "") {
     let response = await new Promise(function (resolve) {
       fetch(_url, {
@@ -201,7 +216,7 @@ const Server = new function() {
     
     let result = await response.text();
     try {
-      result = JSON.parse(result);
+      result = Encoder.decodeObj(JSON.parse(result));
     } catch (e) {}
       
     return result;
