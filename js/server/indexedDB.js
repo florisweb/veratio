@@ -137,7 +137,7 @@ function LocalDB_Project(_projectId, _DB) {
       let operation = operations[o];
       operation.projectId = this.id;
       
-      let result = await Server.executeMessageRequest(operation);
+      let result = await Server.fetchFunctionRequest(operation);
       console.log("SCO:", operation, result);
     }
 

@@ -186,11 +186,38 @@ const Server = new function() {
 
 
 
-  this.fetchFunctionRequest = async function(_functionRequest) {
-    let paramString = Encoder.objToString([_functionRequest]);
-    let result = await this.fetchData("database/project/executeFunctionList.php", "functions=" + paramString);
-    return result[0];
+  let requests = [];
+  let timeoutStarted = false;
+  const timeOutLength = 30;
+  this.fetchFunctionRequest = async function(_request) {    
+    let resolver;
+    let returnPromise = new Promise(function(resolve) {resolver = resolve});
+    _request.resolve = resolver;
+    requests.push(_request);
+
+    if (timeoutStarted) return returnPromise;
+    timeoutStarted = true;
+    
+    setTimeout(async function () {
+      console.warn("Send:", requests.length, requests);
+      let results = await Server.fetchFunctionRequestList(requests);
+
+      for (let r = 0; r < results.length; r++) requests[r].resolve(results[r]);
+      
+      requests = [];
+
+      timeoutStarted = false;
+    }, timeOutLength);
+    
+    return returnPromise;
   }
+
+  this.fetchFunctionRequestList = async function(_requests) {
+    let paramString = Encoder.objToString(_requests);
+    let result = await this.fetchData("database/project/executeFunctionList.php", "functions=" + paramString);
+    return result;
+  }
+
 
 
   this.fetchData = async function(_url, _parameters = "") {
@@ -220,40 +247,6 @@ const Server = new function() {
     } catch (e) {}
       
     return result;
-  }
-
-
-
-
-
-  this.executeMessageRequest = async function(_message) {
-    let messageFunction = await getMessageFunction(_message);
-    if (!messageFunction) return false;
-
-    let result = false;
-    try {
-      result = await messageFunction(_message.parameters);
-    } catch (e) {console.error("An error accured", e)};
-
-    return result;
-  }
-
-
-  async function getMessageFunction(_message) {
-    let project = new Project({id: _message.projectId});
-    await project.setup();
-
-    let messageFunction = false;
-    if (_message.type == "project")
-    {
-      switch (_message.action)
-      {
-        case "remove": return Server.removeProject;   break;
-        case "rename": return project.rename;       break;
-        case "create": return Server.createProject;   break;
-        case "getAll": return Server.getProjectList;  break;
-      }
-    } else return project[_message.type][_message.action];
   }
 }
 
