@@ -9,20 +9,26 @@
 	require_once __DIR__ . "/../modules/app.php";
 
 
-	// $_functionData			= (String)$_POST["function"];
-	$_functionData			= (String)$_GET["function"];
-	if (!$_functionData) 	die("Parameters missing");
+	$_functionDataList			= (String)$_POST["functions"];
+	if (!$_functionDataList) 	die("Parameters missing");
 	
-	$_functionData 			= json_decode(urldecode($_functionData), true);
-	if (!$_functionData) 	die("Invalid function");
+	$_functionDataList 			= json_decode(urldecode($_functionDataList), true);
+	if (!$_functionDataList) 	die("Invalid function");
 
 
-	$functionData = validateFunction($_functionData);
-	if (is_string($functionData)) die($functionData);
+	$returnValues = [];
+	foreach ($_functionDataList as $_functionData)
+	{
+		$functionData = validateFunction($_functionData);
+		if (is_string($functionData)) 
+		{
+			array_push($returnValues, $functionData);
+			continue;
+		}
+		array_push($returnValues, callFunction($functionData));
+	}
 
-
-	echo json_encode(callFunction($functionData));
-
+	echo json_encode($returnValues);
 
 
 
