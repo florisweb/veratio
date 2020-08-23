@@ -6,7 +6,7 @@
 
 function GlobalProject() {
   this.tasks = new function() {
-    let Type = "task";
+    let Type = "tasks";
     TypeBaseClass.call(this, Type);
 
     this.getByDate = function(_date) {
@@ -58,7 +58,7 @@ function GlobalProject() {
   this.users = new function() {
     let Users = this;
 
-    let Type = "user";
+    let Type = "users";
     TypeBaseClass.call(this, Type);
 
 
@@ -97,7 +97,7 @@ function GlobalProject() {
 
 
   this.tags = new function() {
-    let Type = "tag";
+    let Type = "tags";
     TypeBaseClass.call(this, Type);
 
     this.get = async function(_id) {
@@ -241,7 +241,7 @@ function Project(_project) {
 
 
   this.tasks = new function() {
-    let Type = "task";
+    let Type = "tasks";
     TypeBaseClass.call(this, Type);
 
     this.getByDate = async function(_date) {
@@ -287,7 +287,7 @@ function Project(_project) {
 
       let result = await Server.fetchFunctionRequest(functionRequest);
 
-      if (result == "E_noConnection") return await Local[Type + "s"].getByGroup(_info);
+      if (result == "E_noConnection") return await Local[Type].getByGroup(_info);
 
       if (Local) // Store data Localily
       {
@@ -309,7 +309,7 @@ function Project(_project) {
   this.users = new function() {
     let Users = this;
 
-    let Type = "user";
+    let Type = "users";
     TypeBaseClass.call(this, Type);
 
     let list = [];
@@ -403,7 +403,7 @@ function Project(_project) {
 
 
   this.tags = new function() {
-    let Type = "tag";
+    let Type = "tags";
     TypeBaseClass.call(this, Type);
 
     this.get = async function(_id) {
@@ -419,7 +419,7 @@ function Project(_project) {
     this.getAll = async function() {
       let functionRequest = {
           action: "getAll",
-          type: Type + "s",
+          type: Type,
           projectId: This.id,
       };
 
@@ -450,17 +450,17 @@ function Project(_project) {
     this.get = async function(_id) {
       let functionRequest = {
           action: "get",
-          type: Type + "s",
+          type: Type,
           parameters: _id,
           projectId: This.id,
       };
 
       let result = await Server.fetchFunctionRequest(functionRequest);
 
-      if (result == "E_noConnection") return await Local[Type + "s"].get(_id);
+      if (result == "E_noConnection") return await Local[Type].get(_id);
 
       let item = Encoder.decodeObj(result);
-      Local[Type + "s"].update(item); // TEMP naming scheme should always use the plural
+      Local[Type].update(item);
 
       return item;
     }
@@ -468,7 +468,7 @@ function Project(_project) {
     this.remove = async function(_id) {
       let functionRequest = {
           action: "remove",
-          type: Type + "s",
+          type: Type,
           parameters: _id,
           projectId: This.id,
       };
@@ -477,11 +477,11 @@ function Project(_project) {
 
       if (result == "E_noConnection" && Local) 
       {
-        Local[Type + "s"].remove(_id);
+        Local[Type].remove(_id);
         Local.addCachedOperation(functionRequest);
         return true;
       } 
-      if (result && Local) Local[Type + "s"].remove(_id);
+      if (result && Local) Local[Type].remove(_id);
 
       return result;
     }
@@ -489,7 +489,7 @@ function Project(_project) {
     this.update = async function(_newItem) {
       let functionRequest = {
           action: "update",
-          type: Type + "s",
+          type: Type,
           parameters: _newItem,
           projectId: This.id,
       };
@@ -498,12 +498,12 @@ function Project(_project) {
 
       if (result == "E_noConnection" && Local) 
       {
-        Local[Type + "s"].update(_newItem);
+        Local[Type].update(_newItem);
         Local.addCachedOperation(functionRequest);
 
         return _newItem;
       }
-      if (result && Local) Local[Type + "s"].update(result);
+      if (result && Local) Local[Type].update(result);
 
       return result;
     }

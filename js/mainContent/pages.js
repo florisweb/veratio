@@ -270,7 +270,7 @@ function taskPage_tab_week() {
 	}
 
 	function getNewDate() {
-		let lastTaskHolder = MainContent.taskHolder.list.lastItem();
+		let lastTaskHolder = MainContent.taskHolder.list[MainContent.taskHolder.list.length - 1];
 		if (lastTaskHolder.type != "date") return false;
 		return lastTaskHolder.date;
 	}
