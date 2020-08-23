@@ -154,7 +154,7 @@ function taskPage_tab_today() {
 			[date]
 		);
 
-		let taskList 	= await Server.global.tasks.getByDate(date);
+		let taskList 	= await Server.global.tasks.getByDate(date.toString());
 		if (!taskList || !taskList[date]) return false;
 		taskList = taskList[date];
 
@@ -209,7 +209,7 @@ function taskPage_tab_week() {
 		MainContent.header.setMemberList([]);
 
 		let startDate = new Date();
-		let dateList = await Server.global.tasks.getByDateRange({date: startDate, range: 7});
+		let dateList = await Server.global.tasks.getByDateRange({date: startDate.toString(), range: 7});
 
 		for (let i = 0; i < 7; i++)
 		{
@@ -256,7 +256,7 @@ function taskPage_tab_week() {
 		loadingMoreDays = true;
 		
 		let startDate = getNewDate();
-		let dateList = await Server.global.tasks.getByDateRange({date: startDate.copy().moveDay(1), range: _days});
+		let dateList = await Server.global.tasks.getByDateRange({date: startDate.copy().moveDay(1).toString(), range: _days});
 
 		for (let i = 1; i < _days + 1; i++)
 		{
@@ -294,7 +294,7 @@ function taskPage_tab_project() {
 		MainContent.header.setMemberList(await project.users.getAll());
 
 
-		let plannedTasks 		= await project.tasks.getByDateRange({date: new Date(), range: 1000});
+		let plannedTasks 		= await project.tasks.getByDateRange({date: new Date().toString(), range: 1000});
 		if (Object.keys(plannedTasks).length)
 		{
 			let taskHolder_planned = MainContent.taskHolder.add(

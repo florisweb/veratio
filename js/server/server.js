@@ -189,6 +189,7 @@ const Server = new function() {
   let requests = [];
   let timeoutStarted = false;
   const timeOutLength = 30;
+  
   this.fetchFunctionRequest = async function(_request) {    
     let resolver;
     let returnPromise = new Promise(function(resolve) {resolver = resolve});
@@ -199,10 +200,8 @@ const Server = new function() {
     timeoutStarted = true;
     
     setTimeout(async function () {
-      console.warn("Send:", requests.length, requests);
       let results = await Server.fetchFunctionRequestList(requests);
-      console.log('get', results);
-      
+
       for (let r = 0; r < requests.length; r++) 
       {
         let result = results == "E_noConnection" ? "E_noConnection" : results[r];
