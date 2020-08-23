@@ -68,12 +68,9 @@
 					if (!$project || is_string($project)) return "E_invalidProjectId";
 					return $project->rename($_functionData["parameters"]); 
 				break;
-				case "rename": 
+				case "remove": 
 					if (!$project || is_string($project)) return "E_invalidProjectId";
 					return $project->remove(); 
-				break;
-				case "rename": 
-					return $GLOBALS["App"]->createProject($_functionData["parameters"]);
 				break;
 				case "getAll": 
 					return $GLOBALS["App"]->getAllProjects();

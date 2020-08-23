@@ -762,7 +762,7 @@ function _Popup_createTagMenu() {
 		let tag = {
 			id: newId(),
 			title: This.HTML.tagTitle.value.replace(/^\s+|\s+$/g, ''),
-			colour: colourOptionMenu.value.colour
+			colour: colourOptionMenu.value.colour.toHex()
 		};
 
 		if (EditData.tag) tag.id = EditData.tag.id;

@@ -51,6 +51,8 @@ function _MainContent() {
 		if (!project) return false;
 		await project.remove();
 		
+		await Server.clearCache();
+		
 		MainContent.taskPage.weekTab.open();
 		App.update();
 	}
