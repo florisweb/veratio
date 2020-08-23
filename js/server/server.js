@@ -201,8 +201,14 @@ const Server = new function() {
     setTimeout(async function () {
       console.warn("Send:", requests.length, requests);
       let results = await Server.fetchFunctionRequestList(requests);
+      console.log('get', results);
       
-      for (let r = 0; r < results.length; r++) requests[r].resolve(results[r]);
+      for (let r = 0; r < requests.length; r++) 
+      {
+        let result = results == "E_noConnection" ? "E_noConnection" : results[r];
+        if (!result) continue;
+        requests[r].resolve(result);
+      }
       
       requests = [];
 
