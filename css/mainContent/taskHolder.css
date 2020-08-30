@@ -162,6 +162,9 @@
 			opacity: 0;
 			pointer-events: none;
 		}
+			.createMenuHolder.uploading {
+				pointer-events: none;
+			}
 
 			.createMenuHolder .inputField.taskTitle {
 				float: left;
@@ -196,7 +199,17 @@
 			.createMenuHolder .button {
 				left: 0;
 				width: auto;
+				height: 18px;
 				font-size: 12px;
+			}
+
+
+			.createMenuHolder .button .loadIcon {
+				top: -.5px;
+				margin: -1px 1.5px;
+
+				width: 20px;
+				height: auto;
 			}
 
 			.createMenuHolder .rightHand {

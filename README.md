@@ -4,7 +4,7 @@
 Version 1.3
 Planned features:
 - [ ] Offline service
-
+- [x] When creating a task there will now be a little loading-icon-indicator to show when it's being uploaded.
 
 
 

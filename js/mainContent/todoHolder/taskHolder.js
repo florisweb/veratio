@@ -676,8 +676,7 @@ function TaskHolder_createMenu(_parent) {
 		Parent.HTML.inputField.value 		= null;
 		Parent.HTML.plannedDateField.value 	= null;
 
-		let buttonTitle = editData.task ? "Change" : "Add";
-		Parent.HTML.createMenu.children[2].children[0].innerHTML = buttonTitle;	
+		setTaskMenuStatus(editData.task ? "change" : "add");
 
 		if (Parent.date) Parent.HTML.plannedDateField.value = DateNames.toString(Parent.date);
 	}
@@ -701,6 +700,7 @@ function TaskHolder_createMenu(_parent) {
 	}
 
 
+
 	this.close = function() {
 		this.openState = false;
 		Parent.HTML.inputField.readOnly = true;
@@ -710,6 +710,7 @@ function TaskHolder_createMenu(_parent) {
 
 
 	this.createTask = async function() {
+		setTaskMenuStatus("loading");
 		let task 		= await scrapeTaskData();
 		let project 	= await Server.getProject(task.projectId);
 
@@ -733,6 +734,29 @@ function TaskHolder_createMenu(_parent) {
 		if (!prevProject) return false;
 		return prevProject.tasks.remove(_task.id);
 	}
+
+
+
+	function setTaskMenuStatus(_value) {
+		Parent.HTML.createMenu.classList.remove("uploading");
+		let innerHTML = "Add";
+		switch (_value) 
+		{
+			case "change": innerHTML = "change"; break;
+			case "loading": 
+				innerHTML = "<img src='images/loading.gif' class='loadIcon'>"; 
+				Parent.HTML.createMenu.classList.add("uploading");
+			break;
+			default: break;
+		}
+
+		Parent.HTML.createMenu.children[2].children[0].innerHTML = innerHTML;	
+	}
+	
+	this.setTaskMenuStatus = setTaskMenuStatus;
+
+
+
 
 
 
