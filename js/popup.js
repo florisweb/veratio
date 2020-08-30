@@ -690,26 +690,19 @@ function _Popup_createTagMenu() {
 	let EditData = {tag: false}
 	let OnClosePromiseResolver;
 
-	this.open = async function(_projectId) {
+	this.open = async function(_projectId, _tagName = null) {
 		CurProject = await Server.getProject(_projectId);
 		if (!CurProject) return;
 
 		resetEditMode();
 
 		extend_open.apply(this);
-		this.HTML.tagTitle.value = null;
+		this.HTML.tagTitle.value = _tagName;
 		this.HTML.tagTitle.focus();
 
 		return new Promise(function (_resolve, _error) {
 			OnClosePromiseResolver = _resolve;
 		});	
-	}
-
-	this.openWithTagName = function(_tagName, _projectId) {
-		let onclosePromise = this.open(_projectId);
-		this.HTML.tagTitle.value = _tagName;
-
-		return onclosePromise;
 	}
 
 

@@ -300,7 +300,7 @@ function _MainContent_searchOptionMenu() {
 				let project = This.curProject;
 				if (!project) project = (await Server.getProjectList())[0];
 				
-				await Popup.createTagMenu.openWithTagName(_item.item.title, project.id);
+				await Popup.createTagMenu.open(project.id, _item.item.title);
 
 				inputField.focus();
 			}

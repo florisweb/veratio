@@ -243,7 +243,6 @@ function LocalDB_Project(_projectId, _DB) {
     let Key = _key;
 
     this.update = async function(_newItem) {
-      console.log("LocalDB.update", Key, This.id, _newItem);
       let data = await this.getAll();
       let found = false;
 
