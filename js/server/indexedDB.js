@@ -136,9 +136,9 @@ function LocalDB_Project(_projectId, _DB) {
     {
       let operation = operations[o];
       operation.projectId = this.id;
+      console.log("Upload CO:", operation);
       
-      let result = await Server.fetchFunctionRequest(operation);
-      console.log("SCO:", operation, result);
+      Server.fetchFunctionRequest(operation);
     }
 
     let newOperations = await this.getData("cachedOperations");
@@ -243,10 +243,9 @@ function LocalDB_Project(_projectId, _DB) {
     let Key = _key;
 
     this.update = async function(_newItem) {
+      console.log("LocalDB.update", Key, This.id, _newItem);
       let data = await this.getAll();
       let found = false;
-
-      // if (Key == "tasks") console.log("localDB", _newItem, data.length);
 
       for (let i = 0; i < data.length; i++)
       {

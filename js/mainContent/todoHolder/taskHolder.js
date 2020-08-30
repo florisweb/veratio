@@ -776,19 +776,22 @@ function TaskHolder_createMenu(_parent) {
 		let createMenuItems = Parent.HTML.createMenu.children;
 		if (!createMenuItems[0]) return false;
 
-		let task = await _inputValueToData(createMenuItems[0].value);
-		let taskDate = filterDate(createMenuItems[1].value);
+		let task 		= await _inputValueToData(createMenuItems[0].value);
+		task.finished 	= Boolean(task.finished);
+		task.groupType 	= "default";
 
+		let taskDate 	= filterDate(createMenuItems[1].value);
 		if (!task.title || task.title.split(" ").join("").length < 1) return "E_InvalidTitle";
 		
-		task.groupType = "default";
 		
-		if (Parent.type == "date" && !taskDate) taskDate = Parent.date.copy().toString();
+		if (Parent.type == "date" && !taskDate) taskDate = Parent.date.copy();
 
 		if (taskDate) 
 		{
 			task.groupType = "date";
-			task.groupValue = taskDate;
+			if (taskDate.getDateInDays() < new Date().getDateInDays()) task.groupType = "overdue";
+
+			task.groupValue = taskDate.toString();
 		}
 
 		return task;
@@ -796,14 +799,15 @@ function TaskHolder_createMenu(_parent) {
 
 	async function _inputValueToData(_value) {
 		let task = {
+			id: newId(),
 			assignedTo: [],
-			id: newId()
 		};
 
 		if (editData.task) task = Object.assign({}, editData.task);
 
 		// add projectId
 		let projects = await getListByValue(_value, ".");
+		
 		task.title 	= projects.value;
 		if (projects.list[0]) 
 		{
@@ -813,13 +817,12 @@ function TaskHolder_createMenu(_parent) {
 			let project 	= await Server.getProject(MainContent.curProjectId);
 			task.projectId 	= project ? project.id : (await Server.getProjectList())[0].id;
 		}
-
 		
 		// add tagId
 		let tags = await getListByValue(task.title, "#");
 		task.title 	= tags.value;
+		task.tagId = false;
 		if (tags.list[0]) task.tagId = tags.list[0].id;
-
 
 		// add assignedTo-list
 		let members = await getListByValue(task.title, "@");
@@ -831,7 +834,8 @@ function TaskHolder_createMenu(_parent) {
 		}
 
 		
-		task.title 	= removeSpacesFromEnds(task.title);
+		task.title = removeSpacesFromEnds(task.title);
+
 		return task;
 	}
 
@@ -853,7 +857,7 @@ function TaskHolder_createMenu(_parent) {
 
 	function filterDate(_strDate) {
 		let date = DateNames.toDate(_strDate);
-		if (date && date.getDateInDays()) return date.toString();
+		if (date && date.getDateInDays()) return date;
 		return false;
 	}
 }
