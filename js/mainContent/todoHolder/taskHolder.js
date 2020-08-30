@@ -799,8 +799,9 @@ function TaskHolder_createMenu(_parent) {
 
 	async function _inputValueToData(_value) {
 		let task = {
-			id: newId(),
+			id: 		newId(),
 			assignedTo: [],
+			tagId: 		false
 		};
 
 		if (editData.task) task = Object.assign({}, editData.task);
@@ -821,7 +822,6 @@ function TaskHolder_createMenu(_parent) {
 		// add tagId
 		let tags = await getListByValue(task.title, "#");
 		task.title 	= tags.value;
-		task.tagId = false;
 		if (tags.list[0]) task.tagId = tags.list[0].id;
 
 		// add assignedTo-list
