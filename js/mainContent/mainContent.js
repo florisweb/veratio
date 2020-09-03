@@ -248,9 +248,9 @@ function _MainContent_searchOptionMenu() {
 		if (!_project) _project = (await Server.getProjectList())[0];
 		switch (_type)
 		{
-			case "#": 	return _project.tags.getAll();			break;
-			case ".": 	return await Server.getProjectList(); 	break;
-			default: 	return _project.users.getAll(); 		break;
+			case "#": 	return await _project.tags.getAll();	break;
+			case ".": 	return Server.projectList;				break;
+			default: 	return await _project.users.getAll(); 	break;
 		}
 	}
 	

@@ -181,15 +181,22 @@ function GlobalProject() {
 
 
 function Project(_project) {
-  let This    = this;
+  const This          = this;
+  const cacheLifeTime = 10000; // ms
+
 
   this.id     = String(_project.id);
   this.title  = String(_project.title);
+
+
+
 
   let Local;
   this.setup = async function() {
     Local = await LocalDB.getProject(this.id, true);
   }
+
+
 
   this.rename = async function(_newTitle) {
     if (!_newTitle) return false;
@@ -321,6 +328,8 @@ function Project(_project) {
     }
 
     this.Self;
+
+
     
     this.get = async function(_id) {
       let users = await this.getAll();
@@ -332,7 +341,20 @@ function Project(_project) {
       return false;
     }
 
+
+
+    let lastRequestTime = false;
+    let curFetchPromise = false;
+
     this.getAll = async function() {
+      if (new Date() - lastRequestTime < cacheLifeTime && Server.connected) 
+      {
+        if (curFetchPromise) return await curFetchPromise;
+        return list;
+      }
+      lastRequestTime = new Date();
+
+
       let functionRequest = {
         action:       "getAll",
         type:         "users",
@@ -348,10 +370,8 @@ function Project(_project) {
         return users;
       }
 
-
-
       if (!Array.isArray(results)) return false;
-      results = Encoder.decodeObj(results);
+
 
       await Local.users.removeAll();
       for (let i = 0; i < results.length; i++)
@@ -366,6 +386,13 @@ function Project(_project) {
       lastSync = new Date();
       return results;
     }
+
+    this.getLocalList = function() {
+      return list;
+    }
+
+
+
 
 
     function setSelf(_userList = []) {
@@ -406,6 +433,9 @@ function Project(_project) {
     let Type = "tags";
     TypeBaseClass.call(this, Type);
 
+    let list = [];
+
+
     this.get = async function(_id) {
       let tags = await this.getAll();
       for (tag of tags)
@@ -416,7 +446,21 @@ function Project(_project) {
       return false;
     }
 
+
+
+
+    let lastRequestTime = false;
+    let curFetchPromise = false;
+
     this.getAll = async function() {
+      if (new Date() - lastRequestTime < cacheLifeTime && Server.connected) 
+      {
+        if (curFetchPromise) return await curFetchPromise;
+        return list;
+      }
+      lastRequestTime = new Date();
+    
+
       let functionRequest = {
           action: "getAll",
           type: Type,
@@ -428,14 +472,14 @@ function Project(_project) {
       if (results == "E_noConnection") return (await Local.tags.getAll()).map(function(tag) {tag.colour = new Color(tag.colour); return tag});
 
       if (!Array.isArray(results)) return false;
-      let list = Encoder.decodeObj(results);
 
+      list = [];
       await Local.tags.removeAll();
-      for (let i = 0; i < list.length; i++)
+      for (let i = 0; i < results.length; i++)
       {
-        await Local.tags.update(list[i]);
-        if (list[i].colour == "Array") console.warn(list[i], results);
-        list[i].colour = new Color(list[i].colour);
+        list[i] = results[i];
+        await Local.tags.update(results[i]);
+        list[i].colour = new Color(results[i].colour);
       }
 
       return list;

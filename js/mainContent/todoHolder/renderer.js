@@ -102,6 +102,7 @@ function _TaskRenderer() {
 			async function setTagColor(html, task, project) {
 				let tag = await project.tags.get(task.tagId);
 				if (!tag) return;
+				console.warn(tag);
 
 				let colorTarget 					= html.children[1].children[0]; 
 				colorTarget.style.backgroundColor	= tag.colour.merge(new Color("rgba(255, 255, 255, .1)"), .3).toRGBA();
