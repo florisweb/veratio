@@ -372,12 +372,7 @@ function Project(_project) {
 
       if (!Array.isArray(results)) return false;
 
-
-      await Local.users.removeAll();
-      for (let i = 0; i < results.length; i++)
-      {
-        await Local.users.update(results[i]);
-      }
+      await Local.users.set(results);
 
       setSelf(results);
 
@@ -474,11 +469,11 @@ function Project(_project) {
       if (!Array.isArray(results)) return false;
 
       list = [];
-      await Local.tags.removeAll();
+
+      await Local.tags.set(results);
       for (let i = 0; i < results.length; i++)
       {
         list[i] = results[i];
-        await Local.tags.update(results[i]);
         list[i].colour = new Color(results[i].colour);
       }
 
