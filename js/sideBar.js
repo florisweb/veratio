@@ -11,15 +11,14 @@ function _SideBar() {
 
 	this.noConnectionMessage = new _SideBar_noConnectionMessage();
 
-
 	this.updateTabIndicator = async function() {
 		if (MainContent.settingsPage.isOpen()) return await setProjectTabOnOpenById(MainContent.curProjectId);
 	
 		switch (MainContent.taskPage.curTab.name)
 		{
-			case "today": setTabOpenIndicator(HTML.todayTab); break;
-			case "week": setTabOpenIndicator(HTML.weekTab); break;
-			default: await setProjectTabOnOpenById(MainContent.curProjectId); break;
+			case "today": 		setTabOpenIndicator(HTML.todayTab); 						break;
+			case "week": 		setTabOpenIndicator(HTML.weekTab); 							break;
+			default: 			await setProjectTabOnOpenById(MainContent.curProjectId); 	break;
 		}
 	}
 	
@@ -44,6 +43,9 @@ function _SideBar() {
 }
 
 
+
+
+
 function _SideBar_projectList() {
 	let HTML = {
 		projectList: $("#sideBar .projectListHolder .projectList")[0],
@@ -53,7 +55,6 @@ function _SideBar_projectList() {
 	
 
 	this.openState = true;
-
 	this.toggleOpenState = function() {
 		if (this.openState) return this.close();
 		this.open();
@@ -78,7 +79,7 @@ function _SideBar_projectList() {
 
 
 	this.fillProjectHolder = async function() {
-		let projects = await Server.getProjectList();
+		let projects = await Server.getProjectList(true);
 		HTML.projectsHolder.innerHTML = "";
 		for (project of projects) createProjectHTML(project);
 	}

@@ -39,8 +39,8 @@ const Server = new function() {
   
   this.projectList = [];
 
-  this.getProjectList = async function() {
-    if (new Date() - lastProjectListUpdate < cacheLifeTime) 
+  this.getProjectList = async function(_forceUpdate = false) {
+    if (new Date() - lastProjectListUpdate < cacheLifeTime && !_forceUpdate) 
     {
       if (curFetchPromise) return await curFetchPromise;
       return this.projectList;
