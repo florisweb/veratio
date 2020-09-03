@@ -47,7 +47,6 @@ function _KeyHandler() {
       event: function (_e) {
         // Popups
         if (Popup.createTagMenu.openState)                         return Popup.createTagMenu.createTag();
-        if (Popup.tagMenu.openState)                               return Popup.tagMenu.close();
 
         if (Popup.createProjectMenu.openState)                     return Popup.createProjectMenu.createProject();
         if (Popup.renameProjectMenu.openState)                     return Popup.renameProjectMenu.renameProject();
