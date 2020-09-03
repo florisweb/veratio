@@ -98,7 +98,10 @@ const LocalDB = new function() {
 
   this.sendCachedOperations = async function() {
     let projects = await this.getProjectList();
-    for (project of projects) await project.sendCachedOperations();
+    let promises = [];
+    for (project of projects) promises.push(project.sendCachedOperations());
+
+    return await Promise.all(promises); 
   }
 
 
@@ -132,14 +135,10 @@ function LocalDB_Project(_projectId, _DB) {
 
   this.sendCachedOperations = async function() {
     let operations = await this.getData("cachedOperations");
-    for (let o = 0; o < operations.length; o++) 
-    {
-      let operation = operations[o];
-      operation.projectId = this.id;
-      console.log("Upload CO:", operation);
-      
-      Server.fetchFunctionRequest(operation);
-    }
+    
+    let results = await Server.fetchFunctionRequestList(operations);
+    console.log("Upload CO:", operations, results);
+
 
     let newOperations = await this.getData("cachedOperations");
     newOperations.splice(0, operations.length);

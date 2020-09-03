@@ -163,25 +163,25 @@ const Server = new function() {
 
 
 
+  this.updateConnectionStatus = async function(_connected = false) {
+    if (this.connected == _connected) return false;
 
-  let prevConnectionStatus = false;
-  this.updateConnectionStatus = function(_connected = false) {
-    if (prevConnectionStatus == _connected) return;
-    if (_connected) this.onReConnect();
+    console.log("UpdateStatus", this.connected, "->", _connected);
+    this.connected  = _connected;
 
-    console.log("UpdateStatus", prevConnectionStatus, "->", _connected);
-    
-    this.connected =_connected;
-    let action = _connected ? "remove" : "add";
+    let action      = _connected ? "remove" : "add";
     document.body.classList[action]("noConnection");
+    
 
-    prevConnectionStatus = _connected;
+    if (!_connected) return false;
+    await this.onReConnect();
+    return true;
   }
 
 
 
-  this.onReConnect = function() {
-    LocalDB.sendCachedOperations();
+  this.onReConnect = async function() {
+    return await LocalDB.sendCachedOperations();
   }
 
 
@@ -241,7 +241,8 @@ const Server = new function() {
       });
     });
 
-    Server.updateConnectionStatus(response != "E_noConnection");
+    let resendRequest = await Server.updateConnectionStatus(response != "E_noConnection");
+    if (resendRequest) return await this.fetchData(...arguments);
 
     if (response == "E_noConnection") return "E_noConnection";
     if (!response.ok) return console.error("HTTP-Error: " + response.status, response);
