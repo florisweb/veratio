@@ -346,8 +346,8 @@ function Project(_project) {
     let lastRequestTime = false;
     let curFetchPromise = false;
 
-    this.getAll = async function() {
-      if (new Date() - lastRequestTime < cacheLifeTime && Server.connected) 
+    this.getAll = async function(_forceRequest = false) {
+      if (new Date() - lastRequestTime < cacheLifeTime && Server.connected && !_forceRequest) 
       {
         if (curFetchPromise) return await curFetchPromise;
         return list;
@@ -452,8 +452,8 @@ function Project(_project) {
     let lastRequestTime = false;
     let curFetchPromise = false;
 
-    this.getAll = async function() {
-      if (new Date() - lastRequestTime < cacheLifeTime && Server.connected) 
+    this.getAll = async function(_forceRequest = false) {
+      if (new Date() - lastRequestTime < cacheLifeTime && Server.connected && !_forceRequest) 
       {
         if (curFetchPromise) return await curFetchPromise;
         return list;

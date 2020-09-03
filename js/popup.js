@@ -512,7 +512,6 @@ function _Popup_permissionMenu() {
 
 		This.close();
 
-		await project.users.getAll();
 		MainContent.settingsPage.open(MainContent.curProjectId);
 	}
 }
@@ -578,7 +577,7 @@ function _Popup_tagMenu() {
 		CurProject = await Server.getProject(_projectId);
 		if (!CurProject) return;
 
-		setTagList(await CurProject.tags.getAll());
+		setTagList(await CurProject.tags.getAll(true));
 		extend_open.apply(this);
 
 		enableFeaturesByPermissions();	
@@ -746,7 +745,7 @@ function _Popup_createTagMenu() {
 
 		tag = await CurProject.tags.update(tag);
 		if (!tag) return console.error("Something went wrong while creating a tag:", tag);
-		CurProject.tags.getAll();
+		CurProject.tags.getAll(true);
 		this.close(tag);
 	} 
 	
