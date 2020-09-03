@@ -33,7 +33,7 @@ const LocalDB = new function() {
 
 
   this.getProjectList = async function(_ignoreUserAbsence = false) {
-    let ids = await this.getProjectIdList();
+    let ids = await getProjectIdList();
 
     let projectList = [];
     for (let i = 0; i < ids.length; i++)
@@ -105,7 +105,27 @@ const LocalDB = new function() {
   }
 
 
-  this.getProjectIdList = function() {
+  this.getCachedOperationsCount = async function() {
+    let projects = await this.getProjectList();
+    let operations = 0;
+    for (project of projects)
+    {
+      operations += (await project.getData("cachedOperations")).length;
+    } 
+
+    return operations;
+  }
+
+
+
+
+
+
+
+
+
+
+  function getProjectIdList() {
     return new Promise(function (resolve, error) {
       let store = DB.transaction("metaData", "readonly").objectStore("metaData");
 
@@ -357,6 +377,8 @@ function LocalDB_ProjectInterface(_projectId, _DB) {
     let data = await this.getData("cachedOperations");
     if (!data) data = [];
     data.push(_operation);
+
+    SideBar.noConnectionMessage.updateLocalChangesCount();
 
     return await this.setData("cachedOperations", data);
   }

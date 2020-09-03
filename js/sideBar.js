@@ -9,6 +9,9 @@ function _SideBar() {
 	this.projectList = new _SideBar_projectList();
 
 
+	this.noConnectionMessage = new _SideBar_noConnectionMessage();
+
+
 	this.updateTabIndicator = async function() {
 		if (MainContent.settingsPage.isOpen()) return await setProjectTabOnOpenById(MainContent.curProjectId);
 	
@@ -95,6 +98,23 @@ function _SideBar_projectList() {
 }
 
 
+
+
+
+function _SideBar_noConnectionMessage() {
+	const HTML = {
+		subtext: $("#sideBar .noConnectionMessage")[0].children[1]
+	};
+
+
+	this.updateLocalChangesCount = async function() {
+		let changes = await LocalDB.getCachedOperationsCount();
+
+		let verbStart = "There are ";
+		if (changes == 1) verbStart = "There is ";
+		setTextToElement(HTML.subtext, verbStart + changes + " local change" + (changes != 1 ? "s" : "") + ".");
+	}
+}
 
 
 

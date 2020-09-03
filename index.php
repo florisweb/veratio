@@ -95,11 +95,9 @@
 			<div class="noConnectionMessage">
 				<div class="header tab"> 
 					<img src="images/icons/noConnectionIconLight.png" class="headerIcon">
-					<div class="headerText">Lost connection</div>
+					<div class="headerText">Offline mode</div>
 				</div>
-				<div class="text">
-					? Unsaved changes <br>- Coming soon -
-				</div>
+				<div class="text"></div>
 			</div>
 		</div>
 		
