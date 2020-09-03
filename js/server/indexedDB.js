@@ -155,6 +155,7 @@ function LocalDB_Project(_projectId, _DB) {
 
   this.sendCachedOperations = async function() {
     let operations = await this.getData("cachedOperations");
+    if (!operations.length) return; 
     
     let results = await Server.fetchFunctionRequestList(operations);
     console.log("Upload CO:", operations, results);
