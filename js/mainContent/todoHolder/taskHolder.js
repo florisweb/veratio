@@ -788,7 +788,6 @@ function TaskHolder_createMenu(_parent) {
 
 		console.log("1", task);
 		let newTask = await this.curTask.project.tasks.update(task);
-		console.log("2", newTask);
 		if (editData.task && task.projectId != editData.task.projectId && newTask) removeOldTask(editData.task); // FIX LATER
 
 		resetEditMode(true);
@@ -849,6 +848,7 @@ function TaskHolder_createMenu(_parent) {
 			if (!Parent.HTML.inputField) return false;
 
 			let task = {
+				id: 			this.id,
 				title: 			removeSpacesFromEnds(Parent.HTML.inputField.value),
 				tagId: 			this.tag ? this.tag.id : false,
 				finished: 		this.finished,
@@ -880,19 +880,19 @@ function TaskHolder_createMenu(_parent) {
 
 
 		async function setup() {
-			if (_task)
-			{
-				This.finished 			= Boolean(_task.finished);
-				This.id 				= _task.id;
-				if (_task.projectId) 	This.setProject(await Server.getProject(_task.projectId));
-				if (_task.tagId) 		This.setTag(await This.project.tag.get(_task.tagId));
+			if (_task && _task.projectId) 	This.setProject(await Server.getProject(_task.projectId));
+			if (!This.project)				This.setProject((await Server.getProjectList())[0]);
 
-				for (user of _task.assignedTo) This.addAssignee(user);
-			}
+			if (!_task) return;
+		
+			This.finished 			= Boolean(_task.finished);
+			This.id 				= _task.id;
 			
+			
+			This.setTag(false);
+			if (_task.tagId) 		This.setTag(await This.project.tags.get(_task.tagId));
 
-			if (!This.project)			This.setProject((await Server.getProjectList())[0]);
-
+			for (user of _task.assignedTo) This.addAssignee(user);
 		}
 		
 		setup();
@@ -948,10 +948,11 @@ function TaskHolder_createMenu(_parent) {
 
 
 	function setTagIndicator(_tag) {
-		if (!_tag) return;
+		let tagColor = new Color();
+		if (_tag) tagColor = _tag.colour;
 
-		Parent.HTML.tagIndicator.style.backgroundColor	= _tag.colour.merge(new Color("rgba(255, 255, 255, .1)"), .3).toRGBA();
-		Parent.HTML.tagIndicator.style.borderColor 		= _tag.colour.merge(new Color("#fff"), .5).toRGBA();
+		Parent.HTML.tagIndicator.style.backgroundColor	= tagColor.merge(new Color("rgba(255, 255, 255, .1)"), .3).toRGBA();
+		Parent.HTML.tagIndicator.style.borderColor 		= tagColor.merge(new Color("#fff"), .5).toRGBA();
 	}
 
 
