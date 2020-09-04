@@ -138,16 +138,6 @@ function _MainContent_taskHolder() {
 		}
 	}
 
-	this.createTask = function() {
-		for (taskHolder of this.list)
-		{
-			if (!taskHolder.createMenu) continue;
-			if (!taskHolder.createMenu.openState) continue;
-			taskHolder.createMenu.createTask();
-			return true;
-		}
-		return false;
-	}
 
 
 	this.closeAllCreateMenus = function(_ignorerer) {
@@ -707,7 +697,7 @@ function TaskHolder_createMenu(_parent) {
 
 	this.openEdit = async function(_taskHTML, _task) {
 		if (!_task || !_taskHTML) return false;
-
+		
 		let project = await Server.getProject(_task.projectId);
 		MainContent.searchOptionMenu.curProject = project;
 
@@ -736,7 +726,6 @@ function TaskHolder_createMenu(_parent) {
 		MainContent.taskHolder.curCreateMenu = false;
 	}
 	
-
 
 
 
@@ -784,15 +773,23 @@ function TaskHolder_createMenu(_parent) {
 
 
 	this.createTask = async function() {
+		if (!this.curTask) return;
+		
 		setTaskMenuStatus("loading");
-		let task 		= await scrapeTaskData();
-		let project 	= await Server.getProject(task.projectId);
+		let task 		= this.curTask.generateTaskData();
 
-		if (!project) 	return false;
-		if (typeof task != "object") return task;
+		if (!this.curTask.project) return false;
+		if (!task || typeof task != "object")
+		{
+			setTaskMenuStatus();
+			if (task) alert(task);
+			return;
+		}
 
-		let newTask = await project.tasks.update(task);
-		if (editData.task && task.projectId != editData.task.projectId && newTask) removeOldTask(editData.task);
+		console.log("1", task);
+		let newTask = await this.curTask.project.tasks.update(task);
+		console.log("2", newTask);
+		if (editData.task && task.projectId != editData.task.projectId && newTask) removeOldTask(editData.task); // FIX LATER
 
 		resetEditMode(true);
 		MainContent.taskHolder.renderTask(newTask);
@@ -822,7 +819,7 @@ function TaskHolder_createMenu(_parent) {
 
 		this.editing		= !!_task;
 
-
+		this.id 			= newId();
 		this.tag 			= false;
 		this.project 		= false;
 		this.assignedTo 	= [];
@@ -831,12 +828,7 @@ function TaskHolder_createMenu(_parent) {
 		this.groupValue 	= "";
 		this.finished 		= false;
 
-		(async function() {
-			if (_task && _task.projectId) 	This.project = await Server.getProject(_task.projectId);
-			if (!This.project)				This.project = (await Server.getProjectList())[0];
-
-		})();		
-
+		
 
 		this.setTag = function(_newTag) {
 			this.tag = _newTag;
@@ -850,6 +842,60 @@ function TaskHolder_createMenu(_parent) {
 		this.addAssignee = function(_user) {
 			this.assignedTo.push(_user);
 		}
+
+
+
+		this.generateTaskData = function() {
+			if (!Parent.HTML.inputField) return false;
+
+			let task = {
+				title: 			removeSpacesFromEnds(Parent.HTML.inputField.value),
+				tagId: 			this.tag ? this.tag.id : false,
+				finished: 		this.finished,
+				assignedTo: 	this.assignedTo,
+
+				groupType: 		"default",
+				groupValue: 	this.groupValue,
+			}
+
+			if (!task.title || task.title.split(" ").join("").length < 1) return "E_InvalidTitle";
+			
+			
+			let taskDate 	= filterDate(Parent.HTML.plannedDateField.value);
+			if (Parent.type == "date" && !taskDate) taskDate = Parent.date.copy();
+
+			if (taskDate) 
+			{
+				task.groupType = "date";
+				if (taskDate.getDateInDays() < new Date().getDateInDays()) task.groupType = "overdue";
+
+				task.groupValue = taskDate.toString();
+			}
+
+			return task;
+		}
+
+
+
+
+
+		async function setup() {
+			if (_task)
+			{
+				This.finished 			= Boolean(_task.finished);
+				This.id 				= _task.id;
+				if (_task.projectId) 	This.setProject(await Server.getProject(_task.projectId));
+				if (_task.tagId) 		This.setTag(await This.project.tag.get(_task.tagId));
+
+				for (user of _task.assignedTo) This.addAssignee(user);
+			}
+			
+
+			if (!This.project)			This.setProject((await Server.getProjectList())[0]);
+
+		}
+		
+		setup();
 	}
 
 
@@ -885,93 +931,8 @@ function TaskHolder_createMenu(_parent) {
 		if (editData.html) editData.html.classList.remove("hide");
 		if (editData.html && _deleteTaskHTML) editData.html.parentNode.removeChild(editData.html);
 		editData.html = false;
-		editData.task = false;
 	}
 
-
-
-
-	async function scrapeTaskData() {
-		if (!Parent.HTML.inputField) return false;
-
-		let task 		= await _inputValueToData(Parent.HTML.inputField.value);
-		task.finished 	= Boolean(task.finished);
-		task.groupType 	= "default";
-
-		let taskDate 	= filterDate(Parent.HTML.plannedDateField.value);
-		if (!task.title || task.title.split(" ").join("").length < 1) return "E_InvalidTitle";
-		
-		
-		if (Parent.type == "date" && !taskDate) taskDate = Parent.date.copy();
-
-		if (taskDate) 
-		{
-			task.groupType = "date";
-			if (taskDate.getDateInDays() < new Date().getDateInDays()) task.groupType = "overdue";
-
-			task.groupValue = taskDate.toString();
-		}
-
-		return task;
-	}
-
-	async function _inputValueToData(_value) {
-		let task = {
-			id: 		newId(),
-			assignedTo: [],
-			tagId: 		false
-		};
-
-		if (editData.task) task = Object.assign({}, editData.task);
-
-		// add projectId
-		let projects = await getListByValue(_value, ".");
-		
-		task.title 	= projects.value;
-		if (projects.list[0]) 
-		{
-			task.projectId = projects.list[0].id;
-		} else if (!editData.task) 
-		{
-			let project 	= await Server.getProject(MainContent.curProjectId);
-			task.projectId 	= project ? project.id : (await Server.getProjectList())[0].id;
-		}
-		
-		// add tagId
-		let tags = await getListByValue(task.title, "#");
-		task.title 	= tags.value;
-		if (tags.list[0]) task.tagId = tags.list[0].id;
-
-		// add assignedTo-list
-		let members = await getListByValue(task.title, "@");
-		task.title 	= members.value;
-		for (member of members.list)
-		{
-			if (task.assignedTo.includes(member.id)) continue;
-			task.assignedTo.push(member.id);
-		}
-
-		
-		task.title = removeSpacesFromEnds(task.title);
-
-		return task;
-	}
-
-
-	async function getListByValue(_value, _type) {
-		let items = await MainContent.searchOptionMenu.getListByValue(_value, _type);
-		let found = [];
-		for (item of items)
-		{
-			if (item.score < 1) return {list: found, value: _value};
-			found.push(item.item);
-			
-			let parts = _value.split(_type + item.str);
-			_value = parts.join("");
-		}
-
-		return {list: found, value: _value};
-	}
 
 	function filterDate(_strDate) {
 		let date = DateNames.toDate(_strDate);

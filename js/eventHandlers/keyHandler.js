@@ -60,7 +60,7 @@ function _KeyHandler() {
         if (MainContent.taskHolder.dateOptionMenu.openState)       return MainContent.taskHolder.dateOptionMenu.clickFirstOption();
         if (MainContent.searchOptionMenu.openState)                return MainContent.searchOptionMenu.clickFirstOption();
 
-        return MainContent.taskHolder.createTask();
+        if (MainContent.taskHolder.curCreateMenu)                  return MainContent.taskHolder.curCreateMenu.createTask();
       },
       ignoreIfInInputField: false
     },
