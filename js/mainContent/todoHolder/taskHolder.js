@@ -588,6 +588,7 @@ function TaskHolder_createMenuConstructor(_config, _type) {
 		html.className = "taskItem createTaskHolder close";
 
 		html.innerHTML = '<div class="createMenuHolder">' + 
+							'<div class="statusCircle"></div>' + 
 							'<input class="text inputField iBoxy clickable taskTitle">' + 
 							'<input class="text inputField iBoxy clickable taskPlannedDate" placeholder="Planned Date">' + 
 							'<div class="leftHand">' + 
@@ -616,19 +617,19 @@ function TaskHolder_createMenuConstructor(_config, _type) {
 		function addEventListeners(This) {
 			This.HTML.createMenuHolder.children[1].onclick 			= function () {This.createMenu.open();}
 
-			This.HTML.createMenu.children[2].children[0].onclick 	= function () {This.createMenu.createTask();}
-			This.HTML.createMenu.children[2].children[1].onclick 	= function () {This.createMenu.close();}
+			This.HTML.createMenu.children[3].children[0].onclick 	= function () {This.createMenu.createTask();}
+			This.HTML.createMenu.children[3].children[1].onclick 	= function () {This.createMenu.close();}
 
-			This.HTML.createMenu.children[3].children[0].onclick 	= function () {This.createMenu.openTagSelectMenu()}
-			This.HTML.createMenu.children[3].children[1].onclick 	= function () {This.createMenu.openMemberSelectMenu()}
-			This.HTML.createMenu.children[3].children[2].onclick 	= function () {This.createMenu.openProjectSelectMenu()}
+			This.HTML.createMenu.children[4].children[0].onclick 	= function () {This.createMenu.openTagSelectMenu()}
+			This.HTML.createMenu.children[4].children[1].onclick 	= function () {This.createMenu.openMemberSelectMenu()}
+			This.HTML.createMenu.children[4].children[2].onclick 	= function () {This.createMenu.openProjectSelectMenu()}
 			
 			
-			This.HTML.inputField = This.HTML.createMenu.children[0];
+			This.HTML.inputField = This.HTML.createMenu.children[1];
 			This.HTML.inputField.placeholder = getRandomItem(PLACEHOLDERTEXTS);
 
 
-			This.HTML.plannedDateField = This.HTML.createMenu.children[1];
+			This.HTML.plannedDateField = This.HTML.createMenu.children[2];
 			
 		
 			This.HTML.plannedDateField.onfocus = This.HTML.plannedDateField.onfocusin = function() {
@@ -750,11 +751,9 @@ function TaskHolder_createMenu(_parent) {
 			default: break;
 		}
 
-		Parent.HTML.createMenu.children[2].children[0].innerHTML = innerHTML;	
+		Parent.HTML.createMenu.children[3].children[0].innerHTML = innerHTML;	
 	}
 	
-	this.setTaskMenuStatus = setTaskMenuStatus;
-
 
 
 
@@ -797,14 +796,13 @@ function TaskHolder_createMenu(_parent) {
 
 
 	async function scrapeTaskData() {
-		let createMenuItems = Parent.HTML.createMenu.children;
-		if (!createMenuItems[0]) return false;
+		if (!Parent.HTML.inputField) return false;
 
-		let task 		= await _inputValueToData(createMenuItems[0].value);
+		let task 		= await _inputValueToData(Parent.HTML.inputField.value);
 		task.finished 	= Boolean(task.finished);
 		task.groupType 	= "default";
 
-		let taskDate 	= filterDate(createMenuItems[1].value);
+		let taskDate 	= filterDate(Parent.HTML.plannedDateField.value);
 		if (!task.title || task.title.split(" ").join("").length < 1) return "E_InvalidTitle";
 		
 		

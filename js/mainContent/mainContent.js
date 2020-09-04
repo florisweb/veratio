@@ -12,6 +12,7 @@ function _MainContent() {
 	
 	this.taskHolder 		= new _MainContent_taskHolder();
 
+
 	this.optionMenu 		= new _MainContent_optionMenu();
 	this.searchOptionMenu 	= new _MainContent_searchOptionMenu();
 	this.userIndicatorMenu 	= new _MainContent_userIndicatorMenu();
