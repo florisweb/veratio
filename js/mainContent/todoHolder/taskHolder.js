@@ -40,6 +40,8 @@ function _MainContent_taskHolder() {
 		return Menu;
 	}();
 
+	this.curCreateMenu = false;
+
 
 
 
@@ -608,6 +610,7 @@ function TaskHolder_createMenuConstructor(_config, _type) {
 
 		This.HTML.createMenuHolder 	= html;
 		This.HTML.createMenu 		= html.children[0];
+		This.HTML.tagIndicator 		= html.children[0].children[0];
 
 		addEventListeners(This);
 
@@ -645,42 +648,62 @@ function TaskHolder_createMenuConstructor(_config, _type) {
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function TaskHolder_createMenu(_parent) {
 	let Parent = _parent;
 	let This = this;
 
 	let editData = {
-		task: false,
 		html: false
 	}
 
-	this.disabled = false;
-	this.disable = function() {
-		this.disabled = true;
-		Parent.HTML.createMenuHolder.classList.add("hide");
-	}
+	this.id 		= newId();
+	this.disabled 	= false;
 
 
+	this.curTask	= {};
 	this.openState = false;
+
 	this.open = async function() {
 		if (this.disabled) return false;
+		MainContent.taskHolder.curCreateMenu = this;
+		this.openState = true;
+
+		this.curTask = new CreateMenu_curTask();
+
+
 		Parent.HTML.inputField.readOnly = false;
 		
 		MainContent.taskHolder.closeAllCreateMenus(Parent);
-		if (!editData.task) MainContent.searchOptionMenu.curProject = await Server.getProject(MainContent.curProjectId);
 		MainContent.searchOptionMenu.openWithInputField(Parent.HTML.inputField);
 		
-		this.openState = true;
 
 		Parent.HTML.createMenuHolder.classList.remove("close");
 		Parent.HTML.inputField.focus();
 		Parent.HTML.inputField.value 		= null;
 		Parent.HTML.plannedDateField.value 	= null;
 
-		setTaskMenuStatus(editData.task ? "change" : "add");
+		
 
+		setTaskMenuStatus(this.curTask.editing ? "change" : "add");
 		if (Parent.date) Parent.HTML.plannedDateField.value = DateNames.toString(Parent.date);
 	}
+
 
 	this.openEdit = async function(_taskHTML, _task) {
 		if (!_task || !_taskHTML) return false;
@@ -690,11 +713,12 @@ function TaskHolder_createMenu(_parent) {
 
 		resetEditMode(false);
 
-		editData.task = _task;
+
 		editData.html = _taskHTML;
 		editData.html.classList.add("hide");
 
 		this.open();
+		this.curTask = new CreateMenu_curTask(_task);
 		
 		Parent.HTML.inputField.value = _task.title;
 		if (_task.groupType == "date") Parent.HTML.plannedDateField.value = _task.groupValue;
@@ -707,7 +731,56 @@ function TaskHolder_createMenu(_parent) {
 		Parent.HTML.inputField.readOnly = true;
 		Parent.HTML.createMenuHolder.classList.add("close");
 		resetEditMode(false);
+
+		if (MainContent.taskHolder.curCreateMenu.id != this.id) return;
+		MainContent.taskHolder.curCreateMenu = false;
 	}
+	
+
+
+
+
+
+
+
+	this.disable = function() {
+		this.disabled = true;
+		Parent.HTML.createMenuHolder.classList.add("hide");
+	}
+
+
+
+
+
+
+
+
+	function setTaskMenuStatus(_value) {
+		Parent.HTML.createMenu.classList.remove("uploading");
+		let innerHTML = "Add";
+		switch (_value) 
+		{
+			case "change": innerHTML = "change"; break;
+			case "loading": 
+				innerHTML = "<img src='images/loading.gif' class='loadIcon'>"; 
+				Parent.HTML.createMenu.classList.add("uploading");
+			break;
+			default: break;
+		}
+
+		Parent.HTML.createMenu.children[3].children[0].innerHTML = innerHTML;	
+	}
+	
+
+
+
+
+
+
+
+
+
+
 
 
 	this.createTask = async function() {
@@ -738,22 +811,47 @@ function TaskHolder_createMenu(_parent) {
 
 
 
-	function setTaskMenuStatus(_value) {
-		Parent.HTML.createMenu.classList.remove("uploading");
-		let innerHTML = "Add";
-		switch (_value) 
-		{
-			case "change": innerHTML = "change"; break;
-			case "loading": 
-				innerHTML = "<img src='images/loading.gif' class='loadIcon'>"; 
-				Parent.HTML.createMenu.classList.add("uploading");
-			break;
-			default: break;
-		}
 
-		Parent.HTML.createMenu.children[3].children[0].innerHTML = innerHTML;	
+
+
+
+
+
+	function CreateMenu_curTask(_task) {
+		let This 			= this;
+
+		this.editing		= !!_task;
+
+
+		this.tag 			= false;
+		this.project 		= false;
+		this.assignedTo 	= [];
+
+		this.groupType 		= "default";
+		this.groupValue 	= "";
+		this.finished 		= false;
+
+		(async function() {
+			if (_task && _task.projectId) 	This.project = await Server.getProject(_task.projectId);
+			if (!This.project)				This.project = (await Server.getProjectList())[0];
+
+		})();		
+
+
+		this.setTag = function(_newTag) {
+			this.tag = _newTag;
+			setTagIndicator(this.tag);
+		}
+		
+		this.setProject = function(_newProject) {
+			this.project = _newProject;
+		}
+		
+		this.addAssignee = function(_user) {
+			this.assignedTo.push(_user);
+		}
 	}
-	
+
 
 
 
@@ -771,8 +869,6 @@ function TaskHolder_createMenu(_parent) {
 
 
 
-	// Setup
-	This.close(false);
 
 
 	async function openSelectMenu(_iconIndex = 0, _type = ".") {
@@ -882,15 +978,31 @@ function TaskHolder_createMenu(_parent) {
 		if (date && date.getDateInDays()) return date;
 		return false;
 	}
+
+
+
+
+
+
+
+
+	function setTagIndicator(_tag) {
+		if (!_tag) return;
+
+		Parent.HTML.tagIndicator.style.backgroundColor	= _tag.colour.merge(new Color("rgba(255, 255, 255, .1)"), .3).toRGBA();
+		Parent.HTML.tagIndicator.style.borderColor 		= _tag.colour.merge(new Color("#fff"), .5).toRGBA();
+	}
+
+
+
+
+
+
+
+
+	// Setup
+	This.close(false);
 }
-
-
-
-
-
-
-
-
 
 
 

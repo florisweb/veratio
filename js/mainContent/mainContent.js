@@ -285,22 +285,22 @@ function _MainContent_searchOptionMenu() {
 		function addSearchItem(_item, _type = "@") {
 			var clickHandler = async function() {
 				if (!inputField) return;
-				let inValue 	= inputField.value;
-				let partA 		= inValue.substr(0, _item.startAt);
-				let partB 		= inValue.substr(_item.startAt + _item.length, inValue.length - _item.startAt - _item.length);
-				let newStr 		= partA + _type + result.title + partB;
-				inputField.value = newStr;
+				let inValue 		= inputField.value;
+				let partA 			= inValue.substr(0, _item.startAt);
+				let partB 			= inValue.substr(_item.startAt + _item.length, inValue.length - _item.startAt - _item.length);
+				inputField.value 	= partA + partB;
+				
 
-				if (_type == ".") This.curProject = _item.item;
+				if (_type == ".") MainContent.taskHolder.curCreateMenu.curTask.setProject(_item.item);
+				if (_type == "#") MainContent.taskHolder.curCreateMenu.curTask.setTag(_item.item);
+				if (_type == "@") MainContent.taskHolder.curCreateMenu.curTask.addAssignee(_item.item);
 				
 				This.userForceHide();
 				inputField.focus();
 
 				if (!_item.isCreateItem) return;
 				
-				let project = This.curProject;
-				if (!project) project = (await Server.getProjectList())[0];
-				
+				let project = MainContent.taskHolder.curCreateMenu.curTask.project;
 				await Popup.createTagMenu.open(project.id, _item.item.title);
 
 				inputField.focus();
