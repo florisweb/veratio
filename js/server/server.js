@@ -205,7 +205,6 @@ const Server = new function() {
       for (let r = 0; r < requests.length; r++) 
       {
         let result = results == "E_noConnection" ? "E_noConnection" : results[r];
-        if (!result) continue;
         requests[r].resolve(result);
       }
       
