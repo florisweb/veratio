@@ -745,8 +745,8 @@ function _Popup_createTagMenu() {
 
 		tag = await CurProject.tags.update(tag);
 		if (!tag) return console.error("Something went wrong while creating a tag:", tag);
-		CurProject.tags.getAll(true);
-		this.close(tag);
+		await CurProject.tags.getAll(true);
+		this.close(await CurProject.tags.get(tag.id));
 	} 
 	
 

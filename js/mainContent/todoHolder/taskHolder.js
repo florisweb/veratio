@@ -949,7 +949,7 @@ function TaskHolder_createMenu(_parent) {
 
 	function setTagIndicator(_tag) {
 		let tagColor = new Color();
-		if (_tag) tagColor = _tag.colour;
+		if (_tag.colour) tagColor = _tag.colour;
 
 		Parent.HTML.tagIndicator.style.backgroundColor	= tagColor.merge(new Color("rgba(255, 255, 255, .1)"), .3).toRGBA();
 		Parent.HTML.tagIndicator.style.borderColor 		= tagColor.merge(new Color("#fff"), .5).toRGBA();

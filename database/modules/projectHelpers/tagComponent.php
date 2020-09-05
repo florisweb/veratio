@@ -33,7 +33,8 @@
 			if ((int)$user["permissions"] < 1) return "E_actionNotAllowed";
 
 			$_newTag["creatorId"] = $user["id"];
-			return $this->DTTemplate->update($_newTag);
+			$this->DTTemplate->update($_newTag);
+			return $this->DTTemplate->get($_newTag["id"]);
 		}
 
 

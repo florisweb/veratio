@@ -301,7 +301,8 @@ function _MainContent_searchOptionMenu() {
 				if (!_item.isCreateItem) return;
 				
 				let project = MainContent.taskHolder.curCreateMenu.curTask.project;
-				await Popup.createTagMenu.open(project.id, _item.item.title);
+				let tag = await Popup.createTagMenu.open(project.id, _item.item.title);
+				if (tag) MainContent.taskHolder.curCreateMenu.curTask.setTag(tag);
 
 				inputField.focus();
 			}
