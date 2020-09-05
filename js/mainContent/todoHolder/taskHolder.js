@@ -688,7 +688,6 @@ function TaskHolder_createMenu(_parent) {
 		Parent.HTML.inputField.value 		= null;
 		Parent.HTML.plannedDateField.value 	= null;
 
-		
 
 		setTaskMenuStatus(this.curTask.editing ? "change" : "add");
 		if (Parent.date) Parent.HTML.plannedDateField.value = DateNames.toString(Parent.date);
@@ -881,6 +880,7 @@ function TaskHolder_createMenu(_parent) {
 
 		async function setup() {
 			if (_task && _task.projectId) 	This.setProject(await Server.getProject(_task.projectId));
+			if (!This.project) 				This.setProject(await Server.getProject(MainContent.curProjectId));
 			if (!This.project)				This.setProject((await Server.getProjectList())[0]);
 
 			if (!_task) return;

@@ -244,14 +244,13 @@ function _MainContent_searchOptionMenu() {
 
 
 
-	this.getItemListByType = async function(_type, _project) {
-		if (!_project) _project = this.curProject;
-		if (!_project) _project = (await Server.getProjectList())[0];
+	this.getItemListByType = async function(_type) {
+		let project = MainContent.taskHolder.curCreateMenu.curTask.project;
 		switch (_type)
 		{
-			case "#": 	return await _project.tags.getAll();	break;
+			case "#": 	return await project.tags.getAll();		break;
 			case ".": 	return Server.projectList;				break;
-			default: 	return await _project.users.getAll(); 	break;
+			default: 	return await project.users.getAll(); 	break;
 		}
 	}
 	
