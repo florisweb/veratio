@@ -885,14 +885,12 @@ function TaskHolder_createMenu(_parent) {
 
 			if (!_task) return;
 		
-			This.finished 			= Boolean(_task.finished);
-			This.id 				= _task.id;
-			
+			This.finished 					= Boolean(_task.finished);
+			This.id 						= _task.id;
 			
 			This.setTag(false);
-			if (_task.tagId) 		This.setTag(await This.project.tags.get(_task.tagId));
-
-			for (user of _task.assignedTo) This.addAssignee(user);
+			if (_task.tagId) 				This.setTag(await This.project.tags.get(_task.tagId));
+			for (user of _task.assignedTo) 	This.addAssignee(user);
 		}
 		
 		setup();

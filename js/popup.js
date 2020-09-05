@@ -693,7 +693,7 @@ function _Popup_createTagMenu() {
 		CurProject = await Server.getProject(_projectId);
 		if (!CurProject) return;
 
-		resetEditMode();
+		updateMenuModeText();
 
 		extend_open.apply(this);
 		this.HTML.tagTitle.value = _tagName;
@@ -706,13 +706,10 @@ function _Popup_createTagMenu() {
 
 
 	this.openEdit = function(_tag, _projectId) {
-		let onclosePromise = this.open(_projectId);
+		let onclosePromise = this.open(_projectId, _tag.title);
 		
 		EditData.tag = _tag;
 		if (!EditData.tag) return;
-
-		setTextToElement(this.HTML.createButton, "EDIT");
-		setTextToElement(this.HTML.title, "EDIT TAG");
 
 		setTagData(_tag);
 
@@ -731,6 +728,18 @@ function _Popup_createTagMenu() {
 
 	function resetEditMode() {
 		EditData.tag = false;
+		updateMenuModeText();
+	}
+
+	function updateMenuModeText() {
+
+		if (EditData.tag)
+		{
+			setTextToElement(This.HTML.createButton, "EDIT");
+			setTextToElement(This.HTML.title, "EDIT TAG");
+			return;
+		}
+
 		setTextToElement(This.HTML.createButton, "CREATE");
 		setTextToElement(This.HTML.title, "CREATE TAG");
 	}
@@ -783,8 +792,6 @@ function _Popup_createTagMenu() {
 
 
 	function setTagData(_tag) {
-		This.HTML.tagTitle.value = _tag.title;
-
 		let index = getColourIndexByTag(_tag);
 		colourOptionMenu.options[index].select();
 	}
