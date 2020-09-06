@@ -588,7 +588,11 @@ function TaskHolder_createMenuConstructor(_config, _type) {
 								'<div class="text button" style="float: left">Cancel</div>' + 
 							'</div>' +
 							'<div class="rightHand">' + 
-								'<img src="images/icons/tagIcon.png" class="icon tagIcon clickable">' +
+								'<div class="assigneeHolder">' +
+									'<div class="assigneeItem text isSelf">Floris</div>' + 
+									'<div class="assigneeItem text">Eelek</div>' + 
+								'</div>' + 
+
 								'<img src="images/icons/memberIcon.png" class="icon clickable">' +
 								'<img src="images/icons/projectIconDark.svg" class="icon projectIcon clickable">' +
 							'</div>' +
@@ -613,7 +617,6 @@ function TaskHolder_createMenuConstructor(_config, _type) {
 			This.HTML.createMenu.children[3].children[0].onclick 	= function () {This.createMenu.createTask();}
 			This.HTML.createMenu.children[3].children[1].onclick 	= function () {This.createMenu.close();}
 
-			This.HTML.createMenu.children[4].children[0].onclick 	= function () {This.createMenu.openTagSelectMenu()}
 			This.HTML.createMenu.children[4].children[1].onclick 	= function () {This.createMenu.openMemberSelectMenu()}
 			This.HTML.createMenu.children[4].children[2].onclick 	= function () {This.createMenu.openProjectSelectMenu()}
 			
@@ -902,9 +905,6 @@ function TaskHolder_createMenu(_parent) {
 
 
 
-	this.openTagSelectMenu = function() {
-		openSelectMenu(0, "#");
-	}
 	this.openMemberSelectMenu = function() {
 		openSelectMenu(1, "@");
 	}	

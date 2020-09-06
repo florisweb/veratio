@@ -240,6 +240,77 @@
 				margin-top: 10px;
 			}
 
+
+			.createMenuHolder .assigneeHolder {
+				position: relative;
+				float: left;
+				width: auto;
+				max-width: calc(100% - 10px);
+			}
+
+			.createMenuHolder .assigneeHolder .assigneeItem {
+				position: relative;
+				float: right;
+				
+				width: auto;
+				height: 20px;
+				padding: 1px 11px;
+
+
+				margin-left: 3px;
+
+				border-radius: 5px;
+				border: 2px solid rgb(140, 153, 247);
+				
+		
+				cursor: pointer;
+
+				background-image: url("../../images/icons/removeIconLight.png");
+				background-size: auto 0%;
+				background-position: 50% 13px;
+				background-repeat: no-repeat;
+
+
+				max-width: 100px;
+
+				line-height: 20px;
+				font-size: 12px;
+				color: rgb(120, 133, 227);
+
+				transition: all .3s, background-size .2s, background-position .2s;
+			}
+
+			.createMenuHolder .assigneeHolder .assigneeItem.isSelf {
+				border: 2px solid rgb(255, 200, 0);
+				color: rgb(230, 150, 0);
+			}
+			
+			.createMenuHolder .assigneeHolder .assigneeItem:hover {
+				background: rgb(140, 153, 247);
+				color: transparent;
+
+				background-image: url("../../images/icons/removeIconLight.png");
+				background-size: auto 80%;
+				background-position: 50% 2px;
+				background-repeat: no-repeat;
+			}
+
+			.createMenuHolder .assigneeHolder .assigneeItem.isSelf:hover {
+				background: rgb(255, 200, 0);
+				background-image: url("../../images/icons/removeIconLight.png");
+				background-size: auto 80%;
+				background-position: 50% 2px;
+				background-repeat: no-repeat;
+			}
+
+
+
+
+			
+
+
+
+
 			.createMenuHolder .rightHand .icon {
 				position: relative;
 				height: 20px;
