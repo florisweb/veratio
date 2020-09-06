@@ -588,10 +588,7 @@ function TaskHolder_createMenuConstructor(_config, _type) {
 								'<div class="text button" style="float: left">Cancel</div>' + 
 							'</div>' +
 							'<div class="rightHand">' + 
-								'<div class="assigneeHolder">' +
-									'<div class="assigneeItem text isSelf">Floris</div>' + 
-									'<div class="assigneeItem text">Eelek</div>' + 
-								'</div>' + 
+								'<div class="assigneeHolder"></div>' + 
 
 								'<img src="images/icons/memberIcon.png" class="icon clickable">' +
 								'<img src="images/icons/projectIconDark.svg" class="icon projectIcon clickable">' +
@@ -605,6 +602,7 @@ function TaskHolder_createMenuConstructor(_config, _type) {
 		This.HTML.createMenuHolder 	= html;
 		This.HTML.createMenu 		= html.children[0];
 		This.HTML.tagIndicator 		= html.children[0].children[0];
+		This.HTML.memberHolder 		= html.children[0].children[4].children[0];
 
 		addEventListeners(This);
 
@@ -844,6 +842,7 @@ function TaskHolder_createMenu(_parent) {
 		
 		this.addAssignee = function(_user) {
 			this.assignedTo.push(_user);
+			setMemberIndicators(this.assignedTo);
 		}
 
 
@@ -856,7 +855,7 @@ function TaskHolder_createMenu(_parent) {
 				title: 			removeSpacesFromEnds(Parent.HTML.inputField.value),
 				tagId: 			this.tag ? this.tag.id : false,
 				finished: 		this.finished,
-				assignedTo: 	this.assignedTo,
+				assignedTo: 	this.assignedTo.map(function (user) {return user.id}),
 
 				groupType: 		"default",
 				groupValue: 	this.groupValue,
@@ -896,9 +895,26 @@ function TaskHolder_createMenu(_parent) {
 			This.id 						= _task.id;
 			
 			if (_task.tagId) 				This.setTag(await This.project.tags.get(_task.tagId));
-			for (user of _task.assignedTo) 	This.addAssignee(user);
+			for (userId of _task.assignedTo) 	
+			{
+				This.project.users.get(userId).then(function (_user) {
+					if (!_user) return;
+					This.addAssignee(_user);
+				});
+			}
 		}
 	}
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -954,6 +970,38 @@ function TaskHolder_createMenu(_parent) {
 		Parent.HTML.tagIndicator.style.borderColor 		= tagColor.merge(new Color("#fff"), .5).toRGBA();
 	}
 
+
+	function setMemberIndicators(_members) {
+		Parent.HTML.memberHolder.innerHTML = "";
+
+		for (member of _members)
+		{
+			let html = createMemberIndicatorHTML(member);
+			Parent.HTML.memberHolder.appendChild(html);
+		}
+	}
+
+
+	function createMemberIndicatorHTML(_member) {
+		let html = document.createElement("div");
+		html.classList.add("assigneeItem");
+		html.classList.add("text");
+		if (_member.Self) html.classList.add("isSelf");
+
+		setTextToElement(html, _member.name);
+
+		html.onclick = function() {
+			for (let i = 0; i < This.curTask.assignedTo.length; i++)
+			{
+				if (This.curTask.assignedTo[i].id != _member.id) continue;
+				This.curTask.assignedTo.splice(i, 1);
+				break;
+			}
+			setMemberIndicators(This.curTask.assignedTo);
+		}
+
+		return html;
+	}
 
 
 
