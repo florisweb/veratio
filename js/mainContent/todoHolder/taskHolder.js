@@ -666,15 +666,13 @@ function TaskHolder_createMenu(_parent) {
 	this.disabled 	= false;
 
 
-	this.curTask	= {};
-	this.openState = false;
+	this.curTask	= false;
+	this.openState 	= false;
 
 	this.open = async function() {
 		if (this.disabled) return false;
 		MainContent.taskHolder.curCreateMenu = this;
 		this.openState = true;
-
-		this.curTask = new CreateMenu_curTask();
 
 
 		Parent.HTML.inputField.readOnly = false;
@@ -689,6 +687,9 @@ function TaskHolder_createMenu(_parent) {
 		Parent.HTML.plannedDateField.value 	= null;
 
 
+		this.curTask = new CreateMenu_curTask();
+		await this.curTask.setup();
+		
 		setTaskMenuStatus(this.curTask.editing ? "change" : "add");
 		if (Parent.date) Parent.HTML.plannedDateField.value = DateNames.toString(Parent.date);
 	}
@@ -702,12 +703,14 @@ function TaskHolder_createMenu(_parent) {
 
 		resetEditMode(false);
 
-
 		editData.html = _taskHTML;
 		editData.html.classList.add("hide");
 
+
 		this.open();
 		this.curTask = new CreateMenu_curTask(_task);
+		await this.curTask.setup();
+
 		
 		Parent.HTML.inputField.value = _task.title;
 		if (_task.groupType == "date") Parent.HTML.plannedDateField.value = _task.groupValue;
@@ -785,7 +788,6 @@ function TaskHolder_createMenu(_parent) {
 			return;
 		}
 
-		console.log("1", task);
 		let newTask = await this.curTask.project.tasks.update(task);
 		if (editData.task && task.projectId != editData.task.projectId && newTask) removeOldTask(editData.task); // FIX LATER
 
@@ -878,7 +880,9 @@ function TaskHolder_createMenu(_parent) {
 
 
 
-		async function setup() {
+		this.setup = async function() {
+			This.setTag(false);
+
 			if (_task && _task.projectId) 	This.setProject(await Server.getProject(_task.projectId));
 			if (!This.project) 				This.setProject(await Server.getProject(MainContent.curProjectId));
 			if (!This.project)				This.setProject((await Server.getProjectList())[0]);
@@ -888,12 +892,9 @@ function TaskHolder_createMenu(_parent) {
 			This.finished 					= Boolean(_task.finished);
 			This.id 						= _task.id;
 			
-			This.setTag(false);
 			if (_task.tagId) 				This.setTag(await This.project.tags.get(_task.tagId));
 			for (user of _task.assignedTo) 	This.addAssignee(user);
 		}
-		
-		setup();
 	}
 
 
