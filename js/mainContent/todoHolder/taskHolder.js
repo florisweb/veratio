@@ -588,10 +588,11 @@ function TaskHolder_createMenuConstructor(_config, _type) {
 								'<div class="text button" style="float: left">Cancel</div>' + 
 							'</div>' +
 							'<div class="rightHand">' + 
-								'<div class="assigneeHolder"></div>' + 
-
-								'<img src="images/icons/memberIcon.png" class="icon clickable">' +
 								'<img src="images/icons/projectIconDark.svg" class="icon projectIcon clickable">' +
+								'<img src="images/icons/memberIcon.png" class="icon clickable">' +
+								'<img src="images/icons/tagIcon.png" class="icon tagIcon clickable">' +
+
+								'<div class="assigneeHolder"></div>' + 
 							'</div>' +
 						'</div>' + 
 						'<div class="addButtonHolder smallTextHolder clickable" onclick="MainContent.taskHolder.openCreateMenu(this.parentNode)">' + 
@@ -602,7 +603,7 @@ function TaskHolder_createMenuConstructor(_config, _type) {
 		This.HTML.createMenuHolder 	= html;
 		This.HTML.createMenu 		= html.children[0];
 		This.HTML.tagIndicator 		= html.children[0].children[0];
-		This.HTML.memberHolder 		= html.children[0].children[4].children[0];
+		This.HTML.memberHolder 		= html.children[0].children[4].children[3];
 
 		addEventListeners(This);
 
@@ -615,9 +616,12 @@ function TaskHolder_createMenuConstructor(_config, _type) {
 			This.HTML.createMenu.children[3].children[0].onclick 	= function () {This.createMenu.createTask();}
 			This.HTML.createMenu.children[3].children[1].onclick 	= function () {This.createMenu.close();}
 
-			This.HTML.createMenu.children[4].children[1].onclick 	= function () {This.createMenu.openMemberSelectMenu()}
-			This.HTML.createMenu.children[4].children[2].onclick 	= function () {This.createMenu.openProjectSelectMenu()}
+			This.HTML.createMenu.children[4].children[0].onclick 	= function () {This.createMenu.openProjectSelectMenu()};
+			This.HTML.createMenu.children[4].children[1].onclick 	= function () {This.createMenu.openMemberSelectMenu()};
+			This.HTML.createMenu.children[4].children[2].onclick 	= function () {This.createMenu.openTagSelectMenu()};
 			
+			
+
 			
 			This.HTML.inputField = This.HTML.createMenu.children[1];
 			This.HTML.inputField.placeholder = getRandomItem(PLACEHOLDERTEXTS);
@@ -752,7 +756,7 @@ function TaskHolder_createMenu(_parent) {
 		let innerHTML = "Add";
 		switch (_value) 
 		{
-			case "change": innerHTML = "change"; break;
+			case "change": innerHTML = "Change"; break;
 			case "loading": 
 				innerHTML = "<img src='images/loading.gif' class='loadIcon'>"; 
 				Parent.HTML.createMenu.classList.add("uploading");
@@ -815,117 +819,14 @@ function TaskHolder_createMenu(_parent) {
 
 
 
-	function CreateMenu_curTask(_task) {
-		let This 			= this;
-
-		this.editing		= !!_task;
-
-		this.id 			= newId();
-		this.tag 			= false;
-		this.project 		= false;
-		this.assignedTo 	= [];
-
-		this.groupType 		= "default";
-		this.groupValue 	= "";
-		this.finished 		= false;
-
-		
-
-		this.setTag = function(_newTag) {
-			this.tag = _newTag;
-			setTagIndicator(this.tag);
-		}
-		
-		this.setProject = function(_newProject) {
-			this.project = _newProject;
-		}
-		
-		this.addAssignee = function(_user) {
-			this.assignedTo.push(_user);
-			setMemberIndicators(this.assignedTo);
-		}
-
-
-
-		this.generateTaskData = function() {
-			if (!Parent.HTML.inputField) return false;
-
-			let task = {
-				id: 			this.id,
-				title: 			removeSpacesFromEnds(Parent.HTML.inputField.value),
-				tagId: 			this.tag ? this.tag.id : false,
-				finished: 		this.finished,
-				assignedTo: 	this.assignedTo.map(function (user) {return user.id}),
-
-				groupType: 		"default",
-				groupValue: 	this.groupValue,
-			}
-
-			if (!task.title || task.title.split(" ").join("").length < 1) return "E_InvalidTitle";
-			
-			
-			let taskDate 	= filterDate(Parent.HTML.plannedDateField.value);
-			if (Parent.type == "date" && !taskDate) taskDate = Parent.date.copy();
-
-			if (taskDate) 
-			{
-				task.groupType = "date";
-				if (taskDate.getDateInDays() < new Date().getDateInDays()) task.groupType = "overdue";
-
-				task.groupValue = taskDate.toString();
-			}
-
-			return task;
-		}
-
-
-
-
-
-		this.setup = async function() {
-			This.setTag(false);
-
-			if (_task && _task.projectId) 	This.setProject(await Server.getProject(_task.projectId));
-			if (!This.project) 				This.setProject(await Server.getProject(MainContent.curProjectId));
-			if (!This.project)				This.setProject((await Server.getProjectList())[0]);
-
-			if (!_task) return;
-		
-			This.finished 					= Boolean(_task.finished);
-			This.id 						= _task.id;
-			
-			if (_task.tagId) 				This.setTag(await This.project.tags.get(_task.tagId));
-			for (userId of _task.assignedTo) 	
-			{
-				This.project.users.get(userId).then(function (_user) {
-					if (!_user) return;
-					This.addAssignee(_user);
-				});
-			}
-		}
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	this.openTagSelectMenu = function() {
+		openSelectMenu(2, "#");
+	}	
 	this.openMemberSelectMenu = function() {
 		openSelectMenu(1, "@");
 	}	
 	this.openProjectSelectMenu = function() {
-		openSelectMenu(2, ".");
+		openSelectMenu(0, ".");
 	}
 
 
@@ -934,7 +835,8 @@ function TaskHolder_createMenu(_parent) {
 
 	async function openSelectMenu(_iconIndex = 0, _type = ".") {
 		if (!This.openState) return false;
-		let htmlElement = Parent.HTML.createMenu.children[3].children[_iconIndex];
+
+		let htmlElement = Parent.HTML.createMenu.children[4].children[_iconIndex];
 		let items = await MainContent.searchOptionMenu.getItemListByType(_type);
 		MainContent.searchOptionMenu.openWithList(htmlElement, items, _type);
 	}
@@ -1005,6 +907,110 @@ function TaskHolder_createMenu(_parent) {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+	function CreateMenu_curTask(_task) {
+		let This 			= this;
+
+		this.editing		= !!_task;
+
+		this.id 			= newId();
+		this.tag 			= false;
+		this.project 		= false;
+		this.assignedTo 	= [];
+
+		this.groupType 		= "default";
+		this.groupValue 	= "";
+		this.finished 		= false;
+
+		
+
+		this.setTag = function(_newTag) {
+			this.tag = _newTag;
+			setTagIndicator(this.tag);
+		}
+		
+		this.setProject = function(_newProject) {
+			this.project = _newProject;
+		}
+		
+		this.addAssignee = function(_user) {	
+			for (user of this.assignedTo) if (user.id == _user.id) return;
+
+			this.assignedTo.push(_user);
+			setMemberIndicators(this.assignedTo);
+		}
+
+
+
+		this.generateTaskData = function() {
+			if (!Parent.HTML.inputField) return false;
+
+			let task = {
+				id: 			this.id,
+				title: 			removeSpacesFromEnds(Parent.HTML.inputField.value),
+				tagId: 			this.tag ? this.tag.id : false,
+				finished: 		this.finished,
+				assignedTo: 	this.assignedTo.map(function (user) {return user.id}),
+
+				groupType: 		"default",
+				groupValue: 	this.groupValue,
+			}
+
+			if (!task.title || task.title.split(" ").join("").length < 1) return "E_InvalidTitle";
+			
+			
+			let taskDate 	= filterDate(Parent.HTML.plannedDateField.value);
+			if (Parent.type == "date" && !taskDate) taskDate = Parent.date.copy();
+
+			if (taskDate) 
+			{
+				task.groupType = "date";
+				if (taskDate.getDateInDays() < new Date().getDateInDays()) task.groupType = "overdue";
+
+				task.groupValue = taskDate.toString();
+			}
+
+			return task;
+		}
+
+
+
+
+
+		this.setup = async function() {
+			This.setTag(false);
+			setMemberIndicators([]);
+
+			if (_task && _task.projectId) 	This.setProject(await Server.getProject(_task.projectId));
+			if (!This.project) 				This.setProject(await Server.getProject(MainContent.curProjectId));
+			if (!This.project)				This.setProject((await Server.getProjectList())[0]);
+
+			if (!_task) return;
+		
+			This.finished 					= Boolean(_task.finished);
+			This.id 						= _task.id;
+			
+			if (_task.tagId) 				This.setTag(await This.project.tags.get(_task.tagId));
+			for (userId of _task.assignedTo) 	
+			{
+				This.project.users.get(userId).then(function (_user) {
+					if (!_user) return;
+					This.addAssignee(_user);
+				});
+			}
+		}
+	}
 
 
 
