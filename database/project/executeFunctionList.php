@@ -25,7 +25,20 @@
 			array_push($returnValues, $functionData);
 			continue;
 		}
-		array_push($returnValues, callFunction($functionData));
+		
+
+		$result 	= callFunction($functionData);
+		$response 	= array(
+			"error"		=> "",
+			"result" 	=> $result,
+		);
+		
+		if (is_string($result)) $response = array(
+			"error"		=> $result,
+			"result" 	=> false,
+		);
+
+		array_push($returnValues, $response);
 	}
 
 	echo json_encode($returnValues);

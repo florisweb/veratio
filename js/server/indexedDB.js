@@ -157,12 +157,17 @@ function LocalDB_Project(_projectId, _DB) {
     let operations = await this.getData("cachedOperations");
     if (!operations.length) return; 
     
-    let results = await Server.fetchFunctionRequestList(operations);
-    console.log("Upload CO:", operations, results);
+    let newOperations = [];
+    let responses = await Server.fetchFunctionRequestList(operations);
+    for (let i = 0; i < responses.length; i++)
+    { 
+      console.log("Upload CO:", operation[i], responses[i]);
+      if (!responses[i].error) continue;
+      
+      console.error("Upload CO: Error", operation[i], responses[i]);
+      newOperations.push(operation[i]);
+    }
 
-
-    let newOperations = await this.getData("cachedOperations");
-    newOperations.splice(0, operations.length);
     this.setData("cachedOperations", newOperations);
   }
 

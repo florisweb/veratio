@@ -4,7 +4,7 @@
 	$PM->includePacket("SESSION", "1.0");
 
 	require_once __DIR__ . "/projectHelpers/userComponent.php";
-	require_once __DIR__ . "/projectHelpers/todoComponent.php";
+	require_once __DIR__ . "/projectHelpers/taskComponent.php";
 	require_once __DIR__ . "/projectHelpers/tagComponent.php";
 	
 
@@ -56,7 +56,7 @@
 
 			if ((int)$user["permissions"] < 3) return "E_actionNotAllowed";
 
-			return $this->DB->removeProject();			
+			return $this->DB->removeProject();
 		}
 	}
 

@@ -54,13 +54,13 @@
 			$projectError = $project->errorOnCreation;
 			if ($projectError === true)  return false;
 			if ($projectError !== false) return $projectError;
-			if ($this->isLinkUser && $project->users->get($this->userId)["type"] != "link") return "E_userIsNotOfTypeLink";
+			if ($this->isLinkUser && $project->users->get($this->userId)["type"] != "link") return "E_userTypeIsNotLink";
 
 			return $project;
 		}
 
 		public function getAllProjects() {
-			if (!$this->userId) {$this->throwNoAuthError(); return array();}
+			if (!$this->userId) {$this->throwNoAuthError(); return "E_noAuth";}
 
 			$DBHelper = $GLOBALS["DBHelper"]->getDBInstance(null);
 			$projectIds = $DBHelper->getAllProjectIds();
@@ -78,14 +78,14 @@
 
 
 		public function createProject($_title) {
-			if (!$this->userId) {$this->throwNoAuthError(); return false;}
+			if (!$this->userId) {$this->throwNoAuthError(); return "E_noAuth";}
 
 			$DBHelper 			= $GLOBALS["DBHelper"]->getDBInstance(null);
 			$projectId 			= $DBHelper->createProject($this->userId);
-			if (!$projectId) 	return false;
+			if (!$projectId) 	return "E_projectNotCreated";
 			
 			$project 			= $this->getProject($projectId);
-			if (!$project || is_string($project)) return "E_projectNotCreated" . $project;
+			if (!$project || is_string($project)) return "E_projectNotCreated";
 
 
 			$user = $project->users->get($this->userId);
@@ -93,7 +93,7 @@
 			$project->users->update($user);
 
 			$titleChanged 		= $project->rename($_title);
-			if (!$titleChanged) return false;
+			if (!$titleChanged) return "E_projectNotCreated";
 
 			return $projectId;
 		}

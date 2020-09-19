@@ -2,8 +2,6 @@
 
 const SW = new function() {
   if ('serviceWorker' in navigator) {} else return;
-  this.connected = true;
-
 
   window.addEventListener('load', async function() {
     navigator.serviceWorker.register('serviceWorker.js').then(function(registration) {
@@ -133,17 +131,21 @@ const Server = new function() {
 
 
   async function fetchProjects() {
-    let results = await Server.fetchData("database/project/getProjectList.php");
-    if (!results) return false;
-    if (results == "E_noConnection") return results;
+    let response = await Server.fetchData("database/project/getProjectList.php");
+    if (!response) return false;
+    if (response.error == "E_noAuth")         return App.promptAuthentication();
+    if (response.error)                       {console.error("fetchProjects:", response); return response;}
+
     
     let projectList = [];
-    for (let i = 0; i < results.length; i++)
+    for (let i = 0; i < response.result.length; i++)
     {
-      let project = importProject(results[i]);
+      let project = importProject(response.result[i]);
       if (!project) continue;
+
       projectList.push(project);
     }
+
     return projectList;
   }
 
@@ -166,12 +168,11 @@ const Server = new function() {
   this.updateConnectionStatus = async function(_connected = false) {
     if (this.connected == _connected) return false;
 
-    console.log("UpdateStatus", this.connected, "->", _connected);
+    console.log("UpdateConnectionStatus", this.connected, "->", _connected);
     this.connected  = _connected;
 
     let action      = _connected ? "remove" : "add";
     document.body.classList[action]("noConnection");
-    
 
     if (!_connected) return false;
     await this.onReConnect();
@@ -179,10 +180,10 @@ const Server = new function() {
   }
 
 
-
   this.onReConnect = async function() {
     return await LocalDB.sendCachedOperations();
   }
+
 
 
 
@@ -200,11 +201,11 @@ const Server = new function() {
     timeoutStarted = true;
     
     setTimeout(async function () {
-      let results = await Server.fetchFunctionRequestList(requests);
+      let responses = await Server.fetchFunctionRequestList(requests);
 
       for (let r = 0; r < requests.length; r++) 
       {
-        let result = results == "E_noConnection" ? "E_noConnection" : results[r];
+        let result = responses.error == "E_noConnection" ? responses : responses[r];
         requests[r].resolve(result);
       }
       
@@ -243,7 +244,7 @@ const Server = new function() {
     let resendRequest = await Server.updateConnectionStatus(response != "E_noConnection");
     if (resendRequest) return await this.fetchData(...arguments);
 
-    if (response == "E_noConnection") return "E_noConnection";
+    if (response == "E_noConnection") return {error: "E_noConnection", result: false};
     if (!response.ok) return console.error("HTTP-Error: " + response.status, response);
     
     let result = await response.text();

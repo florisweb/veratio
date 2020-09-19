@@ -114,12 +114,13 @@
 					$_newTask[$key] = $oldTask[$key];
 				}
 				
-				if (!in_array($user["id"], $oldTask["assignedTo"])) 			return "E_actionNotAllowed";
+				if (!in_array($user["id"], $oldTask["assignedTo"])) return "E_actionNotAllowed";
 			}
 
 
 			// Content checks
 			if (!$this->groupTypeExists($_newTask["groupType"])) return "E_groupTypeDoesNotExist";
+
 			if ($_newTask["groupType"] == "overdue" && $_newTask["finished"]) $_newTask["groupType"] = "date";
 			$_newTask["creatorId"] = $user["id"];
 
@@ -129,7 +130,7 @@
 				$curTime 		= strtotime($curDate->format('d-m-Y'));
 
 				$date 			= $this->filterDate($_newTask["groupValue"]);
-				if (!$date) return false;
+				if (!$date) 	return false;
 
 				$_newTask["groupValue"] = $date;
 
@@ -145,11 +146,11 @@
 
 
 		public function remove($_id) {
-			$task 			= $this->get($_id);
-			$permissions	= (int)$this->Parent->users->Self["permissions"];
+			$task 					= $this->get($_id);
+			$permissions			= (int)$this->Parent->users->Self["permissions"];
 			
-			if (!$task) return false;
-			if ($permissions < 1) return "E_actionNotAllowed";
+			if (!$task) 			return false;
+			if ($permissions < 1) 	return "E_actionNotAllowed";
 
 			return $this->DTTemplate->remove($_id);
 		}

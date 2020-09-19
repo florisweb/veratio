@@ -1,5 +1,26 @@
 
 
+<h1>Server -> Client</h1>
+
+<h2>Response</h2>
+
+  {
+    error: (String) Default: '',              Only happens when the requests data is invalid or the user doesn't have the right permissions etc..
+    result: - functions result -
+  }
+
+  Errors: 
+    E_unknownError
+    E_noAuth
+    E_noConnection
+
+
+
+
+
+
+
+
 <h1>Permissions</h1>
                        create/   create/
                       (re)move   remove    invite   remove   change user   rename     remove

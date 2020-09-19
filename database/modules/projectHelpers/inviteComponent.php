@@ -39,7 +39,7 @@
 			);
 
 			$messageSend = $this->sendMail($emailAdress, $inviteId);
-			if (!$messageSend) return false;
+			if (!$messageSend) return "E_unknownError";
 
 			$newUser = $this->DTTemplate->update($user);
 			if (is_string($newUser)) return $newUser;
@@ -59,8 +59,7 @@
 			);
 
 			$newUser = $this->DTTemplate->update($user);
-			if (is_string($newUser)) return $newUser;
-
+			if (is_string($newUser)) return "E_unknownError";
 			return $inviteId; 
 		}
 
@@ -117,9 +116,9 @@
 			$users = $this->Parent->getAll();
 			foreach ($users as $user)
 			{
-				if ($user["type"] != "invite") continue;
-				if ($user["Self"]) continue;
-				if ($user["name"] !== $_emailAdress) continue;
+				if ($user["type"] != "invite")			continue;
+				if ($user["Self"]) 						continue;
+				if ($user["name"] !== $_emailAdress) 	continue;
 				return true;
 			}
 			return false;
