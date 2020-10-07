@@ -74,7 +74,9 @@ const Server = new function() {
       parameters:   _id,
     };
 
-    return await Server.fetchFunctionRequest(functionRequest);
+    let response = await Server.fetchFunctionRequest(functionRequest);
+    if (response.error) return console.error("RemoveProject:", response);
+    return response.result;
   }
 
 
@@ -86,11 +88,11 @@ const Server = new function() {
         parameters:   _title
       };
 
-      let result =  await Server.fetchFunctionRequest(functionRequest);
-      if (!result) alert(result);
+      let response =  await Server.fetchFunctionRequest(functionRequest);
+      if (response.error) return console.error("CreateProject:", response);
 
-      importProject(result);
-      resolve(result);
+      importProject(response.result);
+      resolve(response.result);
     });
   }
 
@@ -102,12 +104,16 @@ const Server = new function() {
  
 
   async function getProjectList() {
-    let projects = await fetchProjects();
-    let noConnection = projects == "E_noConnection";
+    let response      = await fetchProjects();
+    let noConnection  = response.error == "E_noConnection";
+    
+    if (response.error) console.error("GetProjectList:", response);
 
+    let projects = response.result;
     if (noConnection) 
     {
       projects = [];
+      
       let localDBProjects = await LocalDB.getProjectList();
       for (localProject of localDBProjects) 
       {
@@ -115,14 +121,11 @@ const Server = new function() {
         projects.push(new Project(localProject));
       }
     }
-     
 
 
     let promises = [];
     for (project of projects) promises.push(project.setup());
-
     await Promise.all(promises);
-
 
     if (!noConnection) LocalDB.updateProjectList(projects);
 
@@ -131,11 +134,9 @@ const Server = new function() {
 
 
   async function fetchProjects() {
-    let response = await Server.fetchData("database/project/getProjectList.php");
-    if (!response) return false;
-    if (response.error == "E_noAuth")         return App.promptAuthentication();
-    if (response.error)                       {console.error("fetchProjects:", response); return response;}
-
+    let response        = await Server.fetchData("database/project/getProjectList.php");
+    if (!response)      return false;
+    if (response.error) {console.error("fetchProjects:", response); return response.error;}
     
     let projectList = [];
     for (let i = 0; i < response.result.length; i++)
@@ -146,7 +147,8 @@ const Server = new function() {
       projectList.push(project);
     }
 
-    return projectList;
+    response.result = projectList;
+    return response;
   }
 
     function importProject(_project) {
@@ -251,6 +253,8 @@ const Server = new function() {
     try {
       result = Encoder.decodeObj(JSON.parse(result));
     } catch (e) {}
+
+    if (result.error == "E_noAuth") App.promptAuthentication();
       
     return result;
   }
