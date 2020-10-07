@@ -265,23 +265,21 @@ function Project(_project) {
       };
 
       let result = await Server.fetchFunctionRequest(functionRequest);
-
-      if (result == "E_noConnection") return await Local.tasks.getByDateRange(_info);
-
+      if (result.error) return await Local.tasks.getByDateRange(_info); // When an error accurs fall back on the local data
+      
       if (Local) new Promise(async function () { // Store data Localily  
         let foundTasks = await Local.tasks.getByDateRange(_info);
         
         for (let i = 0; i < foundTasks.length; i++) await Local.tasks.remove(foundTasks[i]);
 
-        for (date in result)
+        for (date in result.result)
         {
-          let data = result[date];
+          let data = result.result[date];
           for (let i = 0; i < data.length; i++) await Local.tasks.update(data[i]);
         }
       });
 
-
-      return result;
+      return result.result;
     }
 
     this.getByGroup = async function(_info = {type: "", value: "*"}) {
@@ -293,22 +291,17 @@ function Project(_project) {
       };
 
       let result = await Server.fetchFunctionRequest(functionRequest);
+      if (result.error) return await Local[Type].getByGroup(_info);
 
-      if (result == "E_noConnection") return await Local[Type].getByGroup(_info);
+      if (Local) overWriteLocalData(result.result, await Local.tasks.getByGroup(_info));
 
-      if (Local) // Store data Localily
-      {
-        overWriteLocalData(result, await Local.tasks.getByGroup(_info));
-      }
-
-      return result;
+      return result.result;
     }
 
 
-
     async function overWriteLocalData(_result, _localEquivalant) {
-      for (let i = 0; i < _localEquivalant.length; i++) await Local.tasks.remove(_localEquivalant[i].id);
-      for (let i = 0; i < _result.length; i++)           await Local.tasks.update(_result[i]);
+      for (let i = 0; i < _localEquivalant.length; i++)   await Local.tasks.remove(_localEquivalant[i].id);
+      for (let i = 0; i < _result.length; i++)            await Local.tasks.update(_result[i]);
     }
   }
 
@@ -361,25 +354,23 @@ function Project(_project) {
         projectId:    This.id,
       };
 
-      let results = await Server.fetchFunctionRequest(functionRequest);
+      let response = await Server.fetchFunctionRequest(functionRequest);
 
-      if (results == "E_noConnection") 
+      if (response.error == "E_noConnection") 
       {
         let users = await Local.users.getAll();
         setSelf(users);
         return users;
       }
 
-      if (!Array.isArray(results)) return false;
+      if (response.error) return false;
 
-      await Local.users.set(results);
-
-      setSelf(results);
-
-      list = results;
+      await Local.users.set(response.result);
+      setSelf(response.result);
       
+      list = response.result;
       lastSync = new Date();
-      return results;
+      return response.result;
     }
 
     this.getLocalList = function() {
@@ -462,19 +453,19 @@ function Project(_project) {
           projectId: This.id,
       };
 
-      let results = await Server.fetchFunctionRequest(functionRequest);
+      let response = await Server.fetchFunctionRequest(functionRequest);
 
-      if (results == "E_noConnection") return (await Local.tags.getAll()).map(function(tag) {tag.colour = new Color(tag.colour); return tag});
+      if (response.error == "E_noConnection") return (await Local.tags.getAll()).map(function(tag) {tag.colour = new Color(tag.colour); return tag});
 
-      if (!Array.isArray(results)) return false;
+      if (response.error) return false;
 
       list = [];
 
-      await Local.tags.set(results);
-      for (let i = 0; i < results.length; i++)
+      await Local.tags.set(response.result);
+      for (let i = 0; i < response.result.length; i++)
       {
-        list[i] = results[i];
-        list[i].colour = new Color(results[i].colour);
+        list[i] = response.result[i];
+        list[i].colour = new Color(response.result[i].colour);
       }
 
       return list;
@@ -494,11 +485,11 @@ function Project(_project) {
           projectId: This.id,
       };
 
-      let result = await Server.fetchFunctionRequest(functionRequest);
+      let response = await Server.fetchFunctionRequest(functionRequest);
 
-      if (result == "E_noConnection") return await Local[Type].get(_id);
+      if (response.error) return await Local[Type].get(_id);
 
-      let item = Encoder.decodeObj(result);
+      let item = Encoder.decodeObj(response.result);
       Local[Type].update(item);
 
       return item;
@@ -512,17 +503,18 @@ function Project(_project) {
           projectId: This.id,
       };
 
-      let result = await Server.fetchFunctionRequest(functionRequest);
+      let response = await Server.fetchFunctionRequest(functionRequest);
 
-      if (result == "E_noConnection" && Local) 
+      if (response.error == "E_noConnection" && Local) 
       {
         Local[Type].remove(_id);
         Local.addCachedOperation(functionRequest);
         return true;
       } 
-      if (result && Local) Local[Type].remove(_id);
 
-      return result;
+      if (response.result && Local) Local[Type].remove(_id);
+
+      return response.result;
     }
 
     this.update = async function(_newItem) {
@@ -533,21 +525,25 @@ function Project(_project) {
           projectId: This.id,
       };
 
-      let result = await Server.fetchFunctionRequest(functionRequest);
+      let response = await Server.fetchFunctionRequest(functionRequest);
 
-      if (result == "E_noConnection" && Local) 
+      if (response.error == "E_noConnection" && Local) 
       {
         Local[Type].update(_newItem);
         Local.addCachedOperation(functionRequest);
 
         return _newItem;
       }
-      if (result && Local) Local[Type].update(result);
-
-      return result;
+      
+      if (!response.error && Local) Local[Type].update(response.result);
+      return response.result;
     }
   }
 }
+
+
+
+
 
 
 
