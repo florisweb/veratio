@@ -423,9 +423,9 @@ function TaskHolder_task(_parent) {
 
 
 
-	this.dropTask = function(_task, _taskIndex) {
-		_task = updateTaskToNewTaskHolder(_task);
-		let task = moveTaskToNewLocalPosition(_task, _taskIndex);
+	this.dropTask = async function(_task, _taskIndex) {
+		_task 		= await updateTaskToNewTaskHolder(_task);
+		let task 	= moveTaskToNewLocalPosition(_task, _taskIndex);
 		task.render(_taskIndex);
 	}
 
@@ -434,8 +434,7 @@ function TaskHolder_task(_parent) {
 		if (Parent.type == "date") _task.groupValue = Parent.date.toString();
 		
 		let project = await Server.getProject(_task.projectId);
-		project.tasks.update(_task);
-		return _task;
+		return await project.tasks.update(_task);
 	}
 
 
@@ -545,7 +544,7 @@ function TaskHolder_task(_parent) {
 			);
 			
 			if (typeof _insertionIndex != "number" || _insertionIndex == TaskHolder.taskList.length) return Parent.HTML.todoHolder.append(This.html);
-
+			console.log("Render", This.html, This, Parent.config.renderPreferences)
 			let insertBeforeElement = Parent.HTML.todoHolder.children[_insertionIndex];
 			Parent.HTML.todoHolder.insertBefore(This.html, insertBeforeElement);
 		}

@@ -161,11 +161,11 @@ function LocalDB_Project(_projectId, _DB) {
     let responses = await Server.fetchFunctionRequestList(operations);
     for (let i = 0; i < responses.length; i++)
     { 
-      console.log("Upload CO:", operation[i], responses[i]);
+      console.log("Upload CO:", operations[i], responses[i]);
       if (!responses[i].error) continue;
       
-      console.error("Upload CO: Error", operation[i], responses[i]);
-      newOperations.push(operation[i]);
+      console.error("Upload CO: Error", operations[i], responses[i]);
+      newOperations.push(operations[i]);
     }
 
     this.setData("cachedOperations", newOperations);

@@ -6,9 +6,10 @@ function _TaskRenderer() {
 	}
 
 	this.renderTask = async function(_taskWrapper, _renderSettings) {
-		if (!_taskWrapper) return false;
-		let project = await Server.getProject(_taskWrapper.task.projectId);
-		if (!project) return false;
+		if (!_taskWrapper) 		return false;
+		let project 			= await Server.getProject(_taskWrapper.task.projectId);
+		console.log("renderTask", project, _taskWrapper.task);
+		if (!project) 			return false;
 
 		let html = createTaskHTMLTemplate();
 		fillInTaskData(html, _taskWrapper.task, project, _renderSettings);
