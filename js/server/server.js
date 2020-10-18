@@ -107,7 +107,7 @@ const Server = new function() {
     let response      = await fetchProjects();
     let noConnection  = response.error == "E_noConnection";
     
-    if (response.error) {if (response.error != "E_noConnection") console.error("GetProjectList:", response); return};
+    if (response.error && response.error != "E_noConnection") {return console.error("GetProjectList:", response);}
 
     let projects = response.result;
     if (noConnection) 

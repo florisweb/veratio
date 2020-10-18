@@ -544,7 +544,6 @@ function TaskHolder_task(_parent) {
 			);
 			
 			if (typeof _insertionIndex != "number" || _insertionIndex == TaskHolder.taskList.length) return Parent.HTML.todoHolder.append(This.html);
-			console.log("Render", This.html, This, Parent.config.renderPreferences)
 			let insertBeforeElement = Parent.HTML.todoHolder.children[_insertionIndex];
 			Parent.HTML.todoHolder.insertBefore(This.html, insertBeforeElement);
 		}
