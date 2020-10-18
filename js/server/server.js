@@ -75,7 +75,7 @@ const Server = new function() {
     };
 
     let response = await Server.fetchFunctionRequest(functionRequest);
-    if (response.error) return console.error("RemoveProject:", response);
+    if (response.error) {if (response.error != "E_noConnection") console.error("RemoveProject:", response); return};
     return response.result;
   }
 
@@ -89,7 +89,7 @@ const Server = new function() {
       };
 
       let response =  await Server.fetchFunctionRequest(functionRequest);
-      if (response.error) return console.error("CreateProject:", response);
+      if (response.error) {if (response.error != "E_noConnection") console.error("CreateProject:", response); return};
 
       importProject(response.result);
       resolve(response.result);
@@ -107,7 +107,7 @@ const Server = new function() {
     let response      = await fetchProjects();
     let noConnection  = response.error == "E_noConnection";
     
-    if (response.error) console.error("GetProjectList:", response);
+    if (response.error) {if (response.error != "E_noConnection") console.error("GetProjectList:", response); return};
 
     let projects = response.result;
     if (noConnection) 
@@ -136,7 +136,7 @@ const Server = new function() {
   async function fetchProjects() {
     let response        = await Server.fetchData("database/project/getProjectList.php");
     if (!response)      return false;
-    if (response.error) {console.error("fetchProjects:", response); return response.error;}
+    if (response.error) {if (response.error != "E_noConnection") console.error("fetchProjects:", response); return response;};
     
     let projectList = [];
     for (let i = 0; i < response.result.length; i++)
