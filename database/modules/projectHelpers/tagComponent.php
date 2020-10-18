@@ -30,11 +30,20 @@
 
 		public function update($_newTag) {
 			$user = $this->Parent->users->Self;
-			if ((int)$user["permissions"] < 1) return "E_actionNotAllowed";
+			if ((int)$user["permissions"] < 1) 	return "E_actionNotAllowed";
 
-			$_newTag["creatorId"] = $user["id"];
+			$_newTag["creatorId"] 				= $user["id"];
+			$_newTag["colour"] 					= $this->filterColor($_newTag["colour"]);
+			if (!$_newTag["colour"])			return "E_invalidColor";
+
 			$this->DTTemplate->update($_newTag);
 			return $this->DTTemplate->get($_newTag["id"]);
+		}
+
+		private function filterColor($_color) {
+			$str = preg_replace("/[^A-Fa-f0-9 ]/", '', $_color);
+			if (strlen($str) != 6) return false;
+			return '#' . $str;
 		}
 
 
