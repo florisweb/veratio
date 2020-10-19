@@ -342,7 +342,7 @@ function Project(_project) {
     this.getAll = async function(_forceRequest = false) {
       if (new Date() - lastRequestTime < cacheLifeTime && Server.connected && !_forceRequest) 
       {
-        if (curFetchPromise) return await curFetchPromise;
+        if (curFetchPromise) await curFetchPromise;
         return list;
       }
       lastRequestTime = new Date();
@@ -354,7 +354,9 @@ function Project(_project) {
         projectId:    This.id,
       };
 
-      let response = await Server.fetchFunctionRequest(functionRequest);
+      curFetchPromise = Server.fetchFunctionRequest(functionRequest);
+      let response    = await curFetchPromise;
+      curFetchPromise = false;
 
       if (response.error == "E_noConnection") 
       {
@@ -371,10 +373,6 @@ function Project(_project) {
       list = response.result;
       lastSync = new Date();
       return response.result;
-    }
-
-    this.getLocalList = function() {
-      return list;
     }
 
 
@@ -441,7 +439,7 @@ function Project(_project) {
     this.getAll = async function(_forceRequest = false) {
       if (new Date() - lastRequestTime < cacheLifeTime && Server.connected && !_forceRequest) 
       {
-        if (curFetchPromise) return await curFetchPromise;
+        if (curFetchPromise) await curFetchPromise;
         return list;
       }
       lastRequestTime = new Date();
@@ -453,7 +451,9 @@ function Project(_project) {
           projectId: This.id,
       };
 
-      let response = await Server.fetchFunctionRequest(functionRequest);
+      curFetchPromise = Server.fetchFunctionRequest(functionRequest);
+      let response    = await curFetchPromise;
+      curFetchPromise = false;
 
       if (response.error == "E_noConnection") return (await Local.tags.getAll()).map(function(tag) {tag.colour = new Color(tag.colour); return tag});
 
@@ -461,7 +461,7 @@ function Project(_project) {
 
       list = [];
 
-      await Local.tags.set(response.result);
+      Local.tags.set(response.result);
       for (let i = 0; i < response.result.length; i++)
       {
         list[i] = response.result[i];

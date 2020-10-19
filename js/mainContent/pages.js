@@ -154,7 +154,7 @@ function taskPage_tab_today() {
 			[date]
 		);
 
-		let taskList 	= await Server.global.tasks.getByDate(date.toString());
+		let taskList = await Server.global.tasks.getByDate(date.toString());
 		if (!taskList || !taskList[date]) return false;
 		taskList = taskList[date];
 
@@ -166,7 +166,6 @@ function taskPage_tab_today() {
 		}
 
 		finalList = TaskSorter.defaultSort(finalList);
-
 		taskHolder.task.addTaskList(finalList);
 	}
 
@@ -186,7 +185,6 @@ function taskPage_tab_today() {
 			_task.assignedTo.length > 0 && 
 			!_task.assignedTo.includes(userId)
 		) return false;
-
 		return true;
 	}
 }
