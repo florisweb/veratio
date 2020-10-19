@@ -1,5 +1,28 @@
 
 
+.statusCircle {
+	margin-top: 2px;
+	width: 13px;
+	height: 13px;
+	border-radius: 100%;
+
+	border: 2px solid #ccc;
+	background: rgba(0, 0, 0, 0.01);
+}
+.statusCircle.finished rect {
+	fill-opacity: 0;
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -313,28 +336,27 @@ body.appLoading #mainContent {
 
 
 
-	#mainContentHolder .optionMenuHolder.searchOption {
+	#mainContentHolder .optionMenuHolder {
 		padding: 5px 8px;
 	}
-		.optionMenuHolder.searchOption .optionItem {
+		.optionMenuHolder .optionItem {
 			border: none;
 		}
 
-			.optionMenuHolder.searchOption .optionItem .statusCircle {
+			.optionMenuHolder .optionItem .statusCircle {
 				position: relative;
+				float: left;
 				left: 0;
-				top: 3px;
+				top: 1px;
 
 				width: 11px;
-
 				height: 11px;
-				border-radius: 100%;
+				border-width: 1px;
 
-				border: 2px solid #ccc;
-				background: rgba(0, 0, 0, 0.02);
-				opacity: 1;
+				opacity: .8;
 			}
-			.optionMenuHolder.searchOption .optionItem .optionText {
+
+			.optionMenuHolder .optionItem .optionText {
 				width: calc(100% - 25px);
 				left: 22px;
 			}

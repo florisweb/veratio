@@ -57,8 +57,8 @@
 		<link rel="stylesheet" type="text/css" href="css/popup.css?a=39">
 		<link rel="stylesheet" type="text/css" href="css/main.css?a=30">
 		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=33">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=63">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=80">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=64">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=82">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/header.css?a=1">
 
 		<script type="text/javascript" src="/JS/jQuery.js" asy nc></script>

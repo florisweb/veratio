@@ -171,13 +171,6 @@
 				position: absolute;
 				left: 2px;
 				margin-top: 8px;
-
-				width: 13px;
-				height: 13px;
-
-				border-radius: 100%;
-				border: 2px solid #ccc;
-				background: rgba(0, 0, 0, 0.01);
 			}
 
 
@@ -185,7 +178,7 @@
 				margin-top: 1px;
 				left: 27px;
 				float: left;
-				/*width: calc(100% + 5px);*/
+
 				width: calc(100% - 90px - 38px);
 				
 				border-radius: 0;
@@ -453,18 +446,9 @@
 		margin-right: -5px;
 	}
 
-		.taskItem .statusCircleHitBox .statusCircle {
-			margin-top: 2px;
-			width: 13px;
-			height: 13px;
-			border-radius: 100%;
-
-			border: 2px solid #ccc;
-			background: rgba(0, 0, 0, 0.01);
+		.taskItem:not(.finished) .statusCircleHitBox .statusCircle rect {
+			fill-opacity: 0;
 		}
-			.taskItem:not(.finished) .statusCircleHitBox .statusCircle rect {
-				fill-opacity: 0;
-			}
 			
 		.taskItem.finished .statusCircleHitBox .statusCircle {
 			opacity: 1;

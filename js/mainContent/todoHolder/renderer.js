@@ -28,16 +28,15 @@ function _TaskRenderer() {
 			let html = document.createElement("div");
 			html.className = "listItem taskItem dropTarget clickable";
 			
-			const statusCircleSVG = '<?xml version="1.0" standalone="no"?><svg class="statusCircle clickable" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="isolation:isolate" viewBox="0 0 83 83" width="83" height="83"><defs><clipPath id="_clipPath_EvyxEBqQoipdaXxIJMEjCjvXV7edc1qw"><rect width="83" height="83"/></clipPath></defs><g clip-path="url(#_clipPath_EvyxEBqQoipdaXxIJMEjCjvXV7edc1qw)"><rect x="0.729" y="42.389" width="43.308" height="20" transform="matrix(0.707,0.707,-0.707,0.707,43.601,-0.482)"/><rect x="16.22" y="30.02" width="70" height="20" transform="matrix(0.707,-0.707,0.707,0.707,-13.296,47.939)"/></g></svg>';
 			html.innerHTML = 	"<div class='taskOwnerIndicator'></div>" + 
-								"<div class='statusCircleHitBox'>" + statusCircleSVG + "</div>" + 
+								"<div class='statusCircleHitBox'></div>" + 
 								'<div class="titleHolder text userText"></div>' + 
 							 	'<div class="functionHolder">' +
 									'<img src="images/icons/optionIcon.png" onclick="MainContent.optionMenu.open(this)" class="functionItem optionIcon icon clickable">' +
 									'<div class="functionItem projectHolder"></div>' +
 									'<div class="functionItem plannedDateHolder userText"></div>' +
 									'<div class="functionItem memberList userText"></div>' +
-								'</div>';
+								'</div>';;
 			return html;
 		}
 
@@ -45,8 +44,8 @@ function _TaskRenderer() {
 			setTextToElement(html.children[2], task.title);
 			setMemberText(html, task, project);
 			setOwnerIndicator(html, task, project);
+			addTagCircle(html, task, project);
 
-			if (task.tagId) 									setTagColor(html, task, project);
 			if (renderSettings.displayDate !== false) 			setPlannedDateText(html, task);
 			if (renderSettings.displayProjectTitle !== false) 	setProjectTitle(html, project);
 		}
@@ -99,14 +98,11 @@ function _TaskRenderer() {
 			}
 
 
-			async function setTagColor(html, task, project) {
+			async function addTagCircle(html, task, project) {
 				let tag = await project.tags.get(task.tagId);
-				if (!tag) return;
+				if (!tag) tag = {colour: new Color("#aaa")};
 
-				let colorTarget 					= html.children[1].children[0]; 
-				colorTarget.style.backgroundColor	= tag.colour.merge(new Color("rgba(255, 255, 255, .1)"), .3).toRGBA();
-				colorTarget.style.borderColor 		= tag.colour.merge(new Color("#fff"), .5).toRGBA();
-				colorTarget.style.fill 				= tag.colour.merge(new Color("rgb(130, 130, 130)"), .5).toRGBA();
+				html.children[1].append(This.createTagCircle(tag));
 			}
 
 
@@ -275,6 +271,21 @@ function _TaskRenderer() {
 					}
 
 			}
+
+
+	this.createTagCircle = function(_tag, _finished = false) {
+		let html = document.createElement("div");
+		html.innerHTML = '<?xml version="1.0" standalone="no"?><svg class="statusCircle clickable" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="isolation:isolate" viewBox="0 0 83 83" width="83" height="83"><defs><clipPath id="_clipPath_EvyxEBqQoipdaXxIJMEjCjvXV7edc1qw"><rect width="83" height="83"/></clipPath></defs><g clip-path="url(#_clipPath_EvyxEBqQoipdaXxIJMEjCjvXV7edc1qw)"><rect x="0.729" y="42.389" width="43.308" height="20" transform="matrix(0.707,0.707,-0.707,0.707,43.601,-0.482)"/><rect x="16.22" y="30.02" width="70" height="20" transform="matrix(0.707,-0.707,0.707,0.707,-13.296,47.939)"/></g></svg>';
+		
+		let tagCircle = html.children[0];
+		if (_finished) tagCircle.classList.add("finished");
+
+		tagCircle.style.backgroundColor		= _tag.colour.merge(new Color("rgba(255, 255, 255, .1)"), .3).toRGBA();
+		tagCircle.style.borderColor 		= _tag.colour.merge(new Color("#fff"), .6).toRGBA();
+		tagCircle.style.fill 				= _tag.colour.merge(new Color("rgb(130, 130, 130)"), .5).toRGBA();
+
+		return tagCircle;
+	}
 }
 
 

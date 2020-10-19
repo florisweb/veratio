@@ -73,12 +73,12 @@ function _OptionMenu_menu(_self) {
 	}
 
 
-	this.addOption = function(_title = "", _onclick, _icon = "") {
+	this.addOption = function(_title = "", _onclick, _image = "") {
 		let option = document.createElement("div");
 		option.className = "optionItem clickable";
-		option.innerHTML = 	"<img class='optionIcon' src='images/icons/removeIcon.png'>" + 
-							"<div class='optionText'>Remove task</div>";
-		option.children[0].setAttribute("src", _icon);
+		option.innerHTML = "<div class='optionText'>Remove task</div>";
+		
+		setImageSource(_image, option);
 		setTextToElement(option.children[1], _title);
 
 		HTML.Self.append(option);
@@ -117,6 +117,19 @@ function _OptionMenu_menu(_self) {
 			}
 		});
 	}
+
+	function setImageSource(_image, _html) {
+		let element = document.createElement("img");
+		if (typeof _image == "string")
+		{
+			element.classList.add('optionIcon');
+			element.setAttribute("src", _image);
+		} else {
+			element = _image;
+		}
+		_html.insertBefore(element, _html.firstChild);
+	}
+
 
 	const popupMargin = 15;
 	function moveToItem(_item, _relativePosition = {left: 0, top: 0}, _event) {

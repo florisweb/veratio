@@ -307,7 +307,7 @@ function _MainContent_searchOptionMenu() {
 			}
 
 			let result = createSearchItemIconByType(_type, _item);
-			Menu.addOption(result.title, clickHandler, result.src);
+			Menu.addOption(result.title, clickHandler, result.image);
 		}
 
 		
@@ -316,7 +316,7 @@ function _MainContent_searchOptionMenu() {
 			{
 				return {
 					title: _item.item.title,
-					src: "images/icons/addIcon.png"
+					image: "images/icons/addIcon.png"
 				}
 			}
 			switch (_type)
@@ -324,19 +324,18 @@ function _MainContent_searchOptionMenu() {
 				case ".": 
 					return {
 						title: _item.item.title,
-						src: "images/icons/projectIconDark.svg"
+						image: "images/icons/projectIconDark.svg"
 					}
 				break;
 				case "#": 
 					return {
 						title: _item.item.title,
-						src: "images/tagIcon?tagId=" + _item.item.id
-						// src: "images/icons/tagIcon.png"
+						image: MainContent.taskPage.renderer.createTagCircle(_item.item, true)
 					}
 				default:
 					return {
 						title: _item.item.name,
-						src: "images/icons/memberIcon.png"
+						image: "images/icons/memberIcon.png"
 					}
 				break;
 			}
