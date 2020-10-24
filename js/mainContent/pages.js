@@ -57,7 +57,7 @@ function MainContent_taskPage() {
 	const HTML = {
 		todoHolder: $("#mainContentHolder .todoListHolder")[0],
 	}
-
+	this.rendering		= false;
 
 	this.renderer 		= new _TaskRenderer(HTML.todoHolder);
 	
@@ -81,6 +81,8 @@ function MainContent_taskPage() {
 
 
 
+
+
 function taskPage_tab(_settings) {
 	this.name = _settings.name;
 	let onOpen = _settings.onOpen;
@@ -90,10 +92,12 @@ function taskPage_tab(_settings) {
 	}
 	
 
-
 	this.open = async function(_projectId = false) {
-		MainContent.startLoadingAnimation();
+		if (MainContent.taskPage.rendering) return;
+		MainContent.taskPage.rendering = true;
+		setTimeout(function() {MainContent.taskPage.rendering = false}, 1000);
 
+		MainContent.startLoadingAnimation();
 		HTML.loadMoreButton.classList.add("hide");
 		
 
@@ -102,16 +106,15 @@ function taskPage_tab(_settings) {
 
 		if (!MainContent.taskPage.isOpen()) MainContent.taskPage.open();
 		resetPage();
-		
 
 		await MainContent.taskHolder.addOverdue();
-
 		await onOpen(_projectId);
 
 		MainContent.stopLoadingAnimation();
 		await SideBar.updateTabIndicator();
 
 		applySettings(_settings);
+		MainContent.taskPage.rendering = false;
 	}
 
 
@@ -145,7 +148,7 @@ function taskPage_tab_today() {
 		MainContent.header.setTitle("Today - " + date.getDate() + " " + date.getMonths()[date.getMonth()].name);
 		MainContent.header.setMemberList([]);
 
-		let taskHolder 	= MainContent.taskHolder.add(
+		let taskHolder = MainContent.taskHolder.add(
 			"date",
 			{
 				displayProjectTitle: true, 
