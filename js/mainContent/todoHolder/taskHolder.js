@@ -48,9 +48,10 @@ function _MainContent_taskHolder() {
 
 
 	this.list = [];
-	this.add = function(_type = "default", _renderPreferences = {}, _parameters = []) {
-		let taskHolder = buildTaskHolder(_type, _renderPreferences, _parameters);
-		this.list.push(taskHolder);
+	this.add = function(_type = "default", _renderPreferences = {}, _parameters = [], _taskHolderIndex) {
+		if (typeof _taskHolderIndex != "number") _taskHolderIndex = this.list.length;
+		let taskHolder = buildTaskHolder(_type, _renderPreferences, _parameters, _taskHolderIndex);
+		this.list.splice(_taskHolderIndex, 0, taskHolder);
 		return taskHolder;
 	}
 
@@ -71,7 +72,9 @@ function _MainContent_taskHolder() {
 			"overdue", 
 			{
 				displayProjectTitle: !MainContent.curProjectId
-			}
+			},
+			null,
+			0,
 		);
 
 		taskList = TaskSorter.defaultSort(taskList);
@@ -85,7 +88,7 @@ function _MainContent_taskHolder() {
 		overdue: 	TaskHolder_overdue
 	}
 
-	function buildTaskHolder(_type, _renderPreferences, _parameters) {
+	function buildTaskHolder(_type, _renderPreferences, _parameters, _taskHolderIndex) {
 		const config = {
 			html: {
 				appendTo: HTML.todoHolder
@@ -93,7 +96,7 @@ function _MainContent_taskHolder() {
 			renderPreferences: _renderPreferences
 		}
 		
-		let parameters = [config].concat(_parameters);
+		let parameters = [config, _taskHolderIndex].concat(_parameters);
 		return new constructors[_type](...parameters);
 	}
 
@@ -129,12 +132,21 @@ function _MainContent_taskHolder() {
 
 
 
-	this.renderTask = function(_task) {
+	this.renderTask = async function(_task) {
 		for (taskHolder of this.list) 
 		{
 			if (!taskHolder.shouldRenderTask(_task)) continue;
 			taskHolder.task.addTask(_task);
 			return true;
+		}
+
+		switch (_task.groupType)
+		{
+			case "overdue": this.addOverdue(); break;
+			default: 
+				if (!MainContent.taskPage.curTab || MainContent.taskPage.curTab.name != "project") return;
+				await MainContent.taskPage.projectTab.addPlannedTaskHolder(); 
+			break;
 		}
 	}
 
@@ -205,10 +217,10 @@ function _MainContent_taskHolder() {
 
 
 // Types
-function TaskHolder_default(_config, _title) {
+function TaskHolder_default(_config, _taskHolderIndex, _title) {
 	let This = this;
 	_config.title = _title;
-	TaskHolder.call(this, _config, "default");
+	TaskHolder.call(this, _config, "default", _taskHolderIndex);
 	TaskHolder_createMenuConstructor.call(this, _config);
 	
 	let project; 
@@ -230,11 +242,11 @@ function TaskHolder_default(_config, _title) {
 }
 
 
-function TaskHolder_date(_config, _date) {
+function TaskHolder_date(_config, _taskHolderIndex, _date) {
 	this.date = _date;
 	_config.title = DateNames.toString(_date, false);
 
-	TaskHolder.call(this, _config, "date");
+	TaskHolder.call(this, _config, "date", _taskHolderIndex);
 	TaskHolder_createMenuConstructor.call(this, _config);
 
 	
@@ -256,10 +268,10 @@ function TaskHolder_date(_config, _date) {
 }
 
 
-function TaskHolder_overdue(_config) {
+function TaskHolder_overdue(_config, _taskHolderIndex) {
 	_config.title 		= "Overdue";
 	_config.html.class 	= "overdue";
-	TaskHolder.call(this, _config, "overdue");
+	TaskHolder.call(this, _config, "overdue", _taskHolderIndex);
 
 	this.shouldRenderTask = function(_task) {
 		if (_task.groupType != "overdue") return false;
@@ -312,7 +324,7 @@ function TaskHolder_overdue(_config) {
 
 
 
-function TaskHolder(_config = {}, _type = "default") {
+function TaskHolder(_config = {}, _type = "default", _taskHolderIndex) {
 	let This = this;
 	this.id 			= newId();
 	this.config 		= _config;
@@ -321,7 +333,7 @@ function TaskHolder(_config = {}, _type = "default") {
 	this.HTML = {
 		Parent: _config.html.appendTo,
 	}
-	this.HTML.Self 	= renderTaskHolder(this.HTML.Parent);
+	this.HTML.Self 	= renderTaskHolder(this.HTML.Parent, _taskHolderIndex);
 	
 	this.task 		= new TaskHolder_task(this);
 
@@ -340,7 +352,8 @@ function TaskHolder(_config = {}, _type = "default") {
 
 	this.taskHolderOpenState = true;
 
-	function renderTaskHolder(_parent) {
+	function renderTaskHolder(_parent, _taskHolderIndex) {
+		console.log(_taskHolderIndex, _parent.children.length);
 		let html = document.createElement("div");
 		html.className = "taskHolder animateIn";
 		setTimeout(function () {html.classList.remove("animateIn");}, 50);
@@ -369,7 +382,12 @@ function TaskHolder(_config = {}, _type = "default") {
 		if (!This.config.title) html.style.marginTop = "0";
 		setTextToElement(html.children[1], This.config.title);
 		
-		_parent.append(html);
+		if (_taskHolderIndex < _parent.children.length)
+		{
+			let appendBeforeSibling = _parent.children[_taskHolderIndex];
+			_parent.insertBefore(html, appendBeforeSibling);
+		} else _parent.append(html);
+		
 
 		return html;
 	}
@@ -677,7 +695,6 @@ function TaskHolder_createMenu(_parent) {
 		MainContent.taskHolder.curCreateMenu = this;
 		this.openState = true;
 
-
 		Parent.HTML.inputField.readOnly = false;
 		
 		MainContent.taskHolder.closeAllCreateMenus(Parent);
@@ -795,7 +812,7 @@ function TaskHolder_createMenu(_parent) {
 		if (editData.task && task.projectId != editData.task.projectId && newTask) removeOldTask(editData.task); // FIX LATER
 
 		resetEditMode(true);
-		MainContent.taskHolder.renderTask(newTask);
+		await MainContent.taskHolder.renderTask(newTask);
 		
 		this.close();
 		MainContent.searchOptionMenu.close();

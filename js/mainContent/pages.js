@@ -280,6 +280,7 @@ function taskPage_tab_week() {
 
 
 function taskPage_tab_project() {
+	let This = this;
 	taskPage_tab.call(this, {
 		name: "project",
 		onOpen: onOpen
@@ -294,28 +295,7 @@ function taskPage_tab_project() {
 		MainContent.header.setTitle(project.title);
 		MainContent.header.setMemberList(await project.users.getAll());
 
-
-		let plannedTasks 		= await project.tasks.getByDateRange({date: new Date().toString(), range: 1000});
-		if (Object.keys(plannedTasks).length)
-		{
-			let taskHolder_planned = MainContent.taskHolder.add(
-				"default",
-				{
-					displayProjectTitle: false, 
-				}, 
-				["Planned"]
-			);
-			
-			let dates = Object.keys(plannedTasks);
-			for (date of dates)
-			{
-				plannedTasks[date] = TaskSorter.defaultSort(plannedTasks[date]);
-				taskHolder_planned.task.addTaskList(
-					plannedTasks[date]
-				);
-			}	
-		}
-
+		await This.addPlannedTaskHolder();
 
 		let nonPlannedTasks = await project.tasks.getByGroup({type: "default", value: "*"});
 		let taskHolder_nonPlanned = MainContent.taskHolder.add(
@@ -328,6 +308,30 @@ function taskPage_tab_project() {
 
 		nonPlannedTasks = TaskSorter.defaultSort(nonPlannedTasks);
 		taskHolder_nonPlanned.task.addTaskList(nonPlannedTasks);
+	}
+
+	this.addPlannedTaskHolder = async function() {
+		let plannedTasks = await project.tasks.getByDateRange({date: new Date().toString(), range: 1000});
+
+		if (!Object.keys(plannedTasks).length) return;
+		
+		let taskHolder = MainContent.taskHolder.add(
+			"default",
+			{
+				displayProjectTitle: false, 
+			}, 
+			["Planned"]
+		);
+		
+		let dates = Object.keys(plannedTasks);
+		for (date of dates)
+		{
+			plannedTasks[date] = TaskSorter.defaultSort(plannedTasks[date]);
+			taskHolder.task.addTaskList(
+				plannedTasks[date]
+			);
+		}	
+	
 	}
 }
 
