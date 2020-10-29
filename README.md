@@ -6,6 +6,7 @@ Planned features:
 - [x] Offline service
 - [x] When creating a task there will now be a little loading-icon-indicator to show when it's being uploaded.
 - [x] Redesigned the taskCreateMenu
+- [x] Implemented the adding of taskHolders for tasks that have to be rendered but whose taskHolder isn't yet created.
 
 
 Version 1.4

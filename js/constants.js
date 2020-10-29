@@ -4,15 +4,17 @@ const COLOUR = {
 	POSITIVE: "rgb(0, 190, 60)",
 	list: [
 		{name: "Red", 			colour: new Color("#ff0000")},
-		{name: "Green", 		colour: new Color("#00ff00")},
+		{name: "Pink", 			colour: new Color("#ff0080")},
+		{name: "Purple", 		colour: new Color("#a100d4")},
+
+		{name: "Orange", 		colour: new Color("#ff6f00")},
+		{name: "Yellow", 		colour: new Color("#ffc500")},
+
 		{name: "Blue", 			colour: new Color("#0000ff")},
-		{name: "Yellow", 		colour: new Color("rgb(255, 177, 0)")},
-		{name: "Orange", 		colour: new Color("#ff5f00")},
-		{name: "Aqua", 			colour: new Color("#00afff")},
-		{name: "Pink", 			colour: new Color("#f000a0")},
-		
-		{name: "Purple", 		colour: new Color("rgb(161, 0, 212)")},
-		{name: "Cyan", 			colour: new Color("#11e182")},
+		{name: "Aqua", 			colour: new Color("#008fff")},
+
+		{name: "Green", 		colour: new Color("#00ff00")},
+		{name: "Cyan", 			colour: new Color("#00f172")},
 		
 		{name: "Black", 		colour: new Color("#000000")},
 		{name: "Dark Gray", 	colour: new Color("#444444")},
