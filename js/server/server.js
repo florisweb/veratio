@@ -45,7 +45,10 @@ const Server = new function() {
     }
 
     curFetchPromise = getProjectList();
-    this.projectList = await curFetchPromise;
+    let response = await curFetchPromise;;
+    console.log(response);
+    this.projectList = response;
+    
     
     lastProjectListUpdate = new Date();
     curFetchPromise = false;
@@ -207,8 +210,8 @@ const Server = new function() {
 
       for (let r = 0; r < requests.length; r++) 
       {
-        let result = responses.error == "E_noConnection" ? responses : responses[r];
-        requests[r].resolve(result);
+        let response = (responses.error == "E_noConnection" || responses.error == "E_noAuth") ? responses : responses[r];
+        requests[r].resolve(response);
       }
       
       requests = [];

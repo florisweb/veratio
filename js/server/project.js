@@ -289,12 +289,14 @@ function Project(_project) {
         projectId:    This.id,
       };
 
-      let result = await Server.fetchFunctionRequest(functionRequest);
-      if (result.error) return await Local[Type].getByGroup(_info);
+      let response = await Server.fetchFunctionRequest(functionRequest);
+      if (response.error) return await Local[Type].getByGroup(_info);
 
-      if (Local) overWriteLocalData(result.result, await Local.tasks.getByGroup(_info));
+      if (Local) Local.tasks.getByGroup(_info).then(function (_result) {
+        overWriteLocalData(response.result, _result);
+      });
 
-      return result.result;
+      return response.result;
     }
 
 
