@@ -213,27 +213,32 @@
 		<script src='js/time.js?antiCache='></script>
 		<script src='js/UI.js?antiCache='></script>
 		<script src='js/color.js?antiCache='></script>
-		
 		<script src='js/textFormater.js?antiCache='></script>
-		<script src='js/constants.js?antiCache='></script>
 
+		<script src='js/constants.js?antiCache='></script>
 		<script src='js/extraFunctions.js?antiCache='></script>
 		<script src='js/optionMenu.js?antiCache='></script>
 		<script src='js/popup.js?antiCache='></script>
+
 		<script src='js/eventHandlers/dragHandler.js?antiCache='></script>
 		<script src='js/eventHandlers/keyHandler.js?antiCache='></script>
 		<script src='js/eventHandlers/doubleClickHandler.js?antiCache='></script>
 		<script src='js/eventHandlers/rightClickHandler.js?antiCache='></script>
+
 		<script src='js/mainContent/header.js?antiCache='></script>
 		<script src='js/mainContent/pages.js?antiCache='></script>
+
 		<script src='js/mainContent/todoHolder/taskHolder.js?antiCache='></script>
 		<script src='js/mainContent/todoHolder/renderer.js?antiCache='></script>
+
 		<script src='js/mainContent/mainContent.js?antiCache='></script>
 		<script src='js/sideBar.js?antiCache='></script>
+
 		<script src='js/server/encoder.js?antiCache='></script>
 		<script src='js/server/indexedDB.js?antiCache='></script>
 		<script src='js/server/project.js?antiCache='></script>
 		<script src='js/server/server.js?antiCache='></script>
-		<script src='js/app.js?antiCache='></script> -->
+		
+		<script src='js -->/app.js?antiCache='></script>
 	</body>
 </html>	

@@ -1,4 +1,11 @@
 
+function $(_string) {
+  return document.querySelectorAll(_string);
+}
+
+
+
+
 function newId() {return Math.round(Math.random() * 100000000) + "" + Math.round(Math.random() * 100000000);}
 
 function setTextToElement(element, text) {
