@@ -353,7 +353,6 @@ function TaskHolder(_config = {}, _type = "default", _taskHolderIndex) {
 	this.taskHolderOpenState = true;
 
 	function renderTaskHolder(_parent, _taskHolderIndex) {
-		console.log(_taskHolderIndex, _parent.children.length);
 		let html = document.createElement("div");
 		html.className = "taskHolder animateIn";
 		setTimeout(function () {html.classList.remove("animateIn");}, 50);
@@ -798,7 +797,7 @@ function TaskHolder_createMenu(_parent) {
 		if (!this.curTask) return;
 		
 		setTaskMenuStatus("loading");
-		let task 		= this.curTask.generateTaskData();
+		let task = this.curTask.generateTaskData();
 
 		if (!this.curTask.project) return false;
 		if (!task || typeof task != "object")
@@ -980,6 +979,8 @@ function TaskHolder_createMenu(_parent) {
 
 				groupType: 		"default",
 				groupValue: 	this.groupValue,
+				creatorId: 		this.project.users.Self.id,
+				projectId: 		this.project.id,
 			}
 
 			if (!task.title || task.title.split(" ").join("").length < 1) return "E_InvalidTitle";

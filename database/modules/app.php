@@ -10,7 +10,7 @@
 	if (!function_exists("APP_noAuthHandler")) 
 	{
 		function APP_noAuthHandler() {
-			die("E_noAuth");
+			die('{"error":"E_noAuth","result":false}');
 		}
 	}
 
