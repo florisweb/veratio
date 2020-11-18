@@ -208,17 +208,16 @@ function Project(_project) {
       projectId: this.id,
     };
 
-    let result = await Server.fetchFunctionRequest(functionRequest);
-
-    if (result == "E_noConnection") 
+    let response = await Server.fetchFunctionRequest(functionRequest);
+    if (response.error == "E_noConnection") 
     {
       Local.rename(_newTitle);
       Local.addCachedOperation(functionRequest);
       return true;
     }
     
-    if (result) Local.rename(_newTitle);
-    return result;
+    if (response.result) Local.rename(_newTitle);
+    return response.result;
   }
 
 
@@ -229,10 +228,10 @@ function Project(_project) {
       projectId: this.id,
     };
 
-    let result = await Server.fetchFunctionRequest(functionRequest);
+    let response = await Server.fetchFunctionRequest(functionRequest);
 
-    if (result && result != "E_noConnection") Local.remove();
-    return result;
+    if (response.result && response.error != "E_noConnection") Local.remove();
+    return response.result;
   }
 
   this.leave = async function() {
