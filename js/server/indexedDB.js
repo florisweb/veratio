@@ -159,6 +159,9 @@ function LocalDB_Project(_projectId, _DB) {
     
     let newOperations = [];
     let responses = await Server.fetchFunctionRequestList(operations);
+    if (responses.error) return;
+    
+    console.log("CO: response: ", responses);
     for (let i = 0; i < responses.length; i++)
     { 
       console.log("Upload CO:", operations[i], responses[i]);
