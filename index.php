@@ -8,10 +8,6 @@
 	// 	} else header("Location: welcome");
 	// 	die("Redirecting");
 	// }
-	
-	$MessageIndex = $_COOKIE["Veratio_messageIndex"];
-	setcookie("Veratio_messageIndex", 1, time() + (60 * 60 * 24 * 365.25), "/");
-
 
 	$enableRedirect = false;
 	function APP_noAuthHandler() {

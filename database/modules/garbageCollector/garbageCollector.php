@@ -7,6 +7,7 @@
 	class _garbageCollector {
 		public function __construct() {
 			$projects = $GLOBALS["App"]->getAllProjects();
+			if ($projects == "E_noAuth") return;
 			
 			$overdueTasks = 0;
 			foreach ($projects as $project) $overdueTasks += $this->setTasksToOverdue($project);
