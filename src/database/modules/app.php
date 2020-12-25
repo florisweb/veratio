@@ -95,7 +95,7 @@
 			$titleChanged 		= $project->rename($_title);
 			if (!$titleChanged) return "E_projectNotCreated";
 
-			return $projectId;
+			return array("projectId" => $projectId, "title" => $_title);
 		}
 	}
 

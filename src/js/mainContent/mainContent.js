@@ -248,7 +248,11 @@ function _MainContent_searchOptionMenu() {
 		let project = MainContent.taskHolder.curCreateMenu.curTask.project;
 		switch (_type)
 		{
-			case "#": 	return await project.tags.getAll();		break;
+			case "#": 	
+				let tags = Object.assign([], await project.tags.getAll());
+				tags.push({id: false, title: "No tag", colour: new Color("#000"), isNoOptionItem: true}); 
+				return tags;
+			break;
 			case ".": 	return Server.projectList;				break;
 			default: 	return await project.users.getAll(); 	break;
 		}
@@ -317,6 +321,13 @@ function _MainContent_searchOptionMenu() {
 				return {
 					title: _item.item.title,
 					image: "images/icons/addIcon.png"
+				}
+			}
+			if (_item.item.isNoOptionItem) 
+			{
+				return {
+					title: _item.item.title,
+					image: "images/icons/noOptionIcon.png"
 				}
 			}
 			switch (_type)

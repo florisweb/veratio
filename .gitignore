@@ -1,6 +1,6 @@
-index.php
+src/index.php
 changelist.txt
-js/main_min.js
-css/main_min.css
+src/js/main_min.js
+src/css/main_min.css
 changeList.txt
-images/sideBarBackground/generator.php
+src/images/sideBarBackground/generator.php

@@ -879,6 +879,7 @@ function TaskHolder_createMenu(_parent) {
 
 
 	function setTagIndicator(_tag) {
+		console.log(_tag);
 		let tagColor = new Color();
 		if (_tag.colour) tagColor = _tag.colour;
 
@@ -950,6 +951,7 @@ function TaskHolder_createMenu(_parent) {
 		
 
 		this.setTag = function(_newTag) {
+			if (_newTag.isNoOptionItem) _newTag = false;
 			this.tag = _newTag;
 			setTagIndicator(this.tag);
 		}
