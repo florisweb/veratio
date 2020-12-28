@@ -100,7 +100,7 @@ function _TaskRenderer() {
 
 			async function addTagCircle(html, task, project) {
 				let tag = await project.tags.get(task.tagId);
-				if (!tag) tag = {colour: new Color("#aaa")};
+				if (!tag) tag = {colour: new Color("#999")};
 
 				html.children[1].append(This.createTagCircle(tag));
 			}
@@ -281,7 +281,7 @@ function _TaskRenderer() {
 		if (_finished) tagCircle.classList.add("finished");
 
 		tagCircle.style.backgroundColor		= _tag.colour.merge(new Color("rgba(255, 255, 255, .1)"), .3).toRGBA();
-		tagCircle.style.borderColor 		= _tag.colour.merge(new Color("#fff"), .6).toRGBA();
+		tagCircle.style.borderColor 		= _tag.colour.merge(new Color("#fff"), .8).toRGBA();
 		tagCircle.style.fill 				= _tag.colour.merge(new Color("rgb(130, 130, 130)"), .5).toRGBA();
 
 		return tagCircle;

@@ -879,7 +879,6 @@ function TaskHolder_createMenu(_parent) {
 
 
 	function setTagIndicator(_tag) {
-		console.log(_tag);
 		let tagColor = new Color();
 		if (_tag.colour) tagColor = _tag.colour;
 

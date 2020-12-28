@@ -46,7 +46,6 @@ const Server = new function() {
 
     curFetchPromise = getProjectList();
     let response = await curFetchPromise;;
-    console.log(response);
     this.projectList = response;
     
     

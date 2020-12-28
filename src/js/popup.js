@@ -592,8 +592,9 @@ function _Popup_tagMenu() {
 	function createTagHTML(_tag) {
 		let html = document.createElement("div");
 		html.className = "UI listItem clickable";
-		
-		html.appendChild(createTagColorCircle(_tag));
+
+		let tagCircle = MainContent.taskPage.renderer.createTagCircle(_tag, true);
+		html.appendChild(tagCircle);
 
 		html.innerHTML += 	"<div class='text'></div>" + 
 							"<div class='rightHand clickable'>" + 
@@ -613,17 +614,6 @@ function _Popup_tagMenu() {
 
 		return html;
 	}
-
-	function createTagColorCircle(_tag) {
-		let circle = document.createElement("div");
-		circle.className = "icon colourCircle";
-			
-		circle.style.backgroundColor = _tag.colour.merge(new Color("rgba(255, 255, 255, .1)"), .5).toHex();
-		circle.style.borderColor = _tag.colour.merge(new Color("rgba(220, 220, 220, .7)"), .5).toHex();
-
-		return circle;
-	}
-
 
 
 	async function openTagEditMenu() {
@@ -732,7 +722,6 @@ function _Popup_createTagMenu() {
 	}
 
 	function updateMenuModeText() {
-
 		if (EditData.tag)
 		{
 			setTextToElement(This.HTML.createButton, "EDIT");
@@ -824,8 +813,8 @@ function _Popup_createTagMenu() {
 			let option = menu.addOption(colour.name, "", colour);
 			option.html.removeChild(option.html.children[0]);
 			
-			let colourCircle = createTagColorCircle(colour);
-			option.html.insertBefore(colourCircle, option.html.children[0]);
+			let tagCircle = MainContent.taskPage.renderer.createTagCircle(colour, true);
+			option.html.insertBefore(tagCircle, option.html.children[0]);
 		}
 
 		
@@ -833,22 +822,11 @@ function _Popup_createTagMenu() {
 			This.HTML.optionPopup.style.left = menuButton.getBoundingClientRect().left + "px";
 			This.HTML.optionPopup.style.top = menuButton.getBoundingClientRect().top + "px";
 			
-			let verticalSpaceAvailable = window.innerHeight - menuButton.getBoundingClientRect().top;
+			let verticalSpaceAvailable = window.innerHeight - menuButton.getBoundingClientRect().top - 20;
 			This.HTML.optionPopup.style.maxHeight = verticalSpaceAvailable + "px";
 		});
 		
 
 		return menu;
-	}
-
-
-	function createTagColorCircle(_tag) {
-		let circle = document.createElement("div");
-		circle.className = "icon colourCircle";
-			
-		circle.style.backgroundColor = _tag.colour.merge(new Color("rgba(255, 255, 255, .4)"), .5).toHex();
-		circle.style.borderColor = _tag.colour.merge(new Color("rgba(220, 220, 220, .6)"), .5).toHex();
-
-		return circle;
 	}
 }

@@ -3,11 +3,10 @@
 
 
 const OptionMenu  = new _OptionMenu();
-const Popup       = new _Popup();
 var App           = new _app();
 var SideBar       = new _SideBar();
 var MainContent   = new _MainContent();
-
+const Popup       = new _Popup();
 
 function _app() {
 

@@ -2,11 +2,11 @@
 
 .statusCircle {
 	margin-top: 2px;
-	width: 13px;
-	height: 13px;
+	width: 15px;
+	height: 15px;
 	border-radius: 100%;
 
-	border: 2px solid #ccc;
+	border: 1px solid #ccc;
 	background: rgba(0, 0, 0, 0.01);
 }
 .statusCircle.finished rect {
