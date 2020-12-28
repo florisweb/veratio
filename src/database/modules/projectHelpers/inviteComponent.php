@@ -60,7 +60,7 @@
 
 			$newUser = $this->DTTemplate->update($user);
 			if (is_string($newUser)) return "E_unknownError";
-			return $inviteId; 
+			return array("id" => $inviteId); 
 		}
 
 		public function joinAsLink($_originalInviteId, $_inviteUserObj) {

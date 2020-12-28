@@ -401,10 +401,10 @@ function MainContent_settingsPage(_projectId) {
 	this.inviteUserByLink = async function() {
 		let project = await Server.getProject(MainContent.curProjectId);
 		
-		let returnVal = await project.users.inviteByLink();
-		if (typeof returnVal !== "string") console.error("An error accured while inviting a user:", returnVal);
+		let response = await project.users.inviteByLink();
+		if (response.error) console.error("An error accured while inviting a user:", response);
 
-		Popup.inviteByLinkCopyMenu.open("https://florisweb.tk/git/veratio/invite?id=" + returnVal);
+		Popup.inviteByLinkCopyMenu.open("https://florisweb.tk/git/veratio/invite?id=" + response.result.id);
 		This.open(MainContent.curProjectId);
 	}
 

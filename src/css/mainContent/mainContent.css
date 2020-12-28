@@ -163,7 +163,6 @@ body.appLoading #mainContent {
 
 		overflow-x: hidden;
 		overflow-y: auto;
-
 		transition: opacity 0.3s;
 	}
 
