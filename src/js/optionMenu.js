@@ -149,7 +149,6 @@ function _OptionMenu_menu(_self) {
 		let ownHeight = HTML.Self.offsetHeight;
 		if (top + _item.offsetHeight + ownHeight + popupMargin > window.innerHeight) top -= ownHeight + _item.offsetHeight;
 
-		console.log(left, top);
 		HTML.Self.style.left = left + "px";
 		HTML.Self.style.top	 = top + "px";
 	}

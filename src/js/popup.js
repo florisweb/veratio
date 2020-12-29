@@ -4,9 +4,7 @@
 
 
 
-function Popup2({title, content}) {
-	content = [new Title({title: title})].concat(content);
-
+function Popup2({title, content, onOpen, onClose}) {
 	let HTML 		= createHTML();
 	this.content 	= content;
 	this.openState 	= false;
@@ -20,8 +18,8 @@ function Popup2({title, content}) {
 		HTML.popup = document.createElement("div");
 		HTML.popup.className = "popup";
 
-
-		for (item of content) 
+		let newContent = [new Title({title: title})].concat(content);
+		for (item of newContent) 
 		{
 			let html = item.createHTML();
 			if (!html) continue;
@@ -38,11 +36,17 @@ function Popup2({title, content}) {
 	this.open = function() {
 		this.openState = true;
 		HTML.popupHolder.classList.remove("hide");
+		try {
+			onOpen(...arguments);
+		} catch (e) {};
 	};
 
 	this.close = function() {
 		this.openState = false;
 		HTML.popupHolder.classList.add("hide");
+		try {
+			onClose(...arguments);
+		} catch (e) {};
 	}
 }
 
@@ -92,47 +96,48 @@ function Button({title = '', onclick, filled = false, color, floatLeft = false})
 }
 
 
-function InputField({placeHolder, maxLength = 32}) {
-	let HTML;
+function InputField({placeHolder, maxLength = 32, readonly = false}) {
+	this.HTML;
 	this.createHTML = function() {
-		HTML = document.createElement('input');
-		HTML.className = 'text inputField';
-		if (placeHolder) 	HTML.setAttribute('placeHolder', String(placeHolder));
-		if (maxLength) 		HTML.setAttribute('maxLength', maxLength)
+		this.HTML = document.createElement('input');
+		this.HTML.className = 'text inputField';
+		if (placeHolder) 	this.HTML.setAttribute('placeHolder', String(placeHolder));
+		if (readonly) 		this.HTML.setAttribute('readonly', true);
+		if (maxLength) 		this.HTML.setAttribute('maxLength', maxLength)
 
-		return HTML;
+		return this.HTML;
 	}
 	
-	this.focus = function () {HTML.focus()};
+	this.focus = function () {this.HTML.focus()};
+	this.setValue = function(_newValue) {this.HTML.value = _newValue};
+	this.getValue = function() {return this.HTML.value};
 }
 
 
 
 function OptionSelector() {
 	let This = this;
-	let HTML = {};
+	this.HTML = {};
 	let Menu = OptionMenu.create(1001);
-	this.Menu = Menu;
 	this.getOpenState = function() {return Menu.openState};
 	this.value = false;
 
 	this.createHTML = function() {
-		HTML.button = document.createElement("div");
-		HTML.button.className = "UI selectBox";
-		HTML.button.innerHTML = "<a class='button floatLeft bBoxy bDefault text clickable'>" +
+		this.HTML.button = document.createElement("div");
+		this.HTML.button.className = "UI selectBox";
+		this.HTML.button.innerHTML = "<a class='button floatLeft bBoxy bDefault text clickable'>" +
 								"<img src='images/icons/dropDownIcon.png' class='dropDownIcon'>" + 
 								"<span>hello</span>" + 
 							"</a>";
-		HTML.buttonText = HTML.button.children[0].children[1];
+		this.HTML.buttonText = HTML.button.children[0].children[1];
 
-		HTML.button.addEventListener("click", function () {This.openPopup(); console.log('hi')});
+		this.HTML.button.addEventListener("click", function () {This.openPopup(); console.log('hi')});
 	
-		window.HTML = HTML;
-		return HTML.button;
+		return this.HTML.button;
 	}
 
 	this.openPopup = function() {
-		Menu.open(HTML.button, {left: 0, top: 0});
+		Menu.open(this.HTML.button, {left: 0, top: 0});
 	}
 
 	this.closePopup = function() {
@@ -151,43 +156,6 @@ function OptionSelector() {
 
 
 
-
-
-	// function _buildOptionHolder(_info) {
-	// 	let select = document.createElement("select");
-	// 	select.className = "optionHolder";
-	// 	if (_info.id) select.setAttribute("id", _info.id);
-		
-	// 	for (let i = 0; i < _info.options.length; i++)
-	// 	{
-	// 		let option = _buildOptions(_info.options[i]);
-	// 		select.appendChild(option);
-	// 	}
-	// 	return select;
-	// }
-	// 	function _buildOptions(_option) {
-	// 		let option = document.createElement("option");
-	// 		option.className = "optionItem";
-	// 		if (_option.option) option.text = _option.option;
-	// 		if (_option.value) option.value = _option.value;
-	// 		return option;
-	// 	}
-
-
-	// function _buildSubHeader(_info) {
-	// 	let element = document.createElement("a");
-	// 	element.className = "text header subHeader";
-	// 	setTextToElement(element, _info.subHeader);
-		
-	// 	return element;
-	// }
-
-
-
-
-
-
-
 function VerticalSpace({height = 30}) {
 	let HTML;
 	this.createHTML = function() {
@@ -198,59 +166,12 @@ function VerticalSpace({height = 30}) {
 		return HTML;
 	}
 }
+
 function LineBreak() {
 	VerticalSpace.call(this, {height: 0})
 }
 
 
-
-
-
-let P = new Popup2({
-	title: "Create Tag",
-	content: [
-		new Text({text: "Your tag's title"}),
-		new Text({text: " Your tag's title ", isHeader: true}),
-		new Text({text: "Your tag's title", isHighlighted: true}),
-		new LineBreak(),
-		new Button({title: "Create", filled: true, color: "#7592BF", onclick: function() {console.log("hey")}, floatLeft: true}),
-		new VerticalSpace({height: 30}),
-		new InputField({placeHolder: "Your tag's title"}),
-		new VerticalSpace({height: 40}),
-		new OptionSelector(),
-		new VerticalSpace({height: 40}),
-		new Button({title: "Create", filled: true, onclick: function() {console.log("hey")}}),
-		new Button({title: "Cancel", filled: false, onclick: function() {P.close()}}),
-		new VerticalSpace({height: 40}),
-	]
-})
-
-
-
-P.content[9].addOption({title: "hey", value: 2, icon: ""});
-
-
-
-
-// ============== DOCUMENTATION ===================
-// Usage:
-// f: hide								closes the popup
-// f: showNotification(notification)	opens a popup containing the information given in the notification object
-// 
-// NOTIFICATION OBJECT: array
-// items: 
-// - Raw html string 				"<br>"
-// - Raw html object				document.createElement("br")
-// - Title 							{title: yourTitle}						Can be used to show the user what the popup is about
-// - Text 							{text: yourText, highlighted: true}		
-// - Checkbox 						{checkBox: MyCheckboxes text, id: id for event handeling},
-// - BUTTON OBJECT: array			{buttons: []}
-//		- Button 					{button: buttons name, onclick: function () {}, important: true, color: "rgb()"}		
-//										important means filled in
-//										color: color to fill the button in with
-// - inputfield 					{input: input fields placeholder, id: id for event handeling, value: the startvalue to be set} 
-// 
-// 
 
 
 
@@ -417,37 +338,38 @@ function _popup(_builder) {
 
 function _Popup_createProject() {
 	let This = this;
-	let builder = [
-		{title: "CREATE PROJECT"},
-		"<br><br>",
-		{input: "Project title", value: null, customClass: "text", maxLength: 256},
-		"<br><br>",
-		"<br><br>",
-		"<br>",
-		{buttons: [
-			{button: "CANCEL", onclick: function () {This.close()}},
-			{button: "CREATE", onclick: function () {This.createProject()}, important: true, color: COLOUR.POSITIVE}
-		]}
-	];
+	Popup2.call(this, {
+		title: "Create Project",
+		content: [
+			new Text({text: "Title", isHeader: true}),
+			new VerticalSpace({height: 5}),
+			new InputField({placeHolder: "Project title", maxLength: 256}),
+			new VerticalSpace({height: 20}),
+			new Button({
+				title: "Create", 
+				onclick: function () {This.createProject()},
+				filled: true,
+			}),
+			new Button({
+				title: "Cancel", 
+				onclick: function () {This.close()},
+			})
+		],
+		onOpen: onOpen
+	});
+	
+	let projectTitleInput = this.content[3];
 
-	_popup.call(this, builder);
-	this.HTML.projectTitle = this.HTML.popup.children[2];
-
-	let extend_open = this.open;
-
-	this.open = function() {
-		extend_open.apply(this);
-		this.HTML.projectTitle.value = null;
-		this.HTML.projectTitle.focus();
+	function onOpen() {
+		projectTitleInput.setValue(null);
+		projectTitleInput.focus();
 	}
 
-
-
 	this.createProject = async function() {
-		let project = scrapeProjectData();
-		if (typeof project != "object") return alert(project);
+		let title = projectTitleInput.getValue();
+		if (!title || title.length < 2) return alert("E_incorrectTitle");
 
-		project = await Server.createProject(project.title);
+		project = await Server.createProject(title);
 		if (!project) return console.error("Something went wrong while creating a project:", project);
 		
 		SideBar.projectList.fillProjectHolder();
@@ -456,80 +378,75 @@ function _Popup_createProject() {
 		
 		this.close();
 	} 
-	
-
-	function scrapeProjectData() {
-		let project = {title: This.HTML.projectTitle.value};
-		
-		if (!project.title || project.title.length < 2) return "E_incorrectTitle";
-
-		return project;
-	}
 }
+
+
 
 
 function _Popup_inviteByLinkCopyMenu() {
 	let This = this;
-	let builder = [
-		{title: "SUCCESSFULLY CREATED LINK"},
-		"<br><br>",
-		{text: "Copy and send this link to your invitee."},
-		"<br><br>",
-		{input: "Invitelink", value: null, customClass: "text"},
-		"<br><br>",
-		"<br><br>",
-		{buttons: [
-			{button: "CLOSE", onclick: function () {This.close()}, important: true, color: COLOUR.WARNING}
-		]}
-	];
+	Popup2.call(this, {
+		title: "Successfully created link",
+		content: [
+			new Text({text: "Copy and send this link to your invitee."}),
+			new LineBreak(),
+			new InputField({readonly: true}),
+			new VerticalSpace({height: 20}),
+			new Button({
+				title: "Close",
+				onclick: function () {This.close()},
+				filled: true,
+				color: COLOUR.WARNING,
+			})
+		],
+		onOpen: onOpen
+	});
 
-	_popup.call(this, builder);
-	this.HTML.linkHolder = this.HTML.popup.children[4];
-	this.HTML.linkHolder.setAttribute("readonly", "true");
-	let extend_open = this.open;
-
-	this.open = function(_link) {
-		extend_open.apply(this);
-		this.HTML.linkHolder.value = _link;
-		this.HTML.linkHolder.setSelectionRange(0, _link.length);
+	let linkField = this.content[2];
+	function onOpen(_link) {
+		linkField.setValue(_link);
+		linkField.HTML.setSelectionRange(0, _link.length);
 	}
 }
 
 
 function _Popup_inviteByEmailMenu() {
 	let This = this;
-	let builder = [
-		{title: "INVITE BY EMAIL"},
-		"<br><br>",
-		{text: "Enter your invitees email-adress."},
-		"<br><br>",
-		{input: "Email-adress", value: null, customClass: "text"},
-		"<br><br>",
-		"<br><br>",
-		{buttons: [
-			{button: "CANCEL", onclick: function () {This.close()}},
-			{button: "INVITE", onclick: function () {This.inviteUser()}, important: true, color: COLOUR.POSITIVE}
-		]}
-	];
+	Popup2.call(this, {
+		title: "Invite by email",
+		content: [
+			new Text({text: "Enter your invitees email-adress."}),
+			new LineBreak(),
+			new InputField({placeHolder: "Email-adress"}),
+			new VerticalSpace({height: 20}),
+			new Button({
+				title: "Invite",
+				onclick: function () {This.inviteUser()},
+				filled: true,
+				color: COLOUR.POSITIVE,
+			}),
+			new Button({
+				title: "Close",
+				onclick: function () {This.close()},
+			})
+		],
+		onOpen: onOpen
+	});
 
-	_popup.call(this, builder);
-	this.HTML.emailAdressHolder = this.HTML.popup.children[4];
-	let extend_open = this.open;
+	let emailInputField = this.content[2];
 
-	this.open = function() {
-		extend_open.apply(this);
-		this.HTML.emailAdressHolder.value = null;
-		this.HTML.emailAdressHolder.focus();
+	function onOpen() {
+		emailInputField.setValue(null);
+		emailInputField.focus();
 	}
 
 	this.inviteUser = async function() {
-		let email = this.HTML.emailAdressHolder.value;
+		let email = emailInputField.getValue();
 		let project = await Server.getProject(MainContent.curProjectId);
 		
 		let returnVal = await project.users.inviteByEmail(email);
 		if (returnVal !== true) console.error("An error accured while inviting a user:", returnVal);
 		
-		this.HTML.emailAdressHolder.value = null;
 		This.close();
 
 		MainContent.settingsPage.open(MainContent.curProjectId);
