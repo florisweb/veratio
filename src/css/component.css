@@ -17,7 +17,7 @@
 
 	.button.bDefault {
 		/*background: #7592BF !important;*/
-		background: rgb(140, 153, 247) !important;
+		background: rgb(140, 153, 247);
 		color: #fff !important;
 	}
 
@@ -67,15 +67,14 @@
 	left: 0;
 	padding: 7px 3px;
 	height: 32px;
-	border-radius: 30px;
+	border-radius: 3px;
 	background: transparent;
 
-	border: 2px solid #eee;
+	border: 1px solid #bbb;
 	outline: none;
+
+	color: #555;
 }
-	.inputField.iBoxy {
-		border-radius: 3px;
-	}
 
 
 
@@ -84,7 +83,7 @@
 
 .text {
 	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-	color: #999;
+	color: #777;
 	font-size: 15px;
 }
 

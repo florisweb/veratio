@@ -49,8 +49,8 @@
 		<title>Veratio - Florisweb.tk</title>
 		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0' name='viewport'/>
 
-		<link rel="stylesheet" type="text/css" href="css/component.css?a=54">
-		<link rel="stylesheet" type="text/css" href="css/popup.css?a=39">
+		<link rel="stylesheet" type="text/css" href="css/component.css?a=55">
+		<link rel="stylesheet" type="text/css" href="css/popup.css?a=40">
 		<link rel="stylesheet" type="text/css" href="css/main.css?a=30">
 		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=33">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=65">
@@ -163,6 +163,7 @@
 			// temporary so things don't get cached
 			let antiCache = Math.round(Math.random() * 100000000);
 			// Modules
+			$.getScript("js/extraFunctions.js?antiCache=" 							+ antiCache, function() {});
 			$.getScript("js/DOMData.js?antiCache=" 									+ antiCache, function() {});
 			$.getScript("js/time.js?antiCache=" 									+ antiCache, function() {});
 			$.getScript("js/UI.js?antiCache=" 										+ antiCache, function() {});
@@ -170,7 +171,6 @@
 			$.getScript("js/textFormater.js?antiCache=" 							+ antiCache, function() {});
 
 			$.getScript("js/constants.js?antiCache=" 								+ antiCache, function() {});
-			$.getScript("js/extraFunctions.js?antiCache=" 							+ antiCache, function() {});
 			$.getScript("js/optionMenu.js?antiCache=" 								+ antiCache, function() {});
 			$.getScript("js/popup.js?antiCache=" 									+ antiCache, function() {});
 

@@ -1,3 +1,185 @@
+
+
+
+
+
+
+function Popup2({title, content}) {
+	content = [new Title({title: title})].concat(content);
+
+	let HTML 		= createHTML();
+	this.content 	= content;
+	this.openState 	= false;
+
+
+	function createHTML() {
+		let HTML = {}
+		HTML.popupHolder = document.createElement("div");
+		HTML.popupHolder.className = 'popupHolder hide';
+
+		HTML.popup = document.createElement("div");
+		HTML.popup.className = "popup";
+
+
+		for (item of content) 
+		{
+			let html = item.createHTML();
+			if (!html) continue;
+
+			HTML.popup.append(html);
+		}
+
+
+		HTML.popupHolder.append(HTML.popup);
+		document.body.append(HTML.popupHolder);
+		return HTML;
+	}
+
+	this.open = function() {
+		this.openState = true;
+		HTML.popupHolder.classList.remove("hide");
+	};
+
+	this.close = function() {
+		this.openState = false;
+		HTML.popupHolder.classList.add("hide");
+	}
+}
+
+
+
+function Title({title}) {
+	let HTML;
+	this.createHTML = function() {
+		HTML 				= document.createElement("div");
+		HTML.className 		= "title text";
+		setTextToElement(HTML, title);
+		return HTML;
+	}
+}
+
+
+function Text({text, isHeader = false, isHighlighted = false}) {
+	let HTML;
+	this.createHTML = function() {
+		HTML 				= document.createElement("a");
+		HTML.className 		= "text";
+		if (isHeader) 		HTML.classList.add("header");
+		if (isHighlighted) 	HTML.classList.add("highlighted");
+		
+		if (text.substr(0, 1) == " ")					HTML.style.marginLeft = "3px";
+		if (text.substr(text.length - 1, 1) == " ") 	HTML.style.marginRight = "3px";
+
+		setTextToElement(HTML, text);
+		return HTML;
+	}
+}
+
+function Button({title = '', onclick, filled = false, color, floatLeft = false}) {
+	let HTML;
+	this.createHTML = function() {
+		HTML = document.createElement("div");
+		HTML.className = "button text bBoxy";
+		if (filled)		HTML.classList.add("bDefault");
+		if (color)		HTML.style.background = color;
+		if (floatLeft)	HTML.classList.add("floatLeft");
+
+		HTML.addEventListener("click", onclick);
+		setTextToElement(HTML, title);
+
+		return HTML;
+	}
+}
+
+
+function InputField({placeHolder, maxLength = 32}) {
+	let HTML;
+	this.createHTML = function() {
+		HTML = document.createElement('input');
+		HTML.className = 'text inputField';
+		if (placeHolder) 	HTML.setAttribute('placeHolder', String(placeHolder));
+		if (maxLength) 		HTML.setAttribute('maxLength', maxLength)
+
+		return HTML;
+	}
+	
+	this.focus = function () {HTML.focus()};
+}
+
+
+function VerticalSpace({height = 30}) {
+	let HTML;
+	this.createHTML = function() {
+		HTML = document.createElement('div');
+		HTML.className = 'verticalSpace';
+		if (height) HTML.style.height = parseInt(height) + "px";
+
+		return HTML;
+	}
+}
+function LineBreak() {
+	VerticalSpace.call(this, {height: 0})
+}
+
+
+
+
+
+let P = new Popup2({
+	title: "Create Tag",
+	content: [
+		new Text({text: "Your tag's title"}),
+		new Text({text: " Your tag's title ", isHeader: true}),
+		new Text({text: "Your tag's title", isHighlighted: true}),
+		new LineBreak(),
+		new Button({title: "Create", filled: true, color: "#7592BF", onclick: function() {console.log("hey")}, floatLeft: true}),
+		new VerticalSpace({height: 30}),
+		new InputField({placeHolder: "Your tag's title"}),
+		new VerticalSpace({height: 20}),
+		new Button({title: "Create", filled: true, onclick: function() {console.log("hey")}}),
+		new Button({title: "Cancel", filled: false, onclick: function() {console.log("hey")}}),
+		new VerticalSpace({height: 40}),
+	]
+})
+
+
+
+	// function _buildOptionHolder(_info) {
+	// 	let select = document.createElement("select");
+	// 	select.className = "optionHolder";
+	// 	if (_info.id) select.setAttribute("id", _info.id);
+		
+	// 	for (let i = 0; i < _info.options.length; i++)
+	// 	{
+	// 		let option = _buildOptions(_info.options[i]);
+	// 		select.appendChild(option);
+	// 	}
+	// 	return select;
+	// }
+	// 	function _buildOptions(_option) {
+	// 		let option = document.createElement("option");
+	// 		option.className = "optionItem";
+	// 		if (_option.option) option.text = _option.option;
+	// 		if (_option.value) option.value = _option.value;
+	// 		return option;
+	// 	}
+
+
+	// function _buildSubHeader(_info) {
+	// 	let element = document.createElement("a");
+	// 	element.className = "text header subHeader";
+	// 	setTextToElement(element, _info.subHeader);
+		
+	// 	return element;
+	// }
+
+
+
+
+
+
+
+
 // ============== DOCUMENTATION ===================
 // Usage:
 // f: hide								closes the popup

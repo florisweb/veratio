@@ -596,8 +596,8 @@ function TaskHolder_createMenuConstructor(_config, _type) {
 
 		html.innerHTML = '<div class="createMenuHolder">' + 
 							'<div class="statusCircle"></div>' + 
-							'<input class="text inputField iBoxy clickable taskTitle">' + 
-							'<input class="text inputField iBoxy clickable taskPlannedDate" placeholder="Planned Date">' + 
+							'<input class="text inputField clickable taskTitle">' + 
+							'<input class="text inputField clickable taskPlannedDate" placeholder="Planned Date">' + 
 							'<div class="leftHand">' + 
 								'<div class="text button bDefault bBoxy" style="float: left"></div>' + 
 								'<div class="text button" style="float: left">Cancel</div>' + 
