@@ -102,7 +102,7 @@ function _TaskRenderer() {
 				let tag = await project.tags.get(task.tagId);
 				if (!tag) tag = {colour: new Color("#999")};
 
-				html.children[1].append(This.createTagCircle(tag));
+				html.children[1].append(This.createTagCircle(tag, true));
 			}
 
 
@@ -273,12 +273,12 @@ function _TaskRenderer() {
 			}
 
 
-	this.createTagCircle = function(_tag, _finished = false) {
+	this.createTagCircle = function(_tag, _showCheckIcon = false) {
 		let html = document.createElement("div");
 		html.innerHTML = '<?xml version="1.0" standalone="no"?><svg class="statusCircle clickable" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="isolation:isolate" viewBox="0 0 83 83" width="83" height="83"><defs><clipPath id="_clipPath_EvyxEBqQoipdaXxIJMEjCjvXV7edc1qw"><rect width="83" height="83"/></clipPath></defs><g clip-path="url(#_clipPath_EvyxEBqQoipdaXxIJMEjCjvXV7edc1qw)"><rect x="0.729" y="42.389" width="43.308" height="20" transform="matrix(0.707,0.707,-0.707,0.707,43.601,-0.482)"/><rect x="16.22" y="30.02" width="70" height="20" transform="matrix(0.707,-0.707,0.707,0.707,-13.296,47.939)"/></g></svg>';
 		
 		let tagCircle = html.children[0];
-		if (_finished) tagCircle.classList.add("finished");
+		if (_showCheckIcon) tagCircle.classList.add("showCheckIcon");
 
 		tagCircle.style.backgroundColor		= _tag.colour.merge(new Color("rgba(255, 255, 255, .1)"), .3).toRGBA();
 		tagCircle.style.borderColor 		= _tag.colour.merge(new Color("#fff"), .8).toRGBA();

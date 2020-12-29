@@ -9,7 +9,7 @@
 	border: 1px solid #ccc;
 	background: rgba(0, 0, 0, 0.01);
 }
-.statusCircle.finished rect {
+.statusCircle:not(.showCheckIcon) rect {
 	fill-opacity: 0;
 }
 

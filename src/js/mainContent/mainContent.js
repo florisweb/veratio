@@ -341,7 +341,7 @@ function _MainContent_searchOptionMenu() {
 				case "#": 
 					return {
 						title: _item.item.title,
-						image: MainContent.taskPage.renderer.createTagCircle(_item.item, true)
+						image: MainContent.taskPage.renderer.createTagCircle(_item.item)
 					}
 				default:
 					return {

@@ -593,7 +593,7 @@ function _Popup_tagMenu() {
 		let html = document.createElement("div");
 		html.className = "UI listItem clickable";
 
-		let tagCircle = MainContent.taskPage.renderer.createTagCircle(_tag, true);
+		let tagCircle = MainContent.taskPage.renderer.createTagCircle(_tag);
 		html.appendChild(tagCircle);
 
 		html.innerHTML += 	"<div class='text'></div>" + 
@@ -813,7 +813,7 @@ function _Popup_createTagMenu() {
 			let option = menu.addOption(colour.name, "", colour);
 			option.html.removeChild(option.html.children[0]);
 			
-			let tagCircle = MainContent.taskPage.renderer.createTagCircle(colour, true);
+			let tagCircle = MainContent.taskPage.renderer.createTagCircle(colour);
 			option.html.insertBefore(tagCircle, option.html.children[0]);
 		}
 
