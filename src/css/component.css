@@ -480,9 +480,6 @@ div.optionGroup {
 
 
 
-.UI.selectBox {
-
-}
 
 .UI.selectBox img {
 	position: relative;
@@ -492,7 +489,13 @@ div.optionGroup {
 	top: 2px;
 	margin-right: 9px;
 	margin-left: -4px;
+	pointer-events: none;
 }
+
+.UI.selectBox span {
+	pointer-events: none;
+}
+
 
 
 .UI.selectBox div.UI.box {

@@ -1,9 +1,10 @@
 
-function _OptionMenu() {
-	this.create = function(_parent) {
+const OptionMenu = new function() {
+	this.create = function(_ZIndex = 100) {
 		let html = document.createElement("div");
 		html.className = "optionMenuHolder hide";
-		_parent.append(html);
+		html.style.zIndex = _ZIndex;
+		document.body.append(html);
 
 		let Menu = new _OptionMenu_menu(html);
 
@@ -135,21 +136,21 @@ function _OptionMenu_menu(_self) {
 	function moveToItem(_item, _relativePosition = {left: 0, top: 0}, _event) {
 		if (!_item) return false;
 
-		let top = _item.getBoundingClientRect().top + HTML.parent.scrollTop + _relativePosition.top;
-		let left = _event ? _event.clientX - 325 :  $("#mainContentHolder")[0].offsetWidth - 180;
-		
-		left += _relativePosition.left;
+		let top = _item.getBoundingClientRect().top +  HTML.parent.scrollTop;
+		// _relativePosition.top;
+		let left = _item.getBoundingClientRect().left;
+		if (_event) left = _event.clientX;
+		// left += _relativePosition.left;
 
-		let maxLeft = $("#mainContent")[0].offsetWidth - HTML.Self.offsetWidth - popupMargin;
+
+
+		let maxLeft = document.body.offsetWidth - HTML.Self.offsetWidth - popupMargin;
 		if (left > maxLeft) left = maxLeft;
 
 		let ownHeight = HTML.Self.offsetHeight;
-		if (top + _item.offsetHeight + ownHeight + popupMargin > window.innerHeight) 
-		{
-			top -= ownHeight + _item.offsetHeight;
-		}
+		if (top + _item.offsetHeight + ownHeight + popupMargin > window.innerHeight) top -= ownHeight + _item.offsetHeight;
 
-
+		console.log(left, top);
 		HTML.Self.style.left = left + "px";
 		HTML.Self.style.top	 = top + "px";
 	}

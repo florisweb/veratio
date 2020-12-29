@@ -107,40 +107,49 @@ function InputField({placeHolder, maxLength = 32}) {
 }
 
 
-function VerticalSpace({height = 30}) {
-	let HTML;
+
+function OptionSelector() {
+	let This = this;
+	let HTML = {};
+	let Menu = OptionMenu.create(document.body, 1001);
+	this.Menu = Menu;
+	this.getOpenState = function() {return Menu.openState};
+	this.value = false;
+
 	this.createHTML = function() {
-		HTML = document.createElement('div');
-		HTML.className = 'verticalSpace';
-		if (height) HTML.style.height = parseInt(height) + "px";
+		HTML.button = document.createElement("div");
+		HTML.button.className = "UI selectBox";
+		HTML.button.innerHTML = "<a class='button floatLeft bBoxy bDefault text clickable'>" +
+								"<img src='images/icons/dropDownIcon.png' class='dropDownIcon'>" + 
+								"<span>hello</span>" + 
+							"</a>";
+		HTML.buttonText = HTML.button.children[0].children[1];
 
-		return HTML;
+		HTML.button.addEventListener("click", function () {This.openPopup(); console.log('hi')});
+	
+		window.HTML = HTML;
+		return HTML.button;
 	}
+
+	this.openPopup = function() {
+		Menu.open(HTML.button, {left: 0, top: 0});
+	}
+
+	this.closePopup = function() {
+		Menu.close();
+	}
+
+
+	this.addOption = function ({title, value, icon}) {
+		let option = Menu.addOption(title, function() {
+			This.value = value;
+			setTextToElement(HTML.buttonText, title);
+			Menu.close();
+		}, icon);
+	}	
 }
-function LineBreak() {
-	VerticalSpace.call(this, {height: 0})
-}
 
 
-
-
-
-let P = new Popup2({
-	title: "Create Tag",
-	content: [
-		new Text({text: "Your tag's title"}),
-		new Text({text: " Your tag's title ", isHeader: true}),
-		new Text({text: "Your tag's title", isHighlighted: true}),
-		new LineBreak(),
-		new Button({title: "Create", filled: true, color: "#7592BF", onclick: function() {console.log("hey")}, floatLeft: true}),
-		new VerticalSpace({height: 30}),
-		new InputField({placeHolder: "Your tag's title"}),
-		new VerticalSpace({height: 20}),
-		new Button({title: "Create", filled: true, onclick: function() {console.log("hey")}}),
-		new Button({title: "Cancel", filled: false, onclick: function() {console.log("hey")}}),
-		new VerticalSpace({height: 40}),
-	]
-})
 
 
 
@@ -176,6 +185,49 @@ let P = new Popup2({
 
 
 
+
+
+
+function VerticalSpace({height = 30}) {
+	let HTML;
+	this.createHTML = function() {
+		HTML = document.createElement('div');
+		HTML.className = 'verticalSpace';
+		if (height) HTML.style.height = parseInt(height) + "px";
+
+		return HTML;
+	}
+}
+function LineBreak() {
+	VerticalSpace.call(this, {height: 0})
+}
+
+
+
+
+
+let P = new Popup2({
+	title: "Create Tag",
+	content: [
+		new Text({text: "Your tag's title"}),
+		new Text({text: " Your tag's title ", isHeader: true}),
+		new Text({text: "Your tag's title", isHighlighted: true}),
+		new LineBreak(),
+		new Button({title: "Create", filled: true, color: "#7592BF", onclick: function() {console.log("hey")}, floatLeft: true}),
+		new VerticalSpace({height: 30}),
+		new InputField({placeHolder: "Your tag's title"}),
+		new VerticalSpace({height: 40}),
+		new OptionSelector(),
+		new VerticalSpace({height: 40}),
+		new Button({title: "Create", filled: true, onclick: function() {console.log("hey")}}),
+		new Button({title: "Cancel", filled: false, onclick: function() {P.close()}}),
+		new VerticalSpace({height: 40}),
+	]
+})
+
+
+
+P.content[9].addOption({title: "hey", value: 2, icon: ""});
 
 
 
@@ -281,7 +333,6 @@ function _popup(_builder) {
 		if ("button" in _item) 			element = _buildButton(_item);
 		if ("buttons" in _item) 		element = _buildButtons(_item.buttons);
 		if ("input" in _item) 			element = _buildInput(_item);
-		if ("options" in _item) 		element = _buildOptionHolder(_item);
 		if (_item.onclick) 				element.onclick = _item.onclick;
 		if (_item.customClass) 			element.classList.add(_item.customClass);
 		return element;
@@ -311,18 +362,6 @@ function _popup(_builder) {
 		return element;
 	}
 
-	function _buildCheckbox(_info) {
-		let element = document.createElement("div");
-		element.className = "checkBoxHolder";
-
-		element.append(_buildText({text: _info.checkBox}))
-		let html = '<input type="checkbox">';
-		element.innerHTML = html;
-		if (_info.id) element.children[0].setAttribute("id", _info.id);
-		if (_info.checked) element.children[0].classList.add("checked");
-
-		return element;
-	}
 
 	function _buildButtons(_buttons) {
 		let buttonBar = document.createElement("div");
@@ -360,27 +399,6 @@ function _popup(_builder) {
 
 		return input;
 	}
-	
-	function _buildOptionHolder(_info) {
-		let select = document.createElement("select");
-		select.className = "optionHolder";
-		if (_info.id) select.setAttribute("id", _info.id);
-		
-		for (let i = 0; i < _info.options.length; i++)
-		{
-			let option = _buildOptions(_info.options[i]);
-			select.appendChild(option);
-		}
-		return select;
-	}
-		function _buildOptions(_option) {
-			let option = document.createElement("option");
-			option.className = "optionItem";
-			if (_option.option) option.text = _option.option;
-			if (_option.value) option.value = _option.value;
-			return option;
-		}
-
 
 	function _buildSubHeader(_info) {
 		let element = document.createElement("a");
