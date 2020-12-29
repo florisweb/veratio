@@ -497,7 +497,7 @@ function MainContent_settingsPage(_projectId) {
 			if (!project.users.Self.permissions.users.remove(member))				Menu.options[0].disable();
 			if (!project.users.Self.permissions.users.changePermissions(member)) 	Menu.options[1].disable();
 
-			return Menu.open(_target, {left: -100, top: -45});
+			return Menu.open(_target, {left: -75, top: 30});
 		}
 
 		this.openState 	= Menu.openState;

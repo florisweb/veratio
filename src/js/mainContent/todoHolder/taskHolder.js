@@ -18,11 +18,11 @@ function _MainContent_taskHolder() {
 
 		let menu_open = Menu.open;
 		Menu.open = function(_item, _event) {
-			menu_open.call(Menu, _item, {left: 0, top: -20}, _event);
+			menu_open.call(Menu, _item, {left: 10, top: 25}, _event);
 			if (_item.tagName != "INPUT") return;
 			
 			_item.onkeyup = function(_e) {
-				menu_open.call(Menu, _item, {left: 0, top: -20});
+				menu_open.call(Menu, _item, {left: 0, top: 25});
 				Menu.openState = true;
 				Menu.removeAllOptions();
 

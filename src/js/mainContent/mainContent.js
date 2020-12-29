@@ -81,7 +81,7 @@ function _MainContent_userIndicatorMenu() {
 	this.open = async function(_user, _item, _event) {
 		Menu.removeAllOptions();
 		setUser(_user);
-		return Menu.open(_item, {top: -40, left: -20}, _event);
+		return Menu.open(_item, {left: -80, top: 25}, _event);
 	}
 
 	function setUser(_user) {		
@@ -147,7 +147,7 @@ function _MainContent_optionMenu() {
 		if (!project.users.Self.permissions.tasks.update || 
 			 curDOMData.task.groupType == "overdue")							Menu.options[2].disable();
 
-		return Menu.open(_item, {top: -20, left: 0}, _event);
+		return Menu.open(_item, {left: -50, top: 20}, _event);
 	}
 }
 
@@ -461,8 +461,8 @@ function _MainContent_searchOptionMenu() {
 
 		function moveToItem(_characterIndex = 0) {
 			Menu.open(inputField, {
-				left: _characterIndex * 6.2 - inputField.offsetWidth + 30,
-				top: -20
+				left: _characterIndex * 6.2 - 10,
+				top: 25
 			});
 			This.openState = Menu.openState;
 		}
