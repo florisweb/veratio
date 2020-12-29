@@ -136,11 +136,10 @@ function _OptionMenu_menu(_self) {
 	function moveToItem(_item, _relativePosition = {left: 0, top: 0}, _event) {
 		if (!_item) return false;
 
-		let top = _item.getBoundingClientRect().top +  HTML.parent.scrollTop;
-		// _relativePosition.top;
+		let top = _item.getBoundingClientRect().top +  HTML.parent.scrollTop + _relativePosition.top;
 		let left = _item.getBoundingClientRect().left;
 		if (_event) left = _event.clientX;
-		// left += _relativePosition.left;
+		left += _relativePosition.left;
 
 
 

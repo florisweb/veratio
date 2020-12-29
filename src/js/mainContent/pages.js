@@ -459,7 +459,7 @@ function MainContent_settingsPage(_projectId) {
 
 
 	this.optionMenu = new function() {
-		let Menu = OptionMenu.create(HTML.Self);
+		let Menu = OptionMenu.create();
 		let curItem = "";
 		let curMemberId = "";	
 

@@ -10,7 +10,7 @@ function _MainContent_taskHolder() {
 	}
 
 	this.dateOptionMenu = function() {
-		let Menu = OptionMenu.create(HTML.taskPage, true);
+		let Menu = OptionMenu.create();
 	
 		Menu.removeAllOptions = function() {
 			for (option of Menu.options) this.options[0].remove();

@@ -11,7 +11,7 @@ function _MainContent_header() {
 	}
 
 	this.optionMenu = new function() {
-		let Menu = OptionMenu.create(HTML.mainContent);		
+		let Menu = OptionMenu.create();
 
 		Menu.addOption(
 			"Settings", 

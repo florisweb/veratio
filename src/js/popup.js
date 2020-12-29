@@ -111,7 +111,7 @@ function InputField({placeHolder, maxLength = 32}) {
 function OptionSelector() {
 	let This = this;
 	let HTML = {};
-	let Menu = OptionMenu.create(document.body, 1001);
+	let Menu = OptionMenu.create(1001);
 	this.Menu = Menu;
 	this.getOpenState = function() {return Menu.openState};
 	this.value = false;
@@ -753,7 +753,7 @@ function _Popup_tagMenu() {
 
 	
 
-	const Menu = OptionMenu.create(this.HTML.Self);
+	const Menu = OptionMenu.create();
 	
 	Menu.addOption("Remove", async function () {
 		if (!CurTag) return;

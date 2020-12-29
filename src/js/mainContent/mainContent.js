@@ -75,7 +75,7 @@ function _MainContent_userIndicatorMenu() {
 		mainContentHolder: mainContentHolder
 	}
 
-	let Menu = OptionMenu.create(HTML.mainContentHolder);
+	let Menu = OptionMenu.create();
 
 	this.close = Menu.close;
 	this.open = async function(_user, _item, _event) {
@@ -105,7 +105,7 @@ function _MainContent_optionMenu() {
 	let This = this;
 	
 	let curDOMData;
-	let Menu = OptionMenu.create(HTML.mainContentHolder);
+	let Menu = OptionMenu.create();
 	
 	this.openState 	= Menu.openState;
 	this.close 		= Menu.close;
@@ -165,7 +165,7 @@ function _MainContent_searchOptionMenu() {
 	}
 
 	let This = this;
-	let Menu = OptionMenu.create(HTML.mainContentHolder);
+	let Menu = OptionMenu.create();
 
 
 	let inputField;
