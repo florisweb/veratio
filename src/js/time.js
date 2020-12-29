@@ -186,17 +186,21 @@ Date.prototype.moveMinutes = function(_minutes = 0) {
 
 const DateNames = function() {
     const dateNames = [
-      {name: "Yesterday",   getDate: function () {return new Date().moveDay(-1)}},
-      {name: "Today",       getDate: function () {return new Date()}},
-      {name: "Tomorrow",    getDate: function () {return new Date().moveDay(1)}},
-      {name: "Next week",   getDate: function () {return new Date().moveDay(7)}},
-      {name: "Sunday",  	getDate: function () {return new Date().getFirstDayDate(0)}},
-      {name: "Monday",  	getDate: function () {return new Date().getFirstDayDate(1)}},
-      {name: "Tuesday",  	getDate: function () {return new Date().getFirstDayDate(2)}},
-      {name: "Wednesday",  	getDate: function () {return new Date().getFirstDayDate(3)}},
-      {name: "Thursday",  	getDate: function () {return new Date().getFirstDayDate(4)}},
-      {name: "Friday",  	getDate: function () {return new Date().getFirstDayDate(5)}},
-      {name: "Saturday",  	getDate: function () {return new Date().getFirstDayDate(6)}}
+      {name: "Yesterday",   	getDate: function () {return new Date().moveDay(-1)}},
+      {name: "Today",       	getDate: function () {return new Date()}},
+      {name: "Tomorrow",    	getDate: function () {return new Date().moveDay(1)}},
+      {name: "Next week",   	getDate: function () {return new Date().moveDay(7)}},
+      {name: "In two weeks",   	getDate: function () {return new Date().moveDay(14)}},
+      {name: "In three weeks",  getDate: function () {return new Date().moveDay(21)}},
+      {name: "Next month",  	getDate: function () {return new Date().moveMonth(1)}},
+
+      {name: "Sunday",  		getDate: function () {return new Date().getFirstDayDate(0)}},
+      {name: "Monday",  		getDate: function () {return new Date().getFirstDayDate(1)}},
+      {name: "Tuesday",  		getDate: function () {return new Date().getFirstDayDate(2)}},
+      {name: "Wednesday",  		getDate: function () {return new Date().getFirstDayDate(3)}},
+      {name: "Thursday",  		getDate: function () {return new Date().getFirstDayDate(4)}},
+      {name: "Friday",  		getDate: function () {return new Date().getFirstDayDate(5)}},
+      {name: "Saturday",  		getDate: function () {return new Date().getFirstDayDate(6)}}
     ];
 
     return {
@@ -284,11 +288,21 @@ const DateNames = function() {
 		if (isNaN(day)) return false;
 		date.setDate(day);
 
-		if (!parts[1]) return date;
+		if (!parts[1])
+		{
+			if (new Date().getDate() > day) date.moveMonth(1);
+			return date;
+		}
+
 		let month = getMonthFromStr(parts[1].replace(/[^a-z^A-Z]+/g, ''));
 		if (typeof month == "number") date.setMonth(month);
 
-		if (!parts[2]) return date;
+		if (!parts[2]) 
+		{
+			if (new Date().getDateInDays(true) > date.getDateInDays(true)) date.moveMonth(12);
+			return date;
+		}
+		
 		let year = getYearFromStr(parts[2].replace(/[^0-9]+/g, ''));
 		if (year) date.setYear(year);
 

@@ -4,10 +4,12 @@
 Version 1.3
 Planned features:
 - [x] Offline service
-- [x] When creating a task there will now be a little loading-icon-indicator to show when it's being uploaded.
 - [x] Redesigned the taskCreateMenu
+	- [x] When creating a task there will now be a little loading-icon-indicator to show when it's being uploaded.
+	- [x] Added the ability to remove assignees and tags from a task.
 - [x] Implemented the adding of taskHolders for tasks that have to be rendered but whose taskHolder isn't yet created.
 - [x] Some small visual changes, including the tagCircle's new look.
+- [x] Made the date-popup assume that when entering for example '15 august', it will choose the next one, instead of the one that has already been passed.
 
 Version 1.4
 Planned features:
