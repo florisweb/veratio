@@ -4,7 +4,7 @@
 
 
 
-function Popup2({title, content, onOpen, onClose}) {
+function PopupComponent({title, content, onOpen, onClose}) {
 	let HTML 		= createHTML();
 	this.content 	= content;
 	this.openState 	= false;
@@ -71,11 +71,15 @@ function Text({text, isHeader = false, isHighlighted = false}) {
 		if (isHeader) 		HTML.classList.add("header");
 		if (isHighlighted) 	HTML.classList.add("highlighted");
 		
-		if (text.substr(0, 1) == " ")					HTML.style.marginLeft = "3px";
-		if (text.substr(text.length - 1, 1) == " ") 	HTML.style.marginRight = "3px";
+		// if (text.substr(0, 1) == " ")					HTML.style.marginLeft = "2px";
+		// if (text.substr(text.length - 1, 1) == " ") 	HTML.style.marginRight = "2px";
 
-		setTextToElement(HTML, text);
+		this.setText(text);
 		return HTML;
+	}
+
+	this.setText = function(_text) {
+		setTextToElement(HTML, _text);
 	}
 }
 
@@ -115,12 +119,15 @@ function InputField({placeHolder, maxLength = 32, readonly = false}) {
 
 
 
-function OptionSelector() {
-	let This = this;
-	this.HTML = {};
-	let Menu = OptionMenu.create(1001);
-	this.getOpenState = function() {return Menu.openState};
-	this.value = false;
+function OptionSelector({onValueChange}) {
+	let This 				= this;
+	let Menu 				= OptionMenu.create(1001);
+
+	this.getOpenState 		= function() {return Menu.openState};
+	this.removeAllOptions 	= Menu.removeAllOptions;
+	this.value 				= false;
+	this.HTML 				= {};
+
 
 	this.createHTML = function() {
 		this.HTML.button = document.createElement("div");
@@ -129,9 +136,9 @@ function OptionSelector() {
 								"<img src='images/icons/dropDownIcon.png' class='dropDownIcon'>" + 
 								"<span>hello</span>" + 
 							"</a>";
-		this.HTML.buttonText = HTML.button.children[0].children[1];
+		this.HTML.buttonText = this.HTML.button.children[0].children[1];
 
-		this.HTML.button.addEventListener("click", function () {This.openPopup(); console.log('hi')});
+		this.HTML.button.addEventListener("click", function () {This.openPopup();});
 	
 		return this.HTML.button;
 	}
@@ -144,26 +151,28 @@ function OptionSelector() {
 		Menu.close();
 	}
 
-
 	this.addOption = function ({title, value, icon}) {
-		let option = Menu.addOption(title, function() {
+		return Menu.addOption(title, function() {
 			This.value = value;
-			setTextToElement(HTML.buttonText, title);
+			setTextToElement(This.HTML.buttonText, title);
 			Menu.close();
+			try {
+				onValueChange(This.value);
+			} catch (e) {};
 		}, icon);
-	}	
+	}
 }
 
 
 
 function VerticalSpace({height = 30}) {
-	let HTML;
+	this.HTML;
 	this.createHTML = function() {
-		HTML = document.createElement('div');
-		HTML.className = 'verticalSpace';
-		if (height) HTML.style.height = parseInt(height) + "px";
+		this.HTML = document.createElement('div');
+		this.HTML.className = 'verticalSpace';
+		if (height) this.HTML.style.height = parseInt(height) + "px";
 
-		return HTML;
+		return this.HTML;
 	}
 }
 
@@ -338,7 +347,7 @@ function _popup(_builder) {
 
 function _Popup_createProject() {
 	let This = this;
-	Popup2.call(this, {
+	PopupComponent.call(this, {
 		title: "Create Project",
 		content: [
 			new Text({text: "Title", isHeader: true}),
@@ -385,7 +394,7 @@ function _Popup_createProject() {
 
 function _Popup_inviteByLinkCopyMenu() {
 	let This = this;
-	Popup2.call(this, {
+	PopupComponent.call(this, {
 		title: "Successfully created link",
 		content: [
 			new Text({text: "Copy and send this link to your invitee."}),
@@ -412,7 +421,7 @@ function _Popup_inviteByLinkCopyMenu() {
 
 function _Popup_inviteByEmailMenu() {
 	let This = this;
-	Popup2.call(this, {
+	PopupComponent.call(this, {
 		title: "Invite by email",
 		content: [
 			new Text({text: "Enter your invitees email-adress."}),
@@ -461,50 +470,48 @@ function _Popup_inviteByEmailMenu() {
 
 function _Popup_renameProject() {
 	let This = this;
-	let builder = [
-		{title: "RENAME PROJECT"},
-		"<br><br>",
-		{text: "Rename "},
-		{text: "", highlighted: true},
-		{text: " to:"},
-		"<br><br><br>",
-		{input: "Project title", value: null, customClass: "text", maxLength: 256},
-		"<br><br>",
-		"<br><br>",
-		"<br>",
-		{buttons: [
-			{button: "CANCEL", onclick: function () {This.close()}},
-			{button: "RENAME", onclick: function () {This.renameProject()}, important: true, color: COLOUR.DANGEROUS}
-		]}
-	];
-
-	_popup.call(this, builder);
-
-	this.HTML.projectTitle = this.HTML.popup.children[3];
-	this.HTML.newTitleHolder = this.HTML.popup.children[6];
-
-	let extend_open = this.open;
-
-	this.curProjectId = false;
+	PopupComponent.call(this, {
+		title: "Rename project",
+		content: [
+			new Text({text: "Rename "}),
+			new Text({text: "", isHighlighted: true}),
+			new VerticalSpace({height: 10}),
+			new InputField({placeHolder: "Project title", maxLength: 256}),
+			new VerticalSpace({height: 20}),
+			new Button({
+				title: "Rename",
+				onclick: function () {This.renameProject()},
+				filled: true,
+				color: COLOUR.WARNING,
+			}),
+			new Button({
+				title: "Cancel",
+				onclick: function () {This.close()},
+			})
+		],
+		onOpen: onOpen
+	});
+	let projectTitleHolder = this.content[1];
+	let inputField = this.content[4];
 
 
-	this.open = async function(_projectId) {
+
+
+	let curProjectId = false;
+	async function onOpen(_projectId) {
 		let project = await Server.getProject(_projectId);
 		if (!project) return false;
-		this.curProjectId = project.id;
+		curProjectId = project.id;
 
-		extend_open.apply(this);
-
-
-		setTextToElement(this.HTML.projectTitle, project.title);
-		this.HTML.newTitleHolder.value = project.title;
-		this.HTML.newTitleHolder.focus();
+		projectTitleHolder.setText(project.title);
+		inputField.setValue(project.title);
+		inputField.focus();
 	}	
 
 	this.renameProject = async function() {
-		let project = await Server.getProject(this.curProjectId);
+		let project = await Server.getProject(curProjectId);
 
-		let newTitle = this.HTML.newTitleHolder.value;
+		let newTitle = inputField.getValue();
 		if (!newTitle || newTitle.length < 3) return false;
 
 		project.rename(newTitle).then(async function () {
@@ -530,63 +537,47 @@ function _Popup_renameProject() {
 
 function _Popup_permissionMenu() {
 	let This = this;
-	let builder = [
-		{title: "CHANGE USER PERMISSIONS"},
-		"<br><br>",
-		{text: "Change "},
-		{text: "Member-name", highlighted: true},
-		{text: " permissions to:"},
-		"<br><br><br>",
-		"<div class='UI selectBox'>" + 
-			"<a class='button bBoxy bDefault text'>" +
-				"<img src='images/icons/dropDownIcon.png' class='dropDownIcon'>" + 
-				"<span>Admin</span>" + 
-			"</a>" + 
-			"<div class='UI box popup hide'>" + 
-			"</div>" + 
-		"</div><br><br><br>",
-		
-		{text: "Description", highlighted: true},
-		"<br><div style='position: relative; width: 100%; height: 2px; '></div>",
-		"<a class='UI text' style='white-space: normal !important'></a>",
 
-		"<br><br><br><br><br><br>",
-		{buttons: [
-			{button: "CANCEL", onclick: function () {This.close()}},
-			{
-				button: "CHANGE", 
-				onclick: function () {Popup.permissionMenu.updatePermissions()}, 
-				important: true, 
-				color: COLOUR.DANGEROUS
-			}
-		]}
-	];
+	PopupComponent.call(this, {
+		title: "Change user permissions",
+		content: [
+			new Text({text: "Change ", isHeader: true}),
+			new Text({text: "", isHighlighted: true, isHeader: true}),
+			new Text({text: " permissions", isHeader: true}),
+			new VerticalSpace({height: 10}),
+			new OptionSelector({onValueChange: onValueChange}),
+			new VerticalSpace({height: 40}),
+			new Text({text: ""}),
+			new VerticalSpace({height: 20}),
+			new Button({
+				title: "Change",
+				onclick: function () {Popup.permissionMenu.updatePermissions()},
+				filled: true,
+				color: COLOUR.WARNING,
+			}),
+			new Button({
+				title: "Cancel",
+				onclick: function () {This.close()},
+			})
+		],
+		onOpen: onOpen
+	});
 
-	_popup.call(this, builder);
-	this.HTML.memberName = this.HTML.popup.children[3];
-	this.HTML.optionMenu = this.HTML.popup.children[6].children[0];
-	this.HTML.descriptionHolder = this.HTML.popup.children[9].children[0];
+	let memberNameHolder = this.content[1];
+	let optionMenu = this.content[4];
+	let descriptionHolder = this.content[6];
+
 	
-	let optionMenu = UI.createOptionMenu(this.HTML.optionMenu.children[0], this.HTML.optionMenu.children[1]);
-	optionMenu.onOptionSelected = function(_value) {
-		setTextToElement(
- 			This.HTML.descriptionHolder, 
- 			MainContent.settingsPage.permissionData[parseInt(_value)].description
- 		);
+	function onValueChange(_newValue) {
+		descriptionHolder.setText(
+			MainContent.settingsPage.permissionData[parseInt(_newValue)].description
+		);
 	}
+
 	
 
-
-
-
-	let extend_open = this.open;
-
-
-	let curMember = false;
-
-	this.open = async function(_memberId) {
-		extend_open.apply(this);
-
+	let curMember = false;	
+	async function onOpen(_memberId) {
 		let project	= await Server.getProject(MainContent.curProjectId);
 		let member 	= await project.users.get(_memberId);
 		curMember 	= member;
@@ -595,7 +586,7 @@ function _Popup_permissionMenu() {
 
 
 	async function setMemberData(_member) {
-		setTextToElement(This.HTML.memberName, _member.name + "'s");
+		memberNameHolder.setText(_member.name + "'s");
 		let project = await Server.getProject(MainContent.curProjectId);
 
 		optionMenu.removeAllOptions();
@@ -604,14 +595,14 @@ function _Popup_permissionMenu() {
 		{
 			if (i > project.users.Self.permissions.value) continue;
 
-			optionMenu.addOption(
-				MainContent.settingsPage.permissionData[i].name,
-				MainContent.settingsPage.permissionData[i].icon, 
-				i
-			);
+			let option = optionMenu.addOption({
+				title: 	MainContent.settingsPage.permissionData[i].name,
+				icon: 	MainContent.settingsPage.permissionData[i].icon,
+				value: 	i,
+			});
 
 			if (_member.permissions != i) continue;
-			optionMenu.options[optionMenu.options.length - 1].select();
+			option.select();
 		}
 	}
 

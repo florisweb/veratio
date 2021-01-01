@@ -372,7 +372,7 @@ function MainContent_settingsPage(_projectId) {
 	}
 	
 	this.permissionData = [
-		{name: "Read-only", description: "Can't do anything except finish tasks assigned to him.", 											icon: "images/icons/projectIconDark.svg"},
+		{name: "Read-only", description: "Can't do anything except finish tasks assigned to them.", 											icon: "images/icons/projectIconDark.svg"},
 		{name: "Member", 	description: "Can do everthing except user-related actions, like inviting someone and changing permissions.", 	icon: "images/icons/memberIcon.png"},
 		{name: "Admin", 	description: "Allowed to do everthing except removing the project.", 											icon: "images/icons/adminIcon.png"},
 		{name: "Owner", 	description: "Allowed to do everthing.", 																		icon: "images/icons/ownerIconDark.png"}

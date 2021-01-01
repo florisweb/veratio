@@ -57,7 +57,7 @@ function _OptionMenu_menu(_self) {
 	this.clickFirstOption = function() {
 		let option = this.options[0];
 		if (!option) return;
-		option.html.click();
+		option.select();
 		This.close();
 	}
 
@@ -75,26 +75,19 @@ function _OptionMenu_menu(_self) {
 
 
 	this.addOption = function(_title = "", _onclick, _image = "") {
-		let option = document.createElement("div");
-		option.className = "optionItem clickable";
-		option.innerHTML = "<div class='optionText'>Remove task</div>";
+		let html = document.createElement("div");
+		html.className = "optionItem clickable";
+		html.innerHTML = "<div class='optionText'>Remove task</div>";
 		
-		setImageSource(_image, option);
-		setTextToElement(option.children[1], _title);
+		setImageSource(_image, html);
+		setTextToElement(html.children[1], _title);
 
-		HTML.Self.append(option);
-		option.onclick = function () {
-			let close;
-			try {
-				close = _onclick();
-			}
-			catch (e) {return};
-			if (close) This.close();
-		}
+		HTML.Self.append(html);
+		
 
-		this.options.push(new function() {
+		let option = new function() {
 			this.title = _title;
-			this.html = option;
+			this.html = html;
 
 			this.remove = function() {
 				removeOption(this);
@@ -115,8 +108,21 @@ function _OptionMenu_menu(_self) {
 
 			this.show = function() {
 				this.html.style.display = "block";
+			};
+			this.select = function() {
+				let close;
+				try {
+					close = _onclick();
+				}
+				catch (e) {return console.error("Optionmenu.option.click: An error accured", e)};
+				if (close) This.close();
 			}
-		});
+		};
+
+		html.onclick = option.select;
+
+		this.options.push(option);
+		return option;
 	}
 
 	function setImageSource(_image, _html) {
