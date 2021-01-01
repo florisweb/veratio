@@ -10,6 +10,7 @@ Planned features:
 - [x] Implemented the adding of taskHolders for tasks that have to be rendered but whose taskHolder isn't yet created.
 - [x] Some small visual changes, including the tagCircle's new look.
 - [x] Made the date-popup assume that when entering for example '15 august', it will choose the next one, instead of the one that has already been passed.
+- [x] Added 'are you sure'-messages to 'dangerous' actions, like removing or leaving a project.
 
 Version 1.4
 Planned features:

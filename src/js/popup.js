@@ -24,11 +24,9 @@ function _Popup() {
 
 			for (let i = 0; i < buttons.length; i++) 
 			{
-				content.push(new Button({
-					title: buttons[i].title, 
-					onclick: function () {resolve(buttons[i].value); popup.close()},
-					filled: buttons[i].filled
-				}));
+				let buttonConfig = buttons[i];
+				buttonConfig.onclick = function () {resolve(buttons[i].value); popup.close()};
+				content.push(new Button(buttonConfig));
 			}
 
 
@@ -415,7 +413,7 @@ function _Popup_createProject() {
 		onOpen: onOpen
 	});
 	
-	let projectTitleInput = this.content[3];
+	let projectTitleInput = this.content[2];
 
 	function onOpen() {
 		projectTitleInput.setValue(null);

@@ -40,8 +40,19 @@ function _MainContent() {
 	this.leaveCurrentProject = async function() {
 		let project = await Server.getProject(this.curProjectId);
 		if (!project) return false;
+
+		let actionValidated = await Popup.showMessage({
+			title: "Leave " + project.title + "?", 
+			text: "Are you sure you want to leave " + project.title + "? This action cannot be undone.", 
+			buttons: [
+				{title: "Leave", value: true, filled: true, color: COLOUR.DANGEROUS}, 
+				{title: "Cancel", value: false}
+			]
+		});
+
+		if (!actionValidated) return;
+	
 		await project.leave();
-		
 		await Server.clearCache();
 		MainContent.taskPage.weekTab.open();
 		App.update();
@@ -50,8 +61,18 @@ function _MainContent() {
 	this.removeCurrentProject = async function() {
 		let project = await Server.getProject(this.curProjectId);
 		if (!project) return false;
-		await project.remove();
+
+		let actionValidated = await Popup.showMessage({
+			title: "Remove " + project.title + "?", 
+			text: "Are you sure you want to remove " + project.title + "? This action cannot be undone.", 
+			buttons: [
+				{title: "Remove", value: true, filled: true, color: COLOUR.DANGEROUS}, 
+				{title: "Cancel", value: false}
+			]
+		});
+		if (!actionValidated) return;
 		
+		await project.remove();
 		await Server.clearCache();
 		
 		MainContent.taskPage.weekTab.open();
