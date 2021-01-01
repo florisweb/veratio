@@ -68,15 +68,28 @@ Date.prototype.getDateInDays = function(_addYears) {
 	}
 	
 	if (!_addYears) return totalDays;
-	for (let i = 0; i < this.getFullYear(); i++) 
+
+	for (let i = 1970; i < this.getFullYear(); i++) 
 	{
-		totalDays += 365;
+		let newDate = new Date();
+		newDate.setYear(i);
+		totalDays += 365 + newDate.isLeapYear() ? 1 : 0;
 		if (this.isLeapYear(i + 1)) totalDays++;
 	}
 
 	return totalDays;
 }
 
+Date.prototype.getYearLength = function() {
+	let monthList = this.getMonths();
+	let totalDays = 0;
+
+	for (let i = 0; i < monthList.length; i++)
+	{
+		totalDays += monthList[i].length;
+	}
+	return totalDays;
+}
 
 
 
