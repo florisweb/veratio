@@ -1,5 +1,63 @@
 
 
+function _Popup() {
+	let HTML = {
+		notificationHolder: $("#notificationBoxHolder")[0],
+		notifcationBox: $("#notificationBox")[0]
+	}
+
+	this.createProjectMenu 	 	= new _Popup_createProject();
+	this.renameProjectMenu	  	= new _Popup_renameProject();
+	this.permissionMenu 		= new _Popup_permissionMenu();
+	this.inviteByLinkCopyMenu 	= new _Popup_inviteByLinkCopyMenu();
+	this.inviteByEmailMenu 		= new _Popup_inviteByEmailMenu();
+	this.tagMenu 				= new _Popup_tagMenu();
+	this.createTagMenu 			= new _Popup_createTagMenu();
+
+
+	this.showMessage = function({title = "", text = "", buttons = []}) {
+		return new Promise(function (resolve, error) {
+			let content = [
+				new Text({text: text}),
+				new VerticalSpace({height: 25})
+			];
+
+			for (let i = 0; i < buttons.length; i++) 
+			{
+				content.push(new Button({
+					title: buttons[i].title, 
+					onclick: function () {resolve(buttons[i].value); popup.close()},
+					filled: buttons[i].filled
+				}));
+			}
+
+
+			let popup = new PopupComponent({
+				title: title,
+				content: content,
+				onClose: function() {
+					setTimeout(function() {
+						resolve(false);
+						popup.remove();
+					}, 500);
+				},
+			});
+
+			setTimeout(popup.open, 1);
+		});
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -47,6 +105,10 @@ function PopupComponent({title, content, onOpen, onClose}) {
 		try {
 			onClose(...arguments);
 		} catch (e) {};
+	}
+	
+	this.remove = function() {
+		HTML.popupHolder.parentNode.removeChild(HTML.popupHolder);
 	}
 }
 
@@ -189,20 +251,6 @@ function LineBreak() {
 
 
 
-function _Popup() {
-	let HTML = {
-		notificationHolder: $("#notificationBoxHolder")[0],
-		notifcationBox: $("#notificationBox")[0]
-	}
-
-	this.createProjectMenu 	 	= new _Popup_createProject();
-	this.renameProjectMenu	  	= new _Popup_renameProject();
-	this.permissionMenu 		= new _Popup_permissionMenu();
-	this.inviteByLinkCopyMenu 	= new _Popup_inviteByLinkCopyMenu();
-	this.inviteByEmailMenu 		= new _Popup_inviteByEmailMenu();
-	this.tagMenu 				= new _Popup_tagMenu();
-	this.createTagMenu 			= new _Popup_createTagMenu();
-}
 
 
 
