@@ -466,10 +466,24 @@ function MainContent_settingsPage(_projectId) {
 		Menu.addOption(
 			"Remove user", 
 			async function () {
-				let project 	= await Server.getProject(MainContent.curProjectId);
+				let project = await Server.getProject(MainContent.curProjectId);
 				if (!project || !curMemberId) return false;
+				let member = await project.users.get(curMemberId);
+				if (!member) return;
 
-				let removed = project.users.remove(curMemberId);
+
+				let actionValidated = await Popup.showMessage({
+					title: "Remove " + member.name + "?", 
+					text: "Are you sure you want to remove " + member.name + " from "+ project.title + "?",
+					buttons: [
+						{title: "Remove", value: true, filled: true, color: COLOUR.DANGEROUS}, 
+						{title: "Cancel", value: false}
+					]
+				});
+
+				if (!actionValidated) return;
+
+				let removed = await project.users.remove(curMemberId);
 				if (removed) curItem.classList.add("hide");
 
 				return removed;
