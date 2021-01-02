@@ -9,10 +9,10 @@ function _Popup() {
 	this.createProjectMenu 	 	= new _Popup_createProject();
 	this.renameProjectMenu	  	= new _Popup_renameProject();
 	this.permissionMenu 		= new _Popup_permissionMenu();
-	this.inviteByLinkCopyMenu 	= new _Popup_inviteByLinkCopyMenu();
-	this.inviteByEmailMenu 		= new _Popup_inviteByEmailMenu();
-	this.tagMenu 				= new _Popup_tagMenu();
-	this.createTagMenu 			= new _Popup_createTagMenu();
+	this.inviteByLinkCopyMenu 	= new _Popup_inviteByLinkCopy();
+	this.inviteByEmailMenu 		= new _Popup_inviteByEmail();
+	this.tagMenu 				= new _Popup_tagManager();
+	this.createTag 				= new _Popup_createTag();
 
 
 	this.showMessage = function({title = "", text = "", buttons = []}) {
@@ -21,11 +21,13 @@ function _Popup() {
 				new Text({text: text}),
 				new VerticalSpace({height: 25})
 			];
+			
+			let openResolver;
 
 			for (let i = 0; i < buttons.length; i++) 
 			{
 				let buttonConfig = buttons[i];
-				buttonConfig.onclick = function () {resolve(buttons[i].value); popup.close()};
+				buttonConfig.onclick = function () {openResolver(buttons[i].value); popup.close();};
 				content.push(new Button(buttonConfig));
 			}
 
@@ -39,9 +41,10 @@ function _Popup() {
 						popup.remove();
 					}, 500);
 				},
+				onOpen: function(_openResolver) {openResolver = _openResolver}
 			});
 
-			setTimeout(popup.open, 1);
+			setTimeout(function () {resolve(popup.open())}, 1);
 		});
 	}
 }
@@ -97,7 +100,7 @@ function _Popup_createProject() {
 
 
 
-function _Popup_inviteByLinkCopyMenu() {
+function _Popup_inviteByLinkCopy() {
 	let This = this;
 	PopupComponent.call(this, {
 		title: "Successfully created link",
@@ -124,7 +127,7 @@ function _Popup_inviteByLinkCopyMenu() {
 }
 
 
-function _Popup_inviteByEmailMenu() {
+function _Popup_inviteByEmail() {
 	let This = this;
 	PopupComponent.call(this, {
 		title: "Invite by email",
@@ -322,126 +325,7 @@ function _Popup_permissionMenu() {
 
 
 
-
-
-
-// function _Popup_tagMenu() {
-// 	let This = this;
-// 	const builder = [
-// 		{title: "MANAGE TAGS"},
-// 		"<br><br>",
-// 		{text: "Tags", highlighted: true},
-// 		"<br><div class='tagListHolder'>-</div>",
-// 		{button: "+ Add Tag", onclick: async function () {
-// 			This.close();
-// 			await Popup.createTagMenu.open(CurProject.id);
-// 			This.open(CurProject.id);
-// 		}},
-		
-// 		"<br><br><br><br>",
-// 		{buttons: [
-// 			{button: "CLOSE", onclick: function () {This.close()}},
-// 		]}
-// 	];
-
-// 	_popup.call(this, builder);
-
-// 	this.HTML.tagListHolder = this.HTML.popup.children[3].children[1];
-// 	this.HTML.addTagButton 	= this.HTML.popup.children[4];
-// 	this.HTML.addTagButton.classList.add("addTagButton");
-
-
-	
-
-// 	const Menu = OptionMenu.create();
-	
-// 	Menu.addOption("Remove", async function () {
-// 		if (!CurTag) return;
-// 		let result = await CurProject.tags.remove(CurTag.id);
-
-// 		This.open(CurProject.id);
-// 		return result;
-// 	}, "images/icons/removeIcon.png");
-
-// 	Menu.addOption("Edit", openTagEditMenu, "images/icons/changeIconDark.png");
-
-
-
-
-	
-// 	let extend_open = this.open;
-// 	let CurTag = false;
-// 	let CurProject = false;
-	
-// 	this.open = async function(_projectId) {
-// 		CurProject = await Server.getProject(_projectId);
-// 		if (!CurProject) return;
-
-// 		setTagList(await CurProject.tags.getAll(true));
-// 		extend_open.apply(this);
-
-// 		enableFeaturesByPermissions();	
-// 	}
-
-// 	function setTagList(_tags) {
-// 		This.HTML.tagListHolder.innerHTML = "";
-// 		for (tag of _tags) This.HTML.tagListHolder.append(createTagHTML(tag));
-// 	}
-
-
-// 	function createTagHTML(_tag) {
-// 		let html = document.createElement("div");
-// 		html.className = "UI listItem clickable";
-
-// 		let tagCircle = MainContent.taskPage.renderer.createTagCircle(_tag);
-// 		html.appendChild(tagCircle);
-
-// 		html.innerHTML += 	"<div class='text'></div>" + 
-// 							"<div class='rightHand clickable'>" + 
-// 								"<img src='images/icons/optionIcon.png' class='item optionIcon clickable'>" + 
-// 							"</div>";
-
-// 		DoubleClick.register(html, function () {
-// 			CurTag = _tag;
-// 			openTagEditMenu();
-// 		});
-
-// 		setTextToElement(html.children[1], _tag.title);
-// 		html.children[2].onclick = function() {
-// 			CurTag = _tag;
-// 			Menu.open(this, {left: -20, top: 10});
-// 		}
-
-// 		return html;
-// 	}
-
-
-// 	async function openTagEditMenu() {
-// 		if (!CurTag) return;
-// 		if (!CurProject.users.Self.permissions.tags.update) return;
-// 		This.close();
-		
-// 		await Popup.createTagMenu.openEdit(CurTag, CurProject.id);
-// 		This.open(CurProject.id);
-// 	}
-
-
-// 	function enableFeaturesByPermissions() {
-// 		This.HTML.addTagButton.classList.remove("hide");
-// 		Menu.enableAllOptions();
-
-// 		if (!CurProject.users.Self.permissions.tags.remove) Menu.options[0].disable();
-// 		if (!CurProject.users.Self.permissions.tags.update) Menu.options[1].disable();
-// 		if (!CurProject.users.Self.permissions.tags.update) This.HTML.addTagButton.classList.add("hide");
-// 	}
-// }
-
-
-
-
-
-
-function _Popup_createTagMenu() {
+function _Popup_createTag() {
 	let This = this;
 
 	PopupComponent.call(this, {
@@ -603,7 +487,7 @@ function _Popup_createTagMenu() {
 
 
 
-function _Popup_tagMenu() {
+function _Popup_tagManager() {
 	let This = this;
 
 	PopupComponent.call(this, {
@@ -616,7 +500,7 @@ function _Popup_tagMenu() {
 				title: "+ Add Tag",
 				onclick: async function () {
 					This.close();
-					await Popup.createTagMenu.open(CurProject.id);
+					await Popup.createTag.open(CurProject.id);
 					This.open(CurProject.id);
 				},
 				floatLeft: true,
@@ -679,7 +563,7 @@ function _Popup_tagMenu() {
 		if (!CurProject.users.Self.permissions.tags.update) return;
 		This.close();
 		
-		await Popup.createTagMenu.openEdit(CurTag, CurProject.id);
+		await Popup.createTag.openEdit(CurTag, CurProject.id);
 		This.open(CurProject.id);
 	}
 

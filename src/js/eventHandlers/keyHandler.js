@@ -21,7 +21,7 @@ function _KeyHandler() {
       keys: ["Escape"], 
       event: function () {  
         //Popup's      
-        if (Popup.createTagMenu.openState)                         return Popup.createTagMenu.close();
+        if (Popup.createTag.openState)                             return Popup.createTag.close();
         if (Popup.tagMenu.openState)                               return Popup.tagMenu.close();
 
         if (Popup.createProjectMenu.openState)                     return Popup.createProjectMenu.close();
@@ -46,7 +46,7 @@ function _KeyHandler() {
       keys: ["Enter"], 
       event: function (_e) {
         // Popups
-        if (Popup.createTagMenu.openState)                         return Popup.createTagMenu.createTag();
+        if (Popup.createTag.openState)                             return Popup.createTag.createTag();
 
         if (Popup.createProjectMenu.openState)                     return Popup.createProjectMenu.createProject();
         if (Popup.renameProjectMenu.openState)                     return Popup.renameProjectMenu.renameProject();
