@@ -125,18 +125,6 @@ function _OptionMenu_menu(_self) {
 		return option;
 	}
 
-	function setImageSource(_image, _html) {
-		let element = document.createElement("img");
-		if (typeof _image == "string")
-		{
-			element.classList.add('optionIcon');
-			element.setAttribute("src", _image);
-		} else {
-			element = _image;
-		}
-		_html.insertBefore(element, _html.firstChild);
-	}
-
 
 	const popupMargin = 15;
 	function moveToItem(_item, _relativePosition = {left: 0, top: 0}, _event) {

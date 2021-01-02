@@ -76,6 +76,10 @@
 		.popupHolder .button.floatLeft {
 			float: left;
 		}
+		.popupHolder .button.disabled {
+			opacity: .3;
+			pointer-events: none;
+		}
 
 
 
@@ -245,13 +249,4 @@
 	min-height: 10px;
 	max-height: calc(95vh - 2 * 40px - 130px);
 	border-bottom: 1px solid #eee;
-}
-
-
-
-.popupBoxHolder .popupWindow .addTagButton {
-	float: left;
-}
-.popupBoxHolder .popupWindow .addTagButton.hide {
-	display: none;
 }

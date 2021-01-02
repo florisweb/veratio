@@ -50,7 +50,7 @@
 		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0' name='viewport'/>
 
 		<link rel="stylesheet" type="text/css" href="css/component.css?a=56">
-		<link rel="stylesheet" type="text/css" href="css/popup.css?a=41">
+		<link rel="stylesheet" type="text/css" href="css/popup.css?a=42">
 		<link rel="stylesheet" type="text/css" href="css/main.css?a=30">
 		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=33">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=65">
@@ -172,6 +172,7 @@
 
 			$.getScript("js/constants.js?antiCache=" 								+ antiCache, function() {});
 			$.getScript("js/optionMenu.js?antiCache=" 								+ antiCache, function() {});
+			$.getScript("js/popupComponent.js?antiCache=" 							+ antiCache, function() {});
 			$.getScript("js/popup.js?antiCache=" 									+ antiCache, function() {});
 
 			// Eventhandlers
