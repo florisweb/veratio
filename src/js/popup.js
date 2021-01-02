@@ -61,9 +61,11 @@ function _Popup() {
 
 
 function PopupComponent({title, content, onOpen, onClose}) {
+	let titleComponent;
 	let HTML 		= createHTML();
 	this.content 	= content;
 	this.openState 	= false;
+	
 
 
 	function createHTML() {
@@ -74,7 +76,8 @@ function PopupComponent({title, content, onOpen, onClose}) {
 		HTML.popup = document.createElement("div");
 		HTML.popup.className = "popup";
 
-		let newContent = [new Title({title: title})].concat(content);
+		titleComponent = new Title({title: title});
+		let newContent = [titleComponent].concat(content);
 		for (item of newContent) 
 		{
 			let html = item.createHTML();
@@ -108,6 +111,9 @@ function PopupComponent({title, content, onOpen, onClose}) {
 	this.remove = function() {
 		HTML.popupHolder.parentNode.removeChild(HTML.popupHolder);
 	}
+	this.setTitle = function(_newTitle) {
+		titleComponent.setTitle(_newTitle);
+	}
 }
 
 
@@ -117,8 +123,11 @@ function Title({title}) {
 	this.createHTML = function() {
 		HTML 				= document.createElement("div");
 		HTML.className 		= "title text";
-		setTextToElement(HTML, title);
+		this.setTitle(title);
 		return HTML;
+	};
+	this.setTitle = function(_newTitle) {
+		setTextToElement(HTML, _newTitle);
 	}
 }
 
@@ -153,9 +162,12 @@ function Button({title = '', onclick, filled = false, color, floatLeft = false})
 		if (floatLeft)	HTML.classList.add("floatLeft");
 
 		HTML.addEventListener("click", onclick);
-		setTextToElement(HTML, title);
+		this.setTitle(title);
 
 		return HTML;
+	};
+	this.setTitle = function(_newTitle) {
+		setTextToElement(HTML, _newTitle);
 	}
 }
 
@@ -179,7 +191,7 @@ function InputField({placeHolder, maxLength = 32, readonly = false}) {
 
 
 
-function OptionSelector({onValueChange}) {
+function OptionSelector({onValueChange} = {}) {
 	let This 				= this;
 	let Menu 				= OptionMenu.create(1001);
 
@@ -187,6 +199,7 @@ function OptionSelector({onValueChange}) {
 	this.removeAllOptions 	= Menu.removeAllOptions;
 	this.value 				= false;
 	this.HTML 				= {};
+	this.options 			= [];
 
 
 	this.createHTML = function() {
@@ -212,7 +225,7 @@ function OptionSelector({onValueChange}) {
 	}
 
 	this.addOption = function ({title, value, icon}) {
-		return Menu.addOption(title, function() {
+		let option = Menu.addOption(title, function() {
 			This.value = value;
 			setTextToElement(This.HTML.buttonText, title);
 			Menu.close();
@@ -220,6 +233,9 @@ function OptionSelector({onValueChange}) {
 				onValueChange(This.value);
 			} catch (e) {};
 		}, icon);
+		this.options = Menu.options;
+
+		return option;
 	}
 }
 
@@ -538,7 +554,7 @@ function _Popup_renameProject() {
 		onOpen: onOpen
 	});
 	let projectTitleHolder = this.content[1];
-	let inputField = this.content[4];
+	let inputField = this.content[3];
 
 
 
@@ -796,98 +812,113 @@ function _Popup_tagMenu() {
 
 
 
+
+
+
+
+
 function _Popup_createTagMenu() {
 	let This = this;
-	let builder = [
-		{title: "CREATE TAG"},
-		"<br><br>",
-		{input: "Tag title", value: null, customClass: "text", maxLength: 256},
-		"<br><br><br>",
-		{text: "Tag Colour", highlighted: true},
-		"<br><br><div class='UI selectBox'>" + 
-			"<a class='button bBoxy bDefault'>" +
-				"<img src='images/icons/dropDownIcon.png' class='dropDownIcon'>" + 
-				"<span>Tag Colour</span>" + 
-			"</a>" + 
-		"</div>",
-		"<br>",
-		{buttons: [
-			{button: "CANCEL", onclick: function () {This.close()}},
-			{button: "CREATE", onclick: function () {This.createTag()}, important: true, color: COLOUR.POSITIVE}
-		]}
-	];
 
-	_popup.call(this, builder);
-	this.HTML.title 		= this.HTML.popup.children[0];
-	this.HTML.tagTitle 		= this.HTML.popup.children[2];
-	this.HTML.optionMenu 	= this.HTML.popup.children[5].children[2];
-	this.HTML.createButton 	= this.HTML.popup.children[this.HTML.popup.children.length - 1].children[0];
-	this.HTML.optionPopup	= document.getElementById("optionMenu_colourPopupBox");
+	PopupComponent.call(this, {
+		content: [
+			new InputField({placeHolder: "Tag title", maxLength: 256}),
+			new VerticalSpace({height: 20}),
+			new OptionSelector(),
+			new VerticalSpace({height: 40}),
+			new Button({
+				onclick: function () {This.createTag()},
+				filled: true,
+			}),
+			new Button({
+				title: "Cancel",
+				onclick: function () {This.close()},
+			})
+		],
+		onOpen: onOpen,
+		onClose: onClose,
+	});
 
-	let extend_open = this.open;
-	let extend_close = this.close;
-	let colourOptionMenu = createColourMenu(); 
+	let createButton 	= this.content[4];
+	let tagTitleInput 	= this.content[0];
+	let optionMenu 		= this.content[2];
+	setColorMenuOptions();
 
 
 	let CurProject = false;
 	let EditData = {tag: false}
 	let OnClosePromiseResolver;
 
-	this.open = async function(_projectId, _tagName = null) {
+
+	async function onOpen(_projectId, _tagName = null) {
 		CurProject = await Server.getProject(_projectId);
 		if (!CurProject) return;
 
 		updateMenuModeText();
-
-		extend_open.apply(this);
-		this.HTML.tagTitle.value = _tagName;
-		this.HTML.tagTitle.focus();
+		tagTitleInput.setValue(_tagName);
+		tagTitleInput.focus();
 
 		return new Promise(function (_resolve, _error) {
 			OnClosePromiseResolver = _resolve;
 		});	
 	}
 
-
 	this.openEdit = function(_tag, _projectId) {
 		let onclosePromise = this.open(_projectId, _tag.title);
 		
 		EditData.tag = _tag;
 		if (!EditData.tag) return;
-
-		setTagData(_tag);
+		selectTagColorOption(_tag);
 
 		return onclosePromise;
 	}
 
+	function selectTagColorOption(_tag) {
+		let tagColour = _tag.colour.toRGBA();
+		for (let i = 0; i < optionMenu.options.length; i++)
+		{	
+			let curColour = optionMenu.options[i].value.colour.toRGBA();
+			if (curColour != tagColour) continue;
+			optionMenu.options[i].select();
+			return;
+		}
+	}
 
-	this.close = function(_tag) {
-		extend_close.apply(this);
+	function setColorMenuOptions() {
+		for (colour of COLOUR.list)
+		{
+			optionMenu.addOption({
+				title: colour.name,
+				value: colour,
+				icon: MainContent.taskPage.renderer.createTagCircle(colour)
+			})
+		}
+	}
+
+
+
+
+
+	function onClose(_tag) {
 		try {
 			OnClosePromiseResolver(_tag);
 		} catch (e) {}
-		colourOptionMenu.close();
-		resetEditMode();
-	}
-
-	function resetEditMode() {
+		
+		optionMenu.closePopup();
 		EditData.tag = false;
-		updateMenuModeText();
 	}
 
 	function updateMenuModeText() {
 		if (EditData.tag)
 		{
-			setTextToElement(This.HTML.createButton, "EDIT");
-			setTextToElement(This.HTML.title, "EDIT TAG");
+			createButton.setTitle("Edit");
+			This.setTitle("Edit tag");
 			return;
 		}
 
-		setTextToElement(This.HTML.createButton, "CREATE");
-		setTextToElement(This.HTML.title, "CREATE TAG");
+		createButton.setTitle("Create");
+		This.setTitle("Create tag");
 	}
-
-
 
 
 
@@ -904,9 +935,9 @@ function _Popup_createTagMenu() {
 
 	async function scrapeTagData() {
 		let tag = {
-			id: newId(),
-			title: This.HTML.tagTitle.value.replace(/^\s+|\s+$/g, ''),
-			colour: colourOptionMenu.value.colour.toHex()
+			id: 		newId(),
+			title: 		tagTitleInput.getValue().replace(/^\s+|\s+$/g, ''),
+			colour: 	optionMenu.value.colour.toHex()
 		};
 
 		if (EditData.tag) tag.id = EditData.tag.id;
@@ -926,61 +957,5 @@ function _Popup_createTagMenu() {
 			if (tag.title.toLowerCase() == _tagTitle.toLowerCase()) return true;
 		}
 		return false;
-	}
-
-
-
-
-
-
-
-	function setTagData(_tag) {
-		let index = getColourIndexByTag(_tag);
-		colourOptionMenu.options[index].select();
-	}
-	
-	function getColourIndexByTag(_tag) {
-		let tagColour = _tag.colour.toRGBA();
-		for (let i = 0; i < COLOUR.list.length; i++)
-		{	
-			let curColour = COLOUR.list[i].colour.toRGBA();
-			if (curColour != tagColour) continue;
-			return i;
-		}
-		return 0;
-	}
-
-
-
-
-
-	
-	function createColourMenu() {
-		let menuButton = This.HTML.optionMenu.children[0];
-		let menu = UI.createOptionMenu(menuButton, This.HTML.optionPopup);
-		menu.onOptionSelected = function(_value) {
-		}
-
-
-		for (colour of COLOUR.list)
-		{
-			let option = menu.addOption(colour.name, "", colour);
-			option.html.removeChild(option.html.children[0]);
-			
-			let tagCircle = MainContent.taskPage.renderer.createTagCircle(colour);
-			option.html.insertBefore(tagCircle, option.html.children[0]);
-		}
-
-		
-		menuButton.addEventListener("click", function () {
-			This.HTML.optionPopup.style.left = menuButton.getBoundingClientRect().left + "px";
-			This.HTML.optionPopup.style.top = menuButton.getBoundingClientRect().top + "px";
-			
-			let verticalSpaceAvailable = window.innerHeight - menuButton.getBoundingClientRect().top - 20;
-			This.HTML.optionPopup.style.maxHeight = verticalSpaceAvailable + "px";
-		});
-		
-
-		return menu;
 	}
 }
