@@ -84,7 +84,12 @@ function _Popup_createProject() {
 
 	this.createProject = async function() {
 		let title = projectTitleInput.getValue();
-		if (!title || title.length < 2) return alert("E_incorrectTitle");
+		if (!title || title.length < 2) 
+		{
+			await Popup.showMessage({title: "Invalid title", text: "Please enter a longer title for your project.", buttons: [{title: "close", filled: true}]})
+			projectTitleInput.focus();
+			return;
+		}
 
 		project = await Server.createProject(title);
 		if (!project) return console.error("Something went wrong while creating a project:", project);
@@ -162,7 +167,15 @@ function _Popup_inviteByEmail() {
 		let project = await Server.getProject(MainContent.curProjectId);
 		
 		let returnVal = await project.users.inviteByEmail(email);
-		if (returnVal !== true) console.error("An error accured while inviting a user:", returnVal);
+		if (returnVal.result !== true) 
+		{
+			switch (returnVal.error)
+			{
+				case "E_invalidEmail": return Popup.showMessage({title: "Invalid email", text: "Please enter a valid email-adress.", buttons: [{title: "close", filled: true}]}); break;
+				case "E_emailAlreadyInvited": Popup.showMessage({title: "Already invited", text: "An invite has already been send to this email-adress.", buttons: [{title: "close", filled: true}]}); break;
+ 				default: Popup.showMessage({title: "Error while inviting", text: "An error accured while trying to invite a user: " + returnVal.error, buttons: [{title: "close", filled: true}]}); break;
+ 			}
+		}
 		
 		This.close();
 
@@ -217,7 +230,12 @@ function _Popup_renameProject() {
 		let project = await Server.getProject(curProjectId);
 
 		let newTitle = inputField.getValue();
-		if (!newTitle || newTitle.length < 3) return false;
+		if (!newTitle || newTitle.length < 3) 
+		{
+			await Popup.showMessage({title: "Invalid title", text: "Please enter a longer title for your project.", buttons: [{title: "close", filled: true}]});
+			inputField.focus();
+			return false;
+		}
 
 		project.rename(newTitle).then(async function () {
 			This.close();
@@ -424,7 +442,17 @@ function _Popup_createTag() {
 
 	this.createTag = async function() {
 		let tag = await scrapeTagData();
-		if (typeof tag != "object") return alert(tag);
+		if (typeof tag != "object") {
+			if (tag == "E_tagNameAlreadyTaken")
+			{
+				await Popup.showMessage({title: "Name already taken", text: "There already exists a tag with that name, please choose another one.", buttons: [{title: "close", filled: true}]});
+			} else if (tag == "E_invalidData")
+			{
+				await Popup.showMessage({title: "Invalid title", text: "Your tag's name is too short, please pick a longer one.", buttons: [{title: "close", filled: true}]});
+			}
+			tagTitleInput.focus();
+			return;
+		}
 
 		tag = await CurProject.tags.update(tag);
 		if (!tag) return console.error("Something went wrong while creating a tag:", tag);
