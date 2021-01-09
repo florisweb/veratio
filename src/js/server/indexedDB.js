@@ -57,6 +57,7 @@ const LocalDB = new function() {
       if (projectList[i].id != _id) continue;
       return projectList[i];
     }
+
     return false;
   }
 
@@ -71,7 +72,8 @@ const LocalDB = new function() {
 
       let project = await this.getProject(_newList[i].id);
       if (project) continue;
-      this.addProject(_newList[i].id, _newList[i].title);
+
+      this.addProject(_newList[i]);
     }
 
     for (project of invalidProjects) project.remove();
@@ -81,9 +83,16 @@ const LocalDB = new function() {
 
 
 
-  this.addProject = async function(_id, _title = "A nameless project") {
-    let project = new LocalDB_Project(_id, DB);
-    await project.setData("metaData", {title: _title});
+  this.addProject = async function(_project) {
+    let project = new LocalDB_Project(_project.id, DB);
+    await project.setData("metaData", {title: _project.title});
+    await project.tags.set(_project.tags.list.map(function (tag) {
+      tag.colour = tag.colour.toHex();
+      return tag;
+    }));
+
+    await project.users.set(_project.users.list);
+    await project.setMetaData();
 
     return project;
   }

@@ -313,12 +313,12 @@ function Project(_project) {
     let Type = "users";
     TypeBaseClass.call(this, Type);
 
-    let list = [];
+    this.list = [];
     
     if (_project.users && _project.users.length !== undefined) 
     {
-      list = _project.users;
-      setSelf(list);
+      this.list = _project.users;
+      setSelf(this.list);
     }
 
     this.Self;
@@ -344,7 +344,7 @@ function Project(_project) {
       if (new Date() - lastRequestTime < cacheLifeTime && Server.connected && !_forceRequest) 
       {
         if (curFetchPromise) await curFetchPromise;
-        return list;
+        return this.list;
       }
       lastRequestTime = new Date();
 
@@ -367,14 +367,15 @@ function Project(_project) {
       }
 
       if (response.error) return false;
-
-      await Local.users.set(response.result);
-      setSelf(response.result);
+      if (Local) Local.users.set(response.result);
       
-      list = response.result;
       lastSync = new Date();
-      return response.result;
+
+      setSelf(response.result);
+      this.list = response.result;
+      return this.list;
     }
+
 
 
 
@@ -418,7 +419,7 @@ function Project(_project) {
     let Type = "tags";
     TypeBaseClass.call(this, Type);
 
-    let list = [];
+    this.list = [];
 
 
     this.get = async function(_id) {
@@ -441,7 +442,7 @@ function Project(_project) {
       if (new Date() - lastRequestTime < cacheLifeTime && Server.connected && !_forceRequest) 
       {
         if (curFetchPromise) await curFetchPromise;
-        return list;
+        return this.list;
       }
       lastRequestTime = new Date();
     
@@ -460,16 +461,16 @@ function Project(_project) {
 
       if (response.error) return false;
 
-      list = [];
+      this.list = [];
 
-      Local.tags.set(response.result);
+      if (Local) Local.tags.set(response.result);
       for (let i = 0; i < response.result.length; i++)
       {
-        list[i] = response.result[i];
-        list[i].colour = new Color(response.result[i].colour);
+        this.list[i]        = response.result[i];
+        this.list[i].colour = new Color(response.result[i].colour);
       }
 
-      return list;
+      return this.list;
     }
   }
 

@@ -137,8 +137,7 @@ const Server = new function() {
 
   async function fetchProjects() {
     let response        = await Server.fetchData("database/project/getProjectList.php");
-    if (!response)      return false;
-    if (response.error) {if (response.error != "E_noConnection") console.error("fetchProjects:", response); return response;};
+    if (response.error) return response;
     
     let projectList = [];
     for (let i = 0; i < response.result.length; i++)
@@ -249,7 +248,7 @@ const Server = new function() {
     if (resendRequest) return await this.fetchData(...arguments);
 
     if (response == "E_noConnection") return {error: "E_noConnection", result: false};
-    if (!response.ok) return console.error("HTTP-Error: " + response.status, response);
+    if (!response.ok) return {error: "E_responseError", result: false};
     
     let result = await response.text();
     try {
