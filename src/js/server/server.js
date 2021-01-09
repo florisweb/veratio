@@ -44,13 +44,12 @@ const Server = new function() {
       return this.projectList;
     }
 
-    curFetchPromise = getProjectList();
-    let response = await curFetchPromise;;
-    this.projectList = response;
+    curFetchPromise         = getProjectList();
+    let response            = await curFetchPromise;;
+    this.projectList        = response;
     
-    
-    lastProjectListUpdate = new Date();
-    curFetchPromise = false;
+    lastProjectListUpdate   = new Date();
+    curFetchPromise         = false;
 
     return this.projectList;
   }
@@ -126,7 +125,7 @@ const Server = new function() {
 
 
     let promises = [];
-    for (project of projects) promises.push(project.setup());
+    for (let project of projects) promises.push(project.setup());
     await Promise.all(promises);
 
     if (!noConnection) LocalDB.updateProjectList(projects);

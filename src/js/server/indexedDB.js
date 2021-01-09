@@ -76,7 +76,7 @@ const LocalDB = new function() {
       this.addProject(_newList[i]);
     }
 
-    for (project of invalidProjects) project.remove();
+    for (let project of invalidProjects) project.remove();
   }
 
   
@@ -108,7 +108,7 @@ const LocalDB = new function() {
   this.sendCachedOperations = async function() {
     let projects = await this.getProjectList();
     let promises = [];
-    for (project of projects) promises.push(project.sendCachedOperations());
+    for (let project of projects) promises.push(project.sendCachedOperations());
 
     return await Promise.all(promises); 
   }
@@ -117,7 +117,7 @@ const LocalDB = new function() {
   this.getCachedOperationsCount = async function() {
     let projects = await this.getProjectList();
     let operations = 0;
-    for (project of projects)
+    for (let project of projects)
     {
       operations += (await project.getData("cachedOperations")).length;
     } 

@@ -286,9 +286,10 @@ function taskPage_tab_project() {
 		onOpen: onOpen
 	});
 
-
+	let project;
 	async function onOpen(_projectId) {
-		let project = await Server.getProject(_projectId);
+		console.log("projectTab.onOpen", _projectId);
+		project = await Server.getProject(_projectId);
 		if (!project) return;
 		
 		MainContent.header.showItemsByPage("project");
@@ -322,9 +323,8 @@ function taskPage_tab_project() {
 			}, 
 			["Planned"]
 		);
-		
-		let dates = Object.keys(plannedTasks);
-		for (date of dates)
+
+		for (date in plannedTasks)
 		{
 			plannedTasks[date] = TaskSorter.defaultSort(plannedTasks[date]);
 			taskHolder.task.addTaskList(
@@ -372,7 +372,7 @@ function MainContent_settingsPage(_projectId) {
 	}
 	
 	this.permissionData = [
-		{name: "Read-only", description: "Can't do anything except finish tasks assigned to them.", 											icon: "images/icons/projectIconDark.svg"},
+		{name: "Read-only", description: "Can't do anything except finish tasks assigned to them.", 										icon: "images/icons/projectIconDark.svg"},
 		{name: "Member", 	description: "Can do everthing except user-related actions, like inviting someone and changing permissions.", 	icon: "images/icons/memberIcon.png"},
 		{name: "Admin", 	description: "Allowed to do everthing except removing the project.", 											icon: "images/icons/adminIcon.png"},
 		{name: "Owner", 	description: "Allowed to do everthing.", 																		icon: "images/icons/ownerIconDark.png"}

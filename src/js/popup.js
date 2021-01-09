@@ -91,7 +91,7 @@ function _Popup_createProject() {
 			return;
 		}
 
-		project = await Server.createProject(title);
+		let project = await Server.createProject(title);
 		if (!project) return console.error("Something went wrong while creating a project:", project);
 		
 		SideBar.projectList.fillProjectHolder();
