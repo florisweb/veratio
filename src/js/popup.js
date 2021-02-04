@@ -209,8 +209,8 @@ function _Popup_renameProject() {
 		],
 		onOpen: onOpen
 	});
-	let projectTitleHolder = this.content[1];
-	let inputField = this.content[3];
+	let projectTitleHolder 	= this.content[1];
+	let inputField 			= this.content[3];
 
 
 

@@ -157,9 +157,8 @@ function taskPage_tab_today() {
 			[date]
 		);
 
-		let taskList = await Server.global.tasks.getByDate(date.toString());
-		if (!taskList || !taskList[date]) return false;
-		taskList = taskList[date];
+		let taskList = await Server.global.tasks.getByDate(date);
+		if (!taskList) return false;
 
 		let finalList = [];
 		for (task of taskList)
@@ -210,13 +209,11 @@ function taskPage_tab_week() {
 		MainContent.header.setMemberList([]);
 
 		let startDate = new Date();
-		let dateList = await Server.global.tasks.getByDateRange({date: startDate.toString(), range: 7});
 
 		for (let i = 0; i < 7; i++)
 		{
 			let date = startDate.copy().moveDay(i);
-			let taskList = dateList[date.toString()];
-
+			let taskList = await Server.global.tasks.getByDate(date);
 			let finalList = [];
 			
 			if (taskList) 
@@ -257,12 +254,10 @@ function taskPage_tab_week() {
 		loadingMoreDays = true;
 		
 		let startDate = getNewDate();
-		let dateList = await Server.global.tasks.getByDateRange({date: startDate.copy().moveDay(1).toString(), range: _days});
-
 		for (let i = 1; i < _days + 1; i++)
 		{
 			let date = startDate.copy().moveDay(i);
-			let taskList = dateList[date.toString()];
+			let taskList = await Server.global.tasks.getByDate(date);
 
 			addTaskHolder(date, taskList);
 		}
@@ -312,9 +307,8 @@ function taskPage_tab_project() {
 	}
 
 	this.addPlannedTaskHolder = async function() {
-		let plannedTasks = await project.tasks.getByDateRange({date: new Date().toString(), range: 1000});
-
-		if (!Object.keys(plannedTasks).length) return;
+		let plannedTasks = await project.tasks.getByDateRange({date: new Date(), range: 1000});
+		if (!plannedTasks.length) return;
 		
 		let taskHolder = MainContent.taskHolder.add(
 			"default",
@@ -323,15 +317,7 @@ function taskPage_tab_project() {
 			}, 
 			["Planned"]
 		);
-
-		for (date in plannedTasks)
-		{
-			plannedTasks[date] = TaskSorter.defaultSort(plannedTasks[date]);
-			taskHolder.task.addTaskList(
-				plannedTasks[date]
-			);
-		}	
-	
+		taskHolder.task.addTaskList(plannedTasks);
 	}
 }
 

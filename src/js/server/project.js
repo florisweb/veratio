@@ -15,23 +15,20 @@ function GlobalProject() {
 
     this.getByDateRange = async function(_info = {date: false, range: 1}) {
       let projects = await Server.getProjectList();
-      let returnValue = {};
+      let tasks = [];
       let promises = [];
       for (let i = 0; i < projects.length; i++)
       {
         let promise = projects[i].tasks.getByDateRange(_info).then(function(_result) {
           if (!_result) return;
-          for (key in _result)
-          {
-            if (!returnValue[key]) returnValue[key] = [];
-            returnValue[key] = returnValue[key].concat(_result[key]);
-          }
+          tasks = tasks.concat(_result);
         });
         promises.push(promise);
-      }
+      };
+
       await Promise.all(promises);
 
-      return returnValue;
+      return tasks;
     }
 
     this.getByGroup = async function(_info = {type: "", value: "*"}) { 
@@ -251,16 +248,17 @@ function Project(_project) {
     TypeBaseClass.call(this, Type);
 
     this.getByDate = async function(_date) {
-      let tasks = await this.getByDateRange({date: _date, range: 0});
-      return tasks[_date.toString()];
+      return await this.getByDateRange({date: _date, range: 0});
     }
 
     this.getByDateRange = async function(_info = {date: false, range: 1}) {
+      if (_info.date && _info.date.constructor.name == "Date") _info.date = _info.date.toString();
+
       let functionRequest = {
         action:       "getByDateRange",
         type:         "tasks",
         parameters:   _info,
-        projectId:  This.id,
+        projectId:    This.id,
       };
 
       let result = await Server.fetchFunctionRequest(functionRequest);
@@ -314,7 +312,6 @@ function Project(_project) {
     TypeBaseClass.call(this, Type);
 
     this.list = [];
-    
     if (_project.users && _project.users.length !== undefined) 
     {
       this.list = _project.users;
@@ -420,7 +417,7 @@ function Project(_project) {
     TypeBaseClass.call(this, Type);
 
     this.list = [];
-
+    if (_project.tags && _project.tags.length !== undefined) this.list = _project.tags.map(function (tag) {tag.colour = new Color(tag.colour); return tag});
 
     this.get = async function(_id) {
       let tags = await this.getAll();

@@ -67,9 +67,9 @@
 			
 			$_date 		= $this->filterDate($_info["date"]);
 			if (!$_date) return false; 
-			$startDate 	= strtotime($_date);
+			$date 		= new DateTime($_date);
+			$startTime	= strtotime($date->format('d-m-Y'));
 			$_range		= (int)$_info["range"];
-
 			$tasks 		= $this->getAll();
 
 			$foundTasks = array();
@@ -80,13 +80,11 @@
 				$curTime = new DateTime($curDate);
 				$curTime = strtotime($curTime->format('d-m-Y'));
 				
-				$deltaSeconds = $curTime - $startDate;
+				$deltaSeconds = $curTime - $startTime;
 				if ($deltaSeconds < 0 || $deltaSeconds > 86400 * $_range) continue;
 
-				if (!$foundTasks[$curDate]) $foundTasks[$curDate] = [];
-
 				$task["projectId"] = $this->projectId;
-				array_push($foundTasks[$curDate], $task);
+				array_push($foundTasks, $task);
 			}
 
 			return $foundTasks;

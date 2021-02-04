@@ -100,5 +100,4 @@
 		return $project->{$_functionData["type"]}->{$_functionData["action"]}($_functionData["parameters"]);
 	}
 
-
 ?>

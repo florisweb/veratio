@@ -161,7 +161,35 @@ const Server = new function() {
 
 
 
+  this.getAllData = async function() {
+    let projects = await getProjectList();
+    
+    let promises = [];
+    for (let project of projects)
+    {
+      promises.push(project.tags.getAll());
+      promises.push(project.users.getAll());
+      promises.push(
+        project.tasks.getByDateRange({date: new Date(), range: 365}).then(function (_list) {
+          project.tasks.dateList = _list;
+        })
+      );
+      promises.push(
+        project.tasks.getByGroup({type: "overdue", value: "*"}).then(function (_list) {
+          project.tasks.overdueList = _list;
+        }) 
+      );
+      promises.push(
+        project.tasks.getByGroup({type: "default", value: "*"}).then(function (_list) {
+          project.tasks.defaultList = _list;
+        }) 
+      );
+    };
 
+    await Promise.all(promises);
+
+    return projects;
+  }
 
 
 

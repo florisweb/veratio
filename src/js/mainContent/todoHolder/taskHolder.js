@@ -57,15 +57,9 @@ function _MainContent_taskHolder() {
 
 	this.addOverdue = async function() {
 		let project = await Server.getProject(MainContent.curProjectId);
-		let taskList = []; 
-		if (project) 
-		{
-			taskList = await project.tasks.getByGroup({type: "overdue", value: "*"});
-		} else {
-			let projectList = await Server.global.tasks.getByGroup({type: "overdue", value: "*"});
-			for (let project of projectList) taskList = taskList.concat(project);
-		}
-	
+		if (!project) project = Server.global;
+
+		let taskList = await project.tasks.getByGroup({type: "overdue", value: "*"});
 		if (!taskList || !taskList.length) return false;
 
 		let item = this.add(
