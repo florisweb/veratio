@@ -128,6 +128,35 @@ const LocalDB = new function() {
 
 
 
+  this.resyncWithServer = async function() {
+    await this.clearDB();
+    let projects = await Server.getProjectList(true);
+
+    let promises = [];
+    for (project of projects)
+    {
+      let taskAdder = function(_list) {
+        for (task of _list) project.tasks.update(task);
+      }
+      promises.push(project.tasks.getByDateRange({date: new Date(), range: 365}).then(taskAdder));
+      promises.push(project.tasks.getByGroup({type: "overdue", value: "*"}).then(taskAdder));
+      promises.push(project.tasks.getByGroup({type: "default", value: "*"}).then(taskAdder));
+    }
+
+    return Promise.all(promises);
+  }
+
+
+  this.clearDB = async function() {
+    let ids = await getProjectIdList();
+    let promises = [];
+    for (id of ids)
+    {
+      promises.push(this.removeProject(id));
+    }
+    return Promise.all(promises);
+  }
+
 
 
 

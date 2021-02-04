@@ -344,7 +344,16 @@ function TaskHolder(_config = {}, _type = "default", _taskHolderIndex) {
 	}
 
 
-	this.taskHolderOpenState = true;
+	this.taskListExpanded = true;
+	this.collapseTaskList = function() {
+		this.taskListExpanded = false;
+		this.HTML.Self.classList.add("hideTasks");
+	}
+
+	this.expandTaskList = function() {
+		this.taskListExpanded = true;
+		this.HTML.Self.classList.remove("hideTasks");
+	}
 
 	function renderTaskHolder(_parent, _taskHolderIndex) {
 		let html = document.createElement("div");
@@ -362,14 +371,12 @@ function TaskHolder(_config = {}, _type = "default", _taskHolderIndex) {
 
 		html.onclick = function(_e) {
 			if (_e.target.classList.contains("dropDownButton")) return;
-			This.taskHolderOpenState = true;
-			html.classList.remove("hideTasks");
+			This.expandTaskList();
 		}
 
 		html.children[0].onclick = function() {
-			This.taskHolderOpenState = !This.taskHolderOpenState;
-			let Function = This.taskHolderOpenState ? "remove" : "add";
-			html.classList[Function]("hideTasks");
+			if (This.taskListExpanded) return This.collapseTaskList();
+			This.expandTaskList();
 		}
 
 		if (!This.config.title) html.style.marginTop = "0";
@@ -685,6 +692,7 @@ function TaskHolder_createMenu(_parent) {
 
 	this.open = async function() {
 		if (this.disabled) return false;
+		Parent.expandTaskList();
 		MainContent.taskHolder.curCreateMenu = this;
 		this.openState = true;
 

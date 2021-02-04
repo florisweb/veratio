@@ -317,6 +317,7 @@ function taskPage_tab_project() {
 			}, 
 			["Planned"]
 		);
+		taskHolder.collapseTaskList();
 		taskHolder.task.addTaskList(plannedTasks);
 	}
 }
