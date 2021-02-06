@@ -35,7 +35,13 @@ function _app() {
     await this.update();
 
     SideBar.projectList.open();
-    setTimeout('document.body.classList.remove("appLoading");', 300);
+
+    setTimeout(function () {
+      document.body.classList.remove("appLoading");
+    }, 300);
+    setTimeout(function () {
+      SideBar.messagePopup.showLatestMessage();
+    }, 700);
   }
 
 
@@ -60,8 +66,6 @@ function _app() {
   this.promptAuthentication = function() {
     window.location.replace("/user/login.php?redirect=/git/veratio");
   }
-
-
 }
 
 

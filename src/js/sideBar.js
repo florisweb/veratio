@@ -72,6 +72,18 @@ function _SideBar() {
 		popupHolder.appendChild(popup.HTML.popup);
 		popup.HTML.popupHolder = popupHolder;
 		popup.close();
+
+
+		popup.showLatestMessage = function() {
+			const curMessageIndex = 3;
+			let messageIndex = parseInt(localStorage.getItem("messageIndex"));
+			if (messageIndex >= curMessageIndex) return;
+			    
+			localStorage.setItem("messageIndex", curMessageIndex);
+			this.open();
+		}
+
+
 		return popup;
 	})();
 }
