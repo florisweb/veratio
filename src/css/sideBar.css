@@ -190,6 +190,32 @@ body.appLoading #sideBar {
 
 
 
+#sideBar .messageHolder.popupHolder {
+	position: absolute;
+	
+	width: 100%;
+	height: 100vh;
+
+	background: none;
+	pointer-events: none;
+}
+
+	#sideBar .messageHolder.popupHolder .popup {
+		position: relative;
+		top: calc(100vh - 10px);
+		transform: translateY(-100%);
+		max-width: calc(100% - 40px - 20px);
+
+		pointer-events: all;
+	}
+
+	.messageHolder.popupHolder.hide .popup {
+		transform: translateY(-90%) scale(.8) !important;
+	}
+
+
+
+
 
 
 

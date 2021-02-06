@@ -95,6 +95,11 @@
 				</div>
 				<div class="text"></div>
 			</div>
+			<div class='messageHolder popupHolder'>
+				<!-- <div class='popup'>
+
+				</div> -->
+			</div>
 		</div>
 		
 
@@ -201,7 +206,7 @@
 				
 
 
-			$.getScript("js/app.js?antiCache=" 										+ antiCache, function() {});
+			$.getScript("js/app.js?antiCache=" 										+ antiCache, function() {})
 		</script>
 
 

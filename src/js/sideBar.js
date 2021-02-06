@@ -40,6 +40,40 @@ function _SideBar() {
 
 		_targetObj.classList.add("tabOpen");
 	}
+
+
+
+	this.messagePopup = (function() {
+		let popupHolder = $(".messageHolder.popupHolder")[0];
+
+		let popup = new PopupComponent({
+			title: "Version 1.3", 
+			content: [
+				new Text({text: "Changelog", isHeader: true}),
+				new VerticalSpace({height: 5}),
+				new Text({text: "- Offline functionallity"}),
+				new LineBreak(),
+				new Text({text: "- Assignees can now be removed from tasks."}),
+				new LineBreak(),
+				new Text({text: "- Planned-taskholders will now be collapsed by default."}),
+				new LineBreak(),
+				new Text({text: "- A lot of small bug fixes"}),
+				new VerticalSpace({height: 30}),
+				new Button({title: "Close", filled: true, onclick: function() {popup.close()}}),
+				new Button({title: "Full changelog", onclick: function() {
+					popup.close();
+					window.open("https://florisweb.tk");
+				}}),
+				new VerticalSpace({height: -20}),
+			]
+		});
+
+		document.body.removeChild(popup.HTML.popupHolder)
+		popupHolder.appendChild(popup.HTML.popup);
+		popup.HTML.popupHolder = popupHolder;
+		popup.close();
+		return popup;
+	})();
 }
 
 

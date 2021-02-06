@@ -2,7 +2,7 @@
 
 function PopupComponent({title, content, onOpen, onClose}) {
 	let titleComponent;
-	let HTML 		= createHTML();
+	this.HTML 		= createHTML();
 	this.content 	= content;
 	this.openState 	= false;
 	
@@ -34,7 +34,7 @@ function PopupComponent({title, content, onOpen, onClose}) {
 	let openResolver;
 	this.open = function() {
 		this.openState = true;
-		HTML.popupHolder.classList.remove("hide");
+		this.HTML.popupHolder.classList.remove("hide");
 		let openPromise = new Promise(function (resolve) {openResolver = resolve});
 
 		try {
@@ -46,7 +46,7 @@ function PopupComponent({title, content, onOpen, onClose}) {
 
 	this.close = function() {
 		this.openState = false;
-		HTML.popupHolder.classList.add("hide");
+		this.HTML.popupHolder.classList.add("hide");
 		try {
 			onClose(openResolver, ...arguments);
 		} catch (e) {};
@@ -55,7 +55,7 @@ function PopupComponent({title, content, onOpen, onClose}) {
 	}
 	
 	this.remove = function() {
-		HTML.popupHolder.parentNode.removeChild(HTML.popupHolder);
+		this.HTML.popupHolder.parentNode.removeChild(this.HTML.popupHolder);
 	}
 	this.setTitle = function(_newTitle) {
 		titleComponent.setTitle(_newTitle);
