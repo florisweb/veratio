@@ -138,11 +138,15 @@ const LocalDB = new function() {
     let projects = await Server.getProjectList(true);
 
     let promises = [];
-    for (project of projects)
+    for (let project of projects)
     {
+      let localProject = await LocalDB.getProject(project.id, true);
+      if (!localProject) continue;
+
       let taskAdder = function(_list) {
-        for (task of _list) project.tasks.update(task);
+        for (task of _list) localProject.tasks.update(task);
       }
+
       promises.push(project.tasks.getByDateRange({date: new Date(), range: 365}).then(taskAdder));
       promises.push(project.tasks.getByGroup({type: "overdue", value: "*"}).then(taskAdder));
       promises.push(project.tasks.getByGroup({type: "default", value: "*"}).then(taskAdder));

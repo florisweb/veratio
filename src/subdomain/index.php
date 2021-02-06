@@ -4,7 +4,7 @@
 		<title>Veratio - Florisweb.tk</title>
 		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0' name='viewport'/>
 		<meta name="theme-color" content="#636ad5">
-		<link rel="manifest" href="https://florisweb.tk/git/veratio/manifest.json">
+		<link rel="manifest" href="manifest.json">
 		<link rel="shortcut icon" href="https://florisweb.tk/git/veratio/images/pressSet/favicon.ico">
 		
 		<style>

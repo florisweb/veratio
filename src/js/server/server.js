@@ -109,7 +109,7 @@ const Server = new function() {
     for (let project of projects) promises.push(project.setup());
     await Promise.all(promises);
 
-    if (!noConnection) LocalDB.updateProjectList(projects);
+    if (!noConnection) await LocalDB.updateProjectList(projects);
 
     return projects;
   }
