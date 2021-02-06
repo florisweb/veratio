@@ -80,7 +80,11 @@ const LocalDB = new function() {
   }
 
   
-
+  this.onReConnect = async function() {
+    console.log("reconnect");
+    await this.sendCachedOperations();
+    await this.resyncWithServer();
+  }
 
 
   this.addProject = async function(_project) {
@@ -129,6 +133,7 @@ const LocalDB = new function() {
 
 
   this.resyncWithServer = async function() {
+    if (!Server.connected) return false;
     await this.clearDB();
     let projects = await Server.getProjectList(true);
 
@@ -143,7 +148,8 @@ const LocalDB = new function() {
       promises.push(project.tasks.getByGroup({type: "default", value: "*"}).then(taskAdder));
     }
 
-    return Promise.all(promises);
+    await Promise.all(promises);
+    return true;
   }
 
 
@@ -154,7 +160,7 @@ const LocalDB = new function() {
     {
       promises.push(this.removeProject(id));
     }
-    return Promise.all(promises);
+    await Promise.all(promises);
   }
 
 
@@ -254,20 +260,18 @@ function LocalDB_Project(_projectId, _DB) {
    
     this.getByDateRange = async function({date, range}) {
       let tasks = await this.getAll();
-      let response = {};
-      date = new Date().setDateFromStr(date);
+      let foundTasks = [];
+      if (typeof date == "string") date = new Date().setDateFromStr(date);
 
       for (let i = 0; i < tasks.length; i++)
       {
         if (tasks[i].groupType != "date") continue;
         let taskDate = new Date().setDateFromStr(tasks[i].groupValue);
         if (!taskDate || !taskDate.dateIsBetween(date, date.copy().moveDay(range))) continue;
-        
-        if (typeof response[tasks[i].groupValue] != "object") response[tasks[i].groupValue] = [];
-        response[tasks[i].groupValue].push(tasks[i]);
+        foundTasks.push(tasks[i]);
       }
 
-      return response;
+      return foundTasks;
     }
 
     this.getByGroup = async function({type, value = "*"}) {

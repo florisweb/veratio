@@ -283,7 +283,6 @@ function taskPage_tab_project() {
 
 	let project;
 	async function onOpen(_projectId) {
-		console.log("projectTab.onOpen", _projectId);
 		project = await Server.getProject(_projectId);
 		if (!project) return;
 		

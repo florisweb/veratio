@@ -210,9 +210,7 @@ const Server = new function() {
   }
 
 
-  this.onReConnect = async function() {
-    return await LocalDB.sendCachedOperations();
-  }
+  this.onReConnect = function () {LocalDB.onReConnect()};
 
 
 
@@ -247,10 +245,9 @@ const Server = new function() {
     return returnPromise;
   }
 
-  this.fetchFunctionRequestList = async function(_requests) {
+  this.fetchFunctionRequestList = function(_requests) {
     let paramString = Encoder.objToString(_requests);
-    let result = await this.fetchData("database/project/executeFunctionList.php", "functions=" + paramString);
-    return result;
+    return this.fetchData("database/project/executeFunctionList.php", "functions=" + paramString);
   }
 
 
