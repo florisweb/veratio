@@ -143,8 +143,8 @@ const LocalDB = new function() {
       let localProject = await LocalDB.getProject(project.id, true);
       if (!localProject) continue;
 
-      let taskAdder = function(_list) {
-        for (task of _list) localProject.tasks.update(task);
+      let taskAdder = async function(_list) {
+        for (task of _list) await localProject.tasks.update(task);
       }
 
       promises.push(project.tasks.getByDateRange({date: new Date(), range: 365}).then(taskAdder));
@@ -325,6 +325,7 @@ function LocalDB_Project(_projectId, _DB) {
         if (data[i].id != _newItem.id) continue;
         data[i] = _newItem;
         found = true;
+        break;
       }
 
       if (!found) data.push(_newItem);
