@@ -1,23 +1,4 @@
 
-
-const SW = new function() {
-  if ('serviceWorker' in navigator) {} else return;
-
-  window.addEventListener('load', async function() {
-    navigator.serviceWorker.register('serviceWorker.js').then(function(registration) {
-      console.log("Serviceworker installed with scope", registration.scope);
-      
-    }, function(err) {
-      console.log('ServiceWorker registration failed: ', err);
-    });
-  });
-}
-
-
-
-
-
-
 const Server = new function() {
   let This = this;
   this.connected = false;
