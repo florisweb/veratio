@@ -12,11 +12,10 @@
 	$enableRedirect = false;
 	function APP_noAuthHandler() {
 		if (!$enableRedirect) return;
-		header("Location: /user/login.php?redirect=/git/veratio");
+		header("Location: https://florisweb.tk/user/login.php?redirect=https://veratioDev.florisweb.tk");
 		die("E_noAuth");
 	}
 
-	$root = realpath($_SERVER["DOCUMENT_ROOT"]);	
 	require_once __DIR__ . "/database/modules/app.php";
 	require_once __DIR__ . "/database/modules/garbageCollector/garbageCollector.php";
 
@@ -57,8 +56,10 @@
 		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=83">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/header.css?a=1">
 
-		<script type="text/javascript" src="/JS/jQuery.js" asy nc></script>
-		<script type="text/javascript" src="/JS/request2.js" asy nc></script>
+		<!-- <script type="text/javascript" src="/JS/jQuery.js" asy nc></script> -->
+		<!-- <script type="text/javascript" src="/JS/request2.js" asy nc></script> -->
+		<script type="text/javascript" src="https://florisweb.tk/JS/jQuery.js" asy nc></script>
+		<script type="text/javascript" src="https://florisweb.tk/JS/request2.js" asy nc></script>
 	</head>	
 	<body class="appLoading">
 		<div id="sideBar">

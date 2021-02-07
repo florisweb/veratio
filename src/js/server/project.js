@@ -154,18 +154,6 @@ function GlobalProject() {
       }
       return false;
     }
-
-    this.update = async function(_newItem) {
-      console.warn("Global.update", _newItem, Type);
-      // let projects = await Server.getProjectList();
-      // for (let i = 0; i < projects.length; i++)
-      // {
-      //   let result = await projects[i][Type].get(_id);
-      //   if (!result) continue;
-      //   return result;
-      // }
-      // return false;
-    }
   }
 }
 
@@ -525,7 +513,7 @@ function Project(_project) {
       };
 
       let response = await Server.fetchFunctionRequest(functionRequest);
-
+      console.warn(response);
       if (response.error == "E_noConnection" && Local) 
       {
         Local[Type].update(_newItem);

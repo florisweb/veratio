@@ -1,6 +1,6 @@
 <?php
-	$root = realpath($_SERVER["DOCUMENT_ROOT"]);
-	require_once "$root/PHPV2/PacketManager.php";
+	require_once __DIR__ . "/../../getRoot.php";
+	include_once($GLOBALS["Root"] . "/PHPV2/PacketManager.php");
 
 	$GLOBALS["PM"]->includePacket("DB", "1.0");
 	$GLOBALS["PM"]->includePacket("SESSION", "1.0");

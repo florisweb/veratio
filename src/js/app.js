@@ -64,7 +64,7 @@ function _app() {
 
 
   this.promptAuthentication = function() {
-    window.location.replace("/user/login.php?redirect=/git/veratio");
+    window.location.replace("https://florisweb.tk/user/login.php?redirect=https://veratioDev.florisweb.tk");
   }
 }
 
