@@ -210,17 +210,17 @@ const Server = new function() {
     timeoutStarted = true;
     
     setTimeout(async function () {
-      let responses = await Server.fetchFunctionRequestList(requests);
+      let batchRequests = requests;
+      requests = [];
+      timeoutStarted = false;
 
-      for (let r = 0; r < requests.length; r++) 
+      let responses = await Server.fetchFunctionRequestList(batchRequests);
+      for (let r = 0; r < batchRequests.length; r++) 
       {
         let response = (responses.error == "E_noConnection" || responses.error == "E_noAuth") ? responses : responses[r];
-        requests[r].resolve(response);
+        batchRequests[r].resolve(response);
       }
       
-      requests = [];
-
-      timeoutStarted = false;
     }, timeOutLength);
     
     return returnPromise;

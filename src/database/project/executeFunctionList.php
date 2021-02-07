@@ -17,16 +17,15 @@
 
 
 	$returnValues = [];
-	foreach ($_functionDataList as $_functionData)
+	for ($i = 0; $i < sizeof($_functionDataList); $i++)
 	{
-		$functionData = validateFunction($_functionData);
+		$functionData = validateFunction($_functionDataList[$i]);
 		if (is_string($functionData)) 
 		{
-			array_push($returnValues, $functionData);
+			$returnValues[$i] = $functionData;
 			continue;
 		}
 		
-
 		$result 	= callFunction($functionData);
 		$response 	= array(
 			"error"		=> "",
@@ -38,8 +37,11 @@
 			"result" 	=> false,
 		);
 
-		array_push($returnValues, $response);
+		$returnValues[$i] = $response;
 	}
+
+	$returnValues["functions"] = $_functionDataList;
+	$returnValues["rawFunctions"] = $_POST["functions"];
 
 	echo json_encode($returnValues);
 
