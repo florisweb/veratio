@@ -22,10 +22,10 @@
 	if ($_joinType == "signedIn")
 	{
 		$project->users->InviteComponent->joinAsMember((string)$_GET["link"], $inviteUserObj);
-		header("Location: https://veratio.florisweb.tk");
+		header("Location: https://florisweb.tk/user/login.php?redirect=https://veratioDev.florisweb.tk");
 	} else {
 		$project->users->InviteComponent->joinAsLink((string)$_GET["link"], $inviteUserObj);
-		header("Location: https://veratio.florisweb.tk?link=" . $_inviteUser_placeholderId);
+		header("Location: https://florisweb.tk/user/login.php?redirect=https://veratioDev.florisweb.tk?link=" . $_inviteUser_placeholderId);
 	}
 	
 	die("Redirect user");
