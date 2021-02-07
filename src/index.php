@@ -1,4 +1,17 @@
 <?php
+	
+	// Set the authentication cookie
+	if (isset($_GET["sessionKey"]))
+	{
+		setcookie("SESSION_key", (String)$_GET["sessionKey"], time() + (60 * 60 * 24 * 365.25), "/");
+		if (isset($_GET["link"]))
+		{
+			header("Location: /?link=" . $_GET["link"]);
+			die();
+		}
+		header("Location: /");
+	}
+
 	// system that redirects the user to the welcome page if they're new
 	// if (!isset($_COOKIE["Veratio_hasSeenWelcomeMessage"]))
 	// {
