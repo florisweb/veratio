@@ -180,53 +180,53 @@
 
 		<script>
 			// // temporary so things don't get cached
-			// let antiCache = Math.round(Math.random() * 100000000);
-			// // Modules
-			// $.getScript("js/extraFunctions.js?antiCache=" 							+ antiCache, function() {});
-			// $.getScript("js/DOMData.js?antiCache=" 									+ antiCache, function() {});
-			// $.getScript("js/time.js?antiCache=" 									+ antiCache, function() {});
-			// $.getScript("js/UI.js?antiCache=" 										+ antiCache, function() {});
-			// $.getScript("js/color.js?antiCache=" 									+ antiCache, function() {});
-			// $.getScript("js/textFormater.js?antiCache=" 							+ antiCache, function() {});
+			let antiCache = Math.round(Math.random() * 100000000);
+			// Modules
+			$.getScript("js/extraFunctions.js?antiCache=" 							+ antiCache, function() {});
+			$.getScript("js/DOMData.js?antiCache=" 									+ antiCache, function() {});
+			$.getScript("js/time.js?antiCache=" 									+ antiCache, function() {});
+			$.getScript("js/UI.js?antiCache=" 										+ antiCache, function() {});
+			$.getScript("js/color.js?antiCache=" 									+ antiCache, function() {});
+			$.getScript("js/textFormater.js?antiCache=" 							+ antiCache, function() {});
 
-			// $.getScript("js/constants.js?antiCache=" 								+ antiCache, function() {});
-			// $.getScript("js/optionMenu.js?antiCache=" 								+ antiCache, function() {});
-			// $.getScript("js/popupComponent.js?antiCache=" 							+ antiCache, function() {});
-			// $.getScript("js/popup.js?antiCache=" 									+ antiCache, function() {});
+			$.getScript("js/constants.js?antiCache=" 								+ antiCache, function() {});
+			$.getScript("js/optionMenu.js?antiCache=" 								+ antiCache, function() {});
+			$.getScript("js/popupComponent.js?antiCache=" 							+ antiCache, function() {});
+			$.getScript("js/popup.js?antiCache=" 									+ antiCache, function() {});
 
-			// // Eventhandlers
-			// $.getScript("js/eventHandlers/dragHandler.js?antiCache=" 				+ antiCache, function() {});
-			// $.getScript("js/eventHandlers/keyHandler.js?antiCache=" 				+ antiCache, function() {});
-			// $.getScript("js/eventHandlers/doubleClickHandler.js?antiCache=" 		+ antiCache, function() {});
-			// $.getScript("js/eventHandlers/rightClickHandler.js?antiCache=" 			+ antiCache, function() {});
+			// Eventhandlers
+			$.getScript("js/eventHandlers/dragHandler.js?antiCache=" 				+ antiCache, function() {});
+			$.getScript("js/eventHandlers/keyHandler.js?antiCache=" 				+ antiCache, function() {});
+			$.getScript("js/eventHandlers/doubleClickHandler.js?antiCache=" 		+ antiCache, function() {});
+			$.getScript("js/eventHandlers/rightClickHandler.js?antiCache=" 			+ antiCache, function() {});
 
 
-			// $.getScript("js/mainContent/header.js?antiCache=" 						+ antiCache, function() {});
-			// $.getScript("js/mainContent/pages.js?antiCache=" 						+ antiCache, function() {});
+			$.getScript("js/mainContent/header.js?antiCache=" 						+ antiCache, function() {});
+			$.getScript("js/mainContent/pages.js?antiCache=" 						+ antiCache, function() {});
 			
-			// $.getScript("js/mainContent/todoHolder/taskHolder.js?antiCache=" 		+ antiCache, function() {});
-			// $.getScript("js/mainContent/todoHolder/renderer.js?antiCache=" 			+ antiCache, function() {});
+			$.getScript("js/mainContent/todoHolder/taskHolder.js?antiCache=" 		+ antiCache, function() {});
+			$.getScript("js/mainContent/todoHolder/renderer.js?antiCache=" 			+ antiCache, function() {});
 
-			// $.getScript("js/mainContent/mainContent.js?antiCache=" 					+ antiCache, function() {});
+			$.getScript("js/mainContent/mainContent.js?antiCache=" 					+ antiCache, function() {});
 
 
-			// $.getScript("js/sideBar.js?antiCache=" 									+ antiCache, function() {});
+			$.getScript("js/sideBar.js?antiCache=" 									+ antiCache, function() {});
 			
 
-			// $.getScript("js/server/encoder.js?antiCache=" 							+ antiCache, function() {});
-			// $.getScript("js/server/indexedDB.js?antiCache=" 						+ antiCache, function() {});
-			// $.getScript("js/server/project.js?antiCache=" 							+ antiCache, function() {});
-			// $.getScript("js/server/server.js?antiCache=" 							+ antiCache, function() {});
+			$.getScript("js/server/encoder.js?antiCache=" 							+ antiCache, function() {});
+			$.getScript("js/server/indexedDB.js?antiCache=" 						+ antiCache, function() {});
+			$.getScript("js/server/project.js?antiCache=" 							+ antiCache, function() {});
+			$.getScript("js/server/server.js?antiCache=" 							+ antiCache, function() {});
 				
 
 
-			// $.getScript("js/app.js?antiCache=" 										+ antiCache, function() {})
+			$.getScript("js/app.js?antiCache=" 										+ antiCache, function() {})
 		</script>
 
 
 		<div class='UI box popup hide' id="optionMenu_colourPopupBox">
 		</div>
-		<script src='js/main_min.js?antiCache='></script>
+		<!-- <script src='js/main_min.js?antiCache='></script> -->
 
 <!-- 
 		<script src='js/DOMData.js?antiCache='></script>

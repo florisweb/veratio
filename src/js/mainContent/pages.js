@@ -290,7 +290,7 @@ function taskPage_tab_project() {
 		MainContent.header.setTitle(project.title);
 		MainContent.header.setMemberList(await project.users.getAll());
 
-		await This.addPlannedTaskHolder();
+		await This.addPlannedTaskHolder(true);
 
 		let nonPlannedTasks = await project.tasks.getByGroup({type: "default", value: "*"});
 		let taskHolder_nonPlanned = MainContent.taskHolder.add(
@@ -305,7 +305,7 @@ function taskPage_tab_project() {
 		taskHolder_nonPlanned.task.addTaskList(nonPlannedTasks);
 	}
 
-	this.addPlannedTaskHolder = async function() {
+	this.addPlannedTaskHolder = async function(_collapseTaskList = false) {
 		let plannedTasks = await project.tasks.getByDateRange({date: new Date(), range: 1000});
 		if (!plannedTasks.length) return;
 		
@@ -316,7 +316,7 @@ function taskPage_tab_project() {
 			}, 
 			["Planned"]
 		);
-		taskHolder.collapseTaskList();
+		if (_collapseTaskList) taskHolder.collapseTaskList();
 		taskHolder.task.addTaskList(plannedTasks);
 	}
 }
