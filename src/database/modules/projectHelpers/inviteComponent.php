@@ -163,7 +163,7 @@
 			if (!$userId) 
 			{
 				$redirectLink = urlencode("/git/veratio/invite/join.php?type=signedIn&link=" . $_inviteLink);
-				header("Location: https://florisweb.tk/user/login.php?redirect=https://veratioDev.florisweb.tk");
+				header("Location: https://florisweb.tk/user/login.php?APIKey=veratioV1.3");
 				die("User not signed in");
 			}
 

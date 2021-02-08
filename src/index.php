@@ -1,17 +1,4 @@
 <?php
-	
-	// Set the authentication cookie
-	if (isset($_GET["sessionKey"]))
-	{
-		setcookie("SESSION_key", (String)$_GET["sessionKey"], time() + (60 * 60 * 24 * 365.25), "/");
-		if (isset($_GET["link"]))
-		{
-			header("Location: /?link=" . $_GET["link"]);
-			die();
-		}
-		header("Location: /");
-	}
-
 	// system that redirects the user to the welcome page if they're new
 	// if (!isset($_COOKIE["Veratio_hasSeenWelcomeMessage"]))
 	// {
@@ -25,7 +12,7 @@
 	$enableRedirect = false;
 	function APP_noAuthHandler() {
 		if (!$enableRedirect) return;
-		header("Location: https://florisweb.tk/user/login.php?redirect=https://veratioDev.florisweb.tk");
+		header("Location: https://florisweb.tk/user/login.php?APIKey=veratioV1.3");
 		die("E_noAuth");
 	}
 

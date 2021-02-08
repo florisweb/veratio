@@ -22,7 +22,7 @@
 	if ($_joinType == "signedIn")
 	{
 		$project->users->InviteComponent->joinAsMember((string)$_GET["link"], $inviteUserObj);
-		header("Location: https://florisweb.tk/user/login.php?redirect=https://veratioDev.florisweb.tk");
+		header("Location: https://florisweb.tk/user/login.php?APIKey=veratioV1.3");
 	} else {
 		$project->users->InviteComponent->joinAsLink((string)$_GET["link"], $inviteUserObj);
 		header("Location: https://florisweb.tk/user/login.php?redirect=https://veratioDev.florisweb.tk?link=" . $_inviteUser_placeholderId);

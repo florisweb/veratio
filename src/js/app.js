@@ -62,9 +62,8 @@ function _app() {
 
 
 
-
   this.promptAuthentication = function() {
-    window.location.replace("https://florisweb.tk/user/login.php?redirect=https://veratioDev.florisweb.tk");
+    window.location.replace("https://florisweb.tk/user/login.php?APIKey=veratioV1.3");
   }
 }
 
