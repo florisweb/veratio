@@ -314,8 +314,9 @@ div.optionGroup {
 	box-shadow: 4px 4px 8px 8px rgba(0, 0, 0, 0.05);
 	border-radius: 3px;
 
-	overflow: hidden;
-	transition: all 0.3s, top 0s, left 0s;
+	overflow-x: hidden;
+	overflow-y: auto;
+	transition: all 0.3s, top 0s, left 0s, max-height 0s;
 }
 
 	.optionMenuHolder.hide {

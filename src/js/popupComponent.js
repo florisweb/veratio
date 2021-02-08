@@ -170,7 +170,7 @@ function OptionSelector({onValueChange} = {}) {
 	}
 
 	this.openPopup = function() {
-		Menu.open(this.HTML.button, {left: 0, top: 0});
+		Menu.open(this.HTML.button.children[0], {left: 0, top: 0});
 	}
 
 	this.closePopup = function() {

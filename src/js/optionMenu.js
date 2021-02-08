@@ -126,24 +126,39 @@ function _OptionMenu_menu(_self) {
 	}
 
 
-	const popupMargin = 15;
+	const popupMargin = 20;
 	function moveToItem(_item, _relativePosition = {left: 0, top: 0}, _event) {
 		if (!_item) return false;
+		HTML.Self.style.maxHeight = "none";
 
-		let top = _item.getBoundingClientRect().top +  HTML.parent.scrollTop + _relativePosition.top;
+		let top = _item.getBoundingClientRect().top + HTML.parent.scrollTop + _relativePosition.top;
+		let buttonY = top;
 		let left = _item.getBoundingClientRect().left;
 		if (_event) left = _event.clientX;
 		left += _relativePosition.left;
 
-
-
 		let maxLeft = document.body.offsetWidth - HTML.Self.offsetWidth - popupMargin;
 		if (left > maxLeft) left = maxLeft;
+		
+		let desiredHeight = HTML.Self.offsetHeight;
+		let spaceUnderButton = window.innerHeight - buttonY - popupMargin;
+		let spaceAboveButton = buttonY - popupMargin + _item.offsetHeight;
 
-		let ownHeight = HTML.Self.offsetHeight;
-		if (top + _item.offsetHeight + ownHeight + popupMargin > window.innerHeight) top -= ownHeight + _item.offsetHeight;
+		maxHeight = spaceUnderButton;
+		if (buttonY > spaceUnderButton && spaceUnderButton < desiredHeight) 
+		{
+			if (desiredHeight > spaceAboveButton)
+			{
+				top = popupMargin;
+				maxHeight = spaceAboveButton - 5 * 2; // - 10 because of padding
+			} else {
+				maxHeight = spaceAboveButton
+				top = popupMargin + spaceAboveButton - desiredHeight;
+			}
+		}
 
-		HTML.Self.style.left = left + "px";
-		HTML.Self.style.top	 = top + "px";
+		HTML.Self.style.left 		= left + "px";
+		HTML.Self.style.top			= top + "px";
+		HTML.Self.style.maxHeight 	= maxHeight + "px";
 	}
 }
