@@ -573,7 +573,7 @@ function _Popup_tagManager() {
 
 	function setTagList(_tags) {
 		itemList.removeAllItems();
-		for (tag of _tags) itemList.addItem({
+		for (let tag of _tags) itemList.addItem({
 			title: tag.title,
 			icon: MainContent.taskPage.renderer.createTagCircle(tag),
 			value: tag,
