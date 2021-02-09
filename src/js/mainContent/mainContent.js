@@ -1,3 +1,7 @@
+const projectType 	= ' .';
+const tagType 		= '#';
+const userType 		= ' @';
+
 
 
 function _MainContent() {
@@ -177,13 +181,11 @@ function _MainContent_optionMenu() {
 
 
 
-
-
 function _MainContent_searchOptionMenu() {
 	let HTML = {
 		mainContentHolder: mainContentHolder,
 		scrollYHolder: $("#mainContentHolder .mainContentPage")[0]
-	}
+	};
 
 	let This = this;
 	let Menu = OptionMenu.create();
@@ -222,7 +224,11 @@ function _MainContent_searchOptionMenu() {
 		for (item of _list) 
 		{
 			addSearchItem(
-				{item: item}, 
+				{
+					item: item,
+					startAt: 0,
+					length: 0,
+				}, 
 				_indicator
 			);
 		}
@@ -269,65 +275,66 @@ function _MainContent_searchOptionMenu() {
 		let project = MainContent.taskHolder.curCreateMenu.curTask.project;
 		switch (_type)
 		{
-			case "#": 	
+			case tagType: 	
 				let tags = Object.assign([], await project.tags.getAll());
 				tags.push({id: false, title: "No tag", colour: new Color("#000"), isNoOptionItem: true}); 
 				return tags;
 			break;
-			case ".": 	return Server.projectList;				break;
-			default: 	return await project.users.getAll(); 	break;
+			case projectType: 	return Server.projectList;				break;
+			default: 			return await project.users.getAll(); 	break;
 		}
 	}
 	
 
 
-	async function addOptionItemsByValue(_value, _cursorPosition) {
-		Menu.removeAllOptions();
-		
-		if (await addOptionItemsByValueAndType(_value, _cursorPosition, "#")) return;
-		if (await addOptionItemsByValueAndType(_value, _cursorPosition, "@")) return;
-		if (await addOptionItemsByValueAndType(_value, _cursorPosition, ".")) return;
+	async function addOptionItemsByValue(_value, _cursorPosition) {		
+		if (await addOptionItemsByValueAndType(_value, _cursorPosition, tagType)) return;
+		if (await addOptionItemsByValueAndType(_value, _cursorPosition, userType)) return;
+		if (await addOptionItemsByValueAndType(_value, _cursorPosition, projectType)) return;
 	
 		This.hide();
 	}	
 
 		async function addOptionItemsByValueAndType(_value, _cursorPosition, _type) {
-			let active = 0;
 			let items = await This.getListByValue(_value, _type, _cursorPosition);
-		
-			for (let i = 0; i < items.length; i++)
-			{
-				if (!items[i].active) continue;
-				addSearchItem(items[i], _type);
-				active++;
-			}
+			Menu.removeAllOptions();
 
-			return active > 0;
+			for (let i = 0; i < items.length; i++) addSearchItem(items[i], _type);
+
+			return items.length > 0;
 		}
 
 
-		function addSearchItem(_item, _type = "@") {
+		function addSearchItem(_item, _type = tagType) {
 			var clickHandler = async function() {
 				if (!inputField) return;
 				let inValue 		= inputField.value;
 				let partA 			= inValue.substr(0, _item.startAt);
-				let partB 			= inValue.substr(_item.startAt + _item.length, inValue.length - _item.startAt - _item.length);
+				let partB 			= inValue.substr(_item.startAt + _item.length, Infinity);
 				inputField.value 	= partA + partB;
 				
 
-				if (_type == ".") MainContent.taskHolder.curCreateMenu.curTask.setProject(_item.item);
-				if (_type == "#") MainContent.taskHolder.curCreateMenu.curTask.setTag(_item.item);
-				if (_type == "@") MainContent.taskHolder.curCreateMenu.curTask.addAssignee(_item.item);
+				if (_type == projectType) 	MainContent.taskHolder.curCreateMenu.curTask.setProject(_item.item);
+				if (_type == tagType) 		MainContent.taskHolder.curCreateMenu.curTask.setTag(_item.item);
+				if (_type == userType) 		MainContent.taskHolder.curCreateMenu.curTask.addAssignee(_item.item);
 				
 				This.userForceHide();
 				inputField.focus();
 
 				if (!_item.isCreateItem) return;
-				
-				let project = MainContent.taskHolder.curCreateMenu.curTask.project;
-				let tag = await Popup.createTag.open(project.id, _item.item.title);
-				if (tag) MainContent.taskHolder.curCreateMenu.curTask.setTag(tag);
-
+				switch (_type)
+				{
+					case projectType: 
+						project = await Popup.createProjectMenu.open(_item.item.title);
+						if (project) MainContent.taskHolder.curCreateMenu.curTask.setProject(project);
+					break;
+					case tagType: 
+						project = MainContent.taskHolder.curCreateMenu.curTask.project;
+						let tag = await Popup.createTag.open(project.id, _item.item.title);
+						if (tag) MainContent.taskHolder.curCreateMenu.curTask.setTag(tag);
+					break;
+				}
+		
 				inputField.focus();
 			}
 
@@ -337,13 +344,6 @@ function _MainContent_searchOptionMenu() {
 
 		
 		function createSearchItemIconByType(_type, _item) {
-			if (_item.isCreateItem) 
-			{
-				return {
-					title: _item.item.title,
-					image: "images/icons/addIcon.png"
-				}
-			}
 			if (_item.item.isNoOptionItem) 
 			{
 				return {
@@ -353,13 +353,27 @@ function _MainContent_searchOptionMenu() {
 			}
 			switch (_type)
 			{
-				case ".": 
+				case projectType:
+					if (_item.isCreateItem) 
+					{
+						return {
+							title: _item.item.title,
+							image: "images/icons/addIcon.png"
+						}
+					}
 					return {
 						title: _item.item.title,
 						image: "images/icons/projectIconDark.svg"
 					}
 				break;
-				case "#": 
+				case tagType: 
+					if (_item.isCreateItem) 
+					{
+						return {
+							title: _item.item.title,
+							image: "images/icons/addIcon.png"
+						}
+					}
 					return {
 						title: _item.item.title,
 						image: MainContent.taskPage.renderer.createTagCircle(_item.item)
@@ -374,26 +388,22 @@ function _MainContent_searchOptionMenu() {
 		}
 
 
-
-
-
-
 		this.getListByValue = async function(_value, _type, _cursorPosition) {
 			let found = [];
 			let itemList = await this.getItemListByType(_type);
 			if (!itemList) itemList = [];
 
+			let stringInfo = getRelevantStringInfo(_value, _type, _cursorPosition);
+			if (stringInfo === false) return [];
+
 			for (let i = 0; i < itemList.length; i++)
 			{
-				let item = _checkValueByItem(_value, itemList[i], _type);
-				if (!item) continue;
-				
-				item.active = false;
-				if (item.startAt <= parseInt(_cursorPosition) && item.length + item.startAt >= parseInt(_cursorPosition)) item.active = true;
-				
+				let item = getBestStringCutForItem(stringInfo, itemList[i], _type);
+				console.log(item.score);
+				if (!item || item.score < .5 - 1 / (stringInfo.string.length + 1)) continue;	
 				found.push(item);
 			}
-
+	
 			let createItem = addCreateNewItemOption(_value, _type, _cursorPosition, itemList);
 			if (createItem) found.push(createItem);
 
@@ -404,47 +414,59 @@ function _MainContent_searchOptionMenu() {
 			});
 		}
 
-			function _checkValueByItem(_value, _item, _type = "#") {
-				let valueParts = _value.split(_type);
-				let scores = [];
-				let itemTitle = _item.title ? _item.title : _item.name;
+		function getRelevantStringInfo(_value, _type, _cursorPosition) {
+			let value = _value.substr(0, _cursorPosition + 1);
+			let parts = value.split(_type);
+			let letterIndex = parts[0].length;
+			for (let i = 1; i < parts.length; i++)
+			{
+				let start = letterIndex;
+				letterIndex = start + parts[i].length + _type.length;
 
-				for (let valI = 1; valI < valueParts.length; valI++)
-				{
-					let cValue = Object.assign([], valueParts).splice(valI, valueParts.length).join(_type);
-					let startIndex = Object.assign([], valueParts).splice(0, valI).join(_type).length;
-
-					for (let i = 0; i < cValue.length + 1; i++)
-					{
-						let curSubString = cValue.substr(0, i + 1);
-						let item = {
-							startAt: startIndex,
-							length: i + 2,
-							str: curSubString,
-							score: similarity(curSubString, itemTitle),
-							item: _item
-						}
-						scores.push(item);
-					}
+				if (start > _cursorPosition || letterIndex < _cursorPosition) continue;
+				return {
+					string: parts[i],
+					startOffset: start,
 				}
+			}
+			return false;
+		}
 
-				if (scores.length < 1) return false;
-				return scores.sort(function(a, b){
-			     	if (a.score < b.score) return 1;
-			    	if (a.score > b.score) return -1;
-			    	return 0;
-			    })[0];
+		function getBestStringCutForItem(_stringInfo, _item, _type) {
+			let scores = [];
+			let itemTitle = _item.title ? _item.title : _item.name;
+
+			for (let i = 0; i < _stringInfo.string.length + 1; i++)
+			{
+				let curSubString = _stringInfo.string.substr(0, i);
+				let curItemTitle = itemTitle.substr(0, i);
+				let startIndex = _stringInfo.startOffset;
+				let score = similarity(curSubString, curItemTitle) - Math.abs(i - _stringInfo.string.length) * .1;
+				let item = {
+					startAt: startIndex,
+					length: i + _type.length,
+					str: curSubString,
+					score: i == 0 ? 0 :score,
+					item: _item
+				}
+				scores.push(item);
 			}
 
+			if (scores.length < 1) return false;
+			return scores.sort(function(a, b){
+		     	return b.score - a.score;
+		    })[0];
+		}
+
+
 			function addCreateNewItemOption(_value, _type, _cursorPosition, _itemList) {
-				if (_type != "#") return false;
+				if (_type != tagType && _type != projectType) return false;
 
 				let valueParts = _value.split(_type);
 				if (valueParts.length < 2) return false;
 
 
 				let partIndex = 1;
-				
 				for (let i = 1; i < valueParts.length; i++) 
 				{
 					let curStrIndex = Object.assign([], valueParts).splice(0, i).join(_type).length;

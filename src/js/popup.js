@@ -76,10 +76,11 @@ function _Popup_createProject() {
 	});
 	
 	let projectTitleInput = this.content[2];
-
-	function onOpen() {
-		projectTitleInput.setValue(null);
+	let openResolver;
+	function onOpen(_openResolver, _title = null) {
+		projectTitleInput.setValue(_title);
 		projectTitleInput.focus();
+		openResolver = _openResolver;
 	}
 
 	this.createProject = async function() {
@@ -95,10 +96,11 @@ function _Popup_createProject() {
 		if (!project) return console.error("Something went wrong while creating a project:", project);
 		
 		SideBar.projectList.fillProjectHolder();
-		MainContent.taskPage.open();
-		MainContent.curPage.projectTab.open(project.id);
+		// MainContent.taskPage.open();
+		// MainContent.curPage.projectTab.open(project.id);
 		
 		this.close();
+		openResolver(project);
 	} 
 }
 

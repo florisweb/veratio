@@ -836,20 +836,20 @@ function TaskHolder_createMenu(_parent) {
 
 
 	this.openTagSelectMenu = function() {
-		openSelectMenu(2, "#");
+		openSelectMenu(2, tagType);
 	}	
 	this.openMemberSelectMenu = function() {
-		openSelectMenu(1, "@");
+		openSelectMenu(1, userType);
 	}	
 	this.openProjectSelectMenu = function() {
-		openSelectMenu(0, ".");
+		openSelectMenu(0, projectType);
 	}
 
 
 
 
 
-	async function openSelectMenu(_iconIndex = 0, _type = ".") {
+	async function openSelectMenu(_iconIndex = 0, _type = projectType) {
 		if (!This.openState) return false;
 
 		let htmlElement = Parent.HTML.createMenu.children[4].children[_iconIndex];
