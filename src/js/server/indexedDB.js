@@ -46,6 +46,10 @@ const LocalDB = new function() {
       projectList.push(project);
     }
 
+    projectList.sort(function (projectA, projectB) {
+      return projectA.index - projectB.index;
+    });
+
     return projectList;
   }
 
@@ -73,7 +77,7 @@ const LocalDB = new function() {
       let project = await this.getProject(_newList[i].id);
       if (project) continue;
 
-      this.addProject(_newList[i]);
+      this.addProject(_newList[i], i);
     }
 
     for (let project of invalidProjects) project.remove();
@@ -87,9 +91,9 @@ const LocalDB = new function() {
   }
 
 
-  this.addProject = async function(_project) {
+  this.addProject = async function(_project, _index = 0) {
     let project = new LocalDB_Project(_project.id, DB);
-    await project.setData("metaData", {title: _project.title});
+    await project.setData("metaData", {title: _project.title, index: _index});
     await project.tags.set(_project.tags.list.map(function (tag) {
       tag.colour = tag.colour.toHex();
       return tag;
@@ -235,6 +239,7 @@ function LocalDB_Project(_projectId, _DB) {
 
     let metaData = await this.getData("metaData");
     this.title = metaData.title;
+    this.index = metaData.index;
   }
 
   this.remove = async function() {
