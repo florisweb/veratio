@@ -8,7 +8,6 @@ var MainContent   = new _MainContent();
 const Popup       = new _Popup();
 
 function _app() {
-
   this.setup = async function() {
     document.body.addEventListener("keydown", function(_e) {
       KEYS[_e["key"]] = true;
@@ -30,8 +29,8 @@ function _app() {
       MainContent.optionMenu.close();
       MainContent.searchOptionMenu.hide();
     });
-    
-
+      
+    await Server.onReConnect();
     await this.update();
 
     SideBar.projectList.open();

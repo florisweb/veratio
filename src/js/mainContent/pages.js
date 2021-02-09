@@ -51,7 +51,7 @@ function MainContent_taskPage() {
 	MainContent_page.call(this, {
 		name: "task",
 		index: 0,
-		onOpen: function() {if (!This.curTab) This.todayTab.open()}
+		onOpen: function() {This.reopenCurTab()}
 	});
 
 	const HTML = {

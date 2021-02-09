@@ -8,7 +8,6 @@ function _SideBar() {
 
 	this.projectList = new _SideBar_projectList();
 
-
 	this.noConnectionMessage = new _SideBar_noConnectionMessage();
 
 	this.updateTabIndicator = async function() {
@@ -25,10 +24,9 @@ function _SideBar() {
 
 	async function setProjectTabOnOpenById(_id) {
 		let tabs = $("#sideBar .tab.projectTab");
-		let projectList = await Server.getProjectList();
-		for (let i = 0; i < projectList.length; i++)
+		for (let i = 0; i < SideBar.projectList.projects.length; i++)
 		{
-			if (projectList[i].id != _id) continue;
+			if (SideBar.projectList.projects[i].id != _id) continue;
 			setTabOpenIndicator(tabs[i]);
 			return;
 		}
@@ -98,7 +96,7 @@ function _SideBar_projectList() {
 		projectsHolder: $("#sideBar .projectListHolder .projectList")[0].children[0],
 		dropDownIcon: $(".projectListHolder .header .dropDownButton")[0],
 	}
-	
+	this.projects = [];
 
 	this.openState = true;
 	this.toggleOpenState = function() {
@@ -120,14 +118,10 @@ function _SideBar_projectList() {
 	}
 
 
-
-
-
-
 	this.fillProjectHolder = async function() {
-		let projects = await Server.getProjectList(true);
+		this.projects = await Server.getProjectList(true);
 		HTML.projectsHolder.innerHTML = "";
-		for (let project of projects) createProjectHTML(project);
+		for (let project of this.projects) createProjectHTML(project);
 	}
 
 	function createProjectHTML(_project) {

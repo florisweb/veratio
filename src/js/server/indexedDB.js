@@ -41,7 +41,7 @@ const LocalDB = new function() {
       let project = new LocalDB_Project(ids[i], DB);
       await project.setMetaData();
       
-      if (!project.users.Self && !_ignoreUserAbsence) continue; // project.remove(); -- should remove after some time, but we still need to keep it around for storing the cachedoperation of removing oneself
+      if (!project.users.Self && !_ignoreUserAbsence) continue; // project.remove(); -- should remove after some time, but we still need to keep it around for storing the cachedoperation of removing itself
 
       projectList.push(project);
     }
