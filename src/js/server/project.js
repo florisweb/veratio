@@ -250,13 +250,9 @@ function Project(_project) {
       };
 
       let result = await Server.fetchFunctionRequest(functionRequest);
-      if (result.error)
-      {
-        if (Local) return await Local.tasks.getByDateRange(_info);
-        return [];
-      }
+      if (result.error) return await Local.tasks.getByDateRange(_info);
 
-      if (Local) new Promise(async function () { // Store data Localily  
+      new Promise(async function () { // Store data Localily  
         let foundTasks = await Local.tasks.getByDateRange(_info);
         
         for (let i = 0; i < foundTasks.length; i++) await Local.tasks.remove(foundTasks[i]);
@@ -275,13 +271,9 @@ function Project(_project) {
       };
 
       let response = await Server.fetchFunctionRequest(functionRequest);
-      if (response.error) 
-      {
-        if (Local) return await Local.tasks.getByGroup(_info);
-        return [];
-      }
+      if (response.error) return await Local.tasks.getByGroup(_info);
 
-      if (Local) Local.tasks.getByGroup(_info).then(function (_result) {
+      Local.tasks.getByGroup(_info).then(function (_result) {
         overWriteLocalData(response.result, _result);
       });
 
@@ -355,7 +347,7 @@ function Project(_project) {
       }
 
       if (response.error) return false;
-      if (Local) Local.users.set(response.result);
+      Local.users.set(response.result);
       
       lastSync = new Date();
 
@@ -451,7 +443,7 @@ function Project(_project) {
 
       this.list = [];
 
-      if (Local) Local.tags.set(response.result);
+      Local.tags.set(response.result);
       for (let i = 0; i < response.result.length; i++)
       {
         this.list[i]        = response.result[i];
