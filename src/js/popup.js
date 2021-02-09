@@ -93,14 +93,15 @@ function _Popup_createProject() {
 		}
 
 		let project = await Server.createProject(title);
+		await project.setup();
 		if (!project) return console.error("Something went wrong while creating a project:", project);
 		
 		SideBar.projectList.fillProjectHolder();
 		// MainContent.taskPage.open();
 		// MainContent.curPage.projectTab.open(project.id);
 		
+		openResolver(project);		
 		this.close();
-		openResolver(project);
 	} 
 }
 

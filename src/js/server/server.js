@@ -70,11 +70,11 @@ const Server = new function() {
         parameters:   _title
       };
 
-      let response =  await Server.fetchFunctionRequest(functionRequest);
+      let response = await Server.fetchFunctionRequest(functionRequest);
       if (response.error) {if (response.error != "E_noConnection") console.error("CreateProject:", response); return};
 
-      importProject(response.result);
-      resolve(response.result);
+      let project = importProject(response.result);
+      resolve(project);
     });
   }
 

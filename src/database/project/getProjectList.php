@@ -23,12 +23,7 @@
 	$returnProjects = array();
 	for ($i = 0; $i < sizeof($projects); $i++)
 	{
-		$curProject = array();
-		$curProject["id"] 		= $projects[$i]->id;
-		$curProject["title"] 	= urlencode($projects[$i]->title);
-		$curProject["users"]	= $projects[$i]->users->getAll();
-		$curProject["tags"]		= $projects[$i]->tags->getAll();
-
+		$curProject = $projects[$i]->export();
 		array_push($returnProjects, $curProject);
 	}
 

@@ -58,6 +58,15 @@
 
 			return $this->DB->removeProject();
 		}
+
+		public function export() {
+			return array(
+				"id" 	=> $this->id,
+				"title" => urlencode($this->title),
+				"users"	=> $this->users->getAll(),
+				"tags"	=> $this->tags->getAll()
+			);
+		}
 	}
 
 

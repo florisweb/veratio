@@ -40,9 +40,6 @@
 		$returnValues[$i] = $response;
 	}
 
-	$returnValues["functions"] = $_functionDataList;
-	$returnValues["rawFunctions"] = $_POST["functions"];
-
 	echo json_encode($returnValues);
 
 

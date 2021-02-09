@@ -96,7 +96,7 @@
 			$titleChanged 		= $project->rename($_title);
 			if (!$titleChanged) return "E_projectNotCreated";
 
-			return array("projectId" => $projectId, "title" => $_title);
+			return $project->export();
 		}
 	}
 

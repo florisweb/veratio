@@ -310,14 +310,17 @@ function _MainContent_searchOptionMenu() {
 				if (!inputField) return;
 				let inValue 		= inputField.value;
 				let partA 			= inValue.substr(0, _item.startAt);
-				let partB 			= inValue.substr(_item.startAt + _item.length, Infinity);
+				let partB 			= inValue.substr(_item.startAt + _item.length + _type.length, Infinity);
 				inputField.value 	= partA + partB;
 				
 
-				if (_type == projectType) 	MainContent.taskHolder.curCreateMenu.curTask.setProject(_item.item);
-				if (_type == tagType) 		MainContent.taskHolder.curCreateMenu.curTask.setTag(_item.item);
-				if (_type == userType) 		MainContent.taskHolder.curCreateMenu.curTask.addAssignee(_item.item);
-				
+				if (!_item.isCreateItem)
+				{
+					if (_type == projectType) 	MainContent.taskHolder.curCreateMenu.curTask.setProject(_item.item);
+					if (_type == tagType) 		MainContent.taskHolder.curCreateMenu.curTask.setTag(_item.item);
+					if (_type == userType) 		MainContent.taskHolder.curCreateMenu.curTask.addAssignee(_item.item);
+				}
+
 				This.userForceHide();
 				inputField.focus();
 
@@ -399,7 +402,6 @@ function _MainContent_searchOptionMenu() {
 			for (let i = 0; i < itemList.length; i++)
 			{
 				let item = getBestStringCutForItem(stringInfo, itemList[i], _type);
-				console.log(item.score);
 				if (!item || item.score < .5 - 1 / (stringInfo.string.length + 1)) continue;	
 				found.push(item);
 			}
@@ -488,7 +490,7 @@ function _MainContent_searchOptionMenu() {
 
 				let itemObject = {
 					startAt: curStrIndex,
-					length: itemTitle.length + 1,
+					length: itemTitle.length + _type.length,
 					str: itemTitle,
 					score: 0,
 					active: true,
