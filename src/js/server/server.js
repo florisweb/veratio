@@ -248,7 +248,7 @@ const Server = new function() {
         resolve("E_noConnection");
       });
     });
-
+    
     let resendRequest = await Server.updateConnectionStatus(response != "E_noConnection");
     if (resendRequest) return await this.fetchData(...arguments);
 

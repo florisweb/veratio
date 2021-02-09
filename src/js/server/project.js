@@ -250,18 +250,17 @@ function Project(_project) {
       };
 
       let result = await Server.fetchFunctionRequest(functionRequest);
-      if (result.error) return await Local.tasks.getByDateRange(_info); // When an error accurs fall back on the local data
-      
+      if (result.error)
+      {
+        if (Local) return await Local.tasks.getByDateRange(_info);
+        return [];
+      }
+
       if (Local) new Promise(async function () { // Store data Localily  
         let foundTasks = await Local.tasks.getByDateRange(_info);
         
         for (let i = 0; i < foundTasks.length; i++) await Local.tasks.remove(foundTasks[i]);
-
-        for (date in result.result)
-        {
-          let data = result.result[date];
-          for (let i = 0; i < data.length; i++) await Local.tasks.update(data[i]);
-        }
+        for (task of  result.result) await Local.tasks.update(task);
       });
 
       return result.result;
@@ -276,7 +275,11 @@ function Project(_project) {
       };
 
       let response = await Server.fetchFunctionRequest(functionRequest);
-      if (response.error) return await Local[Type].getByGroup(_info);
+      if (response.error) 
+      {
+        if (Local) return await Local.tasks.getByGroup(_info);
+        return [];
+      }
 
       if (Local) Local.tasks.getByGroup(_info).then(function (_result) {
         overWriteLocalData(response.result, _result);

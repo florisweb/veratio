@@ -47,13 +47,13 @@ function _app() {
 
 
   this.update = async function() {    
-    SideBar.projectList.fillProjectHolder();
-    
     switch (MainContent.curPage.name)
     {
       case "settings":  MainContent.settingsPage.open(MainContent.curProjectId);  break;
       default:          MainContent.taskPage.reopenCurTab();                      break;
     }
+    
+    await SideBar.projectList.fillProjectHolder();
   }
 
 
