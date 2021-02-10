@@ -41,10 +41,13 @@ function _SideBar() {
 
 
 
-	this.messagePopup = (function() {
+	this.messagePopup = new function() {
+		let This = this;
 		let popupHolder = $(".messageHolder.popupHolder")[0];
 
-		let popup = new PopupComponent({
+		this.curPopup;
+
+		let newVersionMessage = {
 			title: "Version 1.3", 
 			content: [
 				new Text({text: "Changelog", isHeader: true}),
@@ -57,33 +60,71 @@ function _SideBar() {
 				new LineBreak(),
 				new Text({text: "- A lot of small bug fixes"}),
 				new VerticalSpace({height: 30}),
-				new Button({title: "Close", filled: true, onclick: function() {popup.close()}}),
+				new Button({title: "Close", filled: true, onclick: function() {
+					SideBar.messagePopup.close();
+				}}),
 				new Button({title: "Full changelog", onclick: function() {
-					popup.close();
+					SideBar.messagePopup.close();
 					window.open("https://florisweb.tk");
 				}}),
 				new VerticalSpace({height: -20}),
 			]
-		});
+		};
 
-		document.body.removeChild(popup.HTML.popupHolder)
-		popupHolder.appendChild(popup.HTML.popup);
-		popup.HTML.popupHolder = popupHolder;
-		popup.close();
+		let welcomeMesage = {
+			title: "Welcome", 
+			content: [
+				new Text({text: "Thank you for using veratio.", isHeader: true}),
+				new VerticalSpace({height: 5}),
+				new Text({text: "Veratio is under active development."}),
+			
+				new VerticalSpace({height: 30}),
+				new Button({title: "Close", filled: true, onclick: function() {
+					SideBar.messagePopup.close();
+				}}),
+				new Button({title: "Full changelog", onclick: function() {
+					SideBar.messagePopup.close();
+					window.open("https://florisweb.tk");
+				}}),
+				new VerticalSpace({height: -20}),
+			]
+		};
 
 
-		popup.showLatestMessage = function() {
+		this.showPopup = function(_popupConfig) {
+			let popup = new PopupComponent(_popupConfig);
+			popupHolder.classList.add("hide");
+			popupHolder.innerHTML = "";
+
+			document.body.removeChild(popup.HTML.popupHolder)
+			popupHolder.appendChild(popup.HTML.popup);
+			popup.HTML.popupHolder = popupHolder;
+			popup.close();
+
+			this.curPopup = popup;
+			this.close = function () {This.curPopup.close()};
+
+			return new Promise(function (resolve) {
+				setTimeout(async function () {
+					resolve(await popup.open());
+				}, 1);
+			})
+		}
+		
+
+		this.showLatestMessage = function() {
+			let isNewUser = !localStorage.getItem("hasSeenWelcomeMessage");
+			localStorage.setItem("hasSeenWelcomeMessage", true);
+			if (isNewUser) return this.showPopup(welcomeMesage);
+
 			const curMessageIndex = 3;
 			let messageIndex = parseInt(localStorage.getItem("messageIndex"));
 			if (messageIndex >= curMessageIndex) return;
 			    
 			localStorage.setItem("messageIndex", curMessageIndex);
-			this.open();
+			this.showPopup(newVersionMessage);
 		}
-
-
-		return popup;
-	})();
+	};
 }
 
 
