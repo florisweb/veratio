@@ -508,7 +508,6 @@ function Project(_project) {
       };
 
       let response = await Server.fetchFunctionRequest(functionRequest);
-      console.warn(response);
       if (response.error == "E_noConnection" && Local) 
       {
         Local[Type].update(_newItem);

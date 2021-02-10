@@ -277,6 +277,8 @@ function _MainContent_searchOptionMenu() {
 		{
 			case tagType: 	
 				let tags = Object.assign([], await project.tags.getAll());
+				if (!MainContent.taskHolder.curCreateMenu.curTask.tag) return tags;
+				
 				tags.push({id: false, title: "No tag", colour: new Color("#000"), isNoOptionItem: true}); 
 				return tags;
 			break;
