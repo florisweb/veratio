@@ -1,14 +1,4 @@
 <?php
-	// system that redirects the user to the welcome page if they're new
-	// if (!isset($_COOKIE["Veratio_hasSeenWelcomeMessage"]))
-	// {
-	// 	if ($_GET["link"])
-	// 	{
-	// 		header("Location: welcome?link=" . $_GET["link"]);
-	// 	} else header("Location: welcome");
-	// 	die("Redirecting");
-	// }
-
 	$enableRedirect = false;
 	function APP_noAuthHandler() {
 		if (!$enableRedirect) return;
