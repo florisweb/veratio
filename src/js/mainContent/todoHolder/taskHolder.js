@@ -618,7 +618,6 @@ function TaskHolder_createMenuConstructor(_config, _type) {
 
 		This.HTML.createMenuHolder 	= html;
 		This.HTML.createMenu 		= html.children[0];
-		This.HTML.tagIndicator 		= html.children[0].children[0];
 		This.HTML.memberHolder 		= html.children[0].children[4].children[3];
 
 		addEventListeners(This);
@@ -881,11 +880,10 @@ function TaskHolder_createMenu(_parent) {
 
 
 	function setTagIndicator(_tag) {
-		let tagColor = new Color();
-		if (_tag.colour) tagColor = _tag.colour;
-
-		Parent.HTML.tagIndicator.style.backgroundColor	= tagColor.merge(new Color("rgba(255, 255, 255, .1)"), .3).toRGBA();
-		Parent.HTML.tagIndicator.style.borderColor 		= tagColor.merge(new Color("#fff"), .5).toRGBA();
+		let tagCircle = MainContent.taskPage.renderer.createTagCircle(_tag);
+		tagCircle.classList.remove("clickable");
+		Parent.HTML.createMenu.insertBefore(tagCircle, Parent.HTML.createMenu.children[0]);
+		Parent.HTML.createMenu.removeChild(Parent.HTML.createMenu.children[1]);
 	}
 
 

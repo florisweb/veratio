@@ -12,7 +12,7 @@ Planned features:
 - [x] Made the date-popup assume that when entering for example '15 august', it will choose the next one, instead of the one that has already been passed.
 - [x] Added 'are you sure'-messages to 'dangerous' actions, like removing or leaving a project.
 - [x] The 'Planned'-taskholder in the project-tab will be collapsed by default now
-
+- [x] Inline project-creation
 
 Version 1.4
 Planned features:
