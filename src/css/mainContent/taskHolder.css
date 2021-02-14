@@ -34,26 +34,35 @@
 		color: #f00;
 	}
 
-	.taskHolder.overdue .dateHolder {
+	.taskHolder.overdue > .titleHolder {
 		color: #f00;
 	}
 
 
 
-
-	.taskHolder .dateHolder {
-		margin-left: 35px;
+	.taskHolder > .titleHolder {
+		float: left;
+		margin-left: 15px;
 		color: #666;
 		font-weight: bold;	
 		transition: margin-left .3s;
 	}
 
-	.taskHolder.hideTasks .dateHolder {
-		margin-left: 60px;
+	.taskHolder.hideTasks > .titleHolder {
+		margin-left: 40px;
 	}
 
-	.taskHolder img:hover + .dateHolder {
-		margin-left: 60px;
+	.taskHolder img:hover + .titleHolder {
+		margin-left: 40px;
+	}
+
+
+	.taskHolder .subTitleHolder {
+		margin-left: 5px;
+		float: left;
+		color: #bbb;
+		font-size: 12px;
+		line-height: 20px;
 	}
 
 
@@ -86,11 +95,12 @@
 
 	.taskHolder .todoHolder {
 		position: relative;
+		float: left;
 
 		width: 100%;
 		height: auto;
 
-		margin-top: 10px;
+		margin-top: 3px;
 		margin-left: 2px;
 		
 		max-height: 1000vh;
@@ -126,17 +136,23 @@
 			overflow: hidden;
 			
 			margin-top: -20px;
+			margin-left: 2px;
 			opacity: 0;
 			pointer-events: none;
 			transition: all .25s;
 		}
+		.createTaskHolder .addButtonHolder .smallText.smallTextIcon {
+			margin-left: 1.5px;
+			margin-right: 2.5px;
+		}
+
 
 		.createTaskHolder.close .addButtonHolder {
 			pointer-events: all;
 			margin-top: 0;
 			opacity: .5;
 		}
-
+		
 
 
 

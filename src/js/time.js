@@ -232,9 +232,9 @@ const DateNames = function() {
       	return "";
     }
 
-    function toString(_date, _compact) {
+    function toString(_date, _compact = false, _customDates = true) {
      	let dateName = getDateStrFromDateNames(_date);
-     	if (dateName) return dateName;
+     	if (dateName && _customDates) return dateName;
 
       	dateName = _date.getDayName();
       	if (!dateName) return false;
@@ -250,7 +250,7 @@ const DateNames = function() {
 
       	return dateName;
     }
-
+ 
 
 	function strToDate(_str) {
 		// short date: 15-08-2019

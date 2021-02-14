@@ -237,8 +237,9 @@ function TaskHolder_default(_config, _taskHolderIndex, _title) {
 
 
 function TaskHolder_date(_config, _taskHolderIndex, _date) {
-	this.date = _date;
-	_config.title = DateNames.toString(_date, false);
+	this.date 			= _date;
+	_config.title 		= DateNames.toString(_date, false);
+	_config.subTitle 	= getSubTitle(_date);
 
 	TaskHolder.call(this, _config, "date", _taskHolderIndex);
 	TaskHolder_createMenuConstructor.call(this, _config);
@@ -259,6 +260,11 @@ function TaskHolder_date(_config, _taskHolderIndex, _date) {
 		
 		return true;
 	}
+
+	function getSubTitle(_date) {
+		if (_date.getDateInDays(true) - new Date().getDateInDays(true) > 7) return '';
+		return '- ' + DateNames.toString(_date, true, false);
+	} 
 }
 
 
@@ -365,7 +371,8 @@ function TaskHolder(_config = {}, _type = "default", _taskHolderIndex) {
 		if (This.config.html.class) html.className += " " + This.config.html.class;
 
 		html.innerHTML = 	'<img src="images/icons/dropDownIconDark.png" class="dropDownButton clickable dropTarget">' +
-							'<div class="header dateHolder dropTarget"></div>' + 
+							'<div class="header titleHolder dropTarget"></div>' + 
+							'<div class="header subTitleHolder dropTarget"></div>' + 
 							'<div class="todoHolder"></div>';
 
 
@@ -381,6 +388,7 @@ function TaskHolder(_config = {}, _type = "default", _taskHolderIndex) {
 
 		if (!This.config.title) html.style.marginTop = "0";
 		setTextToElement(html.children[1], This.config.title);
+		if (This.config.subTitle) setTextToElement(html.children[2], This.config.subTitle);
 		
 		if (_taskHolderIndex < _parent.children.length)
 		{
@@ -403,7 +411,7 @@ function TaskHolder_task(_parent) {
 	const Parent = _parent;
 	let TaskHolder = this;
 	
-	Parent.HTML.todoHolder = Parent.HTML.Self.children[2];
+	Parent.HTML.todoHolder = Parent.HTML.Self.children[3];
 	
 
 	this.taskList = [];
@@ -568,8 +576,6 @@ function TaskHolder_task(_parent) {
 		
 		return This;
 	}
-
-
 }
 
 

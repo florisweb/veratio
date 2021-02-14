@@ -212,7 +212,8 @@ function _TaskRenderer() {
 
 				function dropTargetIsHeader(_target) {
 					return 	_target.classList.contains("dropDownButton") || 
-							_target.classList.contains("dateHolder");
+							_target.classList.contains("titleHolder") ||
+							_target.classList.contains("subTitleHolder");
 				}
 
 				function getDropData(_item) {
