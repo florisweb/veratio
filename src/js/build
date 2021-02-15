@@ -1,0 +1,11 @@
+#!/bin/bash
+cd "$(dirname "$0")"
+echo - Started building
+cat extraFunctions.js DOMData.js time.js color.js constants.js optionMenu.js popupComponent.js popup.js eventHandlers/dragHandler.js eventHandlers/keyHandler.js eventHandlers/doubleClickHandler.js eventHandlers/rightClickHandler.js mainContent/header.js mainContent/pages.js mainContent/todoHolder/taskHolder.js mainContent/todoHolder/renderer.js mainContent/mainContent.js sideBar.js server/encoder.js server/indexedDB.js server/project.js server/server.js app.js > main_min.js
+
+
+
+
+echo \|-------------------\|
+echo \| Finished Building \|
+echo \|-------------------\|
