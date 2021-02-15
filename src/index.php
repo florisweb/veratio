@@ -46,8 +46,6 @@
 		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=83">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/header.css?a=1">
 
-		<!-- <script type="text/javascript" src="/JS/jQuery.js" asy nc></script> -->
-		<!-- <script type="text/javascript" src="/JS/request2.js" asy nc></script> -->
 		<script type="text/javascript" src="https://florisweb.tk/JS/jQuery.js" asy nc></script>
 		<script type="text/javascript" src="https://florisweb.tk/JS/request2.js" asy nc></script>
 	</head>	
@@ -86,11 +84,7 @@
 				</div>
 				<div class="text"></div>
 			</div>
-			<div class='messageHolder popupHolder'>
-				<!-- <div class='popup'>
-
-				</div> -->
-			</div>
+			<div class='messageHolder popupHolder'></div>
 		</div>
 		
 
@@ -162,9 +156,7 @@
 			$.getScript("js/extraFunctions.js?antiCache=" 							+ antiCache, function() {});
 			$.getScript("js/DOMData.js?antiCache=" 									+ antiCache, function() {});
 			$.getScript("js/time.js?antiCache=" 									+ antiCache, function() {});
-			$.getScript("js/UI.js?antiCache=" 										+ antiCache, function() {});
 			$.getScript("js/color.js?antiCache=" 									+ antiCache, function() {});
-			$.getScript("js/textFormater.js?antiCache=" 							+ antiCache, function() {});
 
 			$.getScript("js/constants.js?antiCache=" 								+ antiCache, function() {});
 			$.getScript("js/optionMenu.js?antiCache=" 								+ antiCache, function() {});

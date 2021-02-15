@@ -67,14 +67,6 @@ function getRandomItem(_arr) {
 }
 
 
-
-
-function isPromise(_promise) {
-  if (_promise.then) return true;
-  return false;
-}
-
-
 function removeSpacesFromEnds(_str) {
   for (let c = 0; c < _str.length; c++)
   {
@@ -155,3 +147,20 @@ function similarity(s1, s2) {
   }
 }
 
+
+
+
+
+
+
+
+
+
+const TextFormater = new function() {
+  this.memberListToString = function(_members, _maxLength = 25) {
+    if (!_members || !_members.length) return "";
+
+    let memberText = _members.map(function (_member) {return _member.name}).join(", ");
+    return memberText.substr(0, _maxLength) + (memberText.length > _maxLength ? "..." : "");
+  }
+}
