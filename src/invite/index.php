@@ -162,27 +162,12 @@
 
 
 			#menu_linkFound .joinAsMemberButton::after {
-				content: "Join as member";
+				content: "Sign In";
 			}
 
 			body.userSignedIn #menu_linkFound .joinAsMemberButton::after {
 				content: "Continue";
 			}
-
-
-
-			#menu_linkFound .joinAsGuestButton::after {
-				content: "Join by link";
-			}
-
-			#menu_linkFound .joinAsGuestButton {
-				font-size: 14px; 
-			}
-
-			body.userSignedIn #menu_linkFound .joinAsGuestButton {
-				display: none;
-			}
-
 
 
 
@@ -250,7 +235,6 @@
 				<br>
 
 				<div class="button bBoxy bDefault text joinAsMemberButton"></div>
-				<div class="button bBoxy text joinAsGuestButton"></div>
 			</div>
 
 			<div class="inviteMenu" id="menu_linkNotFound">
@@ -297,15 +281,10 @@
 
 				let memberButton = document.getElementsByClassName("button")[0];
 				memberButton.onclick = function() {
-					window.location.replace("join.php?type=signedIn&link=" + inviteLink);
+					window.location.replace("join.php?link=" + inviteLink);
 				}
 
 				if (inviteData.userSignedIn) return document.body.classList.add("userSignedIn");
-
-				let guestButton = document.getElementsByClassName("button")[1];
-				guestButton.onclick = function() {
-					window.location.replace("join.php?type=guest&link=" + inviteLink);
-				}
 			}
 
 		</script>
