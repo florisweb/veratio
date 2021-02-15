@@ -59,7 +59,7 @@ function _Popup_createProject() {
 		title: "Create Project",
 		content: [
 			new Text({text: "Title", isHeader: true}),
-			new VerticalSpace({height: 5}),
+			new VerticalSpace({height: 7}),
 			new InputField({placeHolder: "Project title", maxLength: 256}),
 			new VerticalSpace({height: 20}),
 			new Button({
@@ -114,7 +114,7 @@ function _Popup_inviteByLinkCopy() {
 		title: "Successfully created link",
 		content: [
 			new Text({text: "Copy and send this link to your invitee."}),
-			new LineBreak(),
+			new VerticalSpace({height: 5}),
 			new InputField({readonly: true}),
 			new VerticalSpace({height: 20}),
 			new Button({
@@ -141,7 +141,7 @@ function _Popup_inviteByEmail() {
 		title: "Invite by email",
 		content: [
 			new Text({text: "Enter your invitees email-adress."}),
-			new LineBreak(),
+			new VerticalSpace({height: 5}),
 			new InputField({placeHolder: "Email-adress"}),
 			new VerticalSpace({height: 20}),
 			new Button({
@@ -196,7 +196,7 @@ function _Popup_renameProject() {
 		content: [
 			new Text({text: "Rename "}),
 			new Text({text: "", isHighlighted: true}),
-			new VerticalSpace({height: 10}),
+			new VerticalSpace({height: 5}),
 			new InputField({placeHolder: "Project title", maxLength: 256}),
 			new VerticalSpace({height: 20}),
 			new Button({
@@ -257,12 +257,12 @@ function _Popup_permissionMenu() {
 	PopupComponent.call(this, {
 		title: "Change user permissions",
 		content: [
-			new Text({text: "Change ", isHeader: true}),
+			new Text({text: "Change ", isHeader: false}),
 			new Text({text: "", isHighlighted: true, isHeader: true}),
-			new Text({text: " permissions", isHeader: true}),
+			new Text({text: " permissions", isHeader: false}),
 			new VerticalSpace({height: 10}),
 			new OptionSelector({onValueChange: onValueChange}),
-			new VerticalSpace({height: 40}),
+			new VerticalSpace({height: 45}),
 			new Text({text: ""}),
 			new VerticalSpace({height: 20}),
 			new Button({
@@ -279,9 +279,9 @@ function _Popup_permissionMenu() {
 		onOpen: onOpen
 	});
 
-	let memberNameHolder = this.content[1];
-	let optionMenu = this.content[4];
-	let descriptionHolder = this.content[6];
+	let memberNameHolder 	= this.content[1];
+	let optionMenu 			= this.content[4];
+	let descriptionHolder 	= this.content[6];
 
 	
 	function onValueChange(_newValue) {
@@ -525,8 +525,8 @@ function _Popup_tagManager() {
 		title: "Manage tags",
 		content: [
 			new Text({text: "Tags", isHeader: true}),
+			new VerticalSpace({height: 3}),
 			new ItemList(),
-			new VerticalSpace({height: 10}),
 			new Button({
 				title: "+ Add Tag",
 				onclick: async function () {
@@ -547,7 +547,7 @@ function _Popup_tagManager() {
 	})
 
 	let addTagButton = this.content[3];
-	let itemList = this.content[1];
+	let itemList = this.content[2];
 
 	const Menu = OptionMenu.create(1001);	
 	Menu.addOption("Remove", async function () {
