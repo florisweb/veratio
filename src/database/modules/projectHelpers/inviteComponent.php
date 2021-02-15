@@ -52,10 +52,10 @@
 			$inviteId 			= sha1(uniqid(mt_rand(), true));
 
 			$user = array(
-				"id" 			=> sha1($inviteId),
+				"id" 			=> 'LINKUSER_' . sha1($inviteId),
 				"name"			=> "Link " . substr(sha1($inviteId), 0, 4),
 				"permissions" 	=> 0,
-				"type"			=> "invite"
+				"type"			=> "link"
 			);
 
 			$newUser = $this->DTTemplate->update($user);

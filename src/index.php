@@ -8,9 +8,8 @@
 
 	require_once __DIR__ . "/database/modules/app.php";
 	require_once __DIR__ . "/database/modules/garbageCollector/garbageCollector.php";
-
-
 	$enableRedirect = true;
+
 
 	$isLinkUser = authenticateLink();
 	if ($isLinkUser == false) $GLOBALS["SESSION"]->clear("veratio_userLink");
@@ -200,13 +199,12 @@
 
 			// console.log(v.join(" "));
 
-
 		</script>
 
 
 		<div class='UI box popup hide' id="optionMenu_colourPopupBox">
 		</div>
-		<script src='js/main_min.js?antiCache='></script>
+		<script src='js/main_min.js?antiCache=2'></script>
 
 <!-- 
 		<script src='js/DOMData.js?antiCache='></script>
