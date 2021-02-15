@@ -12,16 +12,20 @@
 
 
 	$isLinkUser = authenticateLink();
-	if ($isLinkUser == false) $GLOBALS["SESSION"]->clear("veratio_userLink");
-	echo "<script>
-			const IsLinkUser = " . ($isLinkUser ? "true" : "false") . ";
-	</script>";
+	if ($isLinkUser == false) 
+	{
+		$GLOBALS["SESSION"]->clear("veratio_userLink");
+		echo "<script>const LinkUser = {link: false}; </script>";
+	} else {
+		echo "<script>const LinkUser = {link: '" . (string)$_GET["link"] . "'}</script>";
+	}
+
 
 	function authenticateLink() {
 		$_link = (string)$_GET["link"];
 		if (!$_link || strlen($_link) > 100) return false;
 
-		$linkId = "LINKUSER_" . sha1($_link);
+		$linkId = sha1($_link);
 		$GLOBALS["SESSION"]->set("veratio_userLink", $linkId);
 		
 		$GLOBALS["App"] = new _App();
@@ -198,7 +202,6 @@
 			// $.getScript("js/app.js?antiCache=" 										+ antiCache, function() {})
 
 			// console.log(v.join(" "));
-
 		</script>
 
 

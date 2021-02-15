@@ -52,7 +52,7 @@
 			$inviteId 			= sha1(uniqid(mt_rand(), true));
 
 			$user = array(
-				"id" 			=> 'LINKUSER_' . sha1($inviteId),
+				"id" 			=> sha1($inviteId),
 				"name"			=> "Link " . substr(sha1($inviteId), 0, 4),
 				"permissions" 	=> 0,
 				"type"			=> "link"
@@ -61,24 +61,6 @@
 			$newUser = $this->DTTemplate->update($user);
 			if (is_string($newUser)) return "E_unknownError";
 			return array("id" => $inviteId); 
-		}
-
-		public function joinAsLink($_originalInviteId, $_inviteUserObj) {
-			$_inviteUser_placeholderId = sha1($_originalInviteId);
-			
-			$userName 	= $_inviteUserObj["name"];
-			$user = $GLOBALS["USER"]->getByMail($userName);
-			if ($user) $userName = $user["name"];
-
-			$linkId 	= $this->createLinkId($_inviteUser_placeholderId);
-			$newUser 	= array(
-				"id" 			=> $linkId,
-				"name" 			=> $userName,
-				"permissions" 	=> $_inviteUserObj["permissions"],
-				"type" 			=> "link"
-			);
-
-			$this->joinByInviteId($_inviteUser_placeholderId, $newUser);
 		}
 
 		public function joinAsMember($_originalInviteId, $_inviteUserObj) {
@@ -168,10 +150,6 @@
 			}
 
 			return $userId;
-		}
-
-		private function createLinkId($_inviteLink) {
-			return "LINKUSER_" . sha1($_inviteLink);;
 		}
 	}
 	

@@ -14,20 +14,15 @@
 		setcookie("SESSION_key", (String)$_GET["sessionKey"], time() + (60 * 60 * 24 * 365.25), "/");
 	}
 
-	var_dump("link:" . $link);
-
 	$App->userId = sha1((string)$link);
 	$projects = $App->getAllProjects();
 	if (sizeof($projects) == 0) die("E_projectNotFound");
 	$project = $projects[0];
 
 	$inviteUserObj = $project->users->get($App->userId);
-	if (!$inviteUserObj || $inviteUserObj["type"] != "invite") die("E_userNotFound");
-
-
+	if (!$inviteUserObj || ($inviteUserObj["type"] != "invite" && $inviteUserObj["type"] != "link")) die("E_userNotFound");
 
 	$signedIn = !!$GLOBALS["SESSION"]->get("userId");
-	echo "Signed in: "; var_dump($signedIn);
 
 	if ($signedIn)
 	{
@@ -37,7 +32,6 @@
 	}
 
 	setcookie("veratio_inviteLink", $link, time() + 120, "/");
-	
 	header("Location: https://florisweb.tk/user/login.php?APIKey=veratioV1.3_join");
 	die("Redirect user");
 ?>

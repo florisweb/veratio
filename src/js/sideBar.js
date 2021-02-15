@@ -90,6 +90,22 @@ function _SideBar() {
 			]
 		};
 
+		let linkUserMessage = {
+			title: "Bind Account", 
+			content: [
+				new Text({text: "Hello, we see you are using a link to use veratio."}),
+				new VerticalSpace({height: 5}),
+				new Text({text: "When you"}),
+			
+				new VerticalSpace({height: 30}),
+				new Button({title: "Bind Account", filled: true, onclick: function() {
+					SideBar.messagePopup.close();
+					if (!LinkUser.link) return;
+					window.location.replace("invite/join.php?link=" + LinkUser.link);
+				}}),
+				new VerticalSpace({height: -20}),
+			]
+		};
 
 		this.showPopup = function(_popupConfig) {
 			let popup = new PopupComponent(_popupConfig);
@@ -102,7 +118,6 @@ function _SideBar() {
 			popup.close();
 
 			this.curPopup = popup;
-			this.close = function () {This.curPopup.close()};
 
 			return new Promise(function (resolve) {
 				setTimeout(async function () {
@@ -110,19 +125,29 @@ function _SideBar() {
 				}, 1);
 			})
 		}
+
+		this.close = function() {
+			this.curPopup.close();
+			setTimeout(function () {SideBar.messagePopup.showLatestMessage();}, 200);
+		}
 		
 
+		const curMessageIndex = 3;
 		this.showLatestMessage = function() {
 			let isNewUser = !localStorage.getItem("hasSeenWelcomeMessage");
 			localStorage.setItem("hasSeenWelcomeMessage", true);
 			if (isNewUser) return this.showPopup(welcomeMesage);
-
-			const curMessageIndex = 3;
+			
 			let messageIndex = parseInt(localStorage.getItem("messageIndex"));
-			if (messageIndex >= curMessageIndex) return;
-			    
-			localStorage.setItem("messageIndex", curMessageIndex);
-			this.showPopup(newVersionMessage);
+			if (messageIndex < curMessageIndex || isNaN(messageIndex)) 
+			{   
+				localStorage.setItem("messageIndex", curMessageIndex);
+				this.showPopup(newVersionMessage);
+				return;
+			}
+
+			if (!LinkUser.link) return;
+			this.showPopup(linkUserMessage);
 		}
 	};
 }
