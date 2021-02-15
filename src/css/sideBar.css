@@ -173,6 +173,7 @@ body.appLoading #sideBar {
 
 	#sideBar .noConnectionMessage .text {
 		margin-left: 47px;
+		color: #aaa;
 	}
 
 
