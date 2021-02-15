@@ -66,7 +66,7 @@
 		public function joinAsMember($_originalInviteId, $_inviteUserObj) {
 			$userName 	= $_inviteUserObj["name"];
 
-			$userId 	= $this->getUserId($_originalInviteId);
+			$userId 	= $this->getUserId();
 			$user 		= $GLOBALS["USER"]->getById($userId);
 			if (!$user) return "E_userNotFound";
 
@@ -80,7 +80,6 @@
 			$this->joinByInviteId(sha1($_originalInviteId), $newUser);
 		}
 
-
 		private function joinByInviteId($_inviteUser_placeholderId, $_newUser) {
 			$success = $this->DTTemplate->remove($_inviteUser_placeholderId);
 			if (!$success) return false;
@@ -91,6 +90,53 @@
 			$success = $this->DTTemplate->update($_newUser);
 			return $success;
 		}
+
+		public function bindAccount($_originalInviteId, $_inviteUserObj) {
+			$this->joinAsMember($_originalInviteId, $_inviteUserObj);
+			$oldId 		= $_inviteUserObj["id"];
+			$newId 		= $this->getUserId();
+			if (!$newId) return;
+			$newId = sha1($newId);
+			
+			// Transfer ownership of all tasks and tags
+
+			$this->Project->users->Self['permissions']	= 4; // Raise permissions temporarily to change the ids
+			$this->Project->users->Self['id'] 			= $newId;
+
+
+			$tags = $this->Project->tags->getAll();
+			foreach ($tags as $tag)
+			{
+				if ($tag["creatorId"] != $oldId) continue;
+				$tag["creatorId"] = $newId;
+				$this->Project->tags->update($tag);
+			}
+
+
+			$tasks = $this->Project->tasks->getAll();
+			foreach ($tasks as $task)
+			{
+				if ($task["creatorId"] == $oldId) continue;
+				$task["creatorId"] = $newId;
+				$this->Project->tasks->update($task);
+			}
+
+			foreach ($tasks as $task)
+			{
+				if (!in_array($oldId, $task["assignedTo"])) continue;
+				for ($i = 0; $i < sizeof($task["assignedTo"]); $i++)
+				{
+					if ($task["assignedTo"][$i] != $oldId) continue;
+					$task["assignedTo"][$i] = $newId;
+					break;
+				}
+
+				$this->Project->tasks->update($task);
+			}
+		}
+
+
+
 
 
 
@@ -139,12 +185,11 @@
 
 
 
-		private function getUserId($_inviteLink) {
+		private function getUserId() {
 			$userId = $GLOBALS["SESSION"]->get("userId");
 
 			if (!$userId) 
 			{
-				$redirectLink = urlencode("/git/veratio/invite/join.php?type=signedIn&link=" . $_inviteLink);
 				header("Location: https://florisweb.tk/user/login.php?APIKey=veratioV1.3");
 				die("User not signed in");
 			}

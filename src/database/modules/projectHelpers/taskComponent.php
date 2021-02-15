@@ -28,7 +28,7 @@
 		}
 
 
-		private function getAll() {
+		public function getAll() {
 			return $this->DTTemplate->getAllData();
 		}
 

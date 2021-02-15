@@ -23,10 +23,15 @@
 	if (!$inviteUserObj || ($inviteUserObj["type"] != "invite" && $inviteUserObj["type"] != "link")) die("E_userNotFound");
 
 	$signedIn = !!$GLOBALS["SESSION"]->get("userId");
-
 	if ($signedIn)
 	{
-		$project->users->InviteComponent->joinAsMember($link, $inviteUserObj);
+		if ($inviteUserObj["type"] == "link")
+		{
+			$project->users->InviteComponent->bindAccount($link, $inviteUserObj);
+		} else {
+			$project->users->InviteComponent->joinAsMember($link, $inviteUserObj);
+		}
+
 		header("Location: /");
 		die();
 	}
