@@ -114,7 +114,7 @@ const LocalDB = new function() {
 
 
   this.sendCachedOperations = async function() {
-    let projects = await this.getProjectList();
+    let projects = await this.getProjectList(true);
     let promises = [];
     for (let project of projects) promises.push(project.sendCachedOperations());
 
@@ -123,7 +123,7 @@ const LocalDB = new function() {
 
 
   this.getCachedOperationsCount = async function() {
-    let projects = await this.getProjectList();
+    let projects = await this.getProjectList(true);
     let operations = 0;
     for (let project of projects)
     {
