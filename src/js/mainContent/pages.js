@@ -249,7 +249,7 @@ function taskPage_tab_week() {
 
 		let promises = [];
 		let taskHolderDataList = [];
-		for (let i = 1; i < _days + 1; i++)
+		for (let i = 0; i < _days; i++)
 		{
 			promises.push(new Promise(async function (resolve) {
 				let date = startDate.copy().moveDay(i);
@@ -286,7 +286,7 @@ function taskPage_tab_week() {
 	function getNewDate() {
 		let lastTaskHolder = MainContent.taskHolder.list[MainContent.taskHolder.list.length - 1];
 		if (lastTaskHolder.type != "date") return false;
-		return lastTaskHolder.date;
+		return lastTaskHolder.date.copy().moveDay(1);
 	}
 }
 
