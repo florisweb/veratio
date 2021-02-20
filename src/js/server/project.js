@@ -177,8 +177,13 @@ function Project(_project) {
 
 
   let Local;
+  this.isSetup = false;
   this.setup = async function() {
     Local = await LocalDB.getProject(this.id, true);
+        
+
+    if (!Local) return;
+    this.isSetup = true;
   }
 
 
@@ -273,6 +278,7 @@ function Project(_project) {
       let response = await Server.fetchFunctionRequest(functionRequest);
       if (response.error) return await Local.tasks.getByGroup(_info);
 
+      if (!This.isSetup) console.trace(Local, This.id);
       Local.tasks.getByGroup(_info).then(function (_result) {
         overWriteLocalData(response.result, _result);
       });

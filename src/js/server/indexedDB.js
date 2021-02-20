@@ -62,6 +62,7 @@ const LocalDB = new function() {
       return projectList[i];
     }
 
+    console.info("False", _id, _ignoreUserAbsence, projectList.length);
     return false;
   }
 
@@ -152,8 +153,8 @@ const LocalDB = new function() {
       }
 
       promises.push(project.tasks.getByDateRange({date: new Date(), range: 365}).then(taskAdder));
-      promises.push(project.tasks.getByGroup({type: "overdue", value: "*"}).then(taskAdder));
-      promises.push(project.tasks.getByGroup({type: "default", value: "*"}).then(taskAdder));
+      promises.push(project.tasks.getByGroup({type: "overdue", value: "*"}, "overdue").then(taskAdder));
+      promises.push(project.tasks.getByGroup({type: "default", value: "*"}, "x").then(taskAdder));
     }
 
     await Promise.all(promises);

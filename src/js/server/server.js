@@ -7,37 +7,16 @@ const Server = new function() {
   this.global = new GlobalProject();
 
   this.clearCache = async function() {
-    this.projectList = [];
-    lastProjectListUpdate = false;
   }
-
-
- 
-  let lastProjectListUpdate = false;
-  let curFetchPromise = false;
-  
-  this.projectList = [];
 
   this.getProjectList = async function(_forceUpdate = false) {
-    if (new Date() - lastProjectListUpdate < cacheLifeTime && !_forceUpdate) 
-    {
-      if (curFetchPromise) return await curFetchPromise;
-      return this.projectList;
-    }
-
-    curFetchPromise         = getProjectList();
-    let response            = await curFetchPromise;;
-    this.projectList        = response;
-    
-    lastProjectListUpdate   = new Date();
-    curFetchPromise         = false;
-
-    return this.projectList;
+    if (!_forceUpdate) return await getLocalProjectList();
+    return await getProjectList();;
   }
 
  
-  this.getProject = async function(_id) {
-    let projects = await this.getProjectList();
+  this.getProject = async function(_id, _forceUpdate = false) {
+    let projects = await this.getProjectList(_forceUpdate);
     for (let i = 0; i < projects.length; i++)
     {
       if (projects[i].id != _id) continue;
@@ -94,14 +73,7 @@ const Server = new function() {
     let projects = response.result;
     if (noConnection) 
     {
-      projects = [];
-      
-      let localDBProjects = await LocalDB.getProjectList();
-      for (localProject of localDBProjects) 
-      {
-        if (localProject.users.Self) localProject.users = [localProject.users.Self];
-        projects.push(new Project(localProject));
-      }
+      return await getLocalProjectList();      
     } else {
       await LocalDB.updateProjectList(projects);
     }
@@ -138,6 +110,20 @@ const Server = new function() {
       return new Project(_project);
     }
 
+
+  async function getLocalProjectList() {
+    let projects = [];
+    let localDBProjects = await LocalDB.getProjectList();
+    for (let localProject of localDBProjects) 
+    {
+      if (localProject.users.Self) localProject.users = [localProject.users.Self];
+      let project = new Project(localProject);
+      await project.setup();
+      projects.push(project);
+    }
+
+    return projects;
+  }
 
 
 

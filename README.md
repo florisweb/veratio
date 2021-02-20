@@ -13,6 +13,9 @@ Planned features:
 - [x] Added 'are you sure'-messages to 'dangerous' actions, like removing or leaving a project.
 - [x] The 'Planned'-taskholder in the project-tab will be collapsed by default now
 - [x] Inline project-creation
+- [x] Redesigned the invite system:
+	- [x] Bind link-user to actual user
+
 
 Version 1.4
 Planned features:

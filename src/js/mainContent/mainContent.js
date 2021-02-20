@@ -282,7 +282,7 @@ function _MainContent_searchOptionMenu() {
 				tags.push({id: false, title: "No tag", colour: new Color("#000"), isNoOptionItem: true}); 
 				return tags;
 			break;
-			case projectType: 	return Server.projectList;				break;
+			case projectType: 	return await Server.getProjectList();	break;
 			default: 			return await project.users.getAll(); 	break;
 		}
 	}

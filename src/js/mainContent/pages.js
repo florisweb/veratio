@@ -157,18 +157,27 @@ function taskPage_tab_today() {
 			[date]
 		);
 
-		let taskList = await Server.global.tasks.getByDate(date);
-		if (!taskList) return false;
+		let taskList = await getTaskListByDate(date)
+		let sortedList = TaskSorter.defaultSort(taskList);
+		await taskHolder.task.addTaskList(sortedList);
+	};
 
+	async function getTaskListByDate(_date) {
+		let taskList = await Server.global.tasks.getByDate(_date);
+		if (!taskList) return [];
+
+		let promises = [];
 		let finalList = [];
-		for (task of taskList)
+		for (let task of taskList)
 		{
-			if (!(await shouldRenderTask(task))) continue;
-			finalList.push(task);
+			promises.push(shouldRenderTask(task).then(function (_result) {
+				if (!_result) return;
+				finalList.push(task);
+			}));
 		}
 
-		finalList = TaskSorter.defaultSort(finalList);
-		taskHolder.task.addTaskList(finalList);
+		await Promise.all(promises);
+		return finalList;
 	}
 
 	async function shouldRenderTask(_task) {

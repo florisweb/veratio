@@ -72,7 +72,7 @@ function _MainContent_taskHolder() {
 		);
 
 		taskList = TaskSorter.defaultSort(taskList);
-		item.task.addTaskList(taskList);
+		await item.task.addTaskList(taskList);
 	}
 
 
@@ -130,7 +130,7 @@ function _MainContent_taskHolder() {
 		for (taskHolder of this.list) 
 		{
 			if (!taskHolder.shouldRenderTask(_task)) continue;
-			taskHolder.task.addTask(_task);
+			await taskHolder.task.addTask(_task);
 			return true;
 		}
 
@@ -417,15 +417,17 @@ function TaskHolder_task(_parent) {
 	this.taskList = [];
 	this.addTaskList = function(_taskList) {
 		if (!_taskList) return;
-		for (task of _taskList) this.addTask(task);
+		let promises = [];
+		for (task of _taskList) promises.push(this.addTask(task));
+		return Promise.all(promises);
 	}
 
-	this.addTask = function(_task) {
+	this.addTask = async function(_task) {
 		this.removeTask(_task.id, false);
 
 		let task = new _taskWrapper(_task);
 		this.taskList.push(task);
-		task.render();
+		await task.render();
 
 		return task;
 	}
@@ -801,6 +803,7 @@ function TaskHolder_createMenu(_parent) {
 
 
 	this.createTask = async function() {
+		console.log('createTask', this.curTask);
 		if (!this.curTask) return;
 		
 		setTaskMenuStatus("loading");
@@ -815,7 +818,8 @@ function TaskHolder_createMenu(_parent) {
 		}
 
 		let newTask = await this.curTask.project.tasks.update(task);
-		if (editData.task && task.projectId != editData.task.projectId && newTask) removeOldTask(editData.task); // FIX LATER
+		// User moved an edit-task to another project
+		if (editData.task && task.projectId != editData.task.projectId && newTask) removeOldTask(editData.task);
 
 		resetEditMode(true);
 		await MainContent.taskHolder.renderTask(newTask);
@@ -949,11 +953,32 @@ function TaskHolder_createMenu(_parent) {
 		this.project 		= false;
 		this.assignedTo 	= [];
 
-		this.groupType 		= "default";
-		this.groupValue 	= "";
 		this.finished 		= false;
 
+
+
+		this.setup = async function() {
+			This.setTag(false);
+			setMemberIndicators([]);
+
+			if (_task && _task.projectId) 	This.setProject(await Server.getProject(_task.projectId));
+			if (!This.project) 				This.setProject(await Server.getProject(MainContent.curProjectId));
+			if (!This.project)				This.setProject((await Server.getProjectList())[0]);
+
+			if (!_task || !This.project) return;
 		
+			This.finished 					= Boolean(_task.finished);
+			This.id 						= _task.id;
+			
+			if (_task.tagId) 				This.setTag(await This.project.tags.get(_task.tagId));
+			for (userId of _task.assignedTo) 	
+			{
+				This.project.users.get(userId).then(function (_user) {
+					if (!_user) return;
+					This.addAssignee(_user);
+				});
+			}
+		}
 
 		this.setTag = function(_newTag) {
 			if (_newTag.isNoOptionItem) _newTag = false;
@@ -979,21 +1004,21 @@ function TaskHolder_createMenu(_parent) {
 
 			let task = {
 				id: 			this.id,
+				projectId: 		this.project.id,
+
 				title: 			removeSpacesFromEnds(Parent.HTML.inputField.value),
 				tagId: 			this.tag ? this.tag.id : false,
 				finished: 		this.finished,
 				assignedTo: 	this.assignedTo.map(function (user) {return user.id}),
 
 				groupType: 		"default",
-				groupValue: 	this.groupValue,
+				groupValue: 	'',
 				creatorId: 		this.project.users.Self.id,
-				projectId: 		this.project.id,
 			}
 
 			if (!task.title || task.title.split(" ").join("").length < 1) return "E_InvalidTitle";
 			
-			
-			let taskDate 	= filterDate(Parent.HTML.plannedDateField.value);
+			let taskDate = filterDate(Parent.HTML.plannedDateField.value);
 			if (Parent.type == "date" && !taskDate) taskDate = Parent.date.copy();
 
 			if (taskDate) 
@@ -1005,33 +1030,6 @@ function TaskHolder_createMenu(_parent) {
 			}
 
 			return task;
-		}
-
-
-
-
-
-		this.setup = async function() {
-			This.setTag(false);
-			setMemberIndicators([]);
-
-			if (_task && _task.projectId) 	This.setProject(await Server.getProject(_task.projectId));
-			if (!This.project) 				This.setProject(await Server.getProject(MainContent.curProjectId));
-			if (!This.project)				This.setProject((await Server.getProjectList())[0]);
-
-			if (!_task) return;
-		
-			This.finished 					= Boolean(_task.finished);
-			This.id 						= _task.id;
-			
-			if (_task.tagId) 				This.setTag(await This.project.tags.get(_task.tagId));
-			for (userId of _task.assignedTo) 	
-			{
-				This.project.users.get(userId).then(function (_user) {
-					if (!_user) return;
-					This.addAssignee(_user);
-				});
-			}
 		}
 	}
 
