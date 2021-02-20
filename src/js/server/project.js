@@ -177,13 +177,8 @@ function Project(_project) {
 
 
   let Local;
-  this.isSetup = false;
   this.setup = async function() {
     Local = await LocalDB.getProject(this.id, true);
-        
-
-    if (!Local) return;
-    this.isSetup = true;
   }
 
 
@@ -278,7 +273,6 @@ function Project(_project) {
       let response = await Server.fetchFunctionRequest(functionRequest);
       if (response.error) return await Local.tasks.getByGroup(_info);
 
-      if (!This.isSetup) console.trace(Local, This.id);
       Local.tasks.getByGroup(_info).then(function (_result) {
         overWriteLocalData(response.result, _result);
       });
@@ -296,21 +290,13 @@ function Project(_project) {
 
   this.users = new function() {
     let Users = this;
-
     let Type = "users";
     TypeBaseClass.call(this, Type);
 
-    this.list = [];
-    if (_project.users && _project.users.length !== undefined) 
-    {
-      this.list = _project.users;
-      setSelf(this.list);
-    }
-
+    if (_project.users && _project.users.length !== undefined) setSelf(_project.users);
     this.Self;
 
 
-    
     this.get = async function(_id) {
       let users = await this.getAll();
       for (user of users)
@@ -322,18 +308,8 @@ function Project(_project) {
     }
 
 
-
-    let lastRequestTime = false;
-    let curFetchPromise = false;
-
     this.getAll = async function(_forceRequest = false) {
-      if (new Date() - lastRequestTime < cacheLifeTime && Server.connected && !_forceRequest) 
-      {
-        if (curFetchPromise) await curFetchPromise;
-        return this.list;
-      }
-      lastRequestTime = new Date();
-
+      if (!_forceRequest) return await getLocalUserList();
 
       let functionRequest = {
         action:       "getAll",
@@ -341,25 +317,19 @@ function Project(_project) {
         projectId:    This.id,
       };
 
-      curFetchPromise = Server.fetchFunctionRequest(functionRequest);
-      let response    = await curFetchPromise;
-      curFetchPromise = false;
-
-      if (response.error == "E_noConnection") 
-      {
-        let users = await Local.users.getAll();
-        setSelf(users);
-        return users;
-      }
-
+      let response = await Server.fetchFunctionRequest(functionRequest);;
+      if (response.error == "E_noConnection") return await getLocalUserList();
       if (response.error) return false;
       Local.users.set(response.result);
       
-      lastSync = new Date();
-
       setSelf(response.result);
-      this.list = response.result;
-      return this.list;
+      return response.result;
+    }
+
+    async function getLocalUserList() {
+      let users = await Local.users.getAll();
+      setSelf(users);
+      return users;
     }
 
 
@@ -401,12 +371,11 @@ function Project(_project) {
 
 
 
+
+
   this.tags = new function() {
     let Type = "tags";
     TypeBaseClass.call(this, Type);
-
-    this.list = [];
-    if (_project.tags && _project.tags.length !== undefined) this.list = _project.tags.map(function (tag) {tag.colour = new Color(tag.colour); return tag});
 
     this.get = async function(_id) {
       let tags = await this.getAll();
@@ -418,20 +387,8 @@ function Project(_project) {
       return false;
     }
 
-
-
-
-    let lastRequestTime = false;
-    let curFetchPromise = false;
-
     this.getAll = async function(_forceRequest = false) {
-      if (new Date() - lastRequestTime < cacheLifeTime && Server.connected && !_forceRequest) 
-      {
-        if (curFetchPromise) await curFetchPromise;
-        return this.list;
-      }
-      lastRequestTime = new Date();
-    
+      if (!_forceRequest) return await getLocalList();
 
       let functionRequest = {
           action: "getAll",
@@ -439,24 +396,21 @@ function Project(_project) {
           projectId: This.id,
       };
 
-      curFetchPromise = Server.fetchFunctionRequest(functionRequest);
-      let response    = await curFetchPromise;
-      curFetchPromise = false;
-
-      if (response.error == "E_noConnection") return (await Local.tags.getAll()).map(function(tag) {tag.colour = new Color(tag.colour); return tag});
-
+      let response = await Server.fetchFunctionRequest(functionRequest);;
+      if (response.error == "E_noConnection") return await getLocalList();
       if (response.error) return false;
+      let tags = response.result;
 
-      this.list = [];
+      Local.tags.set(tags);
+      for (let i = 0; i < tags.length; i++) tags[i].colour = new Color(tags[i].colour);
 
-      Local.tags.set(response.result);
-      for (let i = 0; i < response.result.length; i++)
-      {
-        this.list[i]        = response.result[i];
-        this.list[i].colour = new Color(response.result[i].colour);
-      }
+      return tags;
+    }
 
-      return this.list;
+    async function getLocalList() {
+      let tags = await Local.tags.getAll();
+      for (tag of tags) tag.colour = new Color(tag.colour);
+      return tags;
     }
   }
 

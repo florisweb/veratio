@@ -30,7 +30,6 @@ function _app() {
       MainContent.searchOptionMenu.hide();
     });
       
-    await Server.onReConnect();
     await this.update();
 
     SideBar.projectList.open();
@@ -45,7 +44,8 @@ function _app() {
 
 
 
-  this.update = async function() {    
+  this.update = async function() {
+    await Server.onReConnect();
     switch (MainContent.curPage.name)
     {
       case "settings":  MainContent.settingsPage.open(MainContent.curProjectId);  break;

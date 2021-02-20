@@ -107,7 +107,9 @@ const Server = new function() {
       if (!_project || typeof _project != "object") return;
       _project = Encoder.decodeObj(_project);
       
-      return new Project(_project);
+      let project = new Project(_project);
+      project.importData = _project;
+      return project;
     }
 
 

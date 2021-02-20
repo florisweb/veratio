@@ -482,7 +482,7 @@ function _Popup_createTag() {
 	}
 
 	async function testIfTagTitleAlreadyExists(_tagTitle) {
-		let tags = await CurProject.tags.getAll();
+		let tags = await CurProject.tags.getAll(true);
 		for (tag of tags) 
 		{
 			if (tag.title.toLowerCase() == _tagTitle.toLowerCase()) return true;
