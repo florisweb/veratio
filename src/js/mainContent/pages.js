@@ -106,7 +106,6 @@ function taskPage_tab(_settings) {
 
 		if (!MainContent.taskPage.isOpen()) MainContent.taskPage.open();
 		resetPage();
-
 		await MainContent.taskHolder.addOverdue();
 		await onOpen(_projectId);
 
@@ -205,6 +204,7 @@ function taskPage_tab_today() {
 
 
 function taskPage_tab_week() {
+	let This = this;
 	taskPage_tab.call(this, {
 		name: "week",
 		onOpen: onOpen,
@@ -217,25 +217,7 @@ function taskPage_tab_week() {
 		MainContent.header.setTitle("This week");
 		MainContent.header.setMemberList([]);
 
-		let startDate = new Date();
-
-		for (let i = 0; i < 7; i++)
-		{
-			let date = startDate.copy().moveDay(i);
-			let taskList = await Server.global.tasks.getByDate(date);
-			let finalList = [];
-			
-			if (taskList) 
-			{
-				for (task of taskList)
-				{
-					if (!(await shouldRenderTask(task))) continue;
-					finalList.push(task);
-				}
-			}
-
-			addTaskHolder(date, finalList);
-		}
+		This.loadMoreDays(7, new Date());
 	}
 
 	async function shouldRenderTask(_task) {
@@ -258,19 +240,46 @@ function taskPage_tab_week() {
 
 
 	let loadingMoreDays = false;
-	this.loadMoreDays = async function(_days = 1) {
+	this.loadMoreDays = async function(_days = 1, _date) {
 		if (loadingMoreDays) return false;
 		loadingMoreDays = true;
 		
-		let startDate = getNewDate();
+		let startDate = _date;
+		if (!startDate) startDate = getNewDate();
+
+		let promises = [];
+		let taskHolderDataList = [];
 		for (let i = 1; i < _days + 1; i++)
 		{
-			let date = startDate.copy().moveDay(i);
-			let taskList = await Server.global.tasks.getByDate(date);
+			promises.push(new Promise(async function (resolve) {
+				let date = startDate.copy().moveDay(i);
 
-			addTaskHolder(date, taskList);
+				let infoObj = {
+					date: date, 
+					taskList: []
+				}
+				taskHolderDataList.push(infoObj);
+
+				let taskList = await Server.global.tasks.getByDate(date);
+				let finalList = [];
+				
+				if (taskList) 
+				{
+					for (task of taskList)
+					{
+						if (!(await shouldRenderTask(task))) continue;
+						finalList.push(task);
+					}
+				}
+
+				infoObj.taskList = finalList;
+				resolve();
+			}))	
 		}
-		
+
+		await Promise.all(promises);
+		for (info of taskHolderDataList) addTaskHolder(info.date, info.taskList);
+
 		loadingMoreDays = false;
 	}
 
