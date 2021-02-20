@@ -298,6 +298,12 @@ function LocalDB_Project(_projectId, _DB) {
   this.tags = new function() {
     const Key = "tags";
     TypeBaseClass.call(this, Key);
+
+    this.getAll = async function() {
+      let items = await This.getData(Key);
+      if (!items) return [];
+      return items.map(function (_tag) {_tag.colour = new Color(_tag.colour); return _tag});
+    }
   }
 
   this.users = new function() {

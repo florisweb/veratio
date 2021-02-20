@@ -58,7 +58,6 @@ function GlobalProject() {
     let Type = "users";
     TypeBaseClass.call(this, Type);
 
-
     
     this.get = async function(_id) {
       let users = await this.getAll();
@@ -166,10 +165,7 @@ function GlobalProject() {
 
 
 function Project(_project) {
-  const This          = this;
-  const cacheLifeTime = 10000; // ms
-
-
+  const This  = this;
   this.id     = String(_project.id);
   this.title  = String(_project.title);
 
@@ -293,8 +289,15 @@ function Project(_project) {
     let Type = "users";
     TypeBaseClass.call(this, Type);
 
-    if (_project.users && _project.users.length !== undefined) setSelf(_project.users);
+    this.list = [];
     this.Self;
+    if (_project.users && _project.users.length != undefined) 
+    {
+      this.list = _project.users;
+      setSelf(_project.users);
+    }
+
+    
 
 
     this.get = async function(_id) {
@@ -309,7 +312,7 @@ function Project(_project) {
 
 
     this.getAll = async function(_forceRequest = false) {
-      if (!_forceRequest) return await getLocalUserList();
+      if (!_forceRequest) return Object.assign([], this.list);
 
       let functionRequest = {
         action:       "getAll",
@@ -321,6 +324,7 @@ function Project(_project) {
       if (response.error == "E_noConnection") return await getLocalUserList();
       if (response.error) return false;
       Local.users.set(response.result);
+      this.list = response.result;
       
       setSelf(response.result);
       return response.result;
@@ -376,6 +380,8 @@ function Project(_project) {
   this.tags = new function() {
     let Type = "tags";
     TypeBaseClass.call(this, Type);
+    this.list = [];
+    if (_project.tags && _project.tags.length != undefined) this.list = _project.tags.map(function (_tag) {_tag.colour = new Color(_tag.colour); return _tag});
 
     this.get = async function(_id) {
       let tags = await this.getAll();
@@ -388,7 +394,7 @@ function Project(_project) {
     }
 
     this.getAll = async function(_forceRequest = false) {
-      if (!_forceRequest) return await getLocalList();
+      if (!_forceRequest) return Object.assign([], this.list);
 
       let functionRequest = {
           action: "getAll",
@@ -396,21 +402,15 @@ function Project(_project) {
           projectId: This.id,
       };
 
-      let response = await Server.fetchFunctionRequest(functionRequest);;
-      if (response.error == "E_noConnection") return await getLocalList();
+      let response = await Server.fetchFunctionRequest(functionRequest);
+      if (response.error == "E_noConnection") return await Local.tags.getAll();
       if (response.error) return false;
-      let tags = response.result;
+      this.list = response.result;
 
-      Local.tags.set(tags);
-      for (let i = 0; i < tags.length; i++) tags[i].colour = new Color(tags[i].colour);
+      Local.tags.set(this.list);
+      for (let i = 0; i < this.list.length; i++) this.list[i].colour = new Color(this.list[i].colour);
 
-      return tags;
-    }
-
-    async function getLocalList() {
-      let tags = await Local.tags.getAll();
-      for (tag of tags) tag.colour = new Color(tag.colour);
-      return tags;
+      return this.list;
     }
   }
 

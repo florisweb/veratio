@@ -1,17 +1,17 @@
 
 const Server = new function() {
-  let This = this;
-  this.connected = true;
-  const cacheLifeTime = 20000; // ms
-  
-  this.global = new GlobalProject();
+  let This        = this;
+  this.connected  = true;  
+  this.global     = new GlobalProject();
 
   this.clearCache = async function() {
   }
 
+  this.projectList = [];
   this.getProjectList = async function(_forceUpdate = false) {
-    if (!_forceUpdate) return await getLocalProjectList();
-    return await getProjectList();;
+    if (!_forceUpdate) return this.projectList;
+    this.projectList = await getProjectList();
+    return this.projectList;
   }
 
  
@@ -116,12 +116,13 @@ const Server = new function() {
   async function getLocalProjectList() {
     let projects = [];
     let localDBProjects = await LocalDB.getProjectList();
+
     for (let localProject of localDBProjects) 
     {
       if (localProject.users.Self) localProject.users = [localProject.users.Self];
       let project = new Project(localProject);
       await project.setup();
-      projects.push(project);
+      projects.push(project);  
     }
 
     return projects;
@@ -180,9 +181,9 @@ const Server = new function() {
     return returnPromise;
   }
 
-  this.fetchFunctionRequestList = function(_requests) {
+  this.fetchFunctionRequestList = async function(_requests) {
     let paramString = Encoder.objToString(_requests);
-    return this.fetchData("database/project/executeFunctionList.php", "functions=" + paramString);
+    return await this.fetchData("database/project/executeFunctionList.php", "functions=" + paramString);
   }
 
 

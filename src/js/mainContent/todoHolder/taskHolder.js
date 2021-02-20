@@ -33,7 +33,6 @@ function _MainContent_taskHolder() {
 					_item.value = optionDate.toString();
 					Menu.close();
 				}, "");
-			
 			}
 		}
 
