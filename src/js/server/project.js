@@ -469,14 +469,14 @@ function Project(_project) {
       let response = await Server.fetchFunctionRequest(functionRequest);
       if (response.error == "E_noConnection" && Local) 
       {
+        _newItem.creatorId = This.users.Self.id;
         Local[Type].update(_newItem);
         Local.addCachedOperation(functionRequest);
-
-        return _newItem;
+        return new TypeClass(_newItem);
       };
       
       if (response.error) return response.result;
-      if (!response.error && Local) Local[Type].update(new TypeClass(response.result));
+      Local[Type].update(new TypeClass(response.result));
       return new TypeClass(response.result);
     }
   }

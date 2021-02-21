@@ -327,14 +327,14 @@ function LocalDB_Project(_projectId, _DB) {
       for (let i = 0; i < data.length; i++)
       {
         if (data[i].id != _newItem.id) continue;
-        data[i] = _newItem.export();
+        data[i] = _newItem;
         found = true;
         break;
       }
 
-      if (!found) data.push(_newItem.export());
+      if (!found) data.push(_newItem);
 
-      return This.setData(Key, data);
+      return this.set(data);
     }
 
 
@@ -358,7 +358,7 @@ function LocalDB_Project(_projectId, _DB) {
         if (items[i].id != _id) continue;
         items.splice(i, 1);
         
-        return await This.setData(Key, items);
+        return await this.set(items);
       }
       return false;
     }
