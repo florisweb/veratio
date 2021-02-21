@@ -170,13 +170,10 @@ function Project(_project) {
   this.title  = String(_project.title);
 
 
-
-
   let Local;
   this.setup = async function() {
     Local = await LocalDB.getProject(this.id, true);
   }
-
 
 
   this.rename = async function(_newTitle) {
@@ -286,6 +283,7 @@ function Project(_project) {
   }
 
 
+
   this.users = new function() {
     let Users = this;
     let Type = "users";
@@ -312,7 +310,8 @@ function Project(_project) {
 
 
     this.getAll = async function(_forceRequest = false) {
-      if (!_forceRequest) return Object.assign([], this.list);
+      if (!_forceRequest && !this.needsUpdate) return Object.assign([], this.list);
+      this.needsUpdate = false;
 
       let functionRequest = {
         action:       "getAll",
@@ -333,9 +332,9 @@ function Project(_project) {
     }
 
     async function getLocalUserList() {
-      let users = await Local.users.getAll();
-      setSelf(users);
-      return users;
+      This.users.list = await Local.users.getAll();
+      setSelf(This.users.list);
+      return This.users.list;
     }
 
 
@@ -350,6 +349,7 @@ function Project(_project) {
 
 
     this.inviteByEmail = async function(_email) {
+      this.needsUpdate = true;
       let functionRequest = {
         action:       "inviteByEmail",
         type:         "users",
@@ -361,6 +361,7 @@ function Project(_project) {
     }
 
     this.inviteByLink = async function() {
+      this.needsUpdate = true;
       let functionRequest = {
         action:       "inviteByLink",
         type:         "users",
@@ -373,11 +374,10 @@ function Project(_project) {
 
 
 
-
-
   this.tags = new function() {
     let Type = "tags";
     TypeBaseClass.call(this, Type, Tag);
+    
     this.list = [];
     if (_project.tags && _project.tags.length != undefined) this.list = _project.tags.map(r => new Tag(r));
 
@@ -392,7 +392,8 @@ function Project(_project) {
     }
 
     this.getAll = async function(_forceRequest = false) {
-      if (!_forceRequest) return Object.assign([], this.list);
+      if (!_forceRequest && !this.needsUpdate) return Object.assign([], this.list);
+      this.needsUpdate = false;
 
       let functionRequest = {
           action: "getAll",
@@ -401,7 +402,11 @@ function Project(_project) {
       };
 
       let response = await Server.fetchFunctionRequest(functionRequest);
-      if (response.error == "E_noConnection") return await Local.tags.getAll();
+      if (response.error == "E_noConnection") 
+      {
+          this.list = await Local.tags.getAll();
+          return this.list;
+      }
       if (response.error) return false;
       
       this.list = response.result.map(r => new Tag(r));
@@ -416,6 +421,7 @@ function Project(_project) {
   function TypeBaseClass(_type, _typeClass) {
     let Type = _type;
     let TypeClass = _typeClass;
+    this.needsUpdate = false;
 
     this.get = async function(_id) {
       let functionRequest = {
@@ -437,6 +443,8 @@ function Project(_project) {
     }
 
     this.remove = async function(_id) {
+      this.needsUpdate = true;
+
       let functionRequest = {
           action: "remove",
           type: Type,
@@ -459,6 +467,8 @@ function Project(_project) {
     }
 
     this.update = async function(_newItem) {
+      this.needsUpdate = true;
+
       let functionRequest = {
           action: "update",
           type: Type,
@@ -467,7 +477,7 @@ function Project(_project) {
       };
 
       let response = await Server.fetchFunctionRequest(functionRequest);
-      if (response.error == "E_noConnection" && Local) 
+      if (response.error == "E_noConnection") 
       {
         _newItem.creatorId = This.users.Self.id;
         Local[Type].update(_newItem);

@@ -334,7 +334,8 @@ function LocalDB_Project(_projectId, _DB) {
 
       if (!found) data.push(_newItem);
 
-      return this.set(data);
+      await this.set(data);
+      return _newItem;
     }
 
 
