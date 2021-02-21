@@ -227,7 +227,7 @@ function _MainContent_searchOptionMenu() {
 				{
 					item: item,
 					startAt: 0,
-					length: 0,
+					length: -_indicator.length,
 				}, 
 				_indicator
 			);

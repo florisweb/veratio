@@ -959,9 +959,9 @@ function TaskHolder_createMenu(_parent) {
 			This.setTag(false);
 			setMemberIndicators([]);
 
-			if (_task && _task.projectId) 	This.setProject(await Server.getProject(_task.projectId));
-			if (!This.project) 				This.setProject(await Server.getProject(MainContent.curProjectId));
-			if (!This.project)				This.setProject((await Server.getProjectList())[0]);
+			if (_task && _task.projectId) 					This.setProject(await Server.getProject(_task.projectId));
+			if (!This.project && MainContent.curProjectId) 	This.setProject(await Server.getProject(MainContent.curProjectId));
+			if (!This.project)								This.setProject((await Server.getProjectList())[0]);
 
 			if (!_task || !This.project) return;
 		
@@ -985,7 +985,8 @@ function TaskHolder_createMenu(_parent) {
 		}
 		
 		this.setProject = function(_newProject) {
-			this.project 					= _newProject;
+			this.project = _newProject;
+			if (!this.project) return;
 			this.project.tags.needsUpdate	= true;
 			this.project.users.needsUpdate 	= true;
 		}
