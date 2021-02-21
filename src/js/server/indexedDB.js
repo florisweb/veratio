@@ -143,13 +143,22 @@ const LocalDB = new function() {
       let localProject = await LocalDB.getProject(project.id, true);
       if (!localProject) continue;
 
-      let taskAdder = async function(_list) {
-        for (task of _list) await localProject.tasks.update(task);
-      }
+      let projectPromises = [
+        project.tasks.getByDateRange({date: new Date(), range: 365}),
+        project.tasks.getByGroup({type: "overdue", value: "*"}),
+        project.tasks.getByGroup({type: "default", value: "*"})
+      ];
 
-      promises.push(project.tasks.getByDateRange({date: new Date(), range: 365}).then(taskAdder));
-      promises.push(project.tasks.getByGroup({type: "overdue", value: "*"}, "overdue").then(taskAdder));
-      promises.push(project.tasks.getByGroup({type: "default", value: "*"}, "x").then(taskAdder));
+      promises.push(new Promise(async function (resolve) {        
+        let results = await Promise.all(projectPromises);
+        
+        let tasks = results[0];
+        tasks = tasks.concat(results[1]);
+        tasks = tasks.concat(results[2]);
+        
+        localProject.tasks.set(tasks);
+        resolve();
+      }));
     }
 
     await Promise.all(promises);
