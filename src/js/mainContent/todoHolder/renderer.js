@@ -167,7 +167,7 @@ function _TaskRenderer() {
 
 						if (dropTargetIsHeader(_dropTarget))
 						{
-							_dropTarget.parentNode.children[2].style.marginTop = "38px";
+							_dropTarget.parentNode.children[3].style.marginTop = "38px";
 						} else {
 							_dropTarget.style.marginBottom = _dropTarget.offsetHeight + "px";
 						}
@@ -207,7 +207,7 @@ function _TaskRenderer() {
 					lastDropTarget.style.marginBottom 	= "";
 
 					if (!lastDropTarget.parentNode.children[2]) return;
-					lastDropTarget.parentNode.children[2].style.marginTop = "";
+					lastDropTarget.parentNode.children[3].style.marginTop = "";
 				}
 
 				function dropTargetIsHeader(_target) {
