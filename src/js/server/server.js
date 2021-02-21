@@ -89,7 +89,7 @@ const Server = new function() {
   async function fetchProjects() {
     let response        = await Server.fetchData("database/project/getProjectList.php");
     if (response.error) return response;
-    
+
     let projectList = [];
     for (let i = 0; i < response.result.length; i++)
     {
@@ -105,10 +105,8 @@ const Server = new function() {
 
     function importProject(_project) {
       if (!_project || typeof _project != "object") return;
-      let decodedProject        = Encoder.decodeObj(_project);
-      let project               = new Project(decodedProject);
-      
-      project.importData        = Encoder.decodeObj(_project);
+      let project               = new Project(Object.assign({}, _project));
+      project.importData        = Object.assign({}, _project);
       project.importData.tags   = project.importData.tags.map(r => new Tag(r));
       project.importData.users  = project.importData.users.map(r => new User(r));
 

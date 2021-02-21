@@ -12,7 +12,7 @@ const Encoder = new function() {
       try {
         _string = decodeURIComponent(_string);
       }
-      catch (e) {}
+      catch (e) {};
       return _string.replace(/<plusSign>/g, "+");
     }
 
