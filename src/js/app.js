@@ -29,7 +29,7 @@ function _app() {
       MainContent.optionMenu.close();
       MainContent.searchOptionMenu.hide();
     });
-      
+
     await this.update();
 
     SideBar.projectList.open();
@@ -46,13 +46,13 @@ function _app() {
 
   this.update = async function() {
     await Server.onReConnect();
+    await SideBar.projectList.fillProjectHolder();
+
     switch (MainContent.curPage.name)
     {
       case "settings":  MainContent.settingsPage.open(MainContent.curProjectId);  break;
       default:          MainContent.taskPage.reopenCurTab();                      break;
     }
-    
-    await SideBar.projectList.fillProjectHolder();
   }
 
 
