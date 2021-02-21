@@ -985,7 +985,9 @@ function TaskHolder_createMenu(_parent) {
 		}
 		
 		this.setProject = function(_newProject) {
-			this.project = _newProject;
+			this.project 					= _newProject;
+			this.project.tags.needsUpdate	= true;
+			this.project.users.needsUpdate 	= true;
 		}
 		
 		this.addAssignee = function(_user) {	
