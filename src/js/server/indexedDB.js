@@ -199,7 +199,7 @@ function LocalDB_Project(_projectId, _DB) {
   LocalDB_ProjectInterface.call(this, _projectId, _DB);
  
 
-  this.title = "Loading..";
+  this.title = "Loading...";
 
   this.sendCachedOperations = async function() {
     let operations = await this.getData("cachedOperations");
@@ -260,7 +260,8 @@ function LocalDB_Project(_projectId, _DB) {
 
   this.tasks = new function() {
     const Key = "tasks";
-    TypeBaseClass.call(this, Key);
+    const TypeClass = Task;
+    TypeBaseClass.call(this, Key, TypeClass);
 
    
     this.getByDateRange = async function({date, range}) {
@@ -297,18 +298,14 @@ function LocalDB_Project(_projectId, _DB) {
 
   this.tags = new function() {
     const Key = "tags";
-    TypeBaseClass.call(this, Key);
-
-    this.getAll = async function() {
-      let items = await This.getData(Key);
-      if (!items) return [];
-      return items.map(function (_tag) {_tag.colour = new Color(_tag.colour); return _tag});
-    }
+    const TypeClass = Tag;
+    TypeBaseClass.call(this, Key, TypeClass);
   }
 
   this.users = new function() {
     const Key = "users";
-    TypeBaseClass.call(this, Key);
+    const TypeClass = User;
+    TypeBaseClass.call(this, Key, TypeClass);
 
     this.Self = false;
   }
@@ -319,9 +316,9 @@ function LocalDB_Project(_projectId, _DB) {
 
 
 
-
-  function TypeBaseClass(_key) {
-    let Key = _key;
+  function TypeBaseClass(_key, _typeClass) {
+    let Key       = _key;
+    let TypeClass = _typeClass;
 
     this.update = async function(_newItem) {
       let data = await this.getAll();
@@ -330,12 +327,12 @@ function LocalDB_Project(_projectId, _DB) {
       for (let i = 0; i < data.length; i++)
       {
         if (data[i].id != _newItem.id) continue;
-        data[i] = _newItem;
+        data[i] = _newItem.export();
         found = true;
         break;
       }
 
-      if (!found) data.push(_newItem);
+      if (!found) data.push(_newItem.export());
 
       return This.setData(Key, data);
     }
@@ -371,14 +368,14 @@ function LocalDB_Project(_projectId, _DB) {
     }
 
     this.set = async function(_data) {
-      return await This.setData(Key, _data);
+      return await This.setData(Key, _data.map(r => r.export()));
     }
 
 
     this.getAll = async function() {
       let items = await This.getData(Key);
       if (!items) return [];
-      return items;
+      return items.map(r => new TypeClass(r));
     }
   }
 }

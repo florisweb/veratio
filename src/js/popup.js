@@ -465,11 +465,11 @@ function _Popup_createTag() {
 	
 
 	async function scrapeTagData() {
-		let tag = {
+		let tag = new Tag({
 			id: 		newId(),
 			title: 		tagTitleInput.getValue().replace(/^\s+|\s+$/g, ''),
 			colour: 	optionMenu.value.colour.toHex()
-		};
+		});
 
 		if (EditData.tag) tag.id = EditData.tag.id;
 		if (!tag.title || tag.title.length < 2 || !tag.colour) return "E_invalidData";

@@ -33,21 +33,21 @@ function GlobalProject() {
 
     this.getByGroup = async function(_info = {type: "", value: "*"}) { 
       let projects = await Server.getProjectList();
-      let returnValue = [];
+      let tasks = [];
 
       let promises = [];
       for (let i = 0; i < projects.length; i++)
       {
         let promise = projects[i].tasks.getByGroup(_info).then(function(_result) {
           if (!_result) return;
-          returnValue = returnValue.concat(_result);
+          tasks = tasks.concat(_result);
         });
 
         promises.push(promise);
       }
       await Promise.all(promises);
 
-      return returnValue;
+      return tasks;
     }
   }
 
@@ -229,7 +229,7 @@ function Project(_project) {
 
   this.tasks = new function() {
     let Type = "tasks";
-    TypeBaseClass.call(this, Type);
+    TypeBaseClass.call(this, Type, Task);
 
     this.getByDate = async function(_date) {
       return await this.getByDateRange({date: _date, range: 0});
@@ -245,17 +245,18 @@ function Project(_project) {
         projectId:    This.id,
       };
 
-      let result = await Server.fetchFunctionRequest(functionRequest);
-      if (result.error) return await Local.tasks.getByDateRange(_info);
+      let response = await Server.fetchFunctionRequest(functionRequest);
+      if (response.error) return await Local.tasks.getByDateRange(_info);
+      response.result = response.result.map(r => new Task(r));
 
       new Promise(async function () { // Store data Localily  
         let foundTasks = await Local.tasks.getByDateRange(_info);
         
         for (let i = 0; i < foundTasks.length; i++) await Local.tasks.remove(foundTasks[i]);
-        for (task of  result.result) await Local.tasks.update(task);
+        for (task of response.result) await Local.tasks.update(task);
       });
 
-      return result.result;
+      return response.result;
     }
 
     this.getByGroup = async function(_info = {type: "", value: "*"}) {
@@ -268,6 +269,7 @@ function Project(_project) {
 
       let response = await Server.fetchFunctionRequest(functionRequest);
       if (response.error) return await Local.tasks.getByGroup(_info);
+      response.result = response.result.map(r => new Task(r));
 
       Local.tasks.getByGroup(_info).then(function (_result) {
         overWriteLocalData(response.result, _result);
@@ -287,17 +289,15 @@ function Project(_project) {
   this.users = new function() {
     let Users = this;
     let Type = "users";
-    TypeBaseClass.call(this, Type);
+    TypeBaseClass.call(this, Type, User);
 
     this.list = [];
     this.Self;
     if (_project.users && _project.users.length != undefined) 
     {
-      this.list = _project.users;
+      this.list = _project.users.map(r => new User(r));
       setSelf(_project.users);
     }
-
-    
 
 
     this.get = async function(_id) {
@@ -323,6 +323,8 @@ function Project(_project) {
       let response = await Server.fetchFunctionRequest(functionRequest);;
       if (response.error == "E_noConnection") return await getLocalUserList();
       if (response.error) return false;
+      response.result = response.result.map(r => new User(r));
+
       Local.users.set(response.result);
       this.list = response.result;
       
@@ -335,10 +337,6 @@ function Project(_project) {
       setSelf(users);
       return users;
     }
-
-
-
-
 
 
     function setSelf(_userList = []) {
@@ -379,9 +377,9 @@ function Project(_project) {
 
   this.tags = new function() {
     let Type = "tags";
-    TypeBaseClass.call(this, Type);
+    TypeBaseClass.call(this, Type, Tag);
     this.list = [];
-    if (_project.tags && _project.tags.length != undefined) this.list = _project.tags.map(function (_tag) {_tag.colour = new Color(_tag.colour); return _tag});
+    if (_project.tags && _project.tags.length != undefined) this.list = _project.tags.map(r => new Tag(r));
 
     this.get = async function(_id) {
       let tags = await this.getAll();
@@ -405,19 +403,19 @@ function Project(_project) {
       let response = await Server.fetchFunctionRequest(functionRequest);
       if (response.error == "E_noConnection") return await Local.tags.getAll();
       if (response.error) return false;
-      this.list = response.result;
-
+      
+      this.list = response.result.map(r => new Tag(r));
       Local.tags.set(this.list);
-      for (let i = 0; i < this.list.length; i++) this.list[i].colour = new Color(this.list[i].colour);
-
+      
       return this.list;
     }
   }
 
 
 
-  function TypeBaseClass(_type) {
+  function TypeBaseClass(_type, _typeClass) {
     let Type = _type;
+    let TypeClass = _typeClass;
 
     this.get = async function(_id) {
       let functionRequest = {
@@ -428,13 +426,14 @@ function Project(_project) {
       };
 
       let response = await Server.fetchFunctionRequest(functionRequest);
-
       if (response.error) return await Local[Type].get(_id);
 
       let item = Encoder.decodeObj(response.result);
-      Local[Type].update(item);
+      if (!item) return false;
 
-      return item;
+      Local[Type].update(new TypeClass(item));
+
+      return new TypeClass(item);
     }
 
     this.remove = async function(_id) {
@@ -463,7 +462,7 @@ function Project(_project) {
       let functionRequest = {
           action: "update",
           type: Type,
-          parameters: _newItem,
+          parameters: _newItem.export(),
           projectId: This.id,
       };
 
@@ -474,10 +473,11 @@ function Project(_project) {
         Local.addCachedOperation(functionRequest);
 
         return _newItem;
-      }
+      };
       
-      if (!response.error && Local) Local[Type].update(response.result);
-      return response.result;
+      if (response.error) return response.result;
+      if (!response.error && Local) Local[Type].update(new TypeClass(response.result));
+      return new TypeClass(response.result);
     }
   }
 }
@@ -538,4 +538,66 @@ function Project_userComponent_Self(_user) {
     }
   }
 }
+
+
+
+
+
+
+
+
+
+
+function Tag({id, title, colour, creatorId}) {
+  this.id           = id;
+  this.title        = title;
+  
+  this.creatorId    = creatorId;
+  this.colour       = colour;
+  if (typeof this.colour == 'string') this.colour = new Color(this.colour);
+
+  this.export = function() {
+    let tag = Object.assign({}, this);
+    tag.colour = tag.colour.toHex();
+    return tag;
+  }
+}
+
+
+
+
+
+
+
+function User({id, name, permissions, type, Self}) {
+  this.id           = id;
+  this.name         = name;
+  this.permissions  = parseInt(permissions);
+  this.type         = type;
+  this.Self         = Self;
+
+  this.export = function() {
+    return Object.assign({}, this);
+  }
+}
+
+function Task({id, tagId = false, projectId, title, finished = false, groupType, groupValue, assignedTo = [], creatorId}) {
+  this.id           = id;
+  this.tagId        = tagId;
+  this.projectId    = projectId;
+
+  this.title        = title;
+  this.finished     = !!finished;
+  this.groupType    = groupType;
+  this.groupValue   = groupValue;
+
+  this.assignedTo   = assignedTo;
+  this.creatorId    = creatorId;
+
+
+  this.export = function() {
+    return Object.assign({}, this);
+  }
+}
+
 

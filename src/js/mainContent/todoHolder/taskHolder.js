@@ -802,7 +802,6 @@ function TaskHolder_createMenu(_parent) {
 
 
 	this.createTask = async function() {
-		console.log('createTask', this.curTask);
 		if (!this.curTask) return;
 		
 		setTaskMenuStatus("loading");
@@ -1001,7 +1000,7 @@ function TaskHolder_createMenu(_parent) {
 		this.generateTaskData = function() {
 			if (!Parent.HTML.inputField) return false;
 
-			let task = {
+			let task = new Task({
 				id: 			this.id,
 				projectId: 		this.project.id,
 
@@ -1013,7 +1012,7 @@ function TaskHolder_createMenu(_parent) {
 				groupType: 		"default",
 				groupValue: 	'',
 				creatorId: 		this.project.users.Self.id,
-			}
+			});
 
 			if (!task.title || task.title.split(" ").join("").length < 1) return "E_InvalidTitle";
 			

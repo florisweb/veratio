@@ -105,10 +105,13 @@ const Server = new function() {
 
     function importProject(_project) {
       if (!_project || typeof _project != "object") return;
-      _project = Encoder.decodeObj(_project);
+      let decodedProject        = Encoder.decodeObj(_project);
+      let project               = new Project(decodedProject);
       
-      let project = new Project(_project);
-      project.importData = _project;
+      project.importData        = Encoder.decodeObj(_project);
+      project.importData.tags   = project.importData.tags.map(r => new Tag(r));
+      project.importData.users  = project.importData.users.map(r => new User(r));
+
       return project;
     }
 
