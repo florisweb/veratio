@@ -46,7 +46,7 @@
 		<link rel="stylesheet" type="text/css" href="css/main.css?a=30">
 		<link rel="stylesheet" type="text/css" href="css/sideBar.css?a=36">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=65">
-		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=83">
+		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=84">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/header.css?a=1">
 
 		<script type="text/javascript" src="https://florisweb.tk/JS/jQuery.js" asy nc></script>

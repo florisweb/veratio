@@ -68,6 +68,7 @@
 
 
 
+
 	.taskHolder .dropDownButton {
 		position: relative;
 		float: left;
@@ -80,7 +81,7 @@
 		opacity: 0;
 		transition: transform 0.2s, opacity .3s;
 	}
-	
+
 	.taskHolder .dropDownButton:hover {
 		opacity: .2;
 	}
@@ -88,6 +89,10 @@
 	.taskHolder.hideTasks .dropDownButton {
 		transform: rotateZ(-90deg);
 		opacity: .2;
+	}
+
+	.taskHolder.overdue .dropDownButton {
+		content: url("../../images/icons/dropDownIconRed.png");
 	}
 
 
