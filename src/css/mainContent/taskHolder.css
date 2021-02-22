@@ -92,7 +92,7 @@
 	}
 
 	.taskHolder.overdue .dropDownButton {
-		content: url("../../images/icons/dropDownIconRed.png");
+		content: url("../images/icons/dropDownIconRed.png");
 	}
 
 
@@ -288,7 +288,7 @@
 			
 					cursor: pointer;
 
-					background-image: url("../../images/icons/removeIconLight.png");
+					background-image: url("../images/icons/removeIconLight.png");
 					background-size: auto 0%;
 					background-position: 50% 13px;
 					background-repeat: no-repeat;
@@ -314,7 +314,7 @@
 					background: rgb(140, 153, 247);
 					color: transparent;
 
-					background-image: url("../../images/icons/removeIconLight.png");
+					background-image: url("../images/icons/removeIconLight.png");
 					background-size: auto 80%;
 					background-position: 50% 2px;
 					background-repeat: no-repeat;
@@ -322,7 +322,7 @@
 
 				.createMenuHolder .assigneeHolder .assigneeItem.isSelf:hover {
 					background: rgb(255, 200, 0);
-					background-image: url("../../images/icons/removeIconLight.png");
+					background-image: url("../images/icons/removeIconLight.png");
 					background-size: auto 80%;
 					background-position: 50% 2px;
 					background-repeat: no-repeat;

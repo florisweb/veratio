@@ -40,7 +40,7 @@
 	<head>
 		<title>Veratio - Florisweb.tk</title>
 		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0' name='viewport'/>
-
+<!-- 
 		<link rel="stylesheet" type="text/css" href="css/component.css?a=57">
 		<link rel="stylesheet" type="text/css" href="css/popup.css?a=44">
 		<link rel="stylesheet" type="text/css" href="css/main.css?a=30">
@@ -48,6 +48,9 @@
 		<link rel="stylesheet" type="text/css" href="css/mainContent/mainContent.css?a=65">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/taskHolder.css?a=84">
 		<link rel="stylesheet" type="text/css" href="css/mainContent/header.css?a=1">
+
+ -->
+ 		<link rel="stylesheet" type="text/css" href="css/main_min.css?a=1">
 
 		<script type="text/javascript" src="https://florisweb.tk/JS/jQuery.js" asy nc></script>
 		<script type="text/javascript" src="https://florisweb.tk/JS/request2.js" asy nc></script>
