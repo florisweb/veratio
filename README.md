@@ -26,6 +26,9 @@ Planned features:
 ? - [ ] Drag and drop support for tasks (Order?)
 ? - [ ] Sorting and filtering UI
 ?    - [ ] Sort tasks by planned date
+- [ ] Extended offline support
+		- [ ] Removing projects
+		- [ ] Creating projects
 
 
 

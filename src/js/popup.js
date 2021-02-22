@@ -130,7 +130,7 @@ function _Popup_inviteByLinkCopy() {
 	let linkField = this.content[2];
 	function onOpen(_openResolver, _link) {
 		linkField.setValue(_link);
-		linkField.HTML.setSelectionRange(0, _link.length);
+		linkField.HTML.select();
 	}
 }
 
