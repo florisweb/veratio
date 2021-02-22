@@ -156,7 +156,7 @@ function taskPage_tab_today() {
 			[date]
 		);
 
-		let taskList = await getTaskListByDate(date)
+		let taskList = await getTaskListByDate(date);
 		let sortedList = TaskSorter.defaultSort(taskList);
 		await taskHolder.task.addTaskList(sortedList);
 	};
@@ -187,13 +187,10 @@ function taskPage_tab_today() {
 
 	this.taskIsMine = async function(_task) {
 		let project = await Server.getProject(_task.projectId);
-		let userId = project.users.Self.id;
-
-		if (_task.assignedTo.length == 0 && _task.creatorId != userId) return false;
 
 		if (
 			_task.assignedTo.length > 0 && 
-			!_task.assignedTo.includes(userId)
+			!_task.assignedTo.includes(project.users.Self.id)
 		) return false;
 		return true;
 	}
@@ -261,24 +258,20 @@ function taskPage_tab_week() {
 				taskHolderDataList.push(infoObj);
 
 				let taskList = await Server.global.tasks.getByDate(date);
-				let finalList = [];
+				if (!taskList) return resolve();
 				
-				if (taskList) 
+				for (let task of taskList)
 				{
-					for (task of taskList)
-					{
-						if (!(await shouldRenderTask(task))) continue;
-						finalList.push(task);
-					}
+					if (!(await shouldRenderTask(task))) continue;
+					infoObj.taskList.push(task);
 				}
 
-				infoObj.taskList = finalList;
 				resolve();
 			}))	
 		}
 
 		await Promise.all(promises);
-		for (info of taskHolderDataList) addTaskHolder(info.date, info.taskList);
+		for (let info of taskHolderDataList) addTaskHolder(info.date, info.taskList);
 
 		loadingMoreDays = false;
 	}
@@ -415,7 +408,7 @@ function MainContent_settingsPage(_projectId) {
 
 	this.setMemberItemsFromList = function(_memberList) {
 		HTML.memberHolder.innerHTML = '<div class="text header">Members (' + _memberList.length + ')</div>';
-		for (member of _memberList) this.addMemberItem(member);
+		for (let member of _memberList) this.addMemberItem(member);
 	}
 
 

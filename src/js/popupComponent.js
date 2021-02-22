@@ -17,7 +17,7 @@ function PopupComponent({title, content, onOpen, onClose}) {
 
 		titleComponent = new Title({title: title});
 		let newContent = [titleComponent].concat(content);
-		for (item of newContent) 
+		for (let item of newContent) 
 		{
 			let html = item.createHTML();
 			if (!html) continue;

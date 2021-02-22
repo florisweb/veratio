@@ -13,7 +13,7 @@ function _MainContent_taskHolder() {
 		let Menu = OptionMenu.create();
 	
 		Menu.removeAllOptions = function() {
-			for (option of Menu.options) this.options[0].remove();
+			for (let option of Menu.options) this.options[0].remove();
 		}
 
 		let menu_open = Menu.open;
@@ -126,7 +126,7 @@ function _MainContent_taskHolder() {
 
 
 	this.renderTask = async function(_task) {
-		for (taskHolder of this.list) 
+		for (let taskHolder of this.list) 
 		{
 			if (!taskHolder.shouldRenderTask(_task)) continue;
 			await taskHolder.task.addTask(_task);
@@ -147,7 +147,7 @@ function _MainContent_taskHolder() {
 
 	this.closeAllCreateMenus = function(_ignorerer) {
 		let closedCreateMenu = false;
-		for (taskHolder of this.list)
+		for (let taskHolder of this.list)
 		{
 			if (!taskHolder.createMenu) continue;
 			if (!taskHolder.createMenu.openState) continue;
@@ -417,7 +417,7 @@ function TaskHolder_task(_parent) {
 	this.addTaskList = function(_taskList) {
 		if (!_taskList) return;
 		let promises = [];
-		for (task of _taskList) promises.push(this.addTask(task));
+		for (let task of _taskList) promises.push(this.addTask(task));
 		return Promise.all(promises);
 	}
 
@@ -433,7 +433,7 @@ function TaskHolder_task(_parent) {
 
 
 	this.reRenderTaskList = function() {
-		for (task of this.taskList) task.render();
+		for (let task of this.taskList) task.render();
 	}
 	
 
@@ -466,7 +466,7 @@ function TaskHolder_task(_parent) {
 
 
 	function get(_id) {
-		for (task of TaskHolder.taskList) 
+		for (let task of TaskHolder.taskList) 
 		{
 			if (task.id == _id) return task;
 		}
@@ -898,7 +898,7 @@ function TaskHolder_createMenu(_parent) {
 	function setMemberIndicators(_members) {
 		Parent.HTML.memberHolder.innerHTML = "";
 
-		for (member of _members)
+		for (let member of _members)
 		{
 			let html = createMemberIndicatorHTML(member);
 			Parent.HTML.memberHolder.appendChild(html);
@@ -969,7 +969,7 @@ function TaskHolder_createMenu(_parent) {
 			This.id 						= _task.id;
 			
 			if (_task.tagId) 				This.setTag(await This.project.tags.get(_task.tagId));
-			for (userId of _task.assignedTo) 	
+			for (let userId of _task.assignedTo) 	
 			{
 				This.project.users.get(userId).then(function (_user) {
 					if (!_user) return;
@@ -992,7 +992,7 @@ function TaskHolder_createMenu(_parent) {
 		}
 		
 		this.addAssignee = function(_user) {	
-			for (user of this.assignedTo) if (user.id == _user.id) return;
+			for (let user of this.assignedTo) if (user.id == _user.id) return;
 
 			this.assignedTo.push(_user);
 			setMemberIndicators(this.assignedTo);

@@ -224,7 +224,7 @@ const DateNames = function() {
 
     function getDateStrFromDateNames(_date) {
     	if (!_date) return "";
-    	for (obj of dateNames)
+    	for (let obj of dateNames)
       	{
         	if (!obj.getDate().compareDate(_date)) continue;
         	return obj.name;
@@ -277,7 +277,7 @@ const DateNames = function() {
 
 	function relativeStrToDate(_str) {
 		let options = []; 
-		for (dateObj of dateNames)
+		for (let dateObj of dateNames)
 		{
 			dateObj.score = similarity(_str, dateObj.name);
 			if (dateObj.score < 0.8) continue;

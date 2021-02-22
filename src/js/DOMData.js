@@ -5,7 +5,7 @@ const DOMData = new function () {
 
 	return {
 		get: function(_element) {
-			for (e of Data) 
+			for (let e of Data) 
 			{
 				if (e.element !== _element) continue;
 				return e.data;

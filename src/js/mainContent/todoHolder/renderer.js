@@ -62,9 +62,9 @@ function _TaskRenderer() {
 					let users = await _project.users.getAll();
 
 					let memberList = [];
-					for (id of _userIdList)
+					for (let id of _userIdList)
 					{
-						for (user of users)
+						for (let user of users)
 						{
 							if (user.id != id) continue;
 							memberList.push(user);

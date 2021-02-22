@@ -8,7 +8,7 @@ function _KeyHandler() {
       keys: ["n"], 
       event: function () {
         let list = MainContent.taskHolder.list;
-        for (item of list)
+        for (let item of list)
         {
           if (!item.createMenu || item.createMenu.disabled) continue;
           return item.createMenu.open();

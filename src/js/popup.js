@@ -408,7 +408,7 @@ function _Popup_createTag() {
 	}
 
 	function setColorMenuOptions() {
-		for (colour of COLOUR.list)
+		for (let colour of COLOUR.list)
 		{
 			optionMenu.addOption({
 				title: colour.name,

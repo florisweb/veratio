@@ -221,7 +221,7 @@ function _MainContent_searchOptionMenu() {
 
 		Menu.removeAllOptions();
 		
-		for (item of _list) 
+		for (let item of _list) 
 		{
 			addSearchItem(
 				{
@@ -488,7 +488,7 @@ function _MainContent_searchOptionMenu() {
 				if (itemTitle.length < 3) return false;
 				let curStrIndex = Object.assign([], valueParts).splice(0, partIndex).join(_type).length;
 
-				for (item of _itemList) if (similarity(item.title, itemTitle) > .9) return false;
+				for (let item of _itemList) if (similarity(item.title, itemTitle) > .9) return false;
 
 				let itemObject = {
 					startAt: curStrIndex,

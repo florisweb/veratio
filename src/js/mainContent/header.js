@@ -131,6 +131,6 @@ function _MainContent_header() {
 
 
 	function hideAllFunctionItems() {
-		for (item of HTML.functionItems) item.classList.add("hide");
+		for (let item of HTML.functionItems) item.classList.add("hide");
 	}
 }

@@ -172,7 +172,7 @@ const LocalDB = new function() {
   this.clearDB = async function() {
     let ids = await getProjectIdList();
     let promises = [];
-    for (id of ids)
+    for (let id of ids)
     {
       promises.push(this.removeProject(id));
     }

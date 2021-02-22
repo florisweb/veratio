@@ -61,7 +61,7 @@ function GlobalProject() {
     
     this.get = async function(_id) {
       let users = await this.getAll();
-      for (user of users)
+      for (let user of users)
       {
         if (user.id != _id) continue;
         return user;
@@ -98,7 +98,7 @@ function GlobalProject() {
 
     this.get = async function(_id) {
       let tags = await this.getAll();
-      for (tag of tags)
+      for (let tag of tags)
       {
         if (tag.id != _id) continue;
         return tag;
@@ -250,7 +250,7 @@ function Project(_project) {
         let foundTasks = await Local.tasks.getByDateRange(_info);
         
         for (let i = 0; i < foundTasks.length; i++) await Local.tasks.remove(foundTasks[i]);
-        for (task of response.result) await Local.tasks.update(task);
+        for (let task of response.result) await Local.tasks.update(task);
       });
 
       return response.result;
@@ -300,7 +300,7 @@ function Project(_project) {
 
     this.get = async function(_id) {
       let users = await this.getAll();
-      for (user of users)
+      for (let user of users)
       {
         if (user.id != _id) continue;
         return user;
@@ -383,7 +383,7 @@ function Project(_project) {
 
     this.get = async function(_id) {
       let tags = await this.getAll();
-      for (tag of tags)
+      for (let tag of tags)
       {
         if (tag.id != _id) continue;
         return tag;
