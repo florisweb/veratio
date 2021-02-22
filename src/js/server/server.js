@@ -147,7 +147,7 @@ const Server = new function() {
   }
 
 
-  this.onReConnect = function () {LocalDB.onReConnect()};
+  this.onReConnect = function () {return LocalDB.onReConnect()};
 
 
 

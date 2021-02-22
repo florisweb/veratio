@@ -85,7 +85,6 @@ const LocalDB = new function() {
 
   
   this.onReConnect = async function() {
-    console.log("reconnect");
     await this.sendCachedOperations();
     await this.resyncWithServer();
   }
