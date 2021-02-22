@@ -40,7 +40,6 @@
 		$returnValues[$i] = $response;
 	}
 
-	// sleep(1);
 	echo json_encode($returnValues);
 
 

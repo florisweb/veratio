@@ -5,29 +5,33 @@ const LocalDB = new function() {
   const DBName = "veratioDB";
   let DBVersion = 2;
 
-  let DB; getDB();
+  let DB;
 
-  function getDB() {
-    const request = indexedDB.open(DBName, DBVersion);
+  this.setup = function() {
+    return new Promise(function (resolve, error) {
+      const request = indexedDB.open(DBName, DBVersion);
 
-    request.onupgradeneeded = function(_e) { // create object stores
-      DB = _e.target.result;
+      request.onupgradeneeded = function(_e) { // create object stores
+        DB = _e.target.result;
 
-      const metaData          = DB.createObjectStore("metaData");
-      const tasks             = DB.createObjectStore("tasks");
-      const users             = DB.createObjectStore("users");
-      const tags              = DB.createObjectStore("tags");
-      const cachedOperations  = DB.createObjectStore("cachedOperations");
-    }
+        const metaData          = DB.createObjectStore("metaData");
+        const tasks             = DB.createObjectStore("tasks");
+        const users             = DB.createObjectStore("users");
+        const tags              = DB.createObjectStore("tags");
+        const cachedOperations  = DB.createObjectStore("cachedOperations");
+      }
 
-    request.onsuccess = function(_e) {
-      DB = _e.target.result;
-    }
+      request.onsuccess = function(_e) {
+        DB = _e.target.result;
+        resolve();
+      }
 
-    request.onerror = function(_e) {
-      console.warn("error", _e);
-      indexedDB.deleteDatabase("veratioDB");
-    }
+      request.onerror = function(_e) {
+        console.warn("error", _e);
+        indexedDB.deleteDatabase("veratioDB");
+        error();
+      }
+    });
   }
 
 

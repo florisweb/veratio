@@ -9,6 +9,8 @@ const Popup       = new _Popup();
 
 function _app() {
   this.setup = async function() {
+    await LocalDB.setup();
+    
     document.body.addEventListener("keydown", function(_e) {
       KEYS[_e["key"]] = true;
       let preventDefault = KeyHandler.handleKeys(KEYS, _e);
@@ -29,6 +31,7 @@ function _app() {
       MainContent.optionMenu.close();
       MainContent.searchOptionMenu.hide();
     });
+
 
     await this.update();
 
