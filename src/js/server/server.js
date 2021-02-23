@@ -10,7 +10,8 @@ const Server = new function() {
   this.projectList = [];
   this.getProjectList = async function(_forceUpdate = false) {
     if (!_forceUpdate) return this.projectList;
-    this.projectList = await getProjectList();
+    let projects = await getProjectList();
+    if (projects) this.projectList = projects;
     return this.projectList;
   }
 
@@ -68,7 +69,7 @@ const Server = new function() {
     let response      = await fetchProjects();
     let noConnection  = response.error == "E_noConnection";
     
-    if (response.error && response.error != "E_noConnection") {return console.error("GetProjectList:", response);}
+    if (response.error && response.error != "E_noConnection") {console.error("GetProjectList:", response); return false}
 
     let projects = response.result;
     if (noConnection) 
@@ -189,7 +190,7 @@ const Server = new function() {
 
 
 
-  this.fetchData = async function(_url, _parameters = "") {
+  this.fetchData = async function(_url, _parameters = "", _attempts = 0) {
     let response = await new Promise(function (resolve) {
       fetch(_url, {
         method: 'POST', 
@@ -205,11 +206,20 @@ const Server = new function() {
       });
     });
     
+    if (response.status != 200) 
+    {
+      if (_attempts >= 5) return {error: "E_responseError", result: false};
+      return await new Promise(function (resolve) {
+        setTimeout(async function () {
+          resolve(await Server.fetchData(_url, _parameters, _attempts + 1));
+        }, 500);
+      }) 
+    }
+    
     let resendRequest = await Server.updateConnectionStatus(response != "E_noConnection");
-    if (resendRequest) return await this.fetchData(...arguments);
+    if (resendRequest) return await Server.fetchData(...arguments);
 
     if (response == "E_noConnection") return {error: "E_noConnection", result: false};
-    if (!response.ok) return {error: "E_responseError", result: false};
     
     let result = await response.text();
     try {

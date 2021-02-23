@@ -210,7 +210,7 @@
 
 		<div class='UI box popup hide' id="optionMenu_colourPopupBox">
 		</div>
-		<script src='js/main_min.js?antiCache=10'></script>
+		<script src='js/main_min.js?antiCache=13'></script>
 
 <!-- 
 		<script src='js/DOMData.js?antiCache='></script>
