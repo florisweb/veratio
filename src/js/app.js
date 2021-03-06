@@ -47,6 +47,7 @@ function _app() {
 
 
   this.update = async function() {
+    MainContent.startLoadingAnimation();
     await SideBar.projectList.fillProjectHolder();
 
     switch (MainContent.curPage.name)
