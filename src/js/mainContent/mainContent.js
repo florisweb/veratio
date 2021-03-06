@@ -239,7 +239,10 @@ function _MainContent_searchOptionMenu() {
 		});
 	}
 
-	this.clickFirstOption = function () {Menu.clickFirstOption.apply(Menu);};
+	this.clickFirstOption = function () {
+		this.openState = false;
+		return Menu.clickFirstOption.apply(Menu);
+	};
 
 
 	this.close = function() {

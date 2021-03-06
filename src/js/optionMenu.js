@@ -56,9 +56,10 @@ function _OptionMenu_menu(_self) {
 
 	this.clickFirstOption = function() {
 		let option = this.options[0];
-		if (!option) return;
+		if (!option) return false;
 		option.select();
 		This.close();
+		return true;
 	}
 
 

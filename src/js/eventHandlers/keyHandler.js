@@ -57,8 +57,8 @@ function _KeyHandler() {
 
 
         // Menu's
-        if (MainContent.taskHolder.dateOptionMenu.openState)       return MainContent.taskHolder.dateOptionMenu.clickFirstOption();
-        if (MainContent.searchOptionMenu.openState)                return MainContent.searchOptionMenu.clickFirstOption();
+        if (MainContent.taskHolder.dateOptionMenu.openState && MainContent.taskHolder.dateOptionMenu.clickFirstOption()) return;
+        if (MainContent.searchOptionMenu.openState && MainContent.searchOptionMenu.clickFirstOption()) return;
 
         if (MainContent.taskHolder.curCreateMenu)                  return MainContent.taskHolder.curCreateMenu.createTask();
       },
