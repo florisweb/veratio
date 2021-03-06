@@ -175,6 +175,7 @@ const Server = new function() {
       for (let r = 0; r < batchRequests.length; r++) 
       {
         let response = (responses.error == "E_noConnection" || responses.error == "E_noAuth") ? responses : responses[r];
+        console.log("resolve", response, batchRequests, responses[r], responses);
         batchRequests[r].resolve(response);
       }
       
@@ -206,7 +207,7 @@ const Server = new function() {
       });
     });
     
-    if (response.status != 200) 
+    if (response.status != 200 && response != "E_noConnection") 
     {
       if (_attempts >= 5) return {error: "E_responseError", result: false};
       return await new Promise(function (resolve) {
