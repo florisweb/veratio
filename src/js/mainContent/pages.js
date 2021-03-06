@@ -401,7 +401,7 @@ function MainContent_settingsPage(_projectId) {
 		let response = await project.users.inviteByLink();
 		if (response.error) console.error("An error accured while inviting a user:", response);
 
-		Popup.inviteByLinkCopyMenu.open("https://veratiodev.florisweb.tk?link=" + response.result.id);
+		Popup.inviteByLinkCopyMenu.open("https://veratio.florisweb.tk?link=" + response.result.id);
 		This.open(MainContent.curProjectId);
 	}
 

@@ -54,12 +54,12 @@ function _SideBar() {
 				new VerticalSpace({height: 5}),
 				new Text({text: "- Offline functionallity"}),
 				new LineBreak(),
-				new Text({text: "- Assignees can now be removed from tasks."}),
+				new Text({text: "- Redesigned the invitesystem"}),
 				new LineBreak(),
-				new Text({text: "- Planned-taskholders will now be collapsed by default."}),
+				new Text({text: "- Improved the create-taskmenu"}),
 				new LineBreak(),
-				new Text({text: "- A lot of small bug fixes"}),
-				new VerticalSpace({height: 30}),
+				new Text({text: "- A lot of small bug fixes and minor improvements."}),
+				new VerticalSpace({height: 25}),
 				new Button({title: "Close", filled: true, onclick: function() {
 					SideBar.messagePopup.close();
 				}}),
@@ -70,13 +70,14 @@ function _SideBar() {
 				new VerticalSpace({height: -20}),
 			]
 		};
+		
 
 		let welcomeMesage = {
 			title: "Welcome", 
 			content: [
-				new Text({text: "Thank you for using veratio.", isHeader: true}),
+				new Text({text: "Thank you for using veratio", isHeader: true}),
 				new VerticalSpace({height: 5}),
-				new Text({text: "Veratio is under active development."}),
+				new Text({text: "Veratio is under active development, see the changelog for more information."}),
 			
 				new VerticalSpace({height: 30}),
 				new Button({title: "Close", filled: true, onclick: function() {
@@ -93,11 +94,11 @@ function _SideBar() {
 		let linkUserMessage = {
 			title: "Bind Account", 
 			content: [
-				new Text({text: "Hello, we see you are using a link to use veratio."}),
+				new Text({text: "You are using a link to access veratio", isHeader: true}),
 				new VerticalSpace({height: 5}),
-				new Text({text: "When you"}),
+				new Text({text: "When you lose that link you can't access your projects anymore, bind these projects to an account to be able to access them anywhere."}),
 			
-				new VerticalSpace({height: 30}),
+				new VerticalSpace({height: 25}),
 				new Button({title: "Bind Account", filled: true, onclick: function() {
 					SideBar.messagePopup.close();
 					if (!LinkUser.link) return;
