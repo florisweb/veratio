@@ -116,7 +116,7 @@
 			$tasks = $this->Project->tasks->getAll();
 			foreach ($tasks as $task)
 			{
-				if ($task["creatorId"] == $oldId) continue;
+				if ($task["creatorId"] != $oldId) continue;
 				$task["creatorId"] = $newId;
 				$this->Project->tasks->update($task);
 			}
