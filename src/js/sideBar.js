@@ -46,7 +46,7 @@ function _SideBar() {
 		let popupHolder = $(".messageHolder.popupHolder")[0];
 
 		this.curPopup;
-		const changeLogUrl = "https://florisweb.tk";
+		const changeLogUrl = "https://github.com/florisweb/veratio/releases/tag/1.3";
 
 		let newVersionMessage = {
 			title: "Version 1.3", 
