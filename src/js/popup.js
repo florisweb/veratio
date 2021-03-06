@@ -458,10 +458,8 @@ function _Popup_createTag() {
 		}
 
 		tag = await CurProject.tags.update(tag);
-		console.log("tag--", tag, tag.id, CurProject.tags.list.length);
 		if (!tag) return console.error("Something went wrong while creating a tag:", tag);
 		await CurProject.tags.getAll(true);
-		console.log("tag-2", CurProject.tags.list.length);
 		this.close(await CurProject.tags.get(tag.id));
 	} 
 	

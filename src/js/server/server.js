@@ -175,7 +175,6 @@ const Server = new function() {
       for (let r = 0; r < batchRequests.length; r++) 
       {
         let response = (responses.error == "E_noConnection" || responses.error == "E_noAuth") ? responses : responses[r];
-        console.log("resolve", response, batchRequests, responses[r], responses);
         batchRequests[r].resolve(response);
       }
       
