@@ -55,6 +55,7 @@ function _app() {
       case "settings":  MainContent.settingsPage.open(MainContent.curProjectId);  break;
       default:          MainContent.taskPage.reopenCurTab();                      break;
     }
+    MainContent.stopLoadingAnimation();
   }
 
 
