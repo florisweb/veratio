@@ -46,6 +46,7 @@ function _SideBar() {
 		let popupHolder = $(".messageHolder.popupHolder")[0];
 
 		this.curPopup;
+		const changeLogUrl = "https://florisweb.tk";
 
 		let newVersionMessage = {
 			title: "Version 1.3", 
@@ -65,7 +66,7 @@ function _SideBar() {
 				}}),
 				new Button({title: "Full changelog", onclick: function() {
 					SideBar.messagePopup.close();
-					window.open("https://florisweb.tk");
+					window.open(changeLogUrl);
 				}}),
 				new VerticalSpace({height: -20}),
 			]
@@ -85,7 +86,7 @@ function _SideBar() {
 				}}),
 				new Button({title: "Full changelog", onclick: function() {
 					SideBar.messagePopup.close();
-					window.open("https://florisweb.tk");
+					window.open(changeLogUrl);
 				}}),
 				new VerticalSpace({height: -20}),
 			]
