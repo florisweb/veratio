@@ -89,14 +89,17 @@ const LocalDB = new function() {
 
   let lastResync = false;
   this.onReConnect = async function() {
-    await this.sendCachedOperations();
+    let updatedSomething = (await this.sendCachedOperations()).find(r => r);
+
     let dt = new Date() - lastResync;
     lastResync = new Date();
 
-    if (dt < 60 * 1000) return; // only resync once a minute for low connectivity situations
+    if (dt < 60 * 1000) return updatedSomething; // only resync once a minute for low connectivity situations
     console.warn("Syncing with Server...");
     await this.resyncWithServer();
     console.warn("Synced with Server!");
+
+    return updatedSomething;
   }
 
 
@@ -221,7 +224,7 @@ function LocalDB_Project(_projectId, _DB) {
 
   this.sendCachedOperations = async function() {
     let operations = await this.getData("cachedOperations");
-    if (!operations.length) return; 
+    if (!operations.length) return false; 
     
     let newOperations = [];
     let responses = await Server.fetchFunctionRequestList(operations);
@@ -238,6 +241,7 @@ function LocalDB_Project(_projectId, _DB) {
     }
 
     this.setData("cachedOperations", newOperations);
+    return true;
   }
 
 

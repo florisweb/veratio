@@ -10,7 +10,10 @@ const Popup       = new _Popup();
 function _app() {
   this.setup = async function() {
     await LocalDB.setup();
-    Server.onReConnect(); // Don't await, so it can sync in the background as to not keep the user waiting
+
+    let cachedOperations = await LocalDB.getCachedOperationsCount();
+    if (cachedOperations) await LocalDB.sendCachedOperations();
+    Server.onReConnect() // Don't await, so it can sync in the background as to not keep the user waiting
     
     document.body.addEventListener("keydown", function(_e) {
       KEYS[_e["key"]] = true;

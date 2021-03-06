@@ -58,7 +58,7 @@ function _MainContent() {
 	
 		await project.leave();
 		await Server.clearCache();
-		MainContent.taskPage.weekTab.open();
+		MainContent.taskPage.todayTab.open();
 		App.update();
 	}
 
@@ -79,7 +79,7 @@ function _MainContent() {
 		await project.remove();
 		await Server.clearCache();
 		
-		MainContent.taskPage.weekTab.open();
+		MainContent.taskPage.todayTab.open();
 		App.update();
 	}
 }
