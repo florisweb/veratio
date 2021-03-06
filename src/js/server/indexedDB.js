@@ -87,10 +87,16 @@ const LocalDB = new function() {
     for (let project of invalidProjects) project.remove();
   }
 
-  
+  let lastResync = false;
   this.onReConnect = async function() {
     await this.sendCachedOperations();
+    let dt = new Date() - lastResync;
+    lastResync = new Date();
+
+    if (dt < 60 * 1000) return; // only resync once a minute for low connectivity situations
+    console.warn("Syncing with Server...");
     await this.resyncWithServer();
+    console.warn("Synced with Server!");
   }
 
 

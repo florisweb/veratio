@@ -10,6 +10,7 @@ const Popup       = new _Popup();
 function _app() {
   this.setup = async function() {
     await LocalDB.setup();
+    Server.onReConnect(); // Don't await, so it can sync in the background as to not keep the user waiting
     
     document.body.addEventListener("keydown", function(_e) {
       KEYS[_e["key"]] = true;
@@ -32,14 +33,12 @@ function _app() {
       MainContent.searchOptionMenu.hide();
     });
 
-
     await this.update();
-
     SideBar.projectList.open();
 
     setTimeout(function () {
       document.body.classList.remove("appLoading");
-    }, 300);
+    }, 150);
     setTimeout(function () {
       SideBar.messagePopup.showLatestMessage();
     }, 700);
@@ -48,7 +47,6 @@ function _app() {
 
 
   this.update = async function() {
-    await Server.onReConnect();
     await SideBar.projectList.fillProjectHolder();
 
     switch (MainContent.curPage.name)
