@@ -1,5 +1,24 @@
 
 
+Version 1.4
+Planned features:
+- [ ] Implement full-data-caching
+- [ ] Electron-wrapper-app
+- [ ] Propper drag and drop support
+
+
+- [ ] Repeatable tasks
+- [ ] Tooltips to indicate what button does what
+- [ ] Subtasks
+- [ ] Project colours
+? - [ ] Drag and drop support for tasks (Order?)
+? - [ ] Sorting and filtering UI
+?    - [ ] Sort tasks by planned date
+- [ ] Extended offline support
+		- [ ] Removing projects
+		- [ ] Creating projects
+
+
 
 Version 1.3
 Planned features:
@@ -15,20 +34,6 @@ Planned features:
 - [x] Inline project-creation
 - [x] Redesigned the invite system:
 	- [x] Bind link-user to actual user
-
-
-Version 1.4
-Planned features:
-- [ ] Repeatable tasks
-- [ ] Tooltips to indicate what button does what
-- [ ] Subtasks
-- [ ] Project colours
-? - [ ] Drag and drop support for tasks (Order?)
-? - [ ] Sorting and filtering UI
-?    - [ ] Sort tasks by planned date
-- [ ] Extended offline support
-		- [ ] Removing projects
-		- [ ] Creating projects
 
 
 
