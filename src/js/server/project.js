@@ -298,8 +298,8 @@ function Project(_project) {
     }
 
 
-    this.get = async function(_id) {
-      let users = await this.getAll();
+    this.get = async function(_id, _forceRequest) {
+      let users = await this.getAll(_forceRequest);
       for (let user of users)
       {
         if (user.id != _id) continue;
@@ -309,9 +309,9 @@ function Project(_project) {
     }
 
 
-    this.getAll = async function(_forceRequest = false) {
-      if (!_forceRequest && !this.needsUpdate) return Object.assign([], this.list);
-      this.needsUpdate = false;
+    this.getAll = async function(_forceRequest) {
+      if (!_forceRequest && (!this.needsUpdate || _forceRequest === false)) return Object.assign([], this.list);
+      if (_forceRequest !== false) this.needsUpdate = false;
 
       let functionRequest = {
         action:       "getAll",
@@ -381,8 +381,8 @@ function Project(_project) {
     this.list = [];
     if (_project.tags && _project.tags.length != undefined) this.list = _project.tags.map(r => new Tag(r));
 
-    this.get = async function(_id) {
-      let tags = await this.getAll();
+    this.get = async function(_id, _forceRequest) {
+      let tags = await this.getAll(_forceRequest);
       for (let tag of tags)
       {
         if (tag.id != _id) continue;
@@ -391,9 +391,9 @@ function Project(_project) {
       return false;
     }
 
-    this.getAll = async function(_forceRequest = false) {
-      if (!_forceRequest && !this.needsUpdate) return Object.assign([], this.list);
-      this.needsUpdate = false;
+    this.getAll = async function(_forceRequest) {
+      if (!_forceRequest && (!this.needsUpdate || _forceRequest === false)) return Object.assign([], this.list);
+      if (_forceRequest !== false) this.needsUpdate = false;
 
       let functionRequest = {
           action: "getAll",

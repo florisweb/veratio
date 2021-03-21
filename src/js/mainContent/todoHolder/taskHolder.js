@@ -724,7 +724,6 @@ function TaskHolder_createMenu(_parent) {
 
 	this.openEdit = async function(_taskHTML, _task) {
 		if (!_task || !_taskHTML) return false;
-		
 		let project = await Server.getProject(_task.projectId);
 		MainContent.searchOptionMenu.curProject = project;
 
@@ -732,7 +731,6 @@ function TaskHolder_createMenu(_parent) {
 
 		editData.html = _taskHTML;
 		editData.html.classList.add("hide");
-
 
 		this.open();
 		this.curTask = new CreateMenu_curTask(_task);
@@ -968,10 +966,10 @@ function TaskHolder_createMenu(_parent) {
 			This.finished 					= Boolean(_task.finished);
 			This.id 						= _task.id;
 			
-			if (_task.tagId) 				This.setTag(await This.project.tags.get(_task.tagId));
+			if (_task.tagId) 				This.setTag(await This.project.tags.get(_task.tagId, false));
 			for (let userId of _task.assignedTo) 	
 			{
-				This.project.users.get(userId).then(function (_user) {
+				This.project.users.get(userId, false).then(function (_user) {
 					if (!_user) return;
 					This.addAssignee(_user);
 				});

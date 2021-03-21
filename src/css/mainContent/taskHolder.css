@@ -91,7 +91,7 @@
 		opacity: .2;
 	}
 
-	.taskHolder.overdue .dropDownButton {
+	.taskHolder.overdue .dropDownButton:after {
 		content: url("../images/icons/dropDownIconRed.png");
 	}
 

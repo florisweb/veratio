@@ -147,6 +147,6 @@
 		<div class='UI box popup hide' id="optionMenu_colourPopupBox">
 		</div>
 		
-		<script src='js/main_min.js'></script>
+		<script src='js/main_min.js?a=1'></script>
 	</body>
 </html>	
