@@ -1,0 +1,19 @@
+{
+  "name": "Veratio",
+  "short_name": "Veratio",
+  "description": "A taskmanager",
+
+  "start_url": ".",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "rgb(200, 100, 241)",
+
+  "icons": [
+    {
+      "src": "./images/pressSet/logo.png",
+      "sizes": "150x150",
+      "type": "image/png"
+    }
+  ]
+}

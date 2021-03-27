@@ -9,6 +9,7 @@ const Popup       = new _Popup();
 
 function _app() {
   this.setup = async function() {
+    installServiceWorker();
     await LocalDB.setup();
 
     let cachedOperations = await LocalDB.getCachedOperationsCount();
@@ -47,6 +48,17 @@ function _app() {
     }, 700);
   }
 
+  function installServiceWorker() {
+    if (!('serviceWorker' in navigator)) return alert('oops, you don\'t have serviceworkers enabled');
+    navigator.serviceWorker.register('serviceWorker.js').then(function(registration) {
+      // Registration was successful
+      console.log('ServiceWorker registration successful with scope: ', registration.scope);
+    }, function(err) {
+      // registration failed :(
+      console.log('ServiceWorker registration failed: ', err);
+    });
+  }
+
 
 
   this.update = async function() {
@@ -76,7 +88,7 @@ function _app() {
 
 window.onload = async function() {
   console.warn("Start loading..."); 
-  await App.setup();
+  // await App.setup();
   console.warn("App loaded!");
 }
 
