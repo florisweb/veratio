@@ -92,6 +92,34 @@ function _SideBar() {
 			]
 		};
 
+
+
+		window.addEventListener('appinstalled', e => {
+	      SideBar.messagePopup.close();
+	      localStorage.setItem("hasSeenInstallMessage", true);
+	    });
+
+
+		let PWAInstallEvent;
+		let installPWAMessage = {
+			title: "App Available", 
+			content: [
+				new Text({text: "Veratio can be installed as an offline app", isHeader: true}),
+				new VerticalSpace({height: 5}),
+				new Text({text: "It will be available even without an internet connection."}),
+			
+				new VerticalSpace({height: 30}),
+				new Button({title: "Install", filled: true, onclick: function() {
+					PWAInstallEvent.prompt();
+				}}),
+				new Button({title: "Close", onclick: function() {
+					SideBar.messagePopup.close();
+					localStorage.setItem("hasSeenInstallMessage", true);
+				}}),
+				new VerticalSpace({height: -20}),
+			]
+		};
+
 		let linkUserMessage = {
 			title: "Bind Account", 
 			content: [
@@ -150,6 +178,15 @@ function _SideBar() {
 
 			if (!LinkUser.link) return;
 			this.showPopup(linkUserMessage);
+		}
+
+
+		this.showInstallPWAMessage = function(_installEvent) {
+			let hasSeenInstallMessage = !!localStorage.getItem("hasSeenInstallMessage");
+			if (hasSeenInstallMessage) return;
+
+			PWAInstallEvent = _installEvent;
+			this.showPopup(installPWAMessage);
 		}
 	};
 }

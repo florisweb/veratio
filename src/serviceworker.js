@@ -4,6 +4,7 @@ const Cache = new function() {
   this.name = 'veratio-cache-v1';
   this.contents = [
     './',
+    './index.php',
     './css/main_min.css',
     './js/main_min.js',
 
@@ -46,11 +47,9 @@ self.addEventListener('install', function(event) {
 
 self.addEventListener('fetch', function(event) {
   event.respondWith(
-    caches.match(event.request)
+    caches.match(event.request, {ignoreVary: true})
       .then(function(response) {
-        if (response && Cache.useCache) return response;        
-        console.log("Fetch:", event.request.url);
-
+        if (response && Cache.useCache) return response;
         return fetch(event.request);
       }
     )

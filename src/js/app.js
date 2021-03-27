@@ -8,6 +8,7 @@ var MainContent   = new _MainContent();
 const Popup       = new _Popup();
 
 function _app() {
+
   this.setup = async function() {
     installServiceWorker();
     await LocalDB.setup();
@@ -15,7 +16,9 @@ function _app() {
     let cachedOperations = await LocalDB.getCachedOperationsCount();
     if (cachedOperations) await LocalDB.sendCachedOperations();
     Server.onReConnect() // Don't await, so it can sync in the background as to not keep the user waiting
-    
+  
+
+
     document.body.addEventListener("keydown", function(_e) {
       KEYS[_e["key"]] = true;
       let preventDefault = KeyHandler.handleKeys(KEYS, _e);
@@ -49,7 +52,7 @@ function _app() {
   }
 
   function installServiceWorker() {
-    if (!('serviceWorker' in navigator)) return alert('oops, you don\'t have serviceworkers enabled');
+    if (!('serviceWorker' in navigator)) return;
     navigator.serviceWorker.register('serviceWorker.js').then(function(registration) {
       // Registration was successful
       console.log('ServiceWorker registration successful with scope: ', registration.scope);
@@ -80,15 +83,20 @@ function _app() {
 
 
   this.promptAuthentication = function() {
-    window.location.replace("https://florisweb.tk/user/login.php?APIKey=veratioV1.3");
+    // window.location.replace("https://florisweb.tk/user/login.php?APIKey=veratioV1.3");
+    window.location.replace("https://florisweb.tk/user/login.php?APIKey=veratioV1.3Dev");
   }
 }
 
 
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  SideBar.messagePopup.showInstallPWAMessage(e);
+});
 
 window.onload = async function() {
   console.warn("Start loading..."); 
-  // await App.setup();
+  await App.setup();
   console.warn("App loaded!");
 }
 
