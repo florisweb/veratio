@@ -228,10 +228,27 @@ function _SideBar_projectList() {
 	this.fillProjectHolder = async function() {
 		this.projects = await Server.getProjectList(true);
 		HTML.projectsHolder.innerHTML = "";
-		for (let project of this.projects) createProjectHTML(project);
+		for (let project of this.projects) project.HTML = createProjectHTML(project);
+
+		await this.updateProjectInfo();
 	}
 
-	async function createProjectHTML(_project) {
+	this.updateProjectInfo = function() {
+		let promises = [];
+		for (let project of this.projects) 
+		{
+			promises.push(new Promise(async function(resolve) {
+				let tasks = await project.tasks.getByGroup({type: "toPlan", value: "*"});
+				let text = tasks.length;
+				if (text == 0) text = "";
+				setTextToElement(project.HTML.children[2], text);
+				resolve();
+			}));
+		}
+		return Promise.all(promises);
+	}
+
+	function createProjectHTML(_project) {
 		if (!_project) return;
 		let html = document.createElement("div");
 		html.className = "header small clickable tab projectTab";
@@ -243,9 +260,7 @@ function _SideBar_projectList() {
 		html.onclick = function() {MainContent.taskPage.projectTab.open(_project.id);}
 		setTextToElement(html.children[1], _project.title);
 
-		let tasks = await _project.tasks.getByGroup({type: "toPlan", value: "*"});
-		if (!tasks.length) return;
-		setTextToElement(html.children[2], tasks.length);
+		return html;
 	}
 }
 

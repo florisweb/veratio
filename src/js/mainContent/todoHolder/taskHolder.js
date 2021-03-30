@@ -247,6 +247,10 @@ function TaskHolder_toPlan(_config, _taskHolderIndex) {
 		project = _result;
 		if (project && !project.users.Self.permissions.tasks.update) This.createMenu.disable();
 	});
+
+	this.onTaskCreate = function(_task) {
+		SideBar.projectList.updateProjectInfo();
+	}
 	
 
 	this.shouldRenderTask = function(_task) {
@@ -593,6 +597,7 @@ function TaskHolder_task(_parent) {
 			let result = await project.tasks.update(This.task);
 			if (!result) return;
 
+			SideBar.projectList.updateProjectInfo();
 			This.taskHolder.onTaskRemove(This.task.id);
 			MainContent.taskHolder.renderTask(This.task);
 		}
@@ -603,6 +608,7 @@ function TaskHolder_task(_parent) {
 			let result = await project.tasks.update(This.task);
 			if (!result) return;
 
+			SideBar.projectList.updateProjectInfo();
 			This.taskHolder.onTaskRemove(This.task.id);
 			MainContent.taskHolder.renderTask(This.task);
 		}
@@ -864,7 +870,10 @@ function TaskHolder_createMenu(_parent) {
 		
 		this.close();
 		MainContent.searchOptionMenu.close();
-		
+		try {
+			Parent.onTaskCreate(newTask);
+		} catch (e) {};
+
 		return true;
 	}
 
