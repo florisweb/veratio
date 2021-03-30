@@ -2,11 +2,22 @@
 
 Version 1.4
 Planned features:
+- [ ] PWA
+- [ ] Properly implement Drag And Drop
+- [ ] Task order
+- [ ] To be Planned-taskholder
 - [ ] Implement full-data-caching
-- [ ] Electron-wrapper-app
-- [ ] Propper drag and drop support
+
+Version 1.5
+Planned features:
+- [ ] Planner
+
+Version 1.6
+Planned features:
+- [ ] Data encryption
 
 
+Future Features:
 - [ ] Repeatable tasks
 - [ ] Tooltips to indicate what button does what
 - [ ] Subtasks
@@ -19,6 +30,11 @@ Planned features:
 		- [ ] Creating projects
 
 
+
+
+
+
+====== Released versions ======
 
 Version 1.3
 Planned features:
@@ -35,9 +51,19 @@ Planned features:
 - [x] Redesigned the invite system:
 	- [x] Bind link-user to actual user
 
+Version 1.2
+Planned features:
+- [x] Tags (Creation, usage, and such)
+- [x] Redesigned permission-system
+- [x] Curtab indicator
 
+- [x] Escape will now allow you to cancel draging
+- [x] Edit project-title by doubleclicking on it
+- [x] OptionMenu will now go above the inputfield if there isn't enough space underneath
 
-====== Released versions ======
+- [x] Front-end permission-checking
+- [x] Offline-indicator
+
 
 Version 1.1
 Planned features:
@@ -51,18 +77,6 @@ Planned features:
 - [x] Bux Fix: When your session expires you will be prompted to login again
 
 
-Version 1.2
-Planned features:
-- [x] Tags (Creation, usage, and such)
-- [x] Redesigned permission-system
-- [x] Curtab indicator
-
-- [x] Escape will now allow you to cancel draging
-- [x] Edit project-title by doubleclicking on it
-- [x] OptionMenu will now go above the inputfield if there isn't enough space underneath
-
-- [x] Front-end permission-checking
-- [x] Offline-indicator
 
 
 
@@ -114,7 +128,7 @@ Server
 - getProjectList() -> [{id, title}]
 - getUserList(projectId) -> [{id, name, permissions, isOwner}]
 - getTagList(projectId) -> etc
-- 
+
 
 
 
