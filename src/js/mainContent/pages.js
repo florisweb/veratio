@@ -315,14 +315,15 @@ function taskPage_tab_project() {
 			}, 
 			["Not Planned"]
 		);
-
 		tasks = TaskSorter.defaultSort(tasks);
+
+		if (_collapseTaskList && tasks.length != 0) taskHolder.collapseTaskList();
 		taskHolder.task.addTaskList(tasks);
 	}
 
 	this.addPlannedTaskHolder = async function(_collapseTaskList = false) {
-		let plannedTasks = await project.tasks.getByDateRange({date: new Date(), range: 1000});
-		if (!plannedTasks.length) return;
+		let tasks = await project.tasks.getByDateRange({date: new Date(), range: 1000});
+		if (!tasks.length) return;
 		
 		let taskHolder = MainContent.taskHolder.add(
 			"default",
@@ -332,7 +333,7 @@ function taskPage_tab_project() {
 			["Planned"]
 		);
 		if (_collapseTaskList) taskHolder.collapseTaskList();
-		taskHolder.task.addTaskList(plannedTasks);
+		taskHolder.task.addTaskList(tasks);
 	}
 
 	this.addToBePlannedTaskHolder = async function(_collapseTaskList = false) {
@@ -345,7 +346,7 @@ function taskPage_tab_project() {
 			[]
 		);
 
-		if (_collapseTaskList) taskHolder.collapseTaskList();
+		if (_collapseTaskList && tasks.length != 0) taskHolder.collapseTaskList();
 		if (!tasks.length) return;
 		taskHolder.task.addTaskList(tasks);
 	}
