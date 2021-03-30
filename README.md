@@ -5,8 +5,10 @@ Planned features:
 - [ ] PWA
 - [ ] Properly implement Drag And Drop
 - [ ] Task order
-- [ ] To be Planned-taskholder
+- [x] To be Planned-taskholder
+	- [x] An 'Add all to planner'-button on the overdue-menu
 - [ ] Implement full-data-caching
+
 
 Version 1.5
 Planned features:

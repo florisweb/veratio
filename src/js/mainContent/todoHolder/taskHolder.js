@@ -600,7 +600,7 @@ function TaskHolder_task(_parent) {
 		async function removeFromPlanner() {
 			This.task.groupType = "default";
 			let project = await Server.getProject(This.task.projectId);
-			let response = await project.tasks.update(This.task);
+			let result = await project.tasks.update(This.task);
 			if (!result) return;
 
 			This.taskHolder.onTaskRemove(This.task.id);
