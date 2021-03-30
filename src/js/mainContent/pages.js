@@ -301,8 +301,8 @@ function taskPage_tab_project() {
 		MainContent.header.setTitle(project.title);
 		MainContent.header.setMemberList(await project.users.getAll());
 
-		await This.addToBePlannedTaskHolder(false);
 		await This.addNotPlannedTaskHolder(false);
+		await This.addToBePlannedTaskHolder(false);
 		await This.addPlannedTaskHolder(true);
 	}
 

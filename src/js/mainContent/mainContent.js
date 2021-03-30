@@ -160,6 +160,24 @@ function _MainContent_optionMenu() {
 		},
 		"images/icons/changeIconDark.png"
 	);
+
+	Menu.addOption(
+		"Add to Planner", 
+		function () {
+			curDOMData.addToPlanner();
+			return true;
+		},
+		"images/icons/changeIconDark.png"
+	);
+	
+	Menu.addOption(
+		"Remove from Planner", 
+		function () {
+			curDOMData.removeFromPlanner();
+			return true;
+		},
+		"images/icons/changeIconDark.png"
+	);
 		
 
 	this.open = async function(_item, _event) {
@@ -167,10 +185,22 @@ function _MainContent_optionMenu() {
 		let project = await Server.getProject(curDOMData.task.projectId);
 
 		Menu.enableAllOptions();
+		Menu.showAllOptions();
 		if (!project.users.Self.permissions.tasks.remove)						Menu.options[0].disable();
 		if (!project.users.Self.permissions.tasks.finish(curDOMData.task))		Menu.options[1].disable();
 		if (!project.users.Self.permissions.tasks.update || 
 			 curDOMData.task.groupType == "overdue")							Menu.options[2].disable();
+
+		if (!project.users.Self.permissions.tasks.update) 
+		{
+			Menu.options[3].disable(); 
+			Menu.options[4].disable(); 
+		}
+
+		if (curDOMData.task.groupType == "toPlan") Menu.options[3].hide();
+		if (curDOMData.task.groupType != "toPlan") Menu.options[4].hide();
+
+
 
 		return Menu.open(_item, {left: -50, top: 20}, _event);
 	}

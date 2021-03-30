@@ -48,6 +48,9 @@ function _OptionMenu_menu(_self) {
 	this.enableAllOptions = function() {
 		for (let option of this.options) option.enable();
 	}
+	this.showAllOptions = function() {
+		for (let option of this.options) option.show();
+	}
 
 	this.removeAllOptions = function() {
 		this.options = [];

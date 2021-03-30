@@ -129,6 +129,12 @@ body.appLoading #sideBar {
 		#sideBar .tab.projectTab .headerText {
 			font-size: 14px;
 		}
+		#sideBar .tab.projectTab .headerText.projectInfoHolder {
+			float: right;
+			right: 0;
+			font-size: 10px;
+			opacity: .5;
+		}
 
 
 

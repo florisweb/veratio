@@ -531,6 +531,8 @@ function TaskHolder_task(_parent) {
 			finish: finish,
 			openEdit: openEdit,
 			remove: remove,
+			addToPlanner: addToPlanner,
+			removeFromPlanner: removeFromPlanner,
 
 			removeHTML: removeHTML,
 			render: render,
@@ -569,6 +571,25 @@ function TaskHolder_task(_parent) {
 			This.taskHolder.createMenu.openEdit(This.html, This.task);
 		}
 
+		async function addToPlanner() {
+			This.task.groupType = "toPlan";
+			let project = await Server.getProject(This.task.projectId);
+			let result = await project.tasks.update(This.task);
+			if (!result) return;
+
+			removeHTML(true);
+			MainContent.taskHolder.renderTask(This.task);
+		}
+
+		async function removeFromPlanner() {
+			This.task.groupType = "default";
+			let project = await Server.getProject(This.task.projectId);
+			let response = await project.tasks.update(This.task);
+			if (!result) return;
+
+			removeHTML(true);
+			MainContent.taskHolder.renderTask(This.task);
+		}
 
 
 

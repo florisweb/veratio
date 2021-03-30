@@ -195,6 +195,8 @@ function _SideBar() {
 
 
 
+
+
 function _SideBar_projectList() {
 	let HTML = {
 		projectList: $("#sideBar .projectListHolder .projectList")[0],
@@ -229,17 +231,21 @@ function _SideBar_projectList() {
 		for (let project of this.projects) createProjectHTML(project);
 	}
 
-	function createProjectHTML(_project) {
+	async function createProjectHTML(_project) {
 		if (!_project) return;
 		let html = document.createElement("div");
 		html.className = "header small clickable tab projectTab";
 		html.innerHTML = '<img src="images/icons/projectIcon.png" class="headerIcon">' +
-						 '<div class="headerText userText"></div>';
-
-		setTextToElement(html.children[1], _project.title);
-		html.onclick = function() {MainContent.taskPage.projectTab.open(_project.id);}
+						 '<div class="headerText userText"></div>' + 
+						 '<div class="headerText projectInfoHolder"></div>';
 
 		HTML.projectsHolder.append(html);
+		html.onclick = function() {MainContent.taskPage.projectTab.open(_project.id);}
+		setTextToElement(html.children[1], _project.title);
+
+		let tasks = await _project.tasks.getByGroup({type: "toPlan", value: "*"});
+		if (!tasks.length) return;
+		setTextToElement(html.children[2], tasks.length);
 	}
 }
 
