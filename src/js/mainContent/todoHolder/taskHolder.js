@@ -213,7 +213,6 @@ function _MainContent_taskHolder() {
 // Types
 function TaskHolder_default(_config, _taskHolderIndex, _title) {
 	let This = this;
-	console.log(_title);
 	_config.title = _title;
 	TaskHolder.call(this, _config, "default", _taskHolderIndex);
 	TaskHolder_createMenuConstructor.call(this, _config);
@@ -293,9 +292,15 @@ function TaskHolder_date(_config, _taskHolderIndex, _date) {
 
 
 function TaskHolder_overdue(_config, _taskHolderIndex) {
+	let This = this;
 	_config.title 		= "Overdue";
+	_config.subTitle 	= "Add all to planner";
 	_config.html.class 	= "overdue";
 	TaskHolder.call(this, _config, "overdue", _taskHolderIndex);
+
+	this.HTML.subTitle.onclick = function() {
+		This.addAllToPlanner();
+	}
 
 	this.shouldRenderTask = function(_task) {
 		if (_task.groupType != "overdue") return false;
@@ -312,6 +317,15 @@ function TaskHolder_overdue(_config, _taskHolderIndex) {
 		this.task.removeTask(_taskId);
 		if (this.task.taskList.length > 0) return;
 		this.remove();
+	}
+
+	this.addAllToPlanner = function() {
+		let promises = [];
+		for (task of this.task.taskList)
+		{
+			promises.push(task.addToPlanner());
+		}
+		return Promise.all(promises);
 	}
 }
 
@@ -399,6 +413,8 @@ function TaskHolder(_config = {}, _type = "default", _taskHolderIndex) {
 							'<div class="header subTitleHolder dropTarget"></div>' + 
 							'<div class="todoHolder"></div>';
 
+		This.HTML.title = html.children[1];
+		This.HTML.subTitle = html.children[2];
 
 		html.onclick = function(_e) {
 			if (_e.target.classList.contains("dropDownButton")) return;
@@ -411,8 +427,8 @@ function TaskHolder(_config = {}, _type = "default", _taskHolderIndex) {
 		}
 
 		if (!This.config.title) html.style.marginTop = "0";
-		setTextToElement(html.children[1], This.config.title);
-		if (This.config.subTitle) setTextToElement(html.children[2], This.config.subTitle);
+		setTextToElement(This.HTML.title, This.config.title);
+		if (This.config.subTitle) setTextToElement(This.HTML.subTitle, This.config.subTitle);
 		
 		if (_taskHolderIndex < _parent.children.length)
 		{
@@ -577,7 +593,7 @@ function TaskHolder_task(_parent) {
 			let result = await project.tasks.update(This.task);
 			if (!result) return;
 
-			removeHTML(true);
+			This.taskHolder.onTaskRemove(This.task.id);
 			MainContent.taskHolder.renderTask(This.task);
 		}
 
@@ -587,7 +603,7 @@ function TaskHolder_task(_parent) {
 			let response = await project.tasks.update(This.task);
 			if (!result) return;
 
-			removeHTML(true);
+			This.taskHolder.onTaskRemove(This.task.id);
 			MainContent.taskHolder.renderTask(This.task);
 		}
 
