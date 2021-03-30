@@ -1,5 +1,5 @@
 const Cache = new function() {
-  this.useCache = true;
+  this.useCache = false;
   
   this.name = 'veratio-cache-v1';
   this.contents = [

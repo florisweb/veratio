@@ -8,6 +8,11 @@
 		private $DTTemplate;
 		private $projectId;
 		
+		private function groupTypeExists($_groupType) {
+			return in_array($_groupType, ["date", "default", "overdue", "toPlan"]);
+		}
+
+		
 		public function __construct($_parent, $_projectId) {
 			$this->projectId = (string)$_projectId;
 			$this->Parent = $_parent;
@@ -175,11 +180,6 @@
 			return $difference;
 		}
 		
-
-
-		private function groupTypeExists($_groupType) {
-			return in_array($_groupType, ["date", "default", "overdue"]);
-		}
 
 		private function filterGroupInfo($_groupType, $_groupValue) {
 			if (!$this->groupTypeExists($_groupType)) return false;

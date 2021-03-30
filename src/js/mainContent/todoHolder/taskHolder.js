@@ -77,6 +77,7 @@ function _MainContent_taskHolder() {
 
 	const constructors = {
 		default: 	TaskHolder_default,
+		toPlan: 	TaskHolder_toPlan,
 		date: 		TaskHolder_date,
 		overdue: 	TaskHolder_overdue
 	}
@@ -212,6 +213,7 @@ function _MainContent_taskHolder() {
 // Types
 function TaskHolder_default(_config, _taskHolderIndex, _title) {
 	let This = this;
+	console.log(_title);
 	_config.title = _title;
 	TaskHolder.call(this, _config, "default", _taskHolderIndex);
 	TaskHolder_createMenuConstructor.call(this, _config);
@@ -223,7 +225,6 @@ function TaskHolder_default(_config, _taskHolderIndex, _title) {
 	});
 	
 
-
 	this.shouldRenderTask = function(_task) {
 		if (this.config.title == "Planned" && _task.groupType != "date") return false;
 		if (_task.groupType != "default" && this.config.title != "Planned") return false;
@@ -233,6 +234,30 @@ function TaskHolder_default(_config, _taskHolderIndex, _title) {
 		return true;
 	}
 }
+
+
+function TaskHolder_toPlan(_config, _taskHolderIndex) {
+	let This = this;
+	_config.title = "To Be Planned";
+
+	TaskHolder.call(this, _config, "toPlan", _taskHolderIndex);
+	TaskHolder_createMenuConstructor.call(this, _config);
+	
+	let project; 
+	Server.getProject(MainContent.curProjectId).then(function (_result) {
+		project = _result;
+		if (project && !project.users.Self.permissions.tasks.update) This.createMenu.disable();
+	});
+	
+
+	this.shouldRenderTask = function(_task) {
+		if (_task.groupType != "toPlan") return false;		
+		if (MainContent.curProjectId && MainContent.curProjectId != _task.projectId) return false;
+
+		return true;
+	}
+}
+
 
 
 function TaskHolder_date(_config, _taskHolderIndex, _date) {
@@ -588,11 +613,6 @@ function TaskHolder_task(_parent) {
 
 
 
-
-
-
-
-
 function TaskHolder_createMenuConstructor(_config, _type) {
 	this.HTML.Self.append(createCreateMenuHTML(this));
 
@@ -663,21 +683,6 @@ function TaskHolder_createMenuConstructor(_config, _type) {
 			}
 		}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1000,7 +1005,6 @@ function TaskHolder_createMenu(_parent) {
 
 		this.generateTaskData = function() {
 			if (!Parent.HTML.inputField) return false;
-
 			let task = new Task({
 				id: 			this.id,
 				projectId: 		this.project.id,
@@ -1010,7 +1014,7 @@ function TaskHolder_createMenu(_parent) {
 				finished: 		this.finished,
 				assignedTo: 	this.assignedTo.map(function (user) {return user.id}),
 
-				groupType: 		"default",
+				groupType: 		Parent.type,
 				groupValue: 	'',
 				creatorId: 		this.project.users.Self.id,
 			});
@@ -1024,7 +1028,6 @@ function TaskHolder_createMenu(_parent) {
 			{
 				task.groupType = "date";
 				if (taskDate.getDateInDays() < new Date().getDateInDays()) task.groupType = "overdue";
-
 				task.groupValue = taskDate.toString();
 			}
 

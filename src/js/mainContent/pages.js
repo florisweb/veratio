@@ -301,10 +301,14 @@ function taskPage_tab_project() {
 		MainContent.header.setTitle(project.title);
 		MainContent.header.setMemberList(await project.users.getAll());
 
+		await This.addToBePlannedTaskHolder(false);
+		await This.addNotPlannedTaskHolder(false);
 		await This.addPlannedTaskHolder(true);
+	}
 
-		let nonPlannedTasks = await project.tasks.getByGroup({type: "default", value: "*"});
-		let taskHolder_nonPlanned = MainContent.taskHolder.add(
+	this.addNotPlannedTaskHolder = async function(_collapseTaskList = false) {
+		let tasks = await project.tasks.getByGroup({type: "default", value: "*"});
+		let taskHolder = MainContent.taskHolder.add(
 			"default",
 			{
 				displayProjectTitle: false, 
@@ -312,8 +316,8 @@ function taskPage_tab_project() {
 			["Not Planned"]
 		);
 
-		nonPlannedTasks = TaskSorter.defaultSort(nonPlannedTasks);
-		taskHolder_nonPlanned.task.addTaskList(nonPlannedTasks);
+		tasks = TaskSorter.defaultSort(tasks);
+		taskHolder.task.addTaskList(tasks);
 	}
 
 	this.addPlannedTaskHolder = async function(_collapseTaskList = false) {
@@ -329,6 +333,21 @@ function taskPage_tab_project() {
 		);
 		if (_collapseTaskList) taskHolder.collapseTaskList();
 		taskHolder.task.addTaskList(plannedTasks);
+	}
+
+	this.addToBePlannedTaskHolder = async function(_collapseTaskList = false) {
+		let tasks = await project.tasks.getByGroup({type: "toPlan", value: "*"});
+		let taskHolder = MainContent.taskHolder.add(
+			"toPlan",
+			{
+				displayProjectTitle: false, 
+			}, 
+			[]
+		);
+
+		if (_collapseTaskList) taskHolder.collapseTaskList();
+		if (!tasks.length) return;
+		taskHolder.task.addTaskList(tasks);
 	}
 }
 
