@@ -32,7 +32,7 @@ function _KeyHandler() {
         if (Popup.inviteByLinkCopyMenu.openState)                  return Popup.inviteByLinkCopyMenu.close();
 
 
-        if (DragHandler.CurDragId)                                 return DragHandler.cancelDraging(DragHandler.CurDragId);
+        // if (DragHandler.CurDragId)                                 return DragHandler.cancelDraging(DragHandler.CurDragId);
 
         if (MainContent.searchOptionMenu.openState)                return MainContent.searchOptionMenu.userForceHide();
         if (MainContent.optionMenu.openState)                      return MainContent.optionMenu.close();

@@ -41,7 +41,7 @@
 		<title>Veratio - Florisweb.tk</title>
 		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0' name='viewport'/>
  		<link rel="manifest" href="manifest.json">
- 		<link rel="stylesheet" type="text/css" href="css/main_min.css">
+ 		<link rel="stylesheet" type="text/css" href="css/main_min.css?a=3">
 	</head>	
 	<body class="appLoading">
 		<div id="sideBar">
@@ -146,6 +146,6 @@
 		<div class='UI box popup hide' id="optionMenu_colourPopupBox">
 		</div>
 		
-		<script src='js/main_min.js'></script>
+		<script src='js/main_min.js?a=3'></script>
 	</body>
 </html>	
