@@ -420,11 +420,11 @@
 	background: #fff;
 }
 .taskItem.listItem.showDropRegion {
-	padding-top: 50px;
+	padding-bottom: 30px;
 }
 
 .taskItem.listItem.dropped {
-	animation: dropAnimation .25s 1;
+	animation: dropAnimation .3s 1;
 }
 
 @keyframes dropAnimation {
@@ -529,7 +529,6 @@
 		position: absolute;
 		float: right;
 		right: 5px;
-		top: 10px;
 
 		height: 20px;
 		width: auto;

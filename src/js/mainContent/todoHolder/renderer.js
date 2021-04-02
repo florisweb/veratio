@@ -154,30 +154,14 @@ function _TaskRenderer() {
 				return assignDragHandler(_html, _taskWrapper, _project);
 			}
 
-			document.body.ondragend = function(e) {
-				dropHandler(e.target, e);
-			}
+			
 
 			function assignDragHandler(_html, _taskWrapper, _project) {
 				if (!_project.users.Self.permissions.tasks.update) return _html;
+				console.log("render")
 
-				_html.setAttribute("draggable", true);
-				_html.addEventListener("dragstart", function() {
-					console.log("add dragging")
-					_html.classList.add("dragging");
-			  	});
+				DragHandler.register(_html);
 
-				_html.addEventListener("dragover", function(e) {
-					e.preventDefault();
-					_html.classList.add("showDropRegion");
-				});
-				_html.addEventListener("dragleave", function() {
-					_html.classList.remove("showDropRegion");
-				});
-
-				_html.addEventListener("drop", function(e) {
-					dropHandler(_html, e);
-				});
 
 				 // ondragstart="drag(event)" ondragover="moveAway(event, this)" ondragleave='moveBack(event, this);'
 
@@ -294,24 +278,6 @@ function _TaskRenderer() {
 				// 		let dropTargetY 		= _dropTarget.getBoundingClientRect().top;
 				// 		return dropTargetY - _item.y > 0;
 				// 	}
-			}
-
-			function dropHandler(_html, _e) {
-				_html.classList.remove("dragging");
-			 	_e.preventDefault();
-
-			 	let tasks = $(".taskItem.showDropRegion");
-			 	for (task of tasks) task.classList.remove("showDropRegion");
-
-			 	_html.classList.add("dropped");
-			 	setTimeout(function () {
-			 		_html.classList.remove("dropped");
-			 		_html.classList.remove("showDropRegion");
-			 	}, 1000);
-
-
-			 	if (!_e.target.classList.contains("taskItem")) return _html.parentNode.appendChild(_html);
-			 	_html.parentNode.insertBefore(_html, _e.target);
 			}
 
 
