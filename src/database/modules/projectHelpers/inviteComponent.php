@@ -187,12 +187,7 @@
 
 		private function getUserId() {
 			$userId = $GLOBALS["SESSION"]->get("userId");
-
-			if (!$userId) 
-			{
-				header("Location: https://florisweb.tk/user/login.php?APIKey=veratioV1.3");
-				die("User not signed in");
-			}
+			if (!$userId) die("User not signed in");
 
 			return $userId;
 		}

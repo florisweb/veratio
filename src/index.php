@@ -2,7 +2,7 @@
 	$enableRedirect = false;
 	function APP_noAuthHandler() {
 		if (!$enableRedirect) return;
-		header("Location: https://florisweb.tk/user/login.php?APIKey=veratioV1.3");
+		header("Location: https://florisweb.tk/user/login.php?redirect=https://veratiodev.florisweb.tk");
 		die("E_noAuth");
 	}
 

@@ -2,17 +2,9 @@
 	function APP_noAuthHandler() {}
 	$root = realpath($_SERVER["DOCUMENT_ROOT"]);
 	require_once __DIR__ . "/../database/modules/app.php";
-	
-	$link = $_COOKIE["veratio_inviteLink"];
-	if (!$link) $link = (string)$_GET["link"];
+
+	$link = (string)$_GET["link"];
 	if (!$link) die("E_invalidLink");
-
-
-	// Set the authentication cookie
-	if (isset($_GET["sessionKey"])) 
-	{
-		setcookie("SESSION_key", (String)$_GET["sessionKey"], time() + (60 * 60 * 24 * 365.25), "/");
-	}
 
 	$App->userId = sha1((string)$link);
 	$projects = $App->getAllProjects();
@@ -36,7 +28,6 @@
 		die();
 	}
 
-	setcookie("veratio_inviteLink", $link, time() + 120, "/");
-	header("Location: https://florisweb.tk/user/login.php?APIKey=veratioV1.3_join");
+	header("Location: https://florisweb.tk/user/login.php?redirect=https://veratiodev.florisweb.tk/invite/join.php?link=" + $link);
 	die("Redirect user");
 ?>
