@@ -137,6 +137,10 @@ function _MainContent_taskHolder() {
 		switch (_task.groupType)
 		{
 			case "overdue": this.addOverdue(); break;
+			case "toPlan": 
+				if (!MainContent.taskPage.curTab || MainContent.taskPage.curTab.name != "project") return;
+				await MainContent.taskPage.projectTab.addToBePlannedTaskHolder(); 
+			break;
 			default: 
 				if (!MainContent.taskPage.curTab || MainContent.taskPage.curTab.name != "project") return;
 				await MainContent.taskPage.projectTab.addPlannedTaskHolder(); 
@@ -430,7 +434,7 @@ function TaskHolder(_config = {}, _type = "default", _taskHolderIndex) {
 			This.expandTaskList();
 		}
 
-		if (!This.config.title) html.style.marginTop = "0";
+		if (!This.config.title) html.style.marginTop = "-5px";
 		setTextToElement(This.HTML.title, This.config.title);
 		if (This.config.subTitle) setTextToElement(This.HTML.subTitle, This.config.subTitle);
 		

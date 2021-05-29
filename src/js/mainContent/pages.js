@@ -301,8 +301,8 @@ function taskPage_tab_project() {
 		MainContent.header.setTitle(project.title);
 		MainContent.header.setMemberList(await project.users.getAll());
 
-		await This.addToBePlannedTaskHolder(true);
 		await This.addNotPlannedTaskHolder(false);
+		await This.addToBePlannedTaskHolder(true);
 		await This.addPlannedTaskHolder(true);
 	}
 
@@ -313,7 +313,7 @@ function taskPage_tab_project() {
 			{
 				displayProjectTitle: false, 
 			}, 
-			["Not Planned"]
+			['']
 		);
 		tasks = TaskSorter.defaultSort(tasks);
 
@@ -338,6 +338,8 @@ function taskPage_tab_project() {
 
 	this.addToBePlannedTaskHolder = async function(_collapseTaskList = false) {
 		let tasks = await project.tasks.getByGroup({type: "toPlan", value: "*"});
+		if (!tasks.length) return;
+		
 		let taskHolder = MainContent.taskHolder.add(
 			"toPlan",
 			{
