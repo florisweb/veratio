@@ -9,13 +9,12 @@
 	$DBHelper = new _databaseHelper;
 
 	class _databaseHelper {
-		// private $DBName = "eelekweb_veratio";
-		private $DBName = "eelekweb_todo";
+		private $DBName = "eelekweb_veratio";
+		// private $DBName = "eelekweb_todo";
 
 		private $DB;
-
 		public function __construct() {
-			$this->DB 		= $GLOBALS["DB"]->connect($this->DBName);
+			$this->DB = $GLOBALS["DB"]->connect($this->DBName);
 			if (!$this->DB) die("databaseHelper.php: DB doesn't exist");
 		}
 

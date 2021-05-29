@@ -118,11 +118,16 @@ function taskPage_tab(_settings) {
 	}
 
 	this.silentRender = async function(_fromCache = false) {
+		let overdueTaskList = await getOverdueTasks(_fromCache);
 		if (MainContent.taskHolder.list[0].type == 'overdue')
 		{
-
-
-			MainContent.taskHolder.list[0].task.reRenderTaskList();
+			if (overdueTaskList.length) 
+			{
+				await MainContent.taskHolder.list[0].task.setTaskList(overdueTaskList);
+			} else MainContent.taskHolder.list[0].remove();
+		} else if (overdueTaskList)
+		{
+			await this.addOverdue(_fromCache);
 		}
 
 		return onSilentRender(_fromCache);
@@ -141,13 +146,9 @@ function taskPage_tab(_settings) {
 	}
 
 
-
-	this.addOverdue = async function() {
-		let project = await Server.getProject(MainContent.curProjectId);
-		if (!project) project = Server.global;
-
-		let taskList = await project.tasks.getByGroup({type: "overdue", value: "*"});
-		if (!taskList || !taskList.length) return false;
+	this.addOverdue = async function(_fromCache = false) {
+		let taskList = await getOverdueTasks(_fromCache);
+		if (!taskList) return false;
 
 		let taskHolder = MainContent.taskHolder.add(
 			"overdue", 
@@ -158,8 +159,18 @@ function taskPage_tab(_settings) {
 			0,
 		);
 
-		taskList = TaskSorter.defaultSort(taskList);
 		await taskHolder.task.addTaskList(taskList);
+	}
+
+	async function getOverdueTasks(_fromCache) {
+		let project = await Server.getProject(MainContent.curProjectId);
+		if (!project) project = Server.global;
+
+		let taskList = await project.tasks.getByGroup({type: "overdue", value: "*"});
+		if (!taskList || !taskList.length) return false;
+
+		taskList = TaskSorter.defaultSort(taskList);
+		return taskList;
 	}
 }
 
@@ -190,9 +201,8 @@ function taskPage_tab_today() {
 			[date]
 		);
 
-		let taskList = await getTaskListByDate(date);
-		let sortedList = TaskSorter.defaultSort(taskList);
-		await taskHolder.task.addTaskList(sortedList);
+		let taskList = await getTodayTaskList(false); 
+		await taskHolder.task.addTaskList(taskList);
 	};
 
 	async function onSilentRender(_fromCache) {
@@ -202,12 +212,16 @@ function taskPage_tab_today() {
 			{
 				case "overdue": break; // is being handled by the general tab-class
 				case "date": 
-					
+					let taskList = await getTodayTaskList(false); 
+					await taskHolder.task.setTaskList(taskList);
 				break;
 			}
-			taskHolder.task.reRenderTaskList();
 		}
+	}
 
+	async function getTodayTaskList(_fromCache) {
+		let taskList = await getTaskListByDate(new Date());
+		return TaskSorter.defaultSort(taskList);
 	}
 
 
@@ -257,7 +271,8 @@ function taskPage_tab_week() {
 	taskPage_tab.call(this, {
 		name: "week",
 		onOpen: onOpen,
-		showLoadMoreButton: true
+		showLoadMoreButton: true,
+		onSilentRender: onSilentRender
 	});
 
 	
@@ -287,6 +302,35 @@ function taskPage_tab_week() {
 		taskHolder.task.addTaskList(_taskList);
 	}
 
+	async function onSilentRender(_fromCache) {
+		for (let taskHolder of MainContent.taskHolder.list)
+		{
+			switch (taskHolder.type) 
+			{
+				case "overdue": break; // is being handled by the general tab-class
+				case "date": 
+					let taskList = await getTaskListByDate(taskHolder.date, _fromCache); 
+					await taskHolder.task.setTaskList(taskList);
+				break;
+			}
+		}
+	}
+
+	async function getTaskListByDate(_date, _fromCache) {
+		let returnList = [];
+		let taskList = await Server.global.tasks.getByDate(_date);
+		if (!taskList) return returnList;
+		
+		for (let task of taskList)
+		{
+			if (!(await shouldRenderTask(task))) continue;
+			returnList.push(task);
+		}
+		return returnList;
+	}
+
+
+
 
 	let loadingMoreDays = false;
 	this.loadMoreDays = async function(_days = 1, _date) {
@@ -309,15 +353,10 @@ function taskPage_tab_week() {
 				}
 				taskHolderDataList.push(infoObj);
 
-				let taskList = await Server.global.tasks.getByDate(date);
+				let taskList = await getTaskListByDate(date, false);
 				if (!taskList) return resolve();
+				infoObj.taskList = taskList;
 				
-				for (let task of taskList)
-				{
-					if (!(await shouldRenderTask(task))) continue;
-					infoObj.taskList.push(task);
-				}
-
 				resolve();
 			}))	
 		}
@@ -341,7 +380,8 @@ function taskPage_tab_project() {
 	let This = this;
 	taskPage_tab.call(this, {
 		name: "project",
-		onOpen: onOpen
+		onOpen: onOpen,
+		onSilentRender: onSilentRender,
 	});
 
 	let project;
@@ -358,8 +398,57 @@ function taskPage_tab_project() {
 		await This.addPlannedTaskHolder(true);
 	}
 
+
+	async function onSilentRender(_fromCache) {
+		let toBePlannedTasks = await getToBePlannedTaskList(_fromCache);
+		let plannedTasks = await getPlannedTaskList(_fromCache);
+		let plannedTaskHolderExists = false;
+		let toBePlannedTaskHolderExists = false;
+
+		for (let taskHolder of MainContent.taskHolder.list)
+		{
+			switch (taskHolder.type) 
+			{
+				case "overdue": break; // is being handled by the general tab-class
+				case "toPlan": 
+					toBePlannedTaskHolderExists = true;
+					if (!toBePlannedTasks.length) 
+					{
+						taskHolder.remove();
+						break;
+					}
+					await taskHolder.task.setTaskList(toBePlannedTasks);
+				break;
+				default: 
+					if (taskHolder.config.title == 'Planned')
+					{
+						plannedTaskHolderExists = true;
+						if (!plannedTasks.length)
+						{
+							taskHolder.remove();
+							break;
+						}
+						await taskHolder.task.setTaskList(plannedTasks);
+						break;
+					}
+
+					let taskList = await getNotPlannedTaskList(_fromCache);
+					await taskHolder.task.setTaskList(taskList);
+				break;
+			}
+		}
+
+		if (toBePlannedTasks.length && !toBePlannedTaskHolderExists) await This.addToBePlannedTaskHolder(true, _fromCache);
+		if (plannedTasks.length && !plannedTaskHolderExists) await This.addPlannedTaskHolder(true, _fromCache);
+	}
+
+	
+	async function getNotPlannedTaskList(_fromCache) {
+		let taskList = await project.tasks.getByGroup({type: "default", value: "*"});
+		return TaskSorter.defaultSort(taskList);
+	}
+
 	this.addNotPlannedTaskHolder = async function(_collapseTaskList = false) {
-		let tasks = await project.tasks.getByGroup({type: "default", value: "*"});
 		let taskHolder = MainContent.taskHolder.add(
 			"default",
 			{
@@ -367,14 +456,21 @@ function taskPage_tab_project() {
 			}, 
 			['']
 		);
-		tasks = TaskSorter.defaultSort(tasks);
 
+		let tasks = await getNotPlannedTaskList(false);
 		if (_collapseTaskList && tasks.length != 0) taskHolder.collapseTaskList();
 		taskHolder.task.addTaskList(tasks);
 	}
 
-	this.addPlannedTaskHolder = async function(_collapseTaskList = false) {
-		let tasks = await project.tasks.getByDateRange({date: new Date(), range: 1000});
+
+
+	async function getPlannedTaskList(_fromCache) {
+		let taskList = await project.tasks.getByDateRange({date: new Date(), range: 1000});
+		return TaskSorter.defaultSort(taskList);
+	}
+
+	this.addPlannedTaskHolder = async function(_collapseTaskList = false, _fromCache = false) {
+		let tasks = await getPlannedTaskList(_fromCache);
 		if (!tasks.length) return;
 		
 		let taskHolder = MainContent.taskHolder.add(
@@ -388,8 +484,14 @@ function taskPage_tab_project() {
 		taskHolder.task.addTaskList(tasks);
 	}
 
-	this.addToBePlannedTaskHolder = async function(_collapseTaskList = false) {
-		let tasks = await project.tasks.getByGroup({type: "toPlan", value: "*"});
+
+	async function getToBePlannedTaskList(_fromCache) {
+		let taskList = await project.tasks.getByGroup({type: "toPlan", value: "*"});
+		return TaskSorter.defaultSort(taskList);
+	}
+
+	this.addToBePlannedTaskHolder = async function(_collapseTaskList = false, _fromCache = false) {
+		let tasks = await getToBePlannedTaskList(_fromCache);
 		if (!tasks.length) return;
 		
 		let taskHolder = MainContent.taskHolder.add(
@@ -401,7 +503,6 @@ function taskPage_tab_project() {
 		);
 
 		if (_collapseTaskList && tasks.length != 0) taskHolder.collapseTaskList();
-		if (!tasks.length) return;
 		taskHolder.task.addTaskList(tasks);
 	}
 }

@@ -460,6 +460,7 @@ function TaskHolder_task(_parent) {
 	}
 
 	this.setTaskList = function(_newTaskList) {
+		Parent.HTML.todoHolder.innerHTML = '';
 		this.taskList = [];
 		return this.addTaskList(_newTaskList);
 	}
@@ -486,7 +487,7 @@ function TaskHolder_task(_parent) {
 	this.dropTask = async function(_task, _taskIndex) {
 		_task 		= await updateTaskToNewTaskHolder(_task);
 		let task 	= moveTaskToNewLocalPosition(_task, _taskIndex);
-		task.render(_taskIndex);
+		return task.render(_taskIndex);
 	}
 
 	async function updateTaskToNewTaskHolder(_task) {
