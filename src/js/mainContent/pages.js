@@ -107,7 +107,7 @@ function taskPage_tab(_settings) {
 
 		if (!MainContent.taskPage.isOpen()) MainContent.taskPage.open();
 		resetPage();
-		await this.addOverdue();
+		await this.addOverdue(true);
 		await onOpen(_projectId);
 
 		MainContent.stopLoadingAnimation();
@@ -115,9 +115,13 @@ function taskPage_tab(_settings) {
 
 		applySettings(_settings);
 		MainContent.taskPage.rendering = false;
+
+		this.silentRender(false);
 	}
 
 	this.silentRender = async function(_fromCache = false) {
+		console.log('start silent render');
+		let t = new Date();
 		let overdueTaskList = await getOverdueTasks(_fromCache);
 		if (MainContent.taskHolder.list[0].type == 'overdue')
 		{
@@ -130,7 +134,8 @@ function taskPage_tab(_settings) {
 			await this.addOverdue(_fromCache);
 		}
 
-		return onSilentRender(_fromCache);
+		await onSilentRender(_fromCache);
+		console.log('SilentRender finish:', new Date() - t);
 	}
 
 	function applySettings(_settings) {
@@ -163,8 +168,15 @@ function taskPage_tab(_settings) {
 	}
 
 	async function getOverdueTasks(_fromCache) {
-		let project = await Server.getProject(MainContent.curProjectId);
-		if (!project) project = Server.global;
+		let project;
+		if (_fromCache)
+		{
+			project = await LocalDB.getProject(MainContent.curProjectId);
+			if (!project) project = LocalDB.global;
+		} else {
+			project = await Server.getProject(MainContent.curProjectId);
+			if (!project) project = Server.global;
+		}
 
 		let taskList = await project.tasks.getByGroup({type: "overdue", value: "*"});
 		if (!taskList || !taskList.length) return false;
@@ -201,7 +213,7 @@ function taskPage_tab_today() {
 			[date]
 		);
 
-		let taskList = await getTodayTaskList(false); 
+		let taskList = await getTodayTaskList(true); 
 		await taskHolder.task.addTaskList(taskList);
 	};
 
@@ -212,7 +224,7 @@ function taskPage_tab_today() {
 			{
 				case "overdue": break; // is being handled by the general tab-class
 				case "date": 
-					let taskList = await getTodayTaskList(false); 
+					let taskList = await getTodayTaskList(_fromCache); 
 					await taskHolder.task.setTaskList(taskList);
 				break;
 			}
@@ -220,19 +232,16 @@ function taskPage_tab_today() {
 	}
 
 	async function getTodayTaskList(_fromCache) {
-		let taskList = await getTaskListByDate(new Date());
-		return TaskSorter.defaultSort(taskList);
-	}
-
-
-
-
-	async function getTaskListByDate(_date) {
-		let taskList = await Server.global.tasks.getByDate(_date);
+		let taskList = [];
+		if (_fromCache) 
+		{
+			taskList = await LocalDB.global.tasks.getByDate(new Date());
+		} else taskList = await Server.global.tasks.getByDate(new Date());
+		
 		if (!taskList) return [];
 
-		let promises = [];
 		let finalList = [];
+		let promises = [];
 		for (let task of taskList)
 		{
 			promises.push(shouldRenderTask(task).then(function (_result) {
@@ -240,10 +249,12 @@ function taskPage_tab_today() {
 				finalList.push(task);
 			}));
 		}
-
 		await Promise.all(promises);
-		return finalList;
+
+		return TaskSorter.defaultSort(finalList);
 	}
+
+
 
 	async function shouldRenderTask(_task) {
 		if (_task.finished) return false;
@@ -318,7 +329,12 @@ function taskPage_tab_week() {
 
 	async function getTaskListByDate(_date, _fromCache) {
 		let returnList = [];
-		let taskList = await Server.global.tasks.getByDate(_date);
+		let taskList = [];
+		if (_fromCache) 
+		{ 
+			taskList = await LocalDB.global.tasks.getByDate(_date);
+		} else taskList = await Server.global.tasks.getByDate(_date);
+
 		if (!taskList) return returnList;
 		
 		for (let task of taskList)
@@ -353,7 +369,7 @@ function taskPage_tab_week() {
 				}
 				taskHolderDataList.push(infoObj);
 
-				let taskList = await getTaskListByDate(date, false);
+				let taskList = await getTaskListByDate(date, true);
 				if (!taskList) return resolve();
 				infoObj.taskList = taskList;
 				
@@ -365,6 +381,7 @@ function taskPage_tab_week() {
 		for (let info of taskHolderDataList) addTaskHolder(info.date, info.taskList);
 
 		loadingMoreDays = false;
+		This.silentRender(false);
 	}
 
 	function getNewDate() {
@@ -393,9 +410,9 @@ function taskPage_tab_project() {
 		MainContent.header.setTitle(project.title);
 		MainContent.header.setMemberList(await project.users.getAll());
 
-		await This.addNotPlannedTaskHolder(false);
-		await This.addToBePlannedTaskHolder(true);
-		await This.addPlannedTaskHolder(true);
+		await This.addNotPlannedTaskHolder(false, true);
+		await This.addToBePlannedTaskHolder(true, true);
+		await This.addPlannedTaskHolder(true, true);
 	}
 
 
@@ -444,11 +461,16 @@ function taskPage_tab_project() {
 
 	
 	async function getNotPlannedTaskList(_fromCache) {
-		let taskList = await project.tasks.getByGroup({type: "default", value: "*"});
+		let taskList = [];
+		if (_fromCache) 
+		{
+			let localProject = await LocalDB.getProject(project.id);
+			taskList = await localProject.tasks.getByGroup({type: "default", value: "*"});
+		} else taskList = await project.tasks.getByGroup({type: "default", value: "*"});
 		return TaskSorter.defaultSort(taskList);
 	}
 
-	this.addNotPlannedTaskHolder = async function(_collapseTaskList = false) {
+	this.addNotPlannedTaskHolder = async function(_collapseTaskList = false, _fromCache) {
 		let taskHolder = MainContent.taskHolder.add(
 			"default",
 			{
@@ -457,7 +479,7 @@ function taskPage_tab_project() {
 			['']
 		);
 
-		let tasks = await getNotPlannedTaskList(false);
+		let tasks = await getNotPlannedTaskList(_fromCache);
 		if (_collapseTaskList && tasks.length != 0) taskHolder.collapseTaskList();
 		taskHolder.task.addTaskList(tasks);
 	}
@@ -465,7 +487,12 @@ function taskPage_tab_project() {
 
 
 	async function getPlannedTaskList(_fromCache) {
-		let taskList = await project.tasks.getByDateRange({date: new Date(), range: 1000});
+		let taskList = [];
+		if (_fromCache) 
+		{
+			let localProject = await LocalDB.getProject(project.id);
+			taskList = await localProject.tasks.getByDateRange({date: new Date(), range: 1000});
+		} else taskList = await project.tasks.getByDateRange({date: new Date(), range: 1000});
 		return TaskSorter.defaultSort(taskList);
 	}
 
@@ -486,7 +513,12 @@ function taskPage_tab_project() {
 
 
 	async function getToBePlannedTaskList(_fromCache) {
-		let taskList = await project.tasks.getByGroup({type: "toPlan", value: "*"});
+		let taskList = [];
+		if (_fromCache) 
+		{
+			let localProject = await LocalDB.getProject(project.id);
+			taskList = await localProject.tasks.getByGroup({type: "toPlan", value: "*"});
+		} else taskList = await project.tasks.getByGroup({type: "toPlan", value: "*"});
 		return TaskSorter.defaultSort(taskList);
 	}
 

@@ -7,6 +7,8 @@ const LocalDB = new function() {
 
   let DB;
 
+  this.global = new LocalDB_globalProject();
+
   this.setup = function() {
     return new Promise(function (resolve, error) {
       const request = indexedDB.open(DBName, DBVersion);
@@ -215,6 +217,108 @@ const LocalDB = new function() {
 
 
 
+
+function LocalDB_globalProject() {
+  this.tasks = new function() {
+    const Key = "tasks";
+    const TypeClass = Task;
+    TypeBaseClass.call(this, Key, TypeClass);
+   
+    this.getByDate = async function(_date) {
+      return this.getByDateRange({date: _date, range: 0})
+    }
+
+    this.getByDateRange = async function({date, range}) {
+      let projects = await LocalDB.getProjectList();
+      let tasks = [];
+      let promises = [];
+      for (let i = 0; i < projects.length; i++)
+      {
+        promises.push(projects[i].tasks.getByDateRange({date: date, range: range}).then(function (_result) {
+          tasks = tasks.concat(_result);
+        }));
+      }
+
+      await Promise.all(promises);
+      return tasks;
+    }
+
+
+    this.getByGroup = async function({type, value = "*"}) {
+      let projects = await LocalDB.getProjectList();
+      let tasks = [];
+      let promises = [];
+      for (let i = 0; i < projects.length; i++)
+      {
+        promises.push(projects[i].tasks.getByGroup({type: type, value: value}).then(function (_result) {
+          tasks = tasks.concat(_result);
+        }));
+      }
+
+      await Promise.all(promises);
+      return tasks;
+    }
+  }
+
+
+  this.tags = new function() {
+    const Key = "tags";
+    const TypeClass = Tag;
+    TypeBaseClass.call(this, Key, TypeClass);
+  }
+
+  this.users = new function() {
+    const Key = "users";
+    const TypeClass = User;
+    TypeBaseClass.call(this, Key, TypeClass);
+
+    this.Self = false;
+  }
+
+
+
+  function TypeBaseClass(_key, _typeClass) {
+    let Key       = _key;
+    let TypeClass = _typeClass;
+
+    this.get = async function(_id) {
+      let projects = await LocalDB.getProjectList();
+      for (let i = 0; i < projects.length; i++)
+      {
+          let item = await projects[i][Key].get(_id);
+          if (item) return item;
+      }
+      return false;
+    }
+
+
+    this.remove = async function(_id) {
+      let projects = await LocalDB.getProjectList();
+      for (let i = 0; i < projects.length; i++)
+      {
+          let success = await projects[i][Key].remove(_id);
+          if (success) return true;
+      }
+      return false;
+    }
+
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function LocalDB_Project(_projectId, _DB) {
   let This = this;
   LocalDB_ProjectInterface.call(this, _projectId, _DB);
@@ -286,6 +390,10 @@ function LocalDB_Project(_projectId, _DB) {
     TypeBaseClass.call(this, Key, TypeClass);
 
    
+    this.getByDate = async function(_date) {
+      return this.getByDateRange({date: _date, range: 0})
+    }
+
     this.getByDateRange = async function({date, range}) {
       let tasks = await this.getAll();
       let foundTasks = [];
@@ -381,7 +489,8 @@ function LocalDB_Project(_projectId, _DB) {
         if (items[i].id != _id) continue;
         items.splice(i, 1);
         
-        return await this.set(items);
+        await this.set(items);
+        return true;
       }
       return false;
     }
