@@ -4,6 +4,7 @@ function _MainContent_header() {
 	let HTML = {
 		mainContent: mainContent,
 		Self: $("#mainContentHeader .header")[0],
+		titleIcon: $("#mainContentHeader .titleIcon.icon")[0],
 		titleHolder: $("#mainContentHeader .header.titleHolder")[0],
 		memberList: $("#mainContentHeader .functionHolder .memberList")[0],
 		optionIcon: $("#mainContentHeader .functionItem.icon.clickable")[0],
@@ -116,6 +117,39 @@ function _MainContent_header() {
 			break;
 		}
 	}
+
+
+	let prevTitleIcon = "today";
+	this.setTitleIcon = function(_type) {
+		console.log(_type);
+		if (_type && _type != 'loading') prevTitleIcon = _type;
+		HTML.titleIcon.classList.remove('projectIcon');
+		HTML.titleIcon.classList.remove('settingsIcon');
+		switch (_type) 
+		{
+			case 'project':
+				HTML.titleIcon.classList.add('projectIcon');
+				HTML.titleIcon.setAttribute('src', 'images/icons/projectIconDark.svg');
+			break;
+			case 'week':
+				HTML.titleIcon.setAttribute('src', 'images/icons/weekIconDark.png');
+			break;
+			case 'today':
+				HTML.titleIcon.setAttribute('src', 'images/icons/todayIconDark.png');
+			break;
+			case 'settings':
+				HTML.titleIcon.classList.add('settingsIcon');
+				HTML.titleIcon.setAttribute('src', 'images/icons/memberIcon.png');
+			break;
+			case 'loading':
+				HTML.titleIcon.setAttribute('src', 'images/loadingDark.gif');
+			break;
+			default:
+				this.setTitleIcon(prevTitleIcon);
+			break;
+		}
+	}
+
 
 
 	this.setTitle = function(_title) {

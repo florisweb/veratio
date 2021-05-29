@@ -108,6 +108,8 @@ function taskPage_tab(_settings) {
 		if (!MainContent.taskPage.isOpen()) MainContent.taskPage.open();
 		resetPage();
 		await this.addOverdue(true);
+
+		MainContent.header.setTitleIcon(MainContent.taskPage.curTab.name);
 		await onOpen(_projectId);
 
 		MainContent.stopLoadingAnimation();
@@ -120,8 +122,7 @@ function taskPage_tab(_settings) {
 	}
 
 	this.silentRender = async function(_fromCache = false) {
-		console.log('start silent render');
-		let t = new Date();
+		MainContent.header.setTitleIcon('loading');
 		let overdueTaskList = await getOverdueTasks(_fromCache);
 		let firstTaskHolder = MainContent.taskHolder.list[0];
 		if (firstTaskHolder && firstTaskHolder.type == 'overdue')
@@ -133,7 +134,7 @@ function taskPage_tab(_settings) {
 		} else if (overdueTaskList) await this.addOverdue(_fromCache);
 
 		await onSilentRender(_fromCache);
-		console.log('SilentRender finish:', new Date() - t);
+		MainContent.header.setTitleIcon();
 	}
 
 	function applySettings(_settings) {
@@ -590,6 +591,7 @@ function MainContent_settingsPage(_projectId) {
 		HTML.inviteHolder.classList.add("hide");
 
 		MainContent.header.setTitle("Settings - " + project.title);
+		MainContent.header.setTitleIcon('settings');
 
 		let users = await project.users.getAll(true);
 

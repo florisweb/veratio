@@ -86,6 +86,7 @@
 
 		<div id="mainContent">
 			<div id="mainContentHeader">
+				<img src="images/icons/todayIconDark.png" class="titleIcon icon clickable">
 				<div class="header titleHolder userText"></div>
 
 				<div class="functionHolder">
