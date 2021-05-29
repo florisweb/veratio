@@ -147,7 +147,7 @@ body.appLoading #mainContent {
 
 #mainContentHolder.showLoadingAnimation {
 	opacity: .2;
-	background-image: url("../images/loadingDark.gif");
+	background-image: url("images/loadingDark.gif");
 }
 
 
