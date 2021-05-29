@@ -2,6 +2,7 @@
 
 Version 1.4
 Planned features:
+- [ ] Preloading - Huge performance increase
 - [ ] PWA
 - [ ] Properly implement Drag And Drop
 - [ ] Task order

@@ -123,16 +123,14 @@ function taskPage_tab(_settings) {
 		console.log('start silent render');
 		let t = new Date();
 		let overdueTaskList = await getOverdueTasks(_fromCache);
-		if (MainContent.taskHolder.list[0].type == 'overdue')
+		let firstTaskHolder = MainContent.taskHolder.list[0];
+		if (firstTaskHolder && firstTaskHolder.type == 'overdue')
 		{
 			if (overdueTaskList.length) 
 			{
-				await MainContent.taskHolder.list[0].task.setTaskList(overdueTaskList);
-			} else MainContent.taskHolder.list[0].remove();
-		} else if (overdueTaskList)
-		{
-			await this.addOverdue(_fromCache);
-		}
+				await firstTaskHolder.task.setTaskList(overdueTaskList);
+			} else firstTaskHolder.remove();
+		} else if (overdueTaskList) await this.addOverdue(_fromCache);
 
 		await onSilentRender(_fromCache);
 		console.log('SilentRender finish:', new Date() - t);
