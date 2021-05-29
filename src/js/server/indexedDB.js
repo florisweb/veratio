@@ -160,7 +160,8 @@ const LocalDB = new function() {
       let projectPromises = [
         project.tasks.getByDateRange({date: new Date(), range: 365}),
         project.tasks.getByGroup({type: "overdue", value: "*"}),
-        project.tasks.getByGroup({type: "default", value: "*"})
+        project.tasks.getByGroup({type: "default", value: "*"}),
+        project.tasks.getByGroup({type: "toPlan", value: "*"})
       ];
 
       promises.push(new Promise(async function (resolve) {        

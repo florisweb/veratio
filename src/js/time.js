@@ -68,13 +68,11 @@ Date.prototype.getDateInDays = function(_addYears) {
 	}
 	
 	if (!_addYears) return totalDays;
-
 	for (let i = 1970; i < this.getFullYear(); i++) 
 	{
 		let newDate = new Date();
 		newDate.setYear(i);
-		totalDays += 365 + newDate.isLeapYear() ? 1 : 0;
-		if (this.isLeapYear(i + 1)) totalDays++;
+		totalDays += 365 + (newDate.isLeapYear() ? 1 : 0);
 	}
 
 	return totalDays;

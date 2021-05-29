@@ -121,7 +121,6 @@ function _MainContent_header() {
 
 	let prevTitleIcon = "today";
 	this.setTitleIcon = function(_type) {
-		console.log(_type);
 		if (_type && _type != 'loading') prevTitleIcon = _type;
 		HTML.titleIcon.classList.remove('projectIcon');
 		HTML.titleIcon.classList.remove('settingsIcon');

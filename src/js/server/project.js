@@ -246,11 +246,12 @@ function Project(_project) {
       if (response.error) return await Local.tasks.getByDateRange(_info);
       response.result = response.result.map(r => new Task(r));
 
-      new Promise(async function () { // Store data Localily  
+      new Promise(async function (resolve) { // Store data Localily  
         let foundTasks = await Local.tasks.getByDateRange(_info);
         
         for (let i = 0; i < foundTasks.length; i++) await Local.tasks.remove(foundTasks[i]);
         for (let task of response.result) await Local.tasks.update(task);
+        resolve();
       });
 
       return response.result;
