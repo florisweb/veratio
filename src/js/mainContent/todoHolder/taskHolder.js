@@ -54,27 +54,6 @@ function _MainContent_taskHolder() {
 		return taskHolder;
 	}
 
-	this.addOverdue = async function() {
-		let project = await Server.getProject(MainContent.curProjectId);
-		if (!project) project = Server.global;
-
-		let taskList = await project.tasks.getByGroup({type: "overdue", value: "*"});
-		if (!taskList || !taskList.length) return false;
-
-		let item = this.add(
-			"overdue", 
-			{
-				displayProjectTitle: !MainContent.curProjectId
-			},
-			null,
-			0,
-		);
-
-		taskList = TaskSorter.defaultSort(taskList);
-		await item.task.addTaskList(taskList);
-	}
-
-
 	const constructors = {
 		default: 	TaskHolder_default,
 		toPlan: 	TaskHolder_toPlan,
@@ -136,7 +115,7 @@ function _MainContent_taskHolder() {
 
 		switch (_task.groupType)
 		{
-			case "overdue": this.addOverdue(); break;
+			case "overdue": await MainContent.taskPage.curTab.addOverdue(); break;
 			case "toPlan": 
 				if (!MainContent.taskPage.curTab || MainContent.taskPage.curTab.name != "project") return;
 				await MainContent.taskPage.projectTab.addToBePlannedTaskHolder(); 
@@ -480,8 +459,13 @@ function TaskHolder_task(_parent) {
 		return task;
 	}
 
+	this.setTaskList = function(_newTaskList) {
+		this.taskList = [];
+		return this.addTaskList(_newTaskList);
+	}
 
 	this.reRenderTaskList = function() {
+		Parent.HTML.todoHolder.innerHTML = '';
 		for (let task of this.taskList) task.render();
 	}
 	

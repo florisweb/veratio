@@ -86,6 +86,7 @@ function MainContent_taskPage() {
 function taskPage_tab(_settings) {
 	this.name = _settings.name;
 	let onOpen = _settings.onOpen;
+	let onSilentRender = _settings.onSilentRender;
 
 	const HTML = {
 		loadMoreButton: $("#mainContentHolder .loadMoreButton")[0],
@@ -106,7 +107,7 @@ function taskPage_tab(_settings) {
 
 		if (!MainContent.taskPage.isOpen()) MainContent.taskPage.open();
 		resetPage();
-		await MainContent.taskHolder.addOverdue();
+		await this.addOverdue();
 		await onOpen(_projectId);
 
 		MainContent.stopLoadingAnimation();
@@ -116,6 +117,16 @@ function taskPage_tab(_settings) {
 		MainContent.taskPage.rendering = false;
 	}
 
+	this.silentRender = async function(_fromCache = false) {
+		if (MainContent.taskHolder.list[0].type == 'overdue')
+		{
+
+
+			MainContent.taskHolder.list[0].task.reRenderTaskList();
+		}
+
+		return onSilentRender(_fromCache);
+	}
 
 	function applySettings(_settings) {
 		if (_settings.showLoadMoreButton) setTimeout(function () {
@@ -128,6 +139,28 @@ function taskPage_tab(_settings) {
 		MainContent.optionMenu.close();
 		MainContent.taskHolder.clear();
 	}
+
+
+
+	this.addOverdue = async function() {
+		let project = await Server.getProject(MainContent.curProjectId);
+		if (!project) project = Server.global;
+
+		let taskList = await project.tasks.getByGroup({type: "overdue", value: "*"});
+		if (!taskList || !taskList.length) return false;
+
+		let taskHolder = MainContent.taskHolder.add(
+			"overdue", 
+			{
+				displayProjectTitle: !MainContent.curProjectId
+			},
+			null,
+			0,
+		);
+
+		taskList = TaskSorter.defaultSort(taskList);
+		await taskHolder.task.addTaskList(taskList);
+	}
 }
 
 
@@ -135,7 +168,8 @@ function taskPage_tab(_settings) {
 function taskPage_tab_today() {
 	taskPage_tab.call(this, {
 		name: "today",
-		onOpen: onOpen
+		onOpen: onOpen,
+		onSilentRender: onSilentRender
 	});
 	let This = this;
 
@@ -160,6 +194,24 @@ function taskPage_tab_today() {
 		let sortedList = TaskSorter.defaultSort(taskList);
 		await taskHolder.task.addTaskList(sortedList);
 	};
+
+	async function onSilentRender(_fromCache) {
+		for (let taskHolder of MainContent.taskHolder.list)
+		{
+			switch (taskHolder.type) 
+			{
+				case "overdue": break; // is being handled by the general tab-class
+				case "date": 
+					
+				break;
+			}
+			taskHolder.task.reRenderTaskList();
+		}
+
+	}
+
+
+
 
 	async function getTaskListByDate(_date) {
 		let taskList = await Server.global.tasks.getByDate(_date);

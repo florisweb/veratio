@@ -11,9 +11,9 @@ echo - Building CSS
 
 cat src/css/component.css src/css/popup.css src/css/main.css src/css/sideBar.css src/css/mainContent/mainContent.css src/css/mainContent/taskHolder.css src/css/mainContent/header.css > dist/main_min.css
 
-cp -r src/images dist/images
-cp -r src/database dist/database
-cp -r src/invite dist/invite
+cp -r src/images dist
+cp -r src/database dist
+cp -r src/invite dist
 cp src/index.php dist/index.php
 cp src/serviceworker.js dist/serviceworker.js
 
