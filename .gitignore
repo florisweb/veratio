@@ -1,6 +1,4 @@
 changelist.txt
-src/js/main_min.js
-src/css/main_min.css
-changeList.txt
 src/images/sideBarBackground/generator.php
-*/.DS_Store
+**/*.DS_Store
+/dist

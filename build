@@ -1,0 +1,22 @@
+#!/bin/bash
+cd "$(dirname "$0")"
+echo - Building JavaScript
+
+cat src/js/extraFunctions.js src/js/DOMData.js src/js/time.js src/js/color.js src/js/constants.js src/js/optionMenu.js src/js/popupComponent.js src/js/popup.js src/js/eventHandlers/dragHandler.js src/js/eventHandlers/keyHandler.js src/js/eventHandlers/doubleClickHandler.js src/js/eventHandlers/rightClickHandler.js src/js/mainContent/header.js src/js/mainContent/pages.js src/js/mainContent/todoHolder/taskHolder.js src/js/mainContent/todoHolder/renderer.js src/js/mainContent/mainContent.js src/js/sideBar.js src/js/server/encoder.js src/js/server/indexedDB.js src/js/server/project.js src/js/server/server.js src/js/app.js > dist/main_min.js
+
+
+
+cd "$(dirname "$0")"
+echo - Building CSS
+
+cat src/css/component.css src/css/popup.css src/css/main.css src/css/sideBar.css src/css/mainContent/mainContent.css src/css/mainContent/taskHolder.css src/css/mainContent/header.css > dist/main_min.css
+
+cp -r src/images dist/images
+cp -r src/database dist/database
+cp -r src/invite dist/invite
+cp src/index.php dist/index.php
+cp src/serviceworker.js dist/serviceworker.js
+
+echo \|-------------------\|
+echo \| Finished Building \|
+echo \|-------------------\|
