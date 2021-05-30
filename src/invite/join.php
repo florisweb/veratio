@@ -28,6 +28,6 @@
 		die();
 	}
 
-	header("Location: https://florisweb.tk/user/login.php?redirect=https://veratiodev.florisweb.tk/invite/join.php?link=" + $link);
+	header("Location: https://user.florisweb.tk/login?redirect=https://veratiodev.florisweb.tk/invite/join.php?link=" . $link);
 	die("Redirect user");
 ?>
