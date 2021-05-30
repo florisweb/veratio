@@ -242,7 +242,6 @@ function _Popup_renameProject() {
 
 		project.rename(newTitle).then(async function () {
 			This.close();
-			await Server.clearCache(); 
 			App.update();
 		});
 	}

@@ -7,7 +7,7 @@
 	]);
 
 	require_once __DIR__ . "/../modules/app.php";
-
+	sleep(2);
 	$_functionDataList			= (String)$_POST["functions"];
 	if (!$_functionDataList) 	die("Parameters missing");
 	

@@ -12,10 +12,11 @@ function _app() {
   this.setup = async function() {
     installServiceWorker();
     await LocalDB.setup();
+    await Server.setup();
 
     let cachedOperations = await LocalDB.getCachedOperationsCount();
     if (cachedOperations) await LocalDB.sendCachedOperations();
-    Server.onReConnect() // Don't await, so it can sync in the background as to not keep the user waiting
+    // Server.onReConnect() // Don't await, so it can sync in the background as to not keep the user waiting
   
 
 
@@ -66,7 +67,7 @@ function _app() {
 
   this.update = async function() {
     MainContent.startLoadingAnimation();
-    await SideBar.projectList.fillProjectHolder();
+    SideBar.projectList.fillProjectHolder();
 
     switch (MainContent.curPage.name)
     {
@@ -83,7 +84,7 @@ function _app() {
 
 
   this.promptAuthentication = function() {
-    window.location.replace("https://florisweb.tk/user/login.php?redirect=https://veratiodev.florisweb.tk");
+    window.location.replace(SignInUrl);
   }
 }
 

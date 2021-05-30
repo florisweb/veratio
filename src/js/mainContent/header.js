@@ -120,8 +120,12 @@ function _MainContent_header() {
 
 
 	let prevTitleIcon = "today";
+	let titleIconLoading = false;
 	this.setTitleIcon = function(_type) {
-		if (_type && _type != 'loading') prevTitleIcon = _type;
+		if (_type && _type != 'loading' && _type != 'finishedLoading') prevTitleIcon = _type;
+		if (_type == 'finishedLoading') titleIconLoading = false;
+		if (titleIconLoading) return;
+
 		HTML.titleIcon.classList.remove('projectIcon');
 		HTML.titleIcon.classList.remove('settingsIcon');
 		switch (_type) 
@@ -141,9 +145,10 @@ function _MainContent_header() {
 				HTML.titleIcon.setAttribute('src', 'images/icons/memberIcon.png');
 			break;
 			case 'loading':
+				titleIconLoading = true;
 				HTML.titleIcon.setAttribute('src', 'images/loadingDark.gif');
 			break;
-			default:
+			case 'finishedLoading':
 				this.setTitleIcon(prevTitleIcon);
 			break;
 		}

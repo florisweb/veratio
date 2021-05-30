@@ -57,7 +57,6 @@ function _MainContent() {
 		if (!actionValidated) return;
 	
 		await project.leave();
-		await Server.clearCache();
 		MainContent.taskPage.todayTab.open();
 		App.update();
 	}
@@ -77,7 +76,6 @@ function _MainContent() {
 		if (!actionValidated) return;
 		
 		await project.remove();
-		await Server.clearCache();
 		
 		MainContent.taskPage.todayTab.open();
 		App.update();

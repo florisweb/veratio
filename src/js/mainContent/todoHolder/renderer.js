@@ -158,8 +158,6 @@ function _TaskRenderer() {
 
 			function assignDragHandler(_html, _taskWrapper, _project) {
 				if (!_project.users.Self.permissions.tasks.update) return _html;
-				console.log("render")
-
 				DragHandler.register(_html);
 
 

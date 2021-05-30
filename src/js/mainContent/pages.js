@@ -121,7 +121,11 @@ function taskPage_tab(_settings) {
 		this.silentRender(false);
 	}
 
+	let silentRendering = false;
 	this.silentRender = async function(_fromCache = false) {
+		if (silentRendering) return console.warn('bussy');
+		silentRendering = true;
+
 		MainContent.header.setTitleIcon('loading');
 		let overdueTaskList = await getOverdueTasks(_fromCache);
 		let firstTaskHolder = MainContent.taskHolder.list[0];
@@ -134,7 +138,8 @@ function taskPage_tab(_settings) {
 		} else if (overdueTaskList) await this.addOverdue(_fromCache);
 
 		await onSilentRender(_fromCache);
-		MainContent.header.setTitleIcon();
+		MainContent.header.setTitleIcon('finishedLoading');
+		silentRendering = false;
 	}
 
 	function applySettings(_settings) {
@@ -608,7 +613,7 @@ function MainContent_settingsPage(_projectId) {
 		let response = await project.users.inviteByLink();
 		if (response.error) console.error("An error accured while inviting a user:", response);
 
-		Popup.inviteByLinkCopyMenu.open("https://veratio.florisweb.tk?link=" + response.result.id);
+		Popup.inviteByLinkCopyMenu.open(window.location.href.split('?')[0] + "?link=" + response.result.id);
 		This.open(MainContent.curProjectId);
 	}
 

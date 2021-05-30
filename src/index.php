@@ -2,12 +2,13 @@
 	$enableRedirect = false;
 	function APP_noAuthHandler() {
 		if (!$enableRedirect) return;
-		header("Location: https://florisweb.tk/user/login.php?redirect=https://veratiodev.florisweb.tk");
+		header("Location: " . $GLOBALS['UserDomainUrl'] . '/login?redirect=' . $GLOBALS['ProjectUrls']['veratio']);
 		die("E_noAuth");
 	}
 
 	require_once __DIR__ . "/database/modules/app.php";
 	require_once __DIR__ . "/database/modules/garbageCollector/garbageCollector.php";
+	$PM->includePacket('GLOBALS', '1.0');
 	$enableRedirect = true;
 
 
@@ -19,6 +20,10 @@
 	} else {
 		echo "<script>const LinkUser = {link: '" . (string)$_GET["link"] . "'}</script>";
 	}
+
+	echo "<script>" . 
+		"const SignInUrl = '" . $GLOBALS['UserDomainUrl'] . '/login?redirect=' . $GLOBALS['ProjectUrls']['veratio'] . "';" . 
+	"</script>";
 
 
 	function authenticateLink() {
