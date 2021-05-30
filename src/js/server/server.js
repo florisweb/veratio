@@ -4,10 +4,18 @@ const Server = new function() {
   this.connected  = true;  
   this.global     = new GlobalProject();
 
-  this.clearCache = async function() {
-  }
 
   this.projectList = [];
+  this.setup = async function() {
+    await this.getLocalProjectList();
+  }
+
+  this.getLocalProjectList = async function() {
+    let projects = await getLocalProjectList();
+    if (projects) this.projectList = projects;
+    return this.projectList;
+  }
+
   this.getProjectList = async function(_forceUpdate = false) {
     if (!_forceUpdate) return this.projectList;
     let projects = await getProjectList();

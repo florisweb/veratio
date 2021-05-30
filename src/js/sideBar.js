@@ -224,13 +224,23 @@ function _SideBar_projectList() {
 		HTML.projectList.classList.add("hide");
 	}
 
+	this.silentRender = async function(_fromCache) {
+		if (_fromCache)
+		{
+			this.projects = await LocalDB.getProjectList();
+		} else {
+			this.projects = await Server.getProjectList(true);
+		}
 
-	this.fillProjectHolder = async function() {
-		this.projects = await Server.getProjectList(true);
 		HTML.projectsHolder.innerHTML = "";
 		for (let project of this.projects) project.HTML = createProjectHTML(project);
 
 		await this.updateProjectInfo();
+	}
+
+	this.fillProjectHolder = async function() {
+		await this.silentRender(true)
+		await this.silentRender(false);
 	}
 
 	this.updateProjectInfo = function() {
