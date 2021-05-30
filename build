@@ -15,7 +15,8 @@ cp -r src/images dist
 cp -r src/database dist
 cp -r src/invite dist
 cp src/index.php dist/index.php
-cp src/serviceworker.js dist/serviceworker.js
+cp src/manifest.json dist/manifest.json
+cp src/serviceWorker.js dist/serviceWorker.js
 
 echo \|-------------------\|
 echo \| Finished Building \|
