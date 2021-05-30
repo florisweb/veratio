@@ -64,8 +64,9 @@
 			<br>
 			<div class="projectListHolder hide">
 				<div class="header clickable tab" onclick="SideBar.projectList.toggleOpenState()">
-					<img src="images/icons/dropDownIcon.png" class="headerIcon dropDownButton close dropTarget">
+					<img src="images/icons/dropDownIcon.png" class="headerIcon dropDownButton close">
 					<div class="headerText">Projects</div>
+					<img src="images/loading.gif" class="icon loadingIcon hide">
 				</div>
 				<div class="projectList hide">
 					<div>

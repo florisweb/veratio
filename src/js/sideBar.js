@@ -202,6 +202,7 @@ function _SideBar_projectList() {
 		projectList: $("#sideBar .projectListHolder .projectList")[0],
 		projectsHolder: $("#sideBar .projectListHolder .projectList")[0].children[0],
 		dropDownIcon: $(".projectListHolder .header .dropDownButton")[0],
+		loadingIcon: $(".projectListHolder .header .loadingIcon")[0],
 	}
 	this.projects = [];
 
@@ -224,6 +225,14 @@ function _SideBar_projectList() {
 		HTML.projectList.classList.add("hide");
 	}
 
+
+	this.setLoadingIconStatus = function(_visible = false) {
+		HTML.loadingIcon.classList.add('hide');
+		if (!_visible) return;
+		HTML.loadingIcon.classList.remove('hide');
+	}
+
+
 	this.silentRender = async function(_fromCache) {
 		if (_fromCache)
 		{
@@ -239,8 +248,10 @@ function _SideBar_projectList() {
 	}
 
 	this.fillProjectHolder = async function() {
+		this.setLoadingIconStatus(true);
 		await this.silentRender(true)
 		await this.silentRender(false);
+		this.setLoadingIconStatus(false);
 	}
 
 	this.updateProjectInfo = function() {
