@@ -312,8 +312,6 @@ function taskPage_tab_week() {
 			}, 
 			[_date]
 		);
-		_taskList = TaskSorter.defaultSort(_taskList);
-
 		taskHolder.task.addTaskList(_taskList);
 	}
 
@@ -346,7 +344,7 @@ function taskPage_tab_week() {
 			if (!(await shouldRenderTask(task))) continue;
 			returnList.push(task);
 		}
-		return returnList;
+		return TaskSorter.defaultSort(returnList);
 	}
 
 

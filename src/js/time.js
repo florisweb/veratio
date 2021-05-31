@@ -17,20 +17,17 @@ Date.prototype.stringIsDate = function(_date) {
 
 Date.prototype.setDateFromStr = function(_str) {
 	if (typeof _str != "string" || !_str) return _str;
-	let dateTime = _str.split(" ");
-	let date = new Date();
-	
+	let dateTime = _str.split(" ");	
 	let dateParts = dateTime[0].split("-");
-	this.setYear(dateParts[2]);
-	this.setMonth(parseInt(dateParts[1]) - 1);
-	this.setDate(dateParts[0]);
+	let date = new Date(parseInt(dateParts[1]) + "/" + parseInt(dateParts[0]) + "/" + parseInt(dateParts[2]));
+	// this.setMonth(parseInt(dateParts[1]) - 1);
 
-	if (!dateTime[1]) return this;
+	if (!dateTime[1]) return date;
 	let timeParts = dateTime[1].split(":");
-	this.setHours(timeParts[0]);
-	this.setMinutes(timeParts[1]);
+	date.setHours(timeParts[0]);
+	date.setMinutes(timeParts[1]);
 	
-	return this;
+	return date;
 }
 Date.prototype.setFromStr = Date.prototype.setDateFromStr;
 

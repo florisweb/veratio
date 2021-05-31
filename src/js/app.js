@@ -41,8 +41,6 @@ function _app() {
       MainContent.searchOptionMenu.hide();
     });
 
-    await this.update();
-    SideBar.projectList.open();
 
     setTimeout(function () {
       document.body.classList.remove("appLoading");
@@ -50,6 +48,9 @@ function _app() {
     setTimeout(function () {
       SideBar.messagePopup.showLatestMessage();
     }, 700);
+    
+    await this.update();
+    SideBar.projectList.open();
   }
 
   function installServiceWorker() {
@@ -67,7 +68,7 @@ function _app() {
 
   this.update = async function() {
     MainContent.startLoadingAnimation();
-    SideBar.projectList.fillProjectHolder();
+    await SideBar.projectList.fillProjectHolder();
 
     switch (MainContent.curPage.name)
     {
