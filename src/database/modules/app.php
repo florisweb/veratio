@@ -1,6 +1,6 @@
 <?php
 	require_once __DIR__ . "/../getRoot.php";
-	include_once($GLOBALS["Root"] . "/PHPV2/PacketManager.php");
+	include_once($GLOBALS["Root"] . "/PHP/PacketManager.php");
 
 	$GLOBALS["PM"]->includePacket("SESSION", "1.0");
 	$GLOBALS["PM"]->includePacket("USER", "1.1");

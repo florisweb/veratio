@@ -16,7 +16,7 @@ function _app() {
 
     let cachedOperations = await LocalDB.getCachedOperationsCount();
     if (cachedOperations) await LocalDB.sendCachedOperations();
-    // Server.onReConnect() // Don't await, so it can sync in the background as to not keep the user waiting
+    Server.onReConnect() // Don't await, so it can sync in the background as to not keep the user waiting
   
 
 
