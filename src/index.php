@@ -2,7 +2,7 @@
 	$enableRedirect = false;
 	function APP_noAuthHandler() {
 		if (!$enableRedirect) return;
-		header("Location: " . $GLOBALS['UserDomainUrl'] . '/login?redirect=' . $GLOBALS['ProjectUrls']['veratio']);
+		header("Location: " . $GLOBALS['UserDomainUrl'] . '/login?redirect=' . $GLOBALS['ProjectUrls']['veratioDev']);
 		die("E_noAuth");
 	}
 
@@ -11,33 +11,16 @@
 	$PM->includePacket('GLOBALS', '1.0');
 	$enableRedirect = true;
 
-
-	$isLinkUser = authenticateLink();
-	if ($isLinkUser == false) 
+	if ($GLOBALS['App']->isLinkUser)
 	{
-		$GLOBALS["SESSION"]->clear("veratio_userLink");
-		echo "<script>const LinkUser = {link: false}; </script>";
-	} else {
 		echo "<script>const LinkUser = {link: '" . (string)$_GET["link"] . "'}</script>";
+	} else {
+		echo "<script>const LinkUser = {link: false}</script>";
 	}
-
+	
 	echo "<script>" . 
-		"const SignInUrl = '" . $GLOBALS['UserDomainUrl'] . '/login?redirect=' . $GLOBALS['ProjectUrls']['veratio'] . "';" . 
+		"const SignInUrl = '" . $GLOBALS['UserDomainUrl'] . '/login?redirect=' . $GLOBALS['ProjectUrls']['veratioDev'] . "';" . 
 	"</script>";
-
-
-	function authenticateLink() {
-		$_link = (string)$_GET["link"];
-		if (!$_link || strlen($_link) > 100) return false;
-
-		$linkId = sha1($_link);
-		$GLOBALS["SESSION"]->set("veratio_userLink", $linkId);
-		
-		$GLOBALS["App"] = new _App();
-		$projects = $GLOBALS["App"]->getAllProjects();
-		if (sizeof($projects) > 0) return true;
-		return false;
-	}	
 ?>
 
 <!DOCTYPE html>

@@ -4,9 +4,18 @@ const Server = new function() {
   this.connected  = true;  
   this.global     = new GlobalProject();
 
+  let linkUserId = false;
+  this.isLinkUser = false;
+  this.setLinkUserId = function(_id) {
+    if (!_id) return;
+    linkUserId = _id;
+    this.isLinkUser = true;
+  }
+
 
   this.projectList = [];
   this.setup = async function() {
+    this.setLinkUserId(LinkUser.link);
     await this.getLocalProjectList();
   }
 
@@ -199,10 +208,16 @@ const Server = new function() {
 
 
   this.fetchData = async function(_url, _parameters = "", _attempts = 0) {
+    let parameters = _parameters;
+    if (this.isLinkUser)
+    {
+      if (parameters) parameters += '&';
+      parameters += "linkId=" + linkUserId;
+    }
     let response = await new Promise(function (resolve) {
       fetch(_url, {
         method: 'POST', 
-        body: _parameters,
+        body: parameters,
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         },

@@ -24,18 +24,28 @@
 		public $ownerPermissions = 3;
 		
 		public function __construct() {
-			$linkId = $GLOBALS["SESSION"]->get("veratio_userLink");
-			if ($linkId) 
-			{
-				$this->userId 		= (string)$linkId;
-				$this->isLinkUser 	= true;
-				return;
-			}
+			if ($this->validateLinkUser()) return;
 
 			$this->userId = (string)$GLOBALS["SESSION"]->get("userId");
-
 			if (!$this->userId) {$this->throwNoAuthError(); return;}
 			$this->userId = sha1($this->userId);
+		}
+
+		private function validateLinkUser() {
+			$link = (string)$_POST['linkId'];
+			if (!$link) $link = (string)$_GET['link'];
+			if (!$link || !isset($link) || strlen($link) > 100) return false;
+
+			$this->isLinkUser = true;
+			$this->userId = sha1($link);;
+			$projects = $this->getAllProjects();
+			if (sizeof($projects) == 0)
+			{
+				$this->isLinkUser = false;
+				$this->userId = false;
+				return false;
+			}
+			return true;;
 		}
 
 
@@ -50,17 +60,16 @@
 		public function getProject($_id) {
 			if (!$this->userId) {$this->throwNoAuthError(); return false;}
 
-			$project = new _Project($_id);
-			
+			$project = new _Project($_id, $this);
 			$projectError = $project->errorOnCreation;
-			if ($projectError === true)  return false;
+			if ($projectError === true) return false;
 			if ($projectError !== false) return $projectError;
 			if ($this->isLinkUser && $project->users->get($this->userId)["type"] != "link") return "E_userTypeIsNotLink";
 
 			return $project;
 		}
 
-		public function getAllProjects() {
+		public function getAllProjects($_customId = false) {
 			if (!$this->userId) {$this->throwNoAuthError(); return "E_noAuth";}
 
 			$DBHelper = $GLOBALS["DBHelper"]->getDBInstance(null);
@@ -69,7 +78,7 @@
 			
 			for ($i = 0; $i < sizeof($projectIds); $i++)
 			{
-				$curProject = $this->getProject($projectIds[$i]);
+				$curProject = $this->getProject($projectIds[$i], $_customId);
 				if (!$curProject || is_string($curProject)) continue;
 				array_push($projects, $curProject); 
 			}

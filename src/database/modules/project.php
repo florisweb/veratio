@@ -18,11 +18,13 @@
 		private $DB;
 
 		public $errorOnCreation = true;
+		public $App;
 
 
-		public function __construct($_projectId) {
+		public function __construct($_projectId, $_App) {
 			$this->id = (string)$_projectId;
-
+			$this->App = $_App;
+			
 			$this->users = new _project_userComponent($this, $this->id);
 			$this->tasks = new _project_taskComponent($this, $this->id);
 			$this->tags  = new _project_tagComponent($this, $this->id);

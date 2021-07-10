@@ -25,7 +25,7 @@
 			$this->InviteComponent 	= new _project_user_inviteComponent($this, $_parent);
 			$this->Parent 			= $_parent;
 
-			$this->Self = $this->get($GLOBALS["App"]->userId);
+			$this->Self = $this->get($this->Parent->App->userId);
 		}
 
 		public function inviteByEmail($_emailAdress) {

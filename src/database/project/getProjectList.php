@@ -13,10 +13,9 @@
 	}
 
 
-
 	if (sizeof($projects) == 0)
 	{
-		$GLOBALS["App"]->createProject("Your first project");
+		$GLOBALS["App"]->createProject("Your first project"); // TODO test for error returns
 		$projects = $App->getAllProjects();
 	}
 
