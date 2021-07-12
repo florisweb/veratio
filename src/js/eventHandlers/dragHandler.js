@@ -10,6 +10,21 @@ function _DragHandler() {
     dropHandler(_e.target, _e, DragHandler.curDragItem.onDropHandler);
   }
 
+  this.registerDropRegion = function(_html) {
+    _html.addEventListener("dragover", function(_e) {
+      _e.preventDefault();
+      _html.classList.add("showDropRegion");
+    });
+
+    _html.addEventListener("dragleave", function() {
+      _html.classList.remove("showDropRegion");
+    });
+
+    _html.addEventListener("drop", function(_e) {
+      dropHandler(_html, _e, DragHandler.curDragItem.onDropHandler);
+    });
+  }
+
   this.register = function(_html, _onDrop) {
     if (!_html) return;
     _html.onDropHandler = _onDrop;
@@ -19,46 +34,47 @@ function _DragHandler() {
       _html.classList.add("dragging");
     });
 
-    _html.addEventListener("dragover", function(e) {
-      e.preventDefault();
-      _html.classList.add("showDropRegion");
-    });
-
-    _html.addEventListener("dragleave", function() {
-      _html.classList.remove("showDropRegion");
-    });
-
-    _html.addEventListener("drop", function(_e) {
-      dropHandler(_html, _e, _onDrop);
-    });
+    this.registerDropRegion(_html);
   }
 
   let curDropTarget = false;
+  let onDropTodoHolder;
   function dropHandler(_html, _e, _onDrop) {
+    if (_html != This.curDragItem) return curDropTarget = _html; // Fires twice: first for the item that is being dropped onto, and the second time for the item that is being dropped
     _html.classList.remove("dragging");
-    if (_html != This.curDragItem) return curDropTarget = _html;
+
+    let regions = $(".showDropRegion");
+    for (let region of regions) region.classList.remove("showDropRegion");
 
     _e.preventDefault();
-
-    
-    let tasks = $(".taskItem.showDropRegion");
-    for (task of tasks) task.classList.remove("showDropRegion");
-
-
+    console.warn(_e.target);
 
     _html.classList.add("dropped");
     setTimeout(function () {
       _html.classList.remove("dropped");
-      _html.classList.remove("showDropRegion");
 
-      if (!curDropTarget) return;
-      _onDrop(_html, curDropTarget.parentNode);
+      if (!onDropTodoHolder) return;
+      _onDrop(_html, onDropTodoHolder);
     }, 300);
 
+
     if (!curDropTarget) return;
-    if (!isDescendant(_html, _e.target)) return curDropTarget.parentNode.appendChild(_html);
-    console.log(curDropTarget.parentNode, curDropTarget, curDropTarget.nextSibling);
-    curDropTarget.parentNode.insertBefore(_html, curDropTarget.nextSibling);
+    if (curDropTarget.classList.contains('taskItem'))
+    {
+      onDropTodoHolder = curDropTarget.parentNode;
+      if (!isDescendant(_html, _e.target)) return curDropTarget.parentNode.appendChild(_html);
+      curDropTarget.parentNode.insertBefore(_html, curDropTarget.nextSibling);
+      return;
+    }
+
+    if (curDropTarget.parentNode.classList.contains('taskHolder'))
+    {
+      console.warn('!!', 'drop to header');
+      onDropTodoHolder = curDropTarget.parentNode.children[3];
+      onDropTodoHolder.insertBefore(_html, onDropTodoHolder.children[0]);
+      return;
+
+    }
   }
 }
 

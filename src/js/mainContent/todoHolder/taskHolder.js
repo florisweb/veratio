@@ -393,13 +393,17 @@ function TaskHolder(_config = {}, _type = "default", _taskHolderIndex) {
 
 		if (This.config.html.class) html.className += " " + This.config.html.class;
 
-		html.innerHTML = 	'<img src="images/icons/dropDownIconDark.png" class="dropDownButton clickable dropTarget">' +
-							'<div class="header titleHolder dropTarget"></div>' + 
-							'<div class="header subTitleHolder dropTarget"></div>' + 
+		html.innerHTML = 	'<img src="images/icons/dropDownIconDark.png" class="dropDownButton clickable">' +
+							'<div class="header titleHolder"></div>' + 
+							'<div class="header subTitleHolder"></div>' + 
 							'<div class="todoHolder"></div>';
 
 		This.HTML.title = html.children[1];
 		This.HTML.subTitle = html.children[2];
+
+		DragHandler.registerDropRegion(html.children[0]);
+		DragHandler.registerDropRegion(This.HTML.title);
+		DragHandler.registerDropRegion(This.HTML.subTitle);
 
 		html.onclick = function(_e) {
 			if (_e.target.classList.contains("dropDownButton")) return;

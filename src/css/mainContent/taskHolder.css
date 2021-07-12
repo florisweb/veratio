@@ -45,7 +45,11 @@
 		margin-left: 15px;
 		color: #666;
 		font-weight: bold;	
-		transition: margin-left .3s;
+		transition: margin-left .3s, padding-bottom .3s;
+	}
+	.taskHolder > .titleHolder.showDropRegion {
+		padding-bottom: 30px;
+		background:  red;
 	}
 
 	.taskHolder.hideTasks > .titleHolder {
