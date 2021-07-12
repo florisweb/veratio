@@ -27,6 +27,7 @@ function _TaskRenderer() {
 		function createTaskHTMLTemplate() {
 			let html = document.createElement("div");
 			html.className = "listItem taskItem dropTarget clickable";
+			html.setAttribute('id', newId());
 			
 			html.innerHTML = 	"<div class='taskOwnerIndicator'></div>" + 
 								"<div class='statusCircleHitBox'></div>" + 
@@ -158,7 +159,23 @@ function _TaskRenderer() {
 
 			function assignDragHandler(_html, _taskWrapper, _project) {
 				if (!_project.users.Self.permissions.tasks.update) return _html;
-				DragHandler.register(_html);
+				DragHandler.register(_html, onDrop);
+
+				function onDrop(_ownHTML, _todoHolder) {
+					let index = -1;
+					for (let i = 0; i < _todoHolder.children.length; i++)
+					{
+						if (_todoHolder.children[i].id != _ownHTML.id) continue;
+						index = i;
+						break;
+					}
+
+
+					let taskHolderId = _todoHolder.parentNode.getAttribute('taskHolderId');
+					let taskHolder = MainContent.taskHolder.get(taskHolderId);
+					if (!taskHolder) return;
+					taskHolder.task.dropTask(_taskWrapper, index);
+				}
 
 
 				 // ondragstart="drag(event)" ondragover="moveAway(event, this)" ondragleave='moveBack(event, this);'

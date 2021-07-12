@@ -127,8 +127,6 @@ function _MainContent_taskHolder() {
 		}
 	}
 
-
-
 	this.closeAllCreateMenus = function(_ignorerer) {
 		let closedCreateMenu = false;
 		for (let taskHolder of this.list)
@@ -484,10 +482,11 @@ function TaskHolder_task(_parent) {
 
 
 
-	this.dropTask = async function(_task, _taskIndex) {
-		_task 		= await updateTaskToNewTaskHolder(_task);
-		let task 	= moveTaskToNewLocalPosition(_task, _taskIndex);
-		return task.render(_taskIndex);
+	this.dropTask = async function(_taskWrapper, _taskIndex) {
+		console.log(_taskWrapper, _taskIndex);
+		_task = await updateTaskToNewTaskHolder(_taskWrapper.task);
+		// let task 	= moveTaskToNewLocalPosition(_taskWrapper.task, _taskIndex);
+		// return task.render(_taskIndex);
 	}
 
 	async function updateTaskToNewTaskHolder(_task) {
@@ -497,6 +496,20 @@ function TaskHolder_task(_parent) {
 		let project = await Server.getProject(_task.projectId);
 		return await project.tasks.update(_task);
 	}
+
+	// function moveTaskToNewLocalPosition(_task, _taskIndex) {
+	// 	if (typeof _taskIndex != "number") _taskIndex = TaskHolder.taskList.length;
+
+	// 	for (let i = 0; i < TaskHolder.taskList.length; i++)
+	// 	{
+	// 		if (TaskHolder.taskList[i].id != _task.id) continue;
+	// 		TaskHolder.taskList.splice(i, 1);
+	// 	}
+
+	// 	let newTask = new _taskWrapper(_task);
+	// 	TaskHolder.taskList.splice(_taskIndex, 0, newTask);
+	// 	return newTask;
+	// }
 
 
 	function get(_id) {
@@ -508,19 +521,7 @@ function TaskHolder_task(_parent) {
 	}
 
 
-	function moveTaskToNewLocalPosition(_task, _taskIndex) {
-		if (typeof _taskIndex != "number") _taskIndex = TaskHolder.taskList.length;
-
-		for (let i = 0; i < TaskHolder.taskList.length; i++)
-		{
-			if (TaskHolder.taskList[i].id != _task.id) continue;
-			TaskHolder.taskList.splice(i, 1);
-		}
-
-		let newTask = new _taskWrapper(_task);
-		TaskHolder.taskList.splice(_taskIndex, 0, newTask);
-		return newTask;
-	}
+	
 
 
 
