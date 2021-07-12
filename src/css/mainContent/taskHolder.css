@@ -49,7 +49,6 @@
 	}
 	.taskHolder > .titleHolder.showDropRegion {
 		padding-bottom: 30px;
-		background:  red;
 	}
 
 	.taskHolder.hideTasks > .titleHolder {
@@ -427,7 +426,7 @@
 	padding-bottom: 30px;
 }
 
-.taskItem.listItem.dropped {
+.taskItem.listItem.successfullDrop {
 	animation: dropAnimation .3s 1;
 }
 

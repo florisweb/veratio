@@ -49,9 +49,8 @@ function _DragHandler() {
     _e.preventDefault();
 
     let onDropTodoHolder;
-    _html.classList.add("dropped");
     setTimeout(function () {
-      _html.classList.remove("dropped");
+      _html.classList.remove("successfullDrop");
       if (!onDropTodoHolder) return;
       _onDrop(_html, onDropTodoHolder);
     }, 300);
@@ -60,6 +59,8 @@ function _DragHandler() {
     if (!curDropTarget) return;
     if (curDropTarget.classList.contains('taskItem'))
     {
+      _html.classList.add("successfullDrop");
+
       onDropTodoHolder = curDropTarget.parentNode;
       if (!isDescendant(_html, _e.target)) return curDropTarget.parentNode.appendChild(_html);
       curDropTarget.parentNode.insertBefore(_html, curDropTarget.nextSibling);
@@ -71,7 +72,6 @@ function _DragHandler() {
       onDropTodoHolder = curDropTarget.parentNode.children[3];
       onDropTodoHolder.insertBefore(_html, onDropTodoHolder.children[0]);
       return;
-
     }
   }
 }

@@ -26,7 +26,7 @@ function _TaskRenderer() {
 
 		function createTaskHTMLTemplate() {
 			let html = document.createElement("div");
-			html.className = "listItem taskItem dropTarget clickable";
+			html.className = "listItem taskItem clickable";
 			html.setAttribute('id', newId());
 			
 			html.innerHTML = 	"<div class='taskOwnerIndicator'></div>" + 
@@ -177,122 +177,7 @@ function _TaskRenderer() {
 					taskHolder.task.dropTask(_taskWrapper, index);
 				}
 
-
-				 // ondragstart="drag(event)" ondragover="moveAway(event, this)" ondragleave='moveBack(event, this);'
-
-
-
-
-				// let lastDropTarget = false;
-				// DragHandler.register(
-				// 	_html, 
-				// 	function (_item, _dropTarget) {
-				// 		if (!_dropTarget) return;
-				// 		clearLastDropTarget();
-
-				// 		if (dropTargetIsHeader(_dropTarget))
-				// 		{
-				// 			_dropTarget.parentNode.children[3].style.marginTop = "38px";
-				// 		} else {
-				// 			_dropTarget.style.marginBottom = _dropTarget.offsetHeight + "px";
-				// 		}
-
-				// 		lastDropTarget = _dropTarget;
-				// 	}, 
-				// 	async function (_item) {						
-				// 		clearLastDropTarget();
-
-				// 		let dropData = getDropData(_item);
-				// 		if (!dropData) return;
-				// 		let dropCoords = {
-				// 			x: dropData.x, 
-				// 			y: dropData.y
-				// 		}
-				// 		_item.placeHolder.style.transition 	= "all .3s";
-				// 		_item.placeHolder.style.left 		= dropData.x + "px";
-				// 		_item.placeHolder.style.top 		= dropData.y + "px";
-						
-
-				// 		_item.html.classList.add("hide");
-				// 		_taskWrapper.taskHolder.onTaskRemove(_taskWrapper.task.id);
-
-				// 		let task = await Server.global.tasks.get(_taskWrapper.task.id);				
-				// 		dropData.taskHolder.task.dropTask(task, dropData.index);
-
-				// 		return dropCoords;
-				// 	},
-				// 	function () {clearLastDropTarget();}
-				// );
-
 				return _html;
-
-
-				// function clearLastDropTarget() {
-				// 	if (!lastDropTarget) return;
-				// 	lastDropTarget.style.marginBottom 	= "";
-
-				// 	if (!lastDropTarget.parentNode.children[2]) return;
-				// 	lastDropTarget.parentNode.children[3].style.marginTop = "";
-				// }
-
-				// function dropTargetIsHeader(_target) {
-				// 	return 	_target.classList.contains("dropDownButton") || 
-				// 			_target.classList.contains("titleHolder") ||
-				// 			_target.classList.contains("subTitleHolder");
-				// }
-
-				// function getDropData(_item) {
-				// 	if (!lastDropTarget) return false;
-				// 	let data = {
-				// 		index: getDropIndex(_item),
-				// 	}
-					
-				// 	data.taskHolder  = getTaskHolderByDropTarget(lastDropTarget)
-					
-				// 	if (!data.taskHolder) return false;
-				// 	let positionObj = data.taskHolder.HTML.todoHolder;
-				// 	const taskHeight = 38;
-					
-				// 	let pos = positionObj.getBoundingClientRect();
-				// 	data.x = pos.left;
-				// 	data.y = pos.top + taskHeight * data.index;
-					
-				// 	if (data.index === 0) data.y -= taskHeight - 10;
-					
-				// 	return data;
-				// }
-
-				// 	function getTaskHolderByDropTarget(_target) {
-				// 		let taskHolder 								= lastDropTarget.parentNode.parentNode;
-				// 		if (dropTargetIsHeader(_target)) taskHolder = _target.parentNode;
-
-				// 		let taskHolderId = taskHolder.getAttribute("taskHolderId");
-				// 		return MainContent.taskHolder.get(taskHolderId);
-				// 	}
-
-
-				// 	function getDropIndex(_item) {
-				// 		if (dropTargetIsHeader(lastDropTarget)) return 0;
-				// 		let index = false;	
-
-				// 		let siblings = lastDropTarget.parentNode.children;
-				// 		let dragItemI = Infinity;
-
-				// 		for (let i = 0; i < siblings.length; i++)
-				// 		{
-				// 			if (siblings[i] == _item.html) dragItemI = i;
-				// 			if (siblings[i] != lastDropTarget) continue;
-				// 			index = i + 1 - (dragItemI < i) - getAboveStatus(_item, lastDropTarget);
-				// 		}
-
-				// 		return index;
-				// 	}
-
-				// 	function getAboveStatus(_item, _dropTarget) {
-				// 		let dropTargetHeight 	= _dropTarget.offsetHeight;
-				// 		let dropTargetY 		= _dropTarget.getBoundingClientRect().top;
-				// 		return dropTargetY - _item.y > 0;
-				// 	}
 			}
 
 
