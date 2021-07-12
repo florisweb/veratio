@@ -30,6 +30,7 @@ function _DragHandler() {
     _html.onDropHandler = _onDrop;
     _html.setAttribute("draggable", true);
     _html.addEventListener("dragstart", function() {
+      curDropTarget = false;
       This.curDragItem = _html;
       _html.classList.add("dragging");
     });
@@ -38,7 +39,6 @@ function _DragHandler() {
   }
 
   let curDropTarget = false;
-  let onDropTodoHolder;
   function dropHandler(_html, _e, _onDrop) {
     if (_html != This.curDragItem) return curDropTarget = _html; // Fires twice: first for the item that is being dropped onto, and the second time for the item that is being dropped
     _html.classList.remove("dragging");
@@ -47,12 +47,11 @@ function _DragHandler() {
     for (let region of regions) region.classList.remove("showDropRegion");
 
     _e.preventDefault();
-    console.warn(_e.target);
 
+    let onDropTodoHolder;
     _html.classList.add("dropped");
     setTimeout(function () {
       _html.classList.remove("dropped");
-
       if (!onDropTodoHolder) return;
       _onDrop(_html, onDropTodoHolder);
     }, 300);
@@ -69,7 +68,6 @@ function _DragHandler() {
 
     if (curDropTarget.parentNode.classList.contains('taskHolder'))
     {
-      console.warn('!!', 'drop to header');
       onDropTodoHolder = curDropTarget.parentNode.children[3];
       onDropTodoHolder.insertBefore(_html, onDropTodoHolder.children[0]);
       return;
