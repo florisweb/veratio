@@ -57,13 +57,20 @@ function _DragHandler() {
 
 
     if (!curDropTarget) return;
-    if (curDropTarget.classList.contains('taskItem'))
-    {
-      _html.classList.add("successfullDrop");
+    _html.classList.add("successfullDrop");
 
+    if (curDropTarget.classList.contains('taskItem') && curDropTarget.classList.contains('listItem'))
+    {
       onDropTodoHolder = curDropTarget.parentNode;
       if (!isDescendant(_html, _e.target)) return curDropTarget.parentNode.appendChild(_html);
       curDropTarget.parentNode.insertBefore(_html, curDropTarget.nextSibling);
+      return;
+    }
+    
+    if (curDropTarget.classList.contains('createTaskHolder'))
+    {
+      onDropTodoHolder = curDropTarget.parentNode.children[3];
+      onDropTodoHolder.appendChild(_html);
       return;
     }
 
@@ -73,6 +80,8 @@ function _DragHandler() {
       onDropTodoHolder.insertBefore(_html, onDropTodoHolder.children[0]);
       return;
     }
+
+    _html.classList.remove("successfullDrop");
   }
 }
 

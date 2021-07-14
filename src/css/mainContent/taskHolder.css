@@ -45,7 +45,7 @@
 		margin-left: 15px;
 		color: #666;
 		font-weight: bold;	
-		transition: margin-left .3s, padding-bottom .3s;
+		transition: margin-left .3s, padding-bottom .2s;
 	}
 	.taskHolder > .titleHolder.showDropRegion {
 		padding-bottom: 30px;
@@ -148,9 +148,13 @@
 		height: auto;
 		
 		overflow: hidden;
+		transition: padding-top .2s;
 	}
 	.taskHolder .createTaskHolder.hide {
 		display: none;
+	}
+	.taskHolder .createTaskHolder.showDropRegion {
+		padding-top: 30px;
 	}
 	
 
@@ -413,7 +417,7 @@
 	padding-left: 35px;
 	overflow: hidden;
 
-	transition: all .3s;
+	transition: all .3s, padding-bottom .2s;
 }
 
 .taskItem.listItem.dragging {

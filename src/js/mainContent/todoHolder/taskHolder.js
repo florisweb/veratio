@@ -487,10 +487,7 @@ function TaskHolder_task(_parent) {
 
 
 	this.dropTask = async function(_taskWrapper, _taskIndex) {
-		console.log(_taskWrapper, _taskIndex);
 		_task = await updateTaskToNewTaskHolder(_taskWrapper.task);
-		// let task 	= moveTaskToNewLocalPosition(_taskWrapper.task, _taskIndex);
-		// return task.render(_taskIndex);
 	}
 
 	async function updateTaskToNewTaskHolder(_task) {
@@ -501,32 +498,10 @@ function TaskHolder_task(_parent) {
 		return await project.tasks.update(_task);
 	}
 
-	// function moveTaskToNewLocalPosition(_task, _taskIndex) {
-	// 	if (typeof _taskIndex != "number") _taskIndex = TaskHolder.taskList.length;
-
-	// 	for (let i = 0; i < TaskHolder.taskList.length; i++)
-	// 	{
-	// 		if (TaskHolder.taskList[i].id != _task.id) continue;
-	// 		TaskHolder.taskList.splice(i, 1);
-	// 	}
-
-	// 	let newTask = new _taskWrapper(_task);
-	// 	TaskHolder.taskList.splice(_taskIndex, 0, newTask);
-	// 	return newTask;
-	// }
-
-
-	function get(_id) {
-		for (let task of TaskHolder.taskList) 
-		{
-			if (task.id == _id) return task;
-		}
-		return false;
-	}
+	
 
 
 	
-
 
 
 
@@ -683,6 +658,8 @@ function TaskHolder_createMenuConstructor(_config, _type) {
 		This.HTML.createMenuHolder 	= html;
 		This.HTML.createMenu 		= html.children[0];
 		This.HTML.memberHolder 		= html.children[0].children[4].children[3];
+
+		DragHandler.registerDropRegion(This.HTML.createMenuHolder);
 
 		addEventListeners(This);
 
