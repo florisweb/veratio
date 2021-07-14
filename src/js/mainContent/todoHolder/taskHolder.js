@@ -833,8 +833,12 @@ function TaskHolder_createMenu(_parent) {
 		}
 
 		let newTask = await this.curTask.project.tasks.update(task);
-		// User moved an edit-task to another project
-		if (editData.task && task.projectId != editData.task.projectId && newTask) removeOldTask(editData.task);
+		
+		if ( // User moved an edit-task to another project
+			newTask &&
+			this.curTask.editing && 
+			this.curTask.originalTask.projectId != newTask.projectId
+		) await removeOldTask(this.curTask.originalTask);
 
 		resetEditMode(true);
 		await MainContent.taskHolder.renderTask(newTask);
@@ -972,6 +976,8 @@ function TaskHolder_createMenu(_parent) {
 		this.assignedTo 	= [];
 
 		this.finished 		= false;
+
+		this.originalTask 	= _task;
 
 
 
