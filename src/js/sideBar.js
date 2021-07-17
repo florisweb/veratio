@@ -24,9 +24,9 @@ function _SideBar() {
 
 	async function setProjectTabOnOpenById(_id) {
 		let tabs = $("#sideBar .tab.projectTab");
-		for (let i = 0; i < SideBar.projectList.projects.length; i++)
+		for (let i = 0; i < tabs.length; i++)
 		{
-			if (SideBar.projectList.projects[i].id != _id) continue;
+			if (tabs[i].getAttribute('id') != _id) continue;
 			setTabOpenIndicator(tabs[i]);
 			return;
 		}
