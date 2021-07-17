@@ -175,6 +175,12 @@ function Project(_project) {
     Local = await LocalDB.getProject(this.id, true);
   }
 
+  this.moveToIndex = async function(_newIndex) {
+    console.log('move project ' + this.title + ' to ' + _newIndex);
+    // add an offline mode too
+
+  }
+
 
   this.rename = async function(_newTitle) {
     if (!_newTitle) return false;

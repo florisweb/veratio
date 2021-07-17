@@ -298,9 +298,10 @@ function _SideBar_projectList() {
 	function getListHolder() {
 		return HTML.projectsHolder;
 	}
-	function onDrop(_ownHTML, _dropTarget, _newIndex) {
-		console.log('move to', _newIndex);
-
+	async function onDrop(_ownHTML, _dropTarget, _newIndex) {
+		let project = await Server.getProject(_ownHTML.getAttribute('id'));
+		if (!project) return;
+		await project.moveToIndex(_newIndex);
 	}
 }
 
