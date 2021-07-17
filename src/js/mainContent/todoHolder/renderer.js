@@ -161,16 +161,7 @@ function _TaskRenderer() {
 				if (!_project.users.Self.permissions.tasks.update) return _html;
 				DragHandler.register(_html, onDrop, getListHolder, MainContent.taskHolder.dropRegionId);
 
-				function onDrop(_ownHTML, _todoHolder) {
-					let index = -1;
-					for (let i = 0; i < _todoHolder.children.length; i++)
-					{
-						if (_todoHolder.children[i].id != _ownHTML.id) continue;
-						index = i;
-						break;
-					}
-
-
+				function onDrop(_ownHTML, _todoHolder, _newIndex) {
 					let taskHolderId = _todoHolder.parentNode.getAttribute('taskHolderId');
 					let taskHolder = MainContent.taskHolder.get(taskHolderId);
 					if (!taskHolder) return;

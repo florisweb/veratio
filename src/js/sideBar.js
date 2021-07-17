@@ -280,6 +280,7 @@ function _SideBar_projectList() {
 	function createProjectHTML(_project) {
 		if (!_project) return;
 		let html = document.createElement("div");
+		html.setAttribute('id', _project.id);
 		html.className = "header small clickable tab projectTab";
 		html.innerHTML = '<img src="images/icons/projectIcon.png" class="headerIcon">' +
 						 '<div class="headerText userText"></div>' + 
@@ -297,7 +298,8 @@ function _SideBar_projectList() {
 	function getListHolder() {
 		return HTML.projectsHolder;
 	}
-	function onDrop(_dropTarget) {
+	function onDrop(_ownHTML, _dropTarget, _newIndex) {
+		console.log('move to', _newIndex);
 
 	}
 }

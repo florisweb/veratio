@@ -76,7 +76,16 @@ function _DragHandler() {
     setTimeout(function () {
       _html.classList.remove("successfulDrop");
       if (!curDropTarget) return;
-      onDropCallBack(_html, curDropTarget);
+      
+      let index = -1;
+      for (let i = 0; i < onDropTodoHolder.children.length; i++)
+      {
+        if (onDropTodoHolder.children[i].id != _html.id) continue;
+        index = i;
+        break;
+      }
+
+      onDropCallBack(_html, curDropTarget, index);
     }, 300);
 
 
