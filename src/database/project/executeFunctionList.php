@@ -3,7 +3,7 @@
 		"tasks"		=> ["get", "getByGroup", "getByDateRange", "update", "remove"],
 		"tags" 		=> ["get", "getAll", "update", "remove"],
 		"users" 	=> ["update", "remove", "getAll", "inviteByEmail", "inviteByLink"],
-		"project" 	=> ["rename", "remove", "create", "getAll"],
+		"project" 	=> ["rename", "remove", "create", "getAll", 'move'],
 	]);
 
 	require_once __DIR__ . "/../modules/app.php";
@@ -88,6 +88,9 @@
 				break;
 				case "create": 
 					return $GLOBALS["App"]->createProject($_functionData["parameters"]);
+				break;
+				case "move": 
+					return $project->moveToIndex($_functionData['parameters']);
 				break;
 			}
 			return "E_invalidAction";

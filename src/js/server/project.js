@@ -176,9 +176,17 @@ function Project(_project) {
   }
 
   this.moveToIndex = async function(_newIndex) {
-    console.log('move project ' + this.title + ' to ' + _newIndex);
-    // add an offline mode too
+    let functionRequest = {
+      action: "move",
+      type: "project",
+      projectId: this.id,
+      parameters: _newIndex
+    };
 
+    let response = await Server.fetchFunctionRequest(functionRequest);
+
+    if (response.result && response.error != "E_noConnection") // Local.move -- to do, offline changing of the projectorder
+    return response.result;
   }
 
 

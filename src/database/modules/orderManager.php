@@ -53,10 +53,18 @@
 		}
 
 		public function moveProjectToIndex($_projectId, $_index, $_userId) {
+			$index = (int)$_index;
+			if ($index < 0) return false;
 			$orderList = $GLOBALS['DBHelper']->orderManager->getProjectOrder($_userId);
-			// do some checks to ensure all projects the user has access to are in the list, and there are no project the user doesn't have access to
 
-			array_splice($orderList, (int)$_index, 0, $_projectId);
+			for ($i = 0; $i < sizeof($orderList); $i++)
+			{
+				if ($orderList[$i] != $_projectId) continue;
+				array_splice($orderList, $i, 1);
+				break;
+			}
+
+			array_splice($orderList, $index, 0, $_projectId);
 			return $GLOBALS['DBHelper']->orderManager->setProjectOrder($orderList, $_userId);
 		}
 	}
