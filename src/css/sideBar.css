@@ -128,6 +128,8 @@ body.appLoading #sideBar {
 
 
 
+
+
 	#sideBar .tab.projectTab {
 		padding: 7px 20px;
 		padding-left: 29px;
@@ -136,6 +138,15 @@ body.appLoading #sideBar {
 	#sideBar .tab.projectTab.showDropRegion {
 		padding-bottom: 37px;
 	}
+	#sideBar .tab.projectTab.successfulDrop {
+		animation: dropAnimation .3s 1;
+	}
+	#sideBar .tab.projectTab.dragging {
+		/*opacity: 0;*/
+		/*margin-top: -38px;	*/
+		/*background: #fff;*/
+	}
+
 
 		#sideBar .tab.projectTab .headerIcon {
 			top: 1px;

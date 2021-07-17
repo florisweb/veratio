@@ -298,7 +298,6 @@ function _SideBar_projectList() {
 		return HTML.projectsHolder;
 	}
 	function onDrop(_dropTarget) {
-		console.warn('drop', ...arguments);
 
 	}
 }
