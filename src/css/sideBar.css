@@ -131,12 +131,11 @@ body.appLoading #sideBar {
 	#sideBar .tab.projectTab {
 		padding: 7px 20px;
 		padding-left: 29px;
-		transition: padding-bottom .2s;
+		transition: all .2s
 	}
 	#sideBar .tab.projectTab.showDropRegion {
 		padding-bottom: 37px;
 	}
-
 
 		#sideBar .tab.projectTab .headerIcon {
 			top: 1px;
@@ -211,7 +210,7 @@ body.appLoading #sideBar {
 		pointer-events: none;
 		opacity: .2;
 	}
-	
+
 	#sideBar .projectListHolder .createProjectButton {
 		transition: padding-top .2s;
 	}

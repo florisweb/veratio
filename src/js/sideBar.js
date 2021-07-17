@@ -198,7 +198,8 @@ function _SideBar() {
 
 
 function _SideBar_projectList() {
-	let HTML = {
+	const DropRegionId = 'SideBar.projectList.dropRegion';
+	const HTML = {
 		projectListHeader: 		$("#sideBar .projectListHolder .header")[0],
 		dropDownIcon: 			$("#sideBar .projectListHolder .header .dropDownButton")[0],
 		loadingIcon: 			$("#sideBar .projectListHolder .header .loadingIcon")[0],
@@ -208,16 +209,12 @@ function _SideBar_projectList() {
 		createProjectButton: 	$("#sideBar .projectListHolder .projectList .createProjectButton")[0],
 	}
 	
-	DragHandler.registerDropRegion(HTML.projectListHeader);
-	DragHandler.registerDropRegion(HTML.createProjectButton);
-
+	DragHandler.registerDropRegion(HTML.projectListHeader, true, DropRegionId);
+	DragHandler.registerDropRegion(HTML.createProjectButton, false, DropRegionId);
 
 	this.projects = [];
-
-
-
-
 	this.openState = true;
+
 	this.toggleOpenState = function() {
 		if (this.openState) return this.close();
 		this.open();
@@ -292,9 +289,17 @@ function _SideBar_projectList() {
 		html.onclick = function() {MainContent.taskPage.projectTab.open(_project.id);}
 		setTextToElement(html.children[1], _project.title);
 
-		DragHandler.register(html);
+		DragHandler.register(html, onDrop, getListHolder, DropRegionId);
 
 		return html;
+	}
+
+	function getListHolder() {
+		return HTML.projectsHolder;
+	}
+	function onDrop(_dropTarget) {
+		console.warn('drop', ...arguments);
+
 	}
 }
 

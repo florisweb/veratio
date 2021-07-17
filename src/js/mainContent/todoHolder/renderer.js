@@ -159,7 +159,7 @@ function _TaskRenderer() {
 
 			function assignDragHandler(_html, _taskWrapper, _project) {
 				if (!_project.users.Self.permissions.tasks.update) return _html;
-				DragHandler.register(_html, onDrop);
+				DragHandler.register(_html, onDrop, getListHolder, MainContent.taskHolder.dropRegionId);
 
 				function onDrop(_ownHTML, _todoHolder) {
 					let index = -1;
@@ -175,6 +175,17 @@ function _TaskRenderer() {
 					let taskHolder = MainContent.taskHolder.get(taskHolderId);
 					if (!taskHolder) return;
 					taskHolder.task.dropTask(_taskWrapper, index);
+				}
+
+				function getListHolder(_dropTarget) {
+					if (
+						_dropTarget.classList.contains('createTaskHolder') ||
+						_dropTarget.classList.contains('titleHolder') ||
+						_dropTarget.classList.contains('subTitleHolder') ||
+						_dropTarget.classList.contains('dropDownButton')
+					) return _dropTarget.parentNode.children[3];
+					console.log(...arguments);
+
 				}
 
 				return _html;

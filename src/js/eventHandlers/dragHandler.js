@@ -4,9 +4,9 @@
 // 
 
 // showDropRegion
-// - above holder (drops underneath)    
-// - actual item (drops underneath)
-// - underneath holder (drops above)
+// - above holder (drops as the first item)       dropOnTop
+// - actual item (drops underneath)               dragItem
+// - underneath holder (drops as the last item)   dropOnBottom
 
 
 
@@ -15,41 +15,55 @@ function _DragHandler() {
   let This = this;
 
   this.curDragItem = false;
+  this.curDropRegionId = false;
+  let onDropCallBack;
+  let getListHolder;
   document.body.ondragend = function(_e) {
     if (!DragHandler.curDragItem) return;
-    dropHandler(_e.target, _e, DragHandler.curDragItem.onDropHandler);
+    dropHandler(_e.target, _e);
   }
 
-  this.registerDropRegion = function(_html) {
+  this.registerDropRegion = function(_html, _dropOnTop = false, _dropRegionId) {
+    _html.classList.add(_dropOnTop ? 'dropOnTop' : 'dropOnBottom');
+
     _html.addEventListener("dragover", function(_e) {
+      if (_dropRegionId != This.curDropRegionId) return;
       _e.preventDefault();
       _html.classList.add("showDropRegion");
     });
 
     _html.addEventListener("dragleave", function() {
+      if (_dropRegionId != This.curDropRegionId) return;
+
       _html.classList.remove("showDropRegion");
     });
 
     _html.addEventListener("drop", function(_e) {
-      dropHandler(_html, _e, DragHandler.curDragItem.onDropHandler);
+      if (_dropRegionId != This.curDropRegionId) return;
+      dropHandler(_html, _e);
     });
   }
 
-  this.register = function(_html, _onDrop) {
+  this.register = function(_html, _onDrop, _getListHolder, _dropRegionId) {
     if (!_html) return;
-    _html.onDropHandler = _onDrop;
+    _html.classList.add('dragItem');
     _html.setAttribute("draggable", true);
+
     _html.addEventListener("dragstart", function() {
-      curDropTarget = false;
-      This.curDragItem = _html;
+      onDropCallBack        = _onDrop;
+      getListHolder         = _getListHolder;
+      curDropTarget         = false;
+
+      This.curDragItem      = _html;
+      This.curDropRegionId  = _dropRegionId;
       _html.classList.add("dragging");
     });
 
-    this.registerDropRegion(_html);
+    this.registerDropRegion(_html, false, _dropRegionId);
   }
 
   let curDropTarget = false;
-  function dropHandler(_html, _e, _onDrop) {
+  function dropHandler(_html, _e) {
     if (_html != This.curDragItem) return curDropTarget = _html; // Fires twice: first for the item that is being dropped onto, and the second time for the item that is being dropped
     _html.classList.remove("dragging");
 
@@ -61,32 +75,32 @@ function _DragHandler() {
     let onDropTodoHolder;
     setTimeout(function () {
       _html.classList.remove("successfulDrop");
-      if (!onDropTodoHolder) return;
-      _onDrop(_html, onDropTodoHolder);
+      if (!curDropTarget) return;
+      onDropCallBack(_html, curDropTarget);
     }, 300);
 
 
     if (!curDropTarget) return;
     _html.classList.add("successfulDrop");
 
-    if (curDropTarget.classList.contains('taskItem') && curDropTarget.classList.contains('listItem'))
+    if (curDropTarget.classList.contains('dragItem'))
     {
       onDropTodoHolder = curDropTarget.parentNode;
-      if (!isDescendant(_html, _e.target)) return curDropTarget.parentNode.appendChild(_html);
+      // if (!isDescendant(_html, _e.target)) return curDropTarget.parentNode.appendChild(_html);
       curDropTarget.parentNode.insertBefore(_html, curDropTarget.nextSibling);
       return;
     }
     
-    if (curDropTarget.classList.contains('createTaskHolder'))
+    if (curDropTarget.classList.contains('dropOnBottom'))
     {
-      onDropTodoHolder = curDropTarget.parentNode.children[3];
+      onDropTodoHolder = getListHolder(curDropTarget);
       onDropTodoHolder.appendChild(_html);
       return;
     }
 
-    if (curDropTarget.parentNode.classList.contains('taskHolder'))
+    if (curDropTarget.classList.contains('dropOnTop'))
     {
-      onDropTodoHolder = curDropTarget.parentNode.children[3];
+      onDropTodoHolder = getListHolder(curDropTarget);
       onDropTodoHolder.insertBefore(_html, onDropTodoHolder.children[0]);
       return;
     }

@@ -8,6 +8,8 @@ function _MainContent_taskHolder() {
 		todoHolder: $("#mainContentHolder .todoListHolder")[0],
 		taskPage: $(".mainContentPage")[0]
 	}
+	this.dropRegionId = 'Maincontent.taskHolder.dropRegionId';
+
 
 	this.dateOptionMenu = function() {
 		let Menu = OptionMenu.create();
@@ -401,9 +403,9 @@ function TaskHolder(_config = {}, _type = "default", _taskHolderIndex) {
 		This.HTML.title = html.children[1];
 		This.HTML.subTitle = html.children[2];
 
-		DragHandler.registerDropRegion(html.children[0]);
-		DragHandler.registerDropRegion(This.HTML.title);
-		DragHandler.registerDropRegion(This.HTML.subTitle);
+		DragHandler.registerDropRegion(html.children[0], true, MainContent.taskHolder.dropRegionId);
+		DragHandler.registerDropRegion(This.HTML.title, true, MainContent.taskHolder.dropRegionId);
+		DragHandler.registerDropRegion(This.HTML.subTitle, true, MainContent.taskHolder.dropRegionId);
 
 		html.onclick = function(_e) {
 			if (_e.target.classList.contains("dropDownButton")) return;
@@ -659,7 +661,7 @@ function TaskHolder_createMenuConstructor(_config, _type) {
 		This.HTML.createMenu 		= html.children[0];
 		This.HTML.memberHolder 		= html.children[0].children[4].children[3];
 
-		DragHandler.registerDropRegion(This.HTML.createMenuHolder);
+		DragHandler.registerDropRegion(This.HTML.createMenuHolder, false, MainContent.taskHolder.dropRegionId);
 
 		addEventListeners(This);
 
