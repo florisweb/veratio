@@ -429,7 +429,7 @@
 	padding-bottom: 30px;
 }
 
-.taskItem.listItem.successfullDrop {
+.taskItem.listItem.successfulDrop {
 	animation: dropAnimation .3s 1;
 }
 

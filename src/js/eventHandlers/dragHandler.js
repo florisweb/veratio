@@ -1,3 +1,13 @@
+// Classes
+// dragging
+// successfulDrop
+// 
+
+// showDropRegion
+// - above holder (drops underneath)    
+// - actual item (drops underneath)
+// - underneath holder (drops above)
+
 
 
 let DragHandler = new _DragHandler();
@@ -50,14 +60,14 @@ function _DragHandler() {
 
     let onDropTodoHolder;
     setTimeout(function () {
-      _html.classList.remove("successfullDrop");
+      _html.classList.remove("successfulDrop");
       if (!onDropTodoHolder) return;
       _onDrop(_html, onDropTodoHolder);
     }, 300);
 
 
     if (!curDropTarget) return;
-    _html.classList.add("successfullDrop");
+    _html.classList.add("successfulDrop");
 
     if (curDropTarget.classList.contains('taskItem') && curDropTarget.classList.contains('listItem'))
     {
@@ -81,7 +91,7 @@ function _DragHandler() {
       return;
     }
 
-    _html.classList.remove("successfullDrop");
+    _html.classList.remove("successfulDrop");
   }
 }
 

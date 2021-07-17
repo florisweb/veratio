@@ -199,12 +199,23 @@ function _SideBar() {
 
 function _SideBar_projectList() {
 	let HTML = {
-		projectList: $("#sideBar .projectListHolder .projectList")[0],
-		projectsHolder: $("#sideBar .projectListHolder .projectList")[0].children[0],
-		dropDownIcon: $(".projectListHolder .header .dropDownButton")[0],
-		loadingIcon: $(".projectListHolder .header .loadingIcon")[0],
+		projectListHeader: 		$("#sideBar .projectListHolder .header")[0],
+		dropDownIcon: 			$("#sideBar .projectListHolder .header .dropDownButton")[0],
+		loadingIcon: 			$("#sideBar .projectListHolder .header .loadingIcon")[0],
+		
+		projectList: 			$("#sideBar .projectListHolder .projectList")[0],
+		projectsHolder: 		$("#sideBar .projectListHolder .projectList")[0].children[0],
+		createProjectButton: 	$("#sideBar .projectListHolder .projectList .createProjectButton")[0],
 	}
+	
+	DragHandler.registerDropRegion(HTML.projectListHeader);
+	DragHandler.registerDropRegion(HTML.createProjectButton);
+
+
 	this.projects = [];
+
+
+
 
 	this.openState = true;
 	this.toggleOpenState = function() {
@@ -280,6 +291,8 @@ function _SideBar_projectList() {
 		HTML.projectsHolder.append(html);
 		html.onclick = function() {MainContent.taskPage.projectTab.open(_project.id);}
 		setTextToElement(html.children[1], _project.title);
+
+		DragHandler.register(html);
 
 		return html;
 	}
