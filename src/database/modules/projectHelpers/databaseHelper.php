@@ -13,9 +13,11 @@
 		// private $DBName = "eelekweb_todo";
 
 		private $DB;
+		public $orderManager;
 		public function __construct() {
 			$this->DB = $GLOBALS["DB"]->connect($this->DBName);
 			if (!$this->DB) die("databaseHelper.php: DB doesn't exist");
+			$this->orderManager = new _databaseHelper_orderManager($this->DB);
 		}
 
 		public function getDBInstance($_projectId) {
@@ -26,6 +28,32 @@
 			$userId = $GLOBALS["SESSION"]->get("userId");
 			if (!$userId) return false;
 			return $userId;
+		}
+	}
+
+	class _databaseHelper_orderManager {
+		private $DBTableName = "orderManager";
+		private $DB;
+
+
+		public function __construct($_DB) {
+			$this->DB = $_DB;
+		}
+
+		public function getProjectOrder($_userId) {
+			$data = $this->DB->execute("SELECT projectOrder FROM $this->DBTableName WHERE userId=? LIMIT 1", array($_userId));
+			$order = $data[0]['projectOrder'];
+			if (!$order || !isset($order)) return [];
+			return json_decode($order, true);
+		}
+		public function setProjectOrder($_orderArr, $_userId) {
+			$dataExists = sizeof($this->getProjectOrder($_userId));
+			$orderStr = json_encode($_orderArr);
+			if ($dataExists)
+			{
+				return $this->DB->execute("UPDATE $this->DBTableName SET projectOrder=? WHERE userId=?", array($orderStr, $_userId));
+			}
+			return $this->DB->execute("INSERT INTO $this->DBTableName (userId, projectOrder) VALUES (?, ?)", array($_userId, $orderStr));
 		}
 	}
 

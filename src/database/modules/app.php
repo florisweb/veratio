@@ -6,6 +6,7 @@
 	$GLOBALS["PM"]->includePacket("USER", "1.1");
 
 	require_once __DIR__ . "/project.php";
+	require_once __DIR__ . "/OrderManager.php";
 
 
 	if (!function_exists("APP_noAuthHandler")) 
@@ -69,7 +70,7 @@
 			return $project;
 		}
 
-		public function getAllProjects($_customId = false) {
+		public function getAllProjects() {
 			if (!$this->userId) {$this->throwNoAuthError(); return "E_noAuth";}
 
 			$DBHelper = $GLOBALS["DBHelper"]->getDBInstance(null);
@@ -78,12 +79,12 @@
 			
 			for ($i = 0; $i < sizeof($projectIds); $i++)
 			{
-				$curProject = $this->getProject($projectIds[$i], $_customId);
+				$curProject = $this->getProject($projectIds[$i]);
 				if (!$curProject || is_string($curProject)) continue;
 				array_push($projects, $curProject); 
 			}
 			
-			return $projects;
+			return $GLOBALS['OrderManager']->sortProjectList($projects, $this->userId);
 		}
 
 
