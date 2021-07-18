@@ -25,9 +25,18 @@ const Server = new function() {
     return this.projectList;
   }
 
+  this.projectListNeedsUpdate = false;
+  let getProjectListPromise = false;
+  
   this.getProjectList = async function(_forceUpdate = false) {
-    if (!_forceUpdate) return this.projectList;
-    let projects = await getProjectList();
+    if (getProjectListPromise) return await getProjectListPromise;
+    if (!_forceUpdate && !this.projectListNeedsUpdate) return this.projectList;
+    this.projectListNeedsUpdate = false;
+
+    getProjectListPromise       = getProjectList();
+    let projects                = await getProjectListPromise;
+    getProjectListPromise       = false;
+    
     if (projects) this.projectList = projects;
     return this.projectList;
   }

@@ -304,6 +304,7 @@ function _MainContent_searchOptionMenu() {
 
 	this.getItemListByType = async function(_type) {
 		let project = MainContent.taskHolder.curCreateMenu.curTask.project;
+		if (!project && _type != projectType) return [];
 		switch (_type)
 		{
 			case tagType: 	

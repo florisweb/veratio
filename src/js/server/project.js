@@ -186,6 +186,7 @@ function Project(_project) {
     let response = await Server.fetchFunctionRequest(functionRequest);
 
     if (response.result && response.error != "E_noConnection") // Local.move -- to do, offline changing of the projectorder
+    if (response.result) Server.projectListNeedsUpdate = true;
     return response.result;
   }
 
