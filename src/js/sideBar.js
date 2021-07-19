@@ -300,7 +300,7 @@ function _SideBar_projectList() {
 	function getListHolder() {
 		return HTML.projectsHolder;
 	}
-	async function onDrop(_ownHTML, _dropTarget, _newIndex) {
+	async function onDrop(_ownHTML, _curDropTarget, _itemHolder, _newIndex) {
 		let project = await Server.getProject(_ownHTML.getAttribute('id'));
 		if (!project) return;
 		await project.moveToIndex(_newIndex);

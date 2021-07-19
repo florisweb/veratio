@@ -85,7 +85,7 @@ function _DragHandler() {
         break;
       }
 
-      onDropCallBack(_html, curDropTarget, index);
+      onDropCallBack(_html, curDropTarget, onDropTodoHolder, index);
     }, 300);
 
 

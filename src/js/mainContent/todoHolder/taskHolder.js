@@ -205,7 +205,6 @@ function TaskHolder_default(_config, _taskHolderIndex, _title) {
 		project = _result;
 		if (project && !project.users.Self.permissions.tasks.update) This.createMenu.disable();
 	});
-	
 
 	this.shouldRenderTask = function(_task) {
 		if (this.config.title == "Planned" && _task.groupType != "date") return false;
@@ -231,9 +230,9 @@ function TaskHolder_toPlan(_config, _taskHolderIndex) {
 		if (project && !project.users.Self.permissions.tasks.update) This.createMenu.disable();
 	});
 
-	this.onTaskCreate = function(_task) {
-		SideBar.projectList.updateProjectInfo();
-	}
+	// this.onTaskCreate = function(_task) {
+	// 	SideBar.projectList.updateProjectInfo();
+	// }
 	
 
 	this.shouldRenderTask = function(_task) {
@@ -299,9 +298,11 @@ function TaskHolder_overdue(_config, _taskHolderIndex) {
 	this.onTaskFinish = function(_taskWrapper) {
 		this.onTaskRemove(_taskWrapper.task.id)
 	}
-
+	this.onDropTaskFrom = function(_taskWrapper) {
+		this.onTaskRemove(_taskWrapper.task.id)
+	}
+	
 	this.onTaskRemove = function(_taskId) {
-		this.task.removeTask(_taskId);
 		if (this.task.taskList.length > 0) return;
 		this.remove();
 	}
@@ -368,12 +369,12 @@ function TaskHolder(_config = {}, _type = "default", _taskHolderIndex) {
 		MainContent.taskHolder.remove(this.id);
 	}
 
-	this.onTaskFinish = function(_task) {}
-
-	this.onTaskRemove = function(_taskId) {
-		this.task.removeTask(_taskId);
-	}
-
+	// Custom eventhandlers:
+	this.onTaskCreate = function() {console.log('onTaskCreate is not assigned', ...arguments)};
+	this.onTaskFinish = function() {console.log('onTaskFinish is not assigned', ...arguments)};
+	this.onDropTaskFrom = function() {console.log('onDropTaskFrom is not assigned', ...arguments)};
+	this.onDropTaskTo = function() {console.log('onDropTaskTo is not assigned', ...arguments)};
+	this.onTaskRemove = function(_taskId) {console.log('onTaskRemove is not assigned', ...arguments)};
 
 	this.taskListExpanded = true;
 	this.collapseTaskList = function() {
@@ -445,7 +446,7 @@ function TaskHolder_task(_parent) {
 	Parent.HTML.todoHolder = Parent.HTML.Self.children[3];
 	
 
-	this.taskList = [];
+	this.taskList = new TaskList();
 	this.addTaskList = function(_taskList) {
 		if (!_taskList) return;
 		let promises = [];
@@ -454,33 +455,24 @@ function TaskHolder_task(_parent) {
 	}
 
 	this.addTask = async function(_task) {
-		this.removeTask(_task.id, false);
-
-		let task = new _taskWrapper(_task);
-		this.taskList.push(task);
-		await task.render();
-
-		return task;
+		let taskWrapper = await this.taskList.add(_task);
+		await taskWrapper.render();
+		return taskWrapper;
 	}
 
 	this.setTaskList = function(_newTaskList) {
 		Parent.HTML.todoHolder.innerHTML = '';
-		this.taskList = [];
+		this.taskList = new TaskList();
 		return this.addTaskList(_newTaskList);
 	}
 
-	this.reRenderTaskList = function() {
-		Parent.HTML.todoHolder.innerHTML = '';
-		for (let task of this.taskList) task.render();
-	}
-	
 
 	this.removeTask = function(_id, _animate = true) {
 		for (let i = 0; i < this.taskList.length; i++)
 		{
 			if (this.taskList[i].task.id != _id) continue;
 			this.taskList[i].removeHTML(_animate);
-			this.taskList.splice(i, 1);
+			this.taskList.remove(_id);
 			return true;
 		}
 		return false;
@@ -488,8 +480,15 @@ function TaskHolder_task(_parent) {
 
 
 
-	this.dropTask = async function(_taskWrapper, _taskIndex) {
+	this.dropTaskTo = async function(_taskWrapper, _taskIndex) {
 		_task = await updateTaskToNewTaskHolder(_taskWrapper.task);
+		let wrapper = this.taskList.add(_taskWrapper.task);
+		wrapper.html = _taskWrapper.html; // Inherits its html from the previous task since that html was dropped to this taskholder.
+		Parent.onDropTaskTo(wrapper, _taskIndex);
+	}
+	this.dropTaskFrom = async function(_taskWrapper, _taskIndex) {
+		this.taskList.remove(_taskWrapper.task.id);
+		Parent.onDropTaskFrom(_taskWrapper, _taskIndex);
 	}
 
 	async function updateTaskToNewTaskHolder(_task) {
@@ -498,7 +497,35 @@ function TaskHolder_task(_parent) {
 		
 		let project = await Server.getProject(_task.projectId);
 		return await project.tasks.update(_task);
+	}	
+
+
+
+
+
+	function TaskList() {
+		let list = [];
+
+		list.add = function(_task) {
+			this.remove(_task.id);
+
+			let task = new _taskWrapper(_task);
+			this.push(task);
+
+			return task;
+		}
+		list.remove = function(_id) {
+			for (let i = 0; i < this.length; i++)
+			{
+				if (this[i].task.id != _id) continue;
+				this.splice(i, 1);
+				return true;
+			}
+			return false;
+		}
+		return list;
 	}
+
 
 	
 
@@ -537,7 +564,7 @@ function TaskHolder_task(_parent) {
 				This.task.finished = false;
 			} else {
 				This.html.classList.add("finished");
-				this.task.finished = true;
+				This.task.finished = true;
 			}
 
 			let project = await Server.getProject(This.task.projectId);
@@ -551,6 +578,7 @@ function TaskHolder_task(_parent) {
 		async function remove() {					
 			let project = await Server.getProject(This.task.projectId);
 			await project.tasks.remove(This.task.id);
+			This.taskHolder.task.removeTask(This.task.id);
 
 			//notify the taskHolder
 			This.taskHolder.onTaskRemove(This.task.id);
@@ -569,7 +597,9 @@ function TaskHolder_task(_parent) {
 			if (!result) return;
 
 			SideBar.projectList.updateProjectInfo();
+			This.taskHolder.task.removeTask(This.task.id);
 			This.taskHolder.onTaskRemove(This.task.id);
+
 			MainContent.taskHolder.renderTask(This.task);
 		}
 
@@ -580,6 +610,7 @@ function TaskHolder_task(_parent) {
 			if (!result) return;
 
 			SideBar.projectList.updateProjectInfo();
+			This.taskHolder.task.removeTask(This.task.id);
 			This.taskHolder.onTaskRemove(This.task.id);
 			MainContent.taskHolder.renderTask(This.task);
 		}

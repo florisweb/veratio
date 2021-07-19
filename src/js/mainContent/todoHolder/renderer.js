@@ -161,11 +161,12 @@ function _TaskRenderer() {
 				if (!_project.users.Self.permissions.tasks.update) return _html;
 				DragHandler.register(_html, onDrop, getListHolder, MainContent.taskHolder.dropRegionId);
 
-				function onDrop(_ownHTML, _todoHolder, _newIndex) {
+				async function onDrop(_ownHTML, _curDropTarget, _todoHolder, _newIndex) {
 					let taskHolderId = _todoHolder.parentNode.getAttribute('taskHolderId');
 					let taskHolder = MainContent.taskHolder.get(taskHolderId);
 					if (!taskHolder) return;
-					taskHolder.task.dropTask(_taskWrapper, index);
+					await _taskWrapper.taskHolder.task.dropTaskFrom(_taskWrapper, _newIndex); // Notify the previous taskholder that a task was dropped from it
+					await taskHolder.task.dropTaskTo(_taskWrapper, _newIndex);
 				}
 
 				function getListHolder(_dropTarget) {
@@ -175,8 +176,6 @@ function _TaskRenderer() {
 						_dropTarget.classList.contains('subTitleHolder') ||
 						_dropTarget.classList.contains('dropDownButton')
 					) return _dropTarget.parentNode.children[3];
-					console.log(...arguments);
-
 				}
 
 				return _html;
