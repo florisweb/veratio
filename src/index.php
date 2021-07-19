@@ -43,8 +43,11 @@
 					<img src="images/icons/weekIcon.png" class="headerIcon">
 					<div class="headerText">This Week</div>
 				</div>
+				<div class="header clickable tab" onclick="MainContent.plannerPage.open()">
+					<img src="images/icons/plannerIcon.png" class="headerIcon">
+					<div class="headerText">Planner</div>
+				</div>
 			</div>
-			<br>
 			<div class="projectListHolder hide">
 				<div class="header clickable tab" onclick="SideBar.projectList.toggleOpenState()">
 					<img src="images/icons/dropDownIcon.png" class="headerIcon dropDownButton close">
@@ -128,6 +131,12 @@
 						<img src="images/icons/leaveIconRed.png">
 						Leave project
 					</div>
+				</div>
+
+				<div class="mainContentPage doNotAlignLeft plannerPage hide">
+					<br>
+					<br>
+					<div class='text' style='text-align: center;'>Work in progress...</div>
 				</div>
 			</div>
 		</div>

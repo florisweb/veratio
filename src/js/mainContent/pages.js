@@ -732,3 +732,24 @@ function MainContent_settingsPage(_projectId) {
 
 
 
+
+
+
+
+
+function MainContent_plannerPage() {
+	MainContent_page.call(this, {
+		name: "planner",
+		index: 2,
+		onOpen: onOpen
+	});
+
+	let This = this;
+
+	async function onOpen() {
+	}
+}
+
+
+
+

@@ -2,8 +2,9 @@
 
 function _SideBar() {
 	const HTML = {
-		todayTab: $("#sideBar .tab")[0],
-		weekTab: $("#sideBar .tab")[1],
+		todayTab: 		$("#sideBar .tab")[0],
+		weekTab: 		$("#sideBar .tab")[1],
+		plannerTab: 	$("#sideBar .tab")[2],
 	}
 
 	this.projectList = new _SideBar_projectList();
@@ -12,6 +13,7 @@ function _SideBar() {
 
 	this.updateTabIndicator = async function() {
 		if (MainContent.settingsPage.isOpen()) return await setProjectTabOnOpenById(MainContent.curProjectId);
+		if (MainContent.plannerPage.isOpen()) return setTabOpenIndicator(HTML.plannerTab);
 	
 		switch (MainContent.taskPage.curTab.name)
 		{

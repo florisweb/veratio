@@ -26,6 +26,8 @@ function _MainContent() {
 
 	this.taskPage 		= new MainContent_taskPage();
 	this.settingsPage 	= new MainContent_settingsPage();
+	this.plannerPage 	= new MainContent_plannerPage();
+
 	this.curPage 		= this.taskPage;
 
 	
@@ -165,7 +167,7 @@ function _MainContent_optionMenu() {
 			curDOMData.addToPlanner();
 			return true;
 		},
-		"images/icons/changeIconDark.png"
+		"images/icons/addToPlannerIconDark.png"
 	);
 	
 	Menu.addOption(
@@ -174,7 +176,7 @@ function _MainContent_optionMenu() {
 			curDOMData.removeFromPlanner();
 			return true;
 		},
-		"images/icons/changeIconDark.png"
+		"images/icons/removeFromPlannerIconDark.png"
 	);
 		
 

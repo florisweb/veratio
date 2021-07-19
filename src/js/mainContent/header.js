@@ -103,8 +103,7 @@ function _MainContent_header() {
 				HTML.functionItems[0].classList.remove("hide");
 				HTML.functionItems[1].classList.remove("hide");
 			break;
-			case "createproject":
-				HTML.functionItems[1].classList.remove("hide");
+			case "planner":
 			break;
 			case "taskpage - today":
 			break;
