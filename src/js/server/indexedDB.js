@@ -349,6 +349,20 @@ function LocalDB_Project(_projectId, _DB) {
     return true;
   }
 
+  this.moveToIndex = async function(_newIndex) {
+    let projects = await LocalDB.getProjectList(true);
+    let project = projects.splice(this.index, 1)[0];
+    projects.splice(_newIndex, 0, project);
+
+    let promises = [];
+    for (let i = 0; i < projects.length; i++) promises.push(projects[i].setIndex(i));
+    return await Promise.all(promises);
+  }
+
+  this.setIndex = async function(_index) {
+    await this.setData("metaData", {title: this.title, index: _index});
+    this.index = _index;
+  }
 
 
   this.setMetaData = async function() {
