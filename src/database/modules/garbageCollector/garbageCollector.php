@@ -4,12 +4,16 @@
 
 
 	class _garbageCollector {
+		private $projects;
 		public function __construct() {
-			$projects = $GLOBALS["App"]->getAllProjects();
-			if ($projects == "E_noAuth") return;
+			$this->projects = $GLOBALS["App"]->getAllProjects();
+			if ($this->projects == "E_noAuth") return;
 			
 			$overdueTasks = 0;
-			foreach ($projects as $project) $overdueTasks += $this->setTasksToOverdue($project);
+			foreach ($this->projects as $project) $overdueTasks += $this->setTasksToOverdue($project);
+
+			$removedTaskOrders = $this->cleanOrderManager();
+			// echo '<div style="display: none">Overdue: ' . $overdueTasks . ' TaskOrder: ' . $removedTaskOrders . "</div>";
 		}
 
 		private function setTasksToOverdue($_project) {
@@ -35,6 +39,44 @@
 				$_project->tasks->update($task);
 			}
 			return $overdueTasks;
+		}
+
+
+
+		private function cleanOrderManager() {
+			$taskOrder 		= $GLOBALS['DBHelper']->orderManager->getTaskOrder($GLOBALS['App']->userId);
+			$newTaskOrder 	= array();
+			$curTime 		= strtotime((new DateTime())->format('d-m-Y'));
+
+			for ($i = 0; $i < sizeof($taskOrder); $i++)
+			{
+				$curTask = $this->getTaskById($taskOrder[$i]);
+				if (!$curTask) continue;
+				if ($curTask['groupType'] != 'date') continue;
+				$date = $curTask['groupValue'];
+				if (!$date) continue;
+
+				$time = strtotime((new DateTime($date))->format('d-m-Y'));
+				if ($time < $curTime) continue;
+
+				array_push($newTaskOrder, $taskOrder[$i]);
+			}
+		
+
+			$delta = sizeof($taskOrder) - sizeof($newTaskOrder); 
+			
+			if ($delta != 0) $GLOBALS['DBHelper']->orderManager->setTaskOrder($newTaskOrder, $GLOBALS['App']->userId);
+			return $delta;
+		}
+
+		private function getTaskById($_id) {
+			foreach ($this->projects as $project) 
+			{
+				$task = $project->tasks->get($_id);
+				if (!$task) continue;
+				return $task;
+			}
+			return false;
 		}
 	}
 
