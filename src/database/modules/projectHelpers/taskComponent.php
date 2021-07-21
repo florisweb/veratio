@@ -181,7 +181,8 @@
 			$tasks = $this->getAll();
 			$task = array_splice($tasks, $ownIndex, 1)[0];
 
-			$inFrontOfIndex = $this->getIndex($_data['inFrontOfId']); // Update the index because the splicing might have moved it
+			$inFrontOfIndex = $this->getIndex($_data['inFrontOfId']);
+			if ($inFrontOfIndex !== false && $inFrontOfIndex > $ownIndex) $inFrontOfIndex--;
 			if ($inFrontOfIndex === false) $inFrontOfIndex = sizeof($tasks); // Push it if the inFrontOfIndex isn't given.
 			array_splice($tasks, $inFrontOfIndex, 0, [$task]);
 

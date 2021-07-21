@@ -494,6 +494,7 @@ function TaskHolder_task(_parent) {
 
 	async function updateTaskToNewTaskHolder(_task) {
 		_task.groupType = Parent.type;
+		if (Parent.config.title == 'Planned') _task.groupType = 'date';
 		if (Parent.type == "date") _task.groupValue = Parent.date.toString();
 		
 		let project = await Server.getProject(_task.projectId);
