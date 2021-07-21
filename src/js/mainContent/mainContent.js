@@ -561,12 +561,14 @@ function _MainContent_searchOptionMenu() {
 
 
 
-const TaskSorter = new _TaskSorter();
-function _TaskSorter() {
+const TaskSorter = new function() {
 	this.defaultSort = function(_tasks) {
-		_tasks = this.sortAlphabet(_tasks);
-		_tasks = this.sortAssignedToMe(_tasks);
-		return this.sortFinished(_tasks);
+		return _tasks;
+		// Disabled sort
+		
+		// _tasks = this.sortAlphabet(_tasks);
+		// _tasks = this.sortAssignedToMe(_tasks);
+		// return this.sortFinished(_tasks);
 	} 
 
 

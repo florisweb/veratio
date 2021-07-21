@@ -1,6 +1,6 @@
 <?php
 	define("AllowedMethods", [
-		"tasks"		=> ["get", "getByGroup", "getByDateRange", "update", "remove"],
+		"tasks"		=> ["get", "getByGroup", "getByDateRange", "update", 'remove', 'moveInFrontOf'],
 		"tags" 		=> ["get", "getAll", "update", "remove"],
 		"users" 	=> ["update", "remove", "getAll", "inviteByEmail", "inviteByLink"],
 		"project" 	=> ["rename", "remove", "create", "getAll", 'move'],

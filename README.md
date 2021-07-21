@@ -137,3 +137,19 @@ Server
 
 
 
+
+
+
+PERMISSIONS
+0: Read Only
+	- finish tasks assigned to you
+1: Member
+	- create, finish, remove and move tasks
+2: Admin
+	- invite, remove and change user permissions
+3: Owner
+	- Remove project
+
+
+
+

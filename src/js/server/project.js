@@ -249,6 +249,18 @@ function Project(_project) {
     let Type = "tasks";
     TypeBaseClass.call(this, Type, Task);
 
+    this.moveInFrontOf = async function({id, inFrontOfId}) {
+      let functionRequest = {
+        action:       "moveInFrontOf",
+        type:         "tasks",
+        parameters:   {id: id, inFrontOfId: inFrontOfId},
+        projectId:    This.id,
+      };
+
+      let response = await Server.fetchFunctionRequest(functionRequest);
+      console.warn(response);
+    }
+
     this.getByDate = async function(_date) {
       return await this.getByDateRange({date: _date, range: 0});
     }

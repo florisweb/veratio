@@ -21,7 +21,7 @@
 			return $data[$this->dataType];
 		}
 
-			private function _writeData($_data) {
+			public function writeData($_data) {
 				return $this->DBHelper->writeProjectData(
 					$this->dataType, 
 					(string)$_data
@@ -99,7 +99,7 @@
 				if ($dataId != $_id) continue;
 
 				array_splice($data, $i, 1);
-				return $this->_writeData(json_encode($data));
+				return $this->writeData(json_encode($data));
 			}
 
 			return false;
@@ -131,7 +131,7 @@
 					if ($dataId != $newData[$dataIdKey]) continue;
 					
 					$data[$i] = $newData;
-					return $this->_writeData(json_encode($data));
+					return $this->writeData(json_encode($data));
 				}
 				return false;
 			}
@@ -139,7 +139,7 @@
 			public function _createDataItem($newData) {
 				$data = $this->getAllData();			
 				array_push($data, $newData);
-				return $this->_writeData(json_encode($data));
+				return $this->writeData(json_encode($data));
 			}
 	}
 ?>

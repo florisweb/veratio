@@ -46,6 +46,16 @@
 			return $task;
 		}
 
+		private function getIndex($_id) {
+			$tasks = $this->getAll();
+			for ($i = 0; $i < sizeof($tasks); $i++)
+			{
+				if ($tasks[$i]['id'] != $_id) continue;
+				return $i;
+			}
+			return false;
+		}
+
 		public function getByGroup($_info) {
 			$groupValue 		= $this->filterGroupInfo($_info["type"], $_info["value"]);
 			if ($groupValue === false) return false;
@@ -157,6 +167,26 @@
 			return $this->DTTemplate->remove($_id);
 		}
 
+
+		public function moveInFrontOf($_data) {
+			if (!isset($_data['id']) || !isset($_data['inFrontOfId'])) return 'E_invalidParameters';
+
+			$ownIndex = $this->getIndex($_data['id']);
+			if ($ownIndex === false) return 'E_taskNotFound';
+
+			$user 			= $this->Parent->users->Self;
+			$permissions 	= (int)$user["permissions"];
+			if ($permissions < 1) return 'E_actionNotAllowed';
+
+			$tasks = $this->getAll();
+			$task = array_splice($tasks, $ownIndex, 1)[0];
+
+			$inFrontOfIndex = $this->getIndex($_data['inFrontOfId']); // Update the index because the splicing might have moved it
+			if ($inFrontOfIndex === false) $inFrontOfIndex = sizeof($tasks); // Push it if the inFrontOfIndex isn't given.
+			array_splice($tasks, $inFrontOfIndex, 0, [$task]);
+
+			return $this->DTTemplate->writeData(json_encode($tasks));
+		}
 
 
 

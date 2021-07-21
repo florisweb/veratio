@@ -296,13 +296,14 @@ function TaskHolder_overdue(_config, _taskHolderIndex) {
 	}
 	
 	this.onTaskFinish = function(_taskWrapper) {
-		this.onTaskRemove(_taskWrapper.task.id)
+		this.task.removeTask(_taskWrapper.task.id, true);
+		this.onTaskRemove();
 	}
 	this.onDropTaskFrom = function(_taskWrapper) {
 		this.onTaskRemove(_taskWrapper.task.id)
 	}
 	
-	this.onTaskRemove = function(_taskId) {
+	this.onTaskRemove = function() {
 		if (this.task.taskList.length > 0) return;
 		this.remove();
 	}
@@ -441,7 +442,7 @@ function TaskHolder(_config = {}, _type = "default", _taskHolderIndex) {
 
 function TaskHolder_task(_parent) {
 	const Parent = _parent;
-	let TaskHolder = this;
+	const TaskHolder = this;
 	
 	Parent.HTML.todoHolder = Parent.HTML.Self.children[3];
 	
@@ -481,9 +482,9 @@ function TaskHolder_task(_parent) {
 
 
 	this.dropTaskTo = async function(_taskWrapper, _taskIndex) {
-		_task = await updateTaskToNewTaskHolder(_taskWrapper.task);
-		let wrapper = this.taskList.add(_taskWrapper.task);
+		let wrapper = this.taskList.add(_taskWrapper.task, _taskIndex);
 		wrapper.html = _taskWrapper.html; // Inherits its html from the previous task since that html was dropped to this taskholder.
+		await updateTaskToNewTaskHolder(_taskWrapper.task);
 		Parent.onDropTaskTo(wrapper, _taskIndex);
 	}
 	this.dropTaskFrom = async function(_taskWrapper, _taskIndex) {
@@ -496,7 +497,23 @@ function TaskHolder_task(_parent) {
 		if (Parent.type == "date") _task.groupValue = Parent.date.toString();
 		
 		let project = await Server.getProject(_task.projectId);
-		return await project.tasks.update(_task);
+		
+		
+		let inFrontOfId = false;
+		for (let i = 0; i < TaskHolder.taskList.length - 1; i++) // - 1 because the last task wouldn't have a task behind it to write as it's inFrontOfId
+		{
+			if (TaskHolder.taskList[i].task.id != _task.id) continue;
+			inFrontOfId = TaskHolder.taskList[i + 1].task.id;
+			break;
+		}
+
+		return await Promise.all([
+			project.tasks.update(_task),
+			project.tasks.moveInFrontOf({
+				id: _task.id, 
+				inFrontOfId: inFrontOfId
+			})
+		]);
 	}	
 
 
@@ -506,12 +523,11 @@ function TaskHolder_task(_parent) {
 	function TaskList() {
 		let list = [];
 
-		list.add = function(_task) {
+		list.add = function(_task, _index = this.length) {
 			this.remove(_task.id);
 
 			let task = new _taskWrapper(_task);
-			this.push(task);
-
+			this.splice(_index, 0, task);
 			return task;
 		}
 		list.remove = function(_id) {
