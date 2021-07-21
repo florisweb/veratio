@@ -60,7 +60,7 @@
 
 		public function getProject($_id) {
 			if (!$this->userId) {$this->throwNoAuthError(); return false;}
-
+			
 			$project = new _Project($_id, $this);
 			$projectError = $project->errorOnCreation;
 			if ($projectError === true) return false;

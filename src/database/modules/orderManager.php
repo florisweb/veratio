@@ -9,20 +9,25 @@
 	$OrderManager = new _OrderManager;
 
 	class _OrderManager {
-		public function __construct() {
-		
-		}
+		public function __construct() {}
 
-		public function addTaskIndicesToTaskList($_taskList, $_userId) {
-			$taskOrder 			= $GLOBALS['DBHelper']->orderManager->getTaskOrder($_userId);
+		public function addTaskIndicesToTaskList($_taskList, $_addPersonalIndices = true, $_userId) {
+			$curTime 			= strtotime((new DateTime())->format('d-m-Y'));
+			$taskOrder 			= [];
 			$taskOrderUpdated 	= false;
 
-			$curTime 			= strtotime((new DateTime())->format('d-m-Y'));
+			if ($_addPersonalIndices)
+			{
+				$taskOrder = $GLOBALS['DBHelper']->orderManager->getTaskOrder($_userId);
+			}
 
 			for ($i = 0; $i < sizeof($_taskList); $i++)
 			{
 				$_taskList[$i]['indexInProject'] = $i;
 				$_taskList[$i]['personalIndex'] = 1000000000;
+				
+				if (!$_addPersonalIndices) continue;
+				
 				$foundPersonalIndex = false;
 				for ($x = 0; $x < sizeof($taskOrder); $x++) 
 				{

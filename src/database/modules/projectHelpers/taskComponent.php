@@ -33,10 +33,9 @@
 			));
 		}
 
-
-		public function getAll() {
+		public function getAll($_addPersonalIndices = true) {
 			$tasks = $this->DTTemplate->getAllData();
-			return $GLOBALS['OrderManager']->addTaskIndicesToTaskList($tasks, $this->Parent->App->userId);
+			return $GLOBALS['OrderManager']->addTaskIndicesToTaskList($tasks, $_addPersonalIndices, $this->Parent->App->userId);
 		}
 
 
@@ -49,7 +48,7 @@
 		}
 
 		private function getIndex($_id) {
-			$tasks = $this->getAll();
+			$tasks = $this->getAll(false);
 			for ($i = 0; $i < sizeof($tasks); $i++)
 			{
 				if ($tasks[$i]['id'] != $_id) continue;
@@ -61,7 +60,7 @@
 		public function getByGroup($_info) {
 			$groupValue 		= $this->filterGroupInfo($_info["type"], $_info["value"]);
 			if ($groupValue === false) return false;
-			$tasks 				= $this->getAll();
+			$tasks 				= $this->getAll((string)$_info['type'] == 'date');
 
 			$foundTasks = array();
 			for ($i = 0; $i < sizeof($tasks); $i++)
@@ -86,7 +85,7 @@
 			$date 		= new DateTime($_date);
 			$startTime	= strtotime($date->format('d-m-Y'));
 			$_range		= (int)$_info["range"];
-			$tasks 		= $this->getAll();
+			$tasks 		= $this->getAll(true);
 
 			$foundTasks = array();
 			foreach ($tasks as $task) 
@@ -185,7 +184,7 @@
 			$permissions 	= (int)$user["permissions"];
 			if ($permissions < 1) return 'E_actionNotAllowed';
 
-			$tasks = $this->getAll();
+			$tasks = $this->getAll(false);
 			$task = array_splice($tasks, $ownIndex, 1)[0];
 
 			$inFrontOfIndex = $this->getIndex($_data['inFrontOfId']);
