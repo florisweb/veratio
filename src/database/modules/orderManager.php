@@ -13,6 +13,55 @@
 		
 		}
 
+		public function addTaskIndicesToTaskList($_taskList, $_userId) {
+			$taskOrder = $GLOBALS['DBHelper']->orderManager->getTaskOrder($_userId);
+			for ($i = 0; $i < sizeof($_taskList); $i++)
+			{
+				$_taskList[$i]['indexInProject'] = $i;
+				$_taskList[$i]['personalIndex'] = 1000000000;
+				for ($x = 0; $x < sizeof($taskOrder); $x++) 
+				{
+					if ($taskOrder[$x] != $_taskList[$i]['id']) continue;
+					$_taskList[$i]['personalIndex'] = $x;
+					break;
+				}
+			}
+			return $_taskList;
+		}
+
+		public function moveTaskInFrontOf($_data, $_userId) {
+			// Validate the tasks existence TODO
+
+
+			$orderList = $GLOBALS['DBHelper']->orderManager->getTaskOrder($_userId);
+			$taskId = (string)$_data['id'];
+
+			$ownIndex = $this->getTaskIndex($taskId, $_userId);
+			if ($ownIndex === false) $ownIndex = sizeof($orderList);
+
+			array_splice($orderList, $ownIndex, 1)[0];
+
+			$inFrontOfIndex = $this->getTaskIndex($_data['inFrontOfId'], $_userId);
+			if ($inFrontOfIndex !== false && $inFrontOfIndex > $ownIndex) $inFrontOfIndex--;
+			if ($inFrontOfIndex === false) $inFrontOfIndex = sizeof($orderList); // Push it if the inFrontOfIndex isn't given.
+			array_splice($orderList, $inFrontOfIndex, 0, [$taskId]);
+
+			return $GLOBALS['DBHelper']->orderManager->setTaskOrder($orderList, $_userId);
+		}
+
+		private function getTaskIndex($_id, $_userId) {
+			$orderList = $GLOBALS['DBHelper']->orderManager->getTaskOrder($_userId);
+			for ($i = 0; $i < sizeof($orderList); $i++)
+			{
+				if ($orderList[$i] != $_id) continue;
+				return $i;
+			}
+			return false;
+		}
+
+
+
+
 		public function sortProjectList($_projectList, $_userId) {
 			$orderList = $GLOBALS['DBHelper']->orderManager->getProjectOrder($_userId);
 			$orderListUpdated = false;

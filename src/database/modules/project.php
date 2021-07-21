@@ -3,7 +3,7 @@
 	include_once($GLOBALS["Root"] . "/PHP/PacketManager.php");
 	$PM->includePacket("SESSION", "1.0");
 
-	require_once __DIR__ . "/OrderManager.php";
+	require_once __DIR__ . "/orderManager.php";
 	require_once __DIR__ . "/projectHelpers/userComponent.php";
 	require_once __DIR__ . "/projectHelpers/taskComponent.php";
 	require_once __DIR__ . "/projectHelpers/tagComponent.php";

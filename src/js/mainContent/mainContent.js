@@ -563,6 +563,8 @@ function _MainContent_searchOptionMenu() {
 
 const TaskSorter = new function() {
 	this.defaultSort = function(_tasks) {
+		console.log(_tasks);
+		if (MainContent.taskPage.curTab.name != 'project') return this.sortByPersonalIndex(_tasks);
 		return _tasks;
 		// Disabled sort
 		
@@ -570,6 +572,14 @@ const TaskSorter = new function() {
 		// _tasks = this.sortAssignedToMe(_tasks);
 		// return this.sortFinished(_tasks);
 	} 
+
+	this.sortByPersonalIndex = function(_tasks) {
+		if (!_tasks) return [];
+		return _tasks.sort(function(a, b) {
+	     	if (a.personalIndex > b.personalIndex) return 1;
+	    	if (a.personalIndex < b.personalIndex) return -1;
+		});
+	}
 
 
 

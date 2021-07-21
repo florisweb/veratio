@@ -249,16 +249,19 @@ function Project(_project) {
     let Type = "tasks";
     TypeBaseClass.call(this, Type, Task);
 
-    this.moveInFrontOf = async function({id, inFrontOfId}) {
+    this.moveInFrontOf = async function({id, inFrontOfId, isPersonal}) {
       let functionRequest = {
         action:       "moveInFrontOf",
         type:         "tasks",
-        parameters:   {id: id, inFrontOfId: inFrontOfId},
+        parameters:   {id: id, inFrontOfId: inFrontOfId, isPersonal: !!isPersonal},
         projectId:    This.id,
       };
+      console.log('send', functionRequest);
 
       let response = await Server.fetchFunctionRequest(functionRequest);
-      console.warn(response);
+
+      // Some offline stuff handeling TODO
+      return response.result;
     }
 
     this.getByDate = async function(_date) {
@@ -625,19 +628,21 @@ function User({id, name, permissions, type, Self}) {
   }
 }
 
-function Task({id, tagId = false, projectId, title, finished = false, groupType, groupValue, assignedTo = [], creatorId}) {
-  this.id           = id;
-  this.tagId        = tagId;
-  this.projectId    = projectId;
+function Task({id, tagId = false, projectId, title, finished = false, groupType, groupValue, assignedTo = [], creatorId, personalIndex, indexInProject}) {
+  this.id             = id;
+  this.tagId          = tagId;
+  this.projectId      = projectId;
 
-  this.title        = title;
-  this.finished     = !!finished;
-  this.groupType    = groupType;
-  this.groupValue   = groupValue;
+  this.title          = title;
+  this.finished       = !!finished;
+  this.groupType      = groupType;
+  this.groupValue     = groupValue;
 
-  this.assignedTo   = assignedTo;
-  this.creatorId    = creatorId;
+  this.assignedTo     = assignedTo;
+  this.creatorId      = creatorId;
 
+  this.personalIndex  = parseInt(personalIndex);
+  this.indexInProject = parseInt(indexInProject);
 
   this.export = function() {
     return Object.assign({}, this);

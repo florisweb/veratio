@@ -47,13 +47,32 @@
 			return json_decode($order, true);
 		}
 		public function setProjectOrder($_orderArr, $_userId) {
-			$dataExists = sizeof($this->getProjectOrder($_userId));
 			$orderStr = json_encode($_orderArr);
-			if ($dataExists)
+			if ($this->dataExists($_userId))
 			{
 				return $this->DB->execute("UPDATE $this->DBTableName SET projectOrder=? WHERE userId=?", array($orderStr, $_userId));
 			}
 			return $this->DB->execute("INSERT INTO $this->DBTableName (userId, projectOrder) VALUES (?, ?)", array($_userId, $orderStr));
+		}
+		
+		public function getTaskOrder($_userId) {
+			$data = $this->DB->execute("SELECT taskOrder FROM $this->DBTableName WHERE userId=? LIMIT 1", array($_userId));
+			$order = $data[0]['taskOrder'];
+			if (!$order || !isset($order)) return [];
+			return json_decode($order, true);
+		}
+
+		public function setTaskOrder($_orderArr, $_userId) {
+			$orderStr = json_encode($_orderArr);
+			if ($this->dataExists($_userId))
+			{
+				return $this->DB->execute("UPDATE $this->DBTableName SET taskOrder=? WHERE userId=?", array($orderStr, $_userId));
+			}
+			return $this->DB->execute("INSERT INTO $this->DBTableName (userId, taskOrder) VALUES (?, ?)", array($_userId, $orderStr));
+		}
+		private function dataExists($_userId) {
+			$data = $this->DB->execute("SELECT * FROM $this->DBTableName WHERE userId=? LIMIT 1", array($_userId));
+			return sizeof($data) != 0;
 		}
 	}
 

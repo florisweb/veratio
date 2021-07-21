@@ -1,5 +1,6 @@
 <?php
 	require_once  __DIR__ . "/dataTypeTemplate.php";
+	require_once  __DIR__ . "/../orderManager.php";
 
 
 	class _project_taskComponent {
@@ -20,21 +21,22 @@
 			$this->DTTemplate = new _project_dataTypeTemplate(
 				$_projectId, 
 				array("tasks" => [
-					"id" 		=> "String",
-					"title" 	=> "String",
-					"groupType" => "String",
-					"groupValue"=> "String",
-					"tagId" 	=> "String",
-					"finished" 	=> "Boolean",
-					"assignedTo"=> "Array",
-					"creatorId" => "String"
+					"id" 			=> "String",
+					"title" 		=> "String",
+					"groupType" 	=> "String",
+					"groupValue"	=> "String",
+					"tagId" 		=> "String",
+					"finished" 		=> "Boolean",
+					"assignedTo"	=> "Array",
+					"creatorId" 	=> "String"
 				]
 			));
 		}
 
 
 		public function getAll() {
-			return $this->DTTemplate->getAllData();
+			$tasks = $this->DTTemplate->getAllData();
+			return $GLOBALS['OrderManager']->addTaskIndicesToTaskList($tasks, $this->Parent->App->userId);
 		}
 
 
@@ -169,6 +171,11 @@
 
 
 		public function moveInFrontOf($_data) {
+			if ($_data['isPersonal'])
+			{
+				return $GLOBALS['OrderManager']->moveTaskInFrontOf($_data, $this->Parent->App->userId);
+			}
+
 			if (!isset($_data['id']) || !isset($_data['inFrontOfId'])) return 'E_invalidParameters';
 
 			$ownIndex = $this->getIndex($_data['id']);
@@ -188,6 +195,7 @@
 
 			return $this->DTTemplate->writeData(json_encode($tasks));
 		}
+
 
 
 

@@ -512,7 +512,8 @@ function TaskHolder_task(_parent) {
 			project.tasks.update(_task),
 			project.tasks.moveInFrontOf({
 				id: _task.id, 
-				inFrontOfId: inFrontOfId
+				inFrontOfId: inFrontOfId,
+				isPersonal: MainContent.taskPage.curTab.name != 'project'
 			})
 		]);
 	}	
