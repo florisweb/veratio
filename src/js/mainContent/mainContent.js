@@ -563,7 +563,6 @@ function _MainContent_searchOptionMenu() {
 
 const TaskSorter = new function() {
 	this.defaultSort = function(_tasks) {
-		console.log(_tasks);
 		if (MainContent.taskPage.curTab.name != 'project') return this.sortByPersonalIndex(_tasks);
 		return _tasks;
 		// Disabled sort

@@ -256,7 +256,6 @@ function Project(_project) {
         parameters:   {id: id, inFrontOfId: inFrontOfId, isPersonal: !!isPersonal},
         projectId:    This.id,
       };
-      console.log('send', functionRequest);
 
       let response = await Server.fetchFunctionRequest(functionRequest);
 

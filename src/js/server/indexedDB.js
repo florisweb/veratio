@@ -438,6 +438,17 @@ function LocalDB_Project(_projectId, _DB) {
       }
       return response;
     }
+
+    this.getAll = async function() {
+      let items = await This.getData(Key);
+      if (!items) return [];
+      let tasks = items.map(r => new Task(r));
+      tasks.sort(function(a, b) {
+          if (a.indexInProject > b.indexInProject) return 1;
+          if (a.indexInProject < b.indexInProject) return -1;
+      });
+      return tasks;
+    }
   }
 
 
