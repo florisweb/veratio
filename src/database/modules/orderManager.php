@@ -14,18 +14,37 @@
 		}
 
 		public function addTaskIndicesToTaskList($_taskList, $_userId) {
-			$taskOrder = $GLOBALS['DBHelper']->orderManager->getTaskOrder($_userId);
+			$taskOrder 			= $GLOBALS['DBHelper']->orderManager->getTaskOrder($_userId);
+			$taskOrderUpdated 	= false;
+
+			$curTime 			= strtotime((new DateTime())->format('d-m-Y'));
+
 			for ($i = 0; $i < sizeof($_taskList); $i++)
 			{
 				$_taskList[$i]['indexInProject'] = $i;
 				$_taskList[$i]['personalIndex'] = 1000000000;
+				$foundPersonalIndex = false;
 				for ($x = 0; $x < sizeof($taskOrder); $x++) 
 				{
 					if ($taskOrder[$x] != $_taskList[$i]['id']) continue;
 					$_taskList[$i]['personalIndex'] = $x;
+					$foundPersonalIndex = true;
 					break;
 				}
+
+				if ($foundPersonalIndex || $_taskList[$i]['groupType'] != 'date') continue;
+
+				$date = $_taskList[$i]['groupValue'];
+				if (!$date) continue;
+
+				$time = strtotime((new DateTime($date))->format('d-m-Y'));
+				if ($time < $curTime) continue; // We are not intrested in tasks in the past
+
+				array_push($taskOrder, $_taskList[$i]['id']);
+				$taskOrderUpdated = true;
 			}
+
+			if ($taskOrderUpdated) $GLOBALS['DBHelper']->orderManager->setTaskOrder($taskOrder, $_userId);
 			return $_taskList;
 		}
 
