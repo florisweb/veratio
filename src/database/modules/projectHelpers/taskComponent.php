@@ -40,7 +40,15 @@
 
 
 		public function get($_id) {
-			$task 				= $this->DTTemplate->get($_id);
+			$task = false;
+			$tasks = $this->getAll(true);
+			for ($i = 0; $i < sizeof($tasks); $i++)
+			{
+				if ($tasks[$i]['id'] != $_id) continue;
+				$task = $tasks[$i];
+				break;
+			}
+			// $task 				= $this->DTTemplate->get($_id);
 			if (!$task) 		return false;
 			
 			$task["projectId"] 	= $this->projectId;
