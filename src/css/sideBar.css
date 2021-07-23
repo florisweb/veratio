@@ -180,7 +180,7 @@ body.appLoading #sideBar {
 		
 		overflow: hidden;
 		top: 0;
-		max-height: calc(100vh - 135px);
+		max-height: calc(100vh - 155px);
 		overflow: auto;
 		transition: all 0.45s;
 	}
@@ -195,7 +195,7 @@ body.appLoading #sideBar {
 	}
 
 	body.noConnection #sideBar .projectListHolder .projectList {
-		max-height: calc(100vh - 135px - 102px);
+		max-height: calc(100vh - 155px - 102px);
 	}
 
 
@@ -230,6 +230,8 @@ body.appLoading #sideBar {
 
 	#sideBar .projectListHolder .createProjectButton {
 		transition: padding-top .2s;
+		margin-bottom: 20px;
+		margin-top: -5px;
 	}
 	#sideBar .projectListHolder .createProjectButton.showDropRegion {
 		padding-top: 30px;
