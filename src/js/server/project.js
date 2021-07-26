@@ -259,6 +259,17 @@ function Project(_project) {
 
       let response = await Server.fetchFunctionRequest(functionRequest);
 
+      if (!isPersonal)
+      {
+        if (
+          response.error == "E_noConnection" ||
+          (response.result && !response.error)
+        ) {
+          await Local.tasks.moveInFrontOf({id: id, inFrontOfId: inFrontOfId});
+        }
+      }
+
+
       // Some offline stuff handeling TODO
       return response.result;
     }

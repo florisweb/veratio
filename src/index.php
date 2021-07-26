@@ -26,7 +26,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Veratio - Florisweb.tk</title>
+		<title>Veratio - Florisweb</title>
 		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0' name='viewport'/>
  		<link rel="manifest" href="manifest.json">
  		<link rel="stylesheet" type="text/css" href="main_min.css">

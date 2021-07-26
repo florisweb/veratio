@@ -191,6 +191,10 @@ const LocalDB = new function() {
     await Promise.all(promises);
   }
 
+  this.moveInFrontOf = async function({id, inFrontOfId}) { // Personal task-order
+     
+  }
+
 
 
 
@@ -405,6 +409,60 @@ function LocalDB_Project(_projectId, _DB) {
     TypeBaseClass.call(this, Key, TypeClass);
 
    
+    this.moveInFrontOf = async function({id, inFrontOfId}) {
+      let curTask = await this.get(id);
+      if (!curTask) return false;
+
+      let inFrontOfTask = await this.get(inFrontOfId);
+      let nextIndex;
+      if (!inFrontOfTask)
+      {
+        nextIndex = await this.getHighestIndex() + 1;
+      } else nextIndex = inFrontOfTask.indexInProject;
+
+
+      let newIndex = nextIndex;
+      if (curTask.indexInProject < nextIndex) newIndex--; // Task is dropped higher than before
+
+      let tasks = await this.getAll();
+      for (let task of tasks)
+      {
+        if (task.id == id) 
+        {
+          task.indexInProject = newIndex;
+          continue;
+        }
+        if (curTask.indexInProject < nextIndex) // Task is dropped higher than before
+        {
+          if (
+            task.indexInProject > curTask.indexInProject &&
+            task.indexInProject <= newIndex
+          ) task.indexInProject--;
+          continue;
+        } 
+
+       if (
+          task.indexInProject >= newIndex &&
+          task.indexInProject < curTask.indexInProject
+        ) task.indexInProject++;
+      }
+
+      return await this.set(tasks);
+    }
+
+    this.getHighestIndex = async function() {
+      let tasks = await this.getAll();
+      let highestIndex = 0;
+      for (let task of tasks)
+      {
+        if (task.indexInProject < highestIndex) continue;
+        highestIndex = task.indexInProject;
+      }
+      return highestIndex;
+    }
+
+
+
     this.getByDate = async function(_date) {
       return this.getByDateRange({date: _date, range: 0})
     }
