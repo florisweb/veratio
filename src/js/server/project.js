@@ -261,6 +261,7 @@ function Project(_project) {
 
       if (response.error == 'E_noConnection')
       {
+        await Local.addCachedOperation(functionRequest);
         if (!isPersonal)
         {
           await Local.tasks.moveInFrontOf({id: id, inFrontOfId: inFrontOfId});
