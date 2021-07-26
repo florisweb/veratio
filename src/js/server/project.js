@@ -259,18 +259,24 @@ function Project(_project) {
 
       let response = await Server.fetchFunctionRequest(functionRequest);
 
-      if (!isPersonal)
+      if (response.error == 'E_noConnection')
       {
-        if (
-          response.error == "E_noConnection" ||
-          (response.result && !response.error)
-        ) {
+        if (!isPersonal)
+        {
           await Local.tasks.moveInFrontOf({id: id, inFrontOfId: inFrontOfId});
+        } else {
+          await LocalDB.global.tasks.moveInFrontOf({id: id, inFrontOfId: inFrontOfId});
+        }
+      } else if(!response.error && response.result)
+      {
+        if (!isPersonal)
+        {
+          Local.tasks.moveInFrontOf({id: id, inFrontOfId: inFrontOfId});
+        } else {
+          LocalDB.global.tasks.moveInFrontOf({id: id, inFrontOfId: inFrontOfId});
         }
       }
 
-
-      // Some offline stuff handeling TODO
       return response.result;
     }
 

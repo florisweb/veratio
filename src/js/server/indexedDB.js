@@ -191,10 +191,6 @@ const LocalDB = new function() {
     await Promise.all(promises);
   }
 
-  this.moveInFrontOf = async function({id, inFrontOfId}) { // Personal task-order
-     
-  }
-
 
 
 
@@ -263,6 +259,90 @@ function LocalDB_globalProject() {
       await Promise.all(promises);
       return tasks;
     }
+
+    this.getAll = async function() {
+      let projects = await LocalDB.getProjectList();
+      let tasks = [];
+      let promises = [];
+      for (let i = 0; i < projects.length; i++)
+      {
+        promises.push(projects[i].tasks.getAll().then(function (_result) {
+          tasks = tasks.concat(_result);
+        }));
+      }
+
+      await Promise.all(promises);
+      return tasks;
+    }
+
+    this.get = async function(_id) {
+      let tasks = await this.getAll();
+      for (let task of tasks)
+      {
+        if (task.id != _id) continue;
+        return task;
+      }
+      return false;
+    }
+
+    this.getHighestPersonalIndex = async function() {
+      this.getAll();
+    }
+
+    const undefinedPersonalIndex = 1000000000;
+    this.moveInFrontOf = async function({id, inFrontOfId}) { // Personal taskorder
+      let curTask = await this.get(id);
+      if (!curTask) return false;
+
+      let inFrontOfTask = await this.get(inFrontOfId);
+      let nextIndex;
+      if (!inFrontOfTask)
+      {
+        nextIndex = undefinedPersonalIndex + 1;
+      } else nextIndex = inFrontOfTask.personalIndex;
+
+
+      let newIndex = nextIndex;
+      if (curTask.personalIndex < nextIndex) newIndex--; // Task is dropped higher than before
+
+      let tasks = await this.getAll();
+      let promises = [];
+      for (let task of tasks)
+      {
+        if (task.id == id || task.personalIndex === undefinedPersonalIndex) continue;
+        if (curTask.personalIndex < nextIndex) // Task is dropped higher than before
+        {
+          if (
+            task.personalIndex > curTask.personalIndex &&
+            task.personalIndex <= newIndex
+          ) {
+            task.personalIndex--;
+            promises.push(this.update(task));
+          }
+
+          continue;
+        } 
+
+       if (
+          task.personalIndex >= newIndex &&
+          task.personalIndex < curTask.personalIndex
+        ) {
+          task.personalIndex++;
+          promises.push(this.update(task));
+        }
+      }
+
+      curTask.personalIndex = newIndex;
+      promises.push(this.update(curTask));
+      await Promise.all(promises);
+    }
+
+    this.update = async function(_task) {
+      let project = await LocalDB.getProject(_task.projectId);
+      if (!project) return false;
+      return await project.tasks.update(_task);
+    }
+
   }
 
 
