@@ -52,12 +52,16 @@
 			{
 				$curTask = $this->getTaskById($taskOrder[$i]);
 				if (!$curTask) continue;
-				if ($curTask['groupType'] != 'date') continue;
+				if (
+					$curTask['groupType'] != 'date' &&
+					($curTask['groupType'] != 'overdue' || $curTask['finished'])
+				) continue;
+
 				$date = $curTask['groupValue'];
 				if (!$date) continue;
 
 				$time = strtotime((new DateTime($date))->format('d-m-Y'));
-				if ($time < $curTime) continue;
+				if ($time < $curTime && $curTask['groupType'] != 'overdue') continue; // We are not intrested in tasks in the past
 
 				array_push($newTaskOrder, $taskOrder[$i]);
 			}

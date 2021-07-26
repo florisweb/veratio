@@ -48,9 +48,8 @@
 				$task = $tasks[$i];
 				break;
 			}
-			// $task 				= $this->DTTemplate->get($_id);
-			if (!$task) 		return false;
-			
+
+			if (!$task) 		return false;			
 			$task["projectId"] 	= $this->projectId;
 			return $task;
 		}
@@ -68,7 +67,7 @@
 		public function getByGroup($_info) {
 			$groupValue 		= $this->filterGroupInfo($_info["type"], $_info["value"]);
 			if ($groupValue === false) return false;
-			$tasks 				= $this->getAll((string)$_info['type'] == 'date');
+			$tasks 				= $this->getAll((string)$_info['type'] == 'date' || (string)$_info['type'] == 'overdue');
 
 			$foundTasks = array();
 			for ($i = 0; $i < sizeof($tasks); $i++)

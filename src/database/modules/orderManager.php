@@ -25,7 +25,6 @@
 			{
 				$_taskList[$i]['indexInProject'] = $i;
 				$_taskList[$i]['personalIndex'] = 1000000000;
-				
 				if (!$_addPersonalIndices) continue;
 				
 				$foundPersonalIndex = false;
@@ -37,13 +36,18 @@
 					break;
 				}
 
-				if ($foundPersonalIndex || $_taskList[$i]['groupType'] != 'date') continue;
+				if (
+					$foundPersonalIndex || (
+						$_taskList[$i]['groupType'] != 'date' &&
+						($_taskList[$i]['groupType'] != 'overdue' || $_taskList[$i]['finished'])
+					)
+				) continue;
 
 				$date = $_taskList[$i]['groupValue'];
 				if (!$date) continue;
 
 				$time = strtotime((new DateTime($date))->format('d-m-Y'));
-				if ($time < $curTime) continue; // We are not intrested in tasks in the past
+				if ($time < $curTime && $_taskList[$i]['groupType'] != 'overdue') continue; // We are not intrested in tasks in the past
 
 				array_push($taskOrder, $_taskList[$i]['id']);
 				$taskOrderUpdated = true;
