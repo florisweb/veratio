@@ -51,23 +51,30 @@
 		pointer-events: none !important;
 	}
 
-
-		.popupHolder .title.text {
-			width: 100%;
+		.popupHolder .text {
 			height: 20px;
 			line-height: 20px;
-			padding-top: 5px;
-			padding-bottom: 14px;
+			font-size: 14px;
+		}
+		.popupHolder .text.header {
+			font-weight: normal !important;
+		}
+		.popupHolder .title.text {
+			width: 100%;
+			height: 35px;
+			line-height: 30px;
 
-			font-size: 16px;
-			font-weight: bold;
+			color: #555;
+			font-size: 17px;
 			font-family: Verdana, Geneva, sans-serif;
 		}
 
 
 
-		.popupHolder .inputField {
+		.popupHolder .text.inputField {
 			width: 100%;
+			height: 30px;
+			line-height: normal;
 			border: 1px solid #ccc;
 		}
 
@@ -91,165 +98,3 @@
 			width: 100%;
 			pointer-events: none;
 		}
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* NOTIFICATIONS/POPUPWINDOW*/
-
-.popupBoxHolder {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100vw;
-	height: 100vh;
-
-	overflow: auto;
-	z-index: 100000;
-	background: rgba(0, 0, 0, 0.3);
-	transition: all 0.3s;
-}
-
-.popupBoxHolder.hide {
-	opacity: 0;
-	pointer-events: none;
-}
-
-.popupBoxHolder .popupWindow {
-	position: relative;
-	top: 45vh;
-	margin: auto;
-	transform: translateY(-50%);
-
-	
-	width: calc(95vw - 80px);
-	max-width: 450px;
-	height: auto;
-	max-height: calc(95vh - 40px * 2);
-	padding: 40px;
-
-	border-radius: 5px;
-	box-shadow: 5px 5px 30px 10px rgba(0, 0, 0, .05);
-	background: #fff;
-	
-	overflow: hidden;
-
-	transition: all 0.3s;
-}
-
-
-.popupBoxHolder.hide .popupWindow {
-	transform: scale(0.5) translateY(-50%);
-	opacity: 0;
-}
-
-
-.popupBoxHolder .popupWindow .fullIcon {
-	position: relative;
-	left: calc((100% - 35%) / 2);
-	width: 35%;
-	height: auto;
-}
-
-
-.popupBoxHolder .popupWindow .text {
-	float: left;
-	color: #888;
-	font-family: Arial, Helvetica, sans-serif;
-	line-height: 20px;
-	
-	max-width: 100%;
-	overflow: hidden;
-	white-space: nowrap;
-}
-
-.popupBoxHolder .popupWindow .text.highlighted {
-	font-weight: bolder;
-	color: #777;
-}
-.popupBoxHolder .popupWindow .header {
-	float: left;
-	font-size: 16px;
-	color: #999;	
-}
-.popupBoxHolder .popupWindow .header.subHeader {
-	float: left;
-	font-size: 12px;
-	color: #666;	
-}
-
-
-
-
-.popupBoxHolder .popupWindow .buttonBar {
-	position: absolute;
-	float: bottom;
-	left: 0;
-	bottom: 0;
-	width: calc(100% - 80px);
-	padding: 5px 40px;
-
-	height: 50px;
-
-	float: right;
-}
-
-.popupBoxHolder .popupWindow .boxButton {
-	position: relative;
-	float: right;
-
-	border-radius: 3px;
-	padding: 7px 12px;
-	font-size: 12px;
-	cursor: pointer;
-}
-
-
-.popupBoxHolder .popupWindow .boxButton:not(.important) {
-	color: #aaa;
-}
-.popupBoxHolder .popupWindow .boxButton.important {
-	color: rgba(255, 255, 255, .9);
-}
-
-.popupBoxHolder .popupWindow .inputField {
-	width: calc(100% - 10px);
-	
-	border-radius: 3px;
-
-	border: 2px solid #eaeaea;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-.popupBoxHolder .popupWindow .tagListHolder {
-	position: relative;
-	
-	width: calc(100%);
-	height: auto;
-	padding-right: 20px;
-
-	overflow: auto;
-	min-height: 10px;
-	max-height: calc(95vh - 2 * 40px - 130px);
-	border-bottom: 1px solid #eee;
-}

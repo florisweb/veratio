@@ -137,6 +137,9 @@ function InputField({placeHolder, maxLength = 32, readonly = false}) {
 		return this.HTML;
 	}
 	
+	this.setPlaceHolder = function(_text) {
+		this.HTML.setAttribute('placeholder', _text);
+	}
 	this.focus = function () {this.HTML.focus()};
 	this.setValue = function(_newValue) {this.HTML.value = _newValue};
 	this.getValue = function() {return this.HTML.value};
@@ -301,140 +304,5 @@ function ItemList() {
 
 
 
-
-
-
-function _popup(_builder) {
-	let This = this;
-	const Builder = _builder;
-	
-	this.HTML = {
-		Self: buildPopup(Builder)
-	};
-	this.HTML.popup = this.HTML.Self.children[0];
-
-
-
-	this.openState = false;
-	
-	this.open = function() {
-		this.openState = true;
-		this.HTML.Self.classList.remove("hide");		
-	}
-	
-	this.close = function() {
-		this.openState = false;
-		this.HTML.Self.classList.add("hide");
-	}
-
-
-	function buildPopup(_builder) {
-		let popupHolder = document.createElement("div");
-		popupHolder.className = "popupBoxHolder hide";
-		popupHolder.innerHTML = "<div class='popupWindow'></div>";
-		let popup = popupHolder.children[0];
-
-		for (let i = 0; i < _builder.length; i++)
-		{
-			let element = _buildItem(_builder[i]);
-			popup.appendChild(element);
-		}
-
-		document.body.append(popupHolder);
-
-		popupHolder.onclick = function(_e) {
-			if (_e.target == this) This.close();
-		}
-
-		return popupHolder;
-	}
-
-
-	function _buildItem(_item) {
-		let element = false;
-		if (typeof _item == "string") 	return _buildString(_item);
-
-		if ("title" in _item) 			element = _buildTitle(_item);
-		if ("text" in _item) 			element = _buildText(_item);
-		if ("subHeader" in _item) 		element = _buildSubHeader(_item);
-		if ("checkBox" in _item) 		element = _buildCheckbox(_item);
-		if ("button" in _item) 			element = _buildButton(_item);
-		if ("buttons" in _item) 		element = _buildButtons(_item.buttons);
-		if ("input" in _item) 			element = _buildInput(_item);
-		if (_item.onclick) 				element.onclick = _item.onclick;
-		if (_item.customClass) 			element.classList.add(_item.customClass);
-		return element;
-	}
-
-	function _buildString(_string) {
-		let parent = document.createElement("div");
-		parent.innerHTML = _string;
-		return parent;
-	}
-
-	function _buildTitle(_info) {
-		let element = document.createElement("a");
-		element.className = "header text";
-		setTextToElement(element, _info.title);
-		return element;
-	}
-
-	function _buildText(_info) {
-		let element = document.createElement("div");
-		element.className = "text";
-		if (_info.highlighted)									element.classList.add("highlighted");
-		if (_info.text.substr(0, 1) == " ")						element.style.marginLeft = "4px";
-		if (_info.text.substr(_info.text.length - 1, 1) == " ") element.style.marginRight = "4px";
-
-		setTextToElement(element, _info.text);
-		return element;
-	}
-
-
-	function _buildButtons(_buttons) {
-		let buttonBar = document.createElement("div");
-		buttonBar.className = "buttonBar";
-
-		for (let i = _buttons.length - 1; i >= 0; i--)
-		{
-			let curButton = _buildButton(_buttons[i]);
-			buttonBar.appendChild(curButton);
-		}
-
-		return buttonBar;
-	}
-		function _buildButton(_buttonInfo) {
-			let button = document.createElement("div");
-			button.className = "boxButton text";
-			
-			if (_buttonInfo.important) button.classList.add("important");
-			if (_buttonInfo.color) button.style.background = _buttonInfo.color;
-			if (_buttonInfo.onclick) button.onclick = _buttonInfo.onclick;
-
-			setTextToElement(button, _buttonInfo.button);
-			return button;
-		} 
-	
-
-	function _buildInput(_info) {
-		let input = document.createElement("input");
-		input.className = "inputField";
-
-		if (_info.id) input.setAttribute("id", String(_info.id));
-		if (_info.input) input.setAttribute("placeHolder", String(_info.input));
-		if (_info.value) input.value = String(_info.value);
-		if (_info.maxLength) input.maxLength = _info.maxLength;
-
-		return input;
-	}
-
-	function _buildSubHeader(_info) {
-		let element = document.createElement("a");
-		element.className = "text header subHeader";
-		setTextToElement(element, _info.subHeader);
-		
-		return element;
-	}
-}
 
 

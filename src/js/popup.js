@@ -55,12 +55,11 @@ function _Popup() {
 
 function _Popup_createProject() {
 	let This = this;
+	let inputField = new InputField({placeHolder: "Project title", maxLength: 256});
 	PopupComponent.call(this, {
 		title: "Create Project",
 		content: [
-			new Text({text: "Title", isHeader: true}),
-			new VerticalSpace({height: 7}),
-			new InputField({placeHolder: "Project title", maxLength: 256}),
+			inputField,
 			new VerticalSpace({height: 20}),
 			new Button({
 				title: "Create", 
@@ -75,20 +74,19 @@ function _Popup_createProject() {
 		onOpen: onOpen
 	});
 	
-	let projectTitleInput = this.content[2];
 	let openResolver;
 	function onOpen(_openResolver, _title = null) {
-		projectTitleInput.setValue(_title);
-		projectTitleInput.focus();
+		inputField.setValue(_title);
+		inputField.focus();
 		openResolver = _openResolver;
 	}
 
 	this.createProject = async function() {
-		let title = projectTitleInput.getValue();
+		let title = inputField.getValue();
 		if (!title || title.length < 2) 
 		{
 			await Popup.showMessage({title: "Invalid title", text: "Please enter a longer title for your project.", buttons: [{title: "close", filled: true}]})
-			projectTitleInput.focus();
+			inputField.focus();
 			return;
 		}
 
@@ -190,14 +188,12 @@ function _Popup_inviteByEmail() {
 
 
 function _Popup_renameProject() {
-	let This = this;
+	const This = this;
+	const inputField = new InputField({placeHolder: "Project title", maxLength: 256});
 	PopupComponent.call(this, {
 		title: "Rename project",
 		content: [
-			new Text({text: "Rename "}),
-			new Text({text: "", isHighlighted: true}),
-			new VerticalSpace({height: 5}),
-			new InputField({placeHolder: "Project title", maxLength: 256}),
+			inputField,
 			new VerticalSpace({height: 20}),
 			new Button({
 				title: "Rename",
@@ -212,10 +208,6 @@ function _Popup_renameProject() {
 		],
 		onOpen: onOpen
 	});
-	let projectTitleHolder 	= this.content[1];
-	let inputField 			= this.content[3];
-
-
 
 
 	let curProjectId = false;
@@ -224,7 +216,7 @@ function _Popup_renameProject() {
 		if (!project) return false;
 		curProjectId = project.id;
 
-		projectTitleHolder.setText(project.title);
+		inputField.setPlaceHolder(project.title);
 		inputField.setValue(project.title);
 		inputField.focus();
 	}	
