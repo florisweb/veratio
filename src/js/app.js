@@ -16,7 +16,6 @@ function _app() {
 
     let cachedOperations = await LocalDB.getCachedOperationsCount();
     if (cachedOperations) await LocalDB.sendCachedOperations();
-    Server.onReConnect() // Don't await, so it can sync in the background as to not keep the user waiting
   
 
 
@@ -47,10 +46,17 @@ function _app() {
     }, 150);
     setTimeout(function () {
       SideBar.messagePopup.showLatestMessage();
-    }, 700);
+    }, 1000);
     
-    await this.update();
+
+    MainContent.startLoadingAnimation();
+    await SideBar.projectList.quickFillProjectHolder();    
     SideBar.projectList.open();
+    await MainContent.taskPage.reopenCurTab();
+    MainContent.stopLoadingAnimation();
+
+
+    Server.onReConnect(); // Don't await, so it can sync in the background as to not keep the user waiting
   }
 
   function installServiceWorker() {

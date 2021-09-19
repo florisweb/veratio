@@ -164,14 +164,15 @@ function GlobalProject() {
 
 
 
-function Project(_project) {
+function Project(_project, _localProject) {
   const This  = this;
   this.id     = String(_project.id);
   this.title  = String(_project.title);
 
 
-  let Local;
+  let Local = _localProject;
   this.setup = async function() {
+    if (_localProject) return;
     Local = await LocalDB.getProject(this.id, true);
   }
 

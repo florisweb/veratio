@@ -257,6 +257,14 @@ function _SideBar_projectList() {
 		await this.updateProjectInfo();
 	}
 
+	this.quickFillProjectHolder = async function() {
+		this.setLoadingIconStatus(true);
+		await this.silentRender(true)
+		this.silentRender(false).then(function () {
+			SideBar.projectList.setLoadingIconStatus(false);
+		});
+	}
+
 	this.fillProjectHolder = async function() {
 		this.setLoadingIconStatus(true);
 		await this.silentRender(true)

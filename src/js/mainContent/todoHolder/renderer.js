@@ -5,9 +5,9 @@ function _TaskRenderer() {
 		scrollHolder: $(".mainContentPage")[0]
 	}
 
-	this.renderTask = async function(_taskWrapper, _renderSettings) {
+	this.renderTask = async function(_taskWrapper, _renderSettings, _fromCache = false) {
 		if (!_taskWrapper) 		return false;
-		let project 			= await Server.getProject(_taskWrapper.task.projectId);
+		let project 			= await Server.getProject(_taskWrapper.task.projectId, undefined, _fromCache);
 		if (!project) 			return false;
 
 		let html = createTaskHTMLTemplate();

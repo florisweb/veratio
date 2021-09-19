@@ -218,7 +218,7 @@ function taskPage_tab_today() {
 		);
 
 		let taskList = await getTodayTaskList(true); 
-		await taskHolder.task.addTaskList(taskList);
+		await taskHolder.task.addTaskList(taskList, true);
 	};
 
 	async function onSilentRender(_fromCache) {
@@ -241,14 +241,14 @@ function taskPage_tab_today() {
 		{
 			taskList = await LocalDB.global.tasks.getByDate(new Date());
 		} else taskList = await Server.global.tasks.getByDate(new Date());
-		
 		if (!taskList) return [];
+
 
 		let finalList = [];
 		let promises = [];
 		for (let task of taskList)
 		{
-			promises.push(shouldRenderTask(task).then(function (_result) {
+			promises.push(shouldRenderTask(task, _fromCache).then(function (_result) {
 				if (!_result) return;
 				finalList.push(task);
 			}));
@@ -260,14 +260,14 @@ function taskPage_tab_today() {
 
 
 
-	async function shouldRenderTask(_task) {
+	async function shouldRenderTask(_task, _fromCache) {
 		if (_task.finished) return false;
-		return await This.taskIsMine(_task);
+		return await This.taskIsMine(_task, _fromCache);
 	}
 
 
-	this.taskIsMine = async function(_task) {
-		let project = await Server.getProject(_task.projectId);
+	this.taskIsMine = async function(_task, _fromCache) {
+		let project = await Server.getProject(_task.projectId, undefined, true);
 
 		if (
 			_task.assignedTo.length > 0 && 

@@ -42,8 +42,13 @@ const Server = new function() {
   }
 
  
-  this.getProject = async function(_id, _forceUpdate = false) {
-    let projects = await this.getProjectList(_forceUpdate);
+  this.getProject = async function(_id, _forceUpdate = false, _fromCache = false) {
+    let projects = [];
+    if (_fromCache)
+    {
+      projects = await this.getLocalProjectList();
+    } else projects = await this.getProjectList(_forceUpdate);
+
     for (let i = 0; i < projects.length; i++)
     {
       if (projects[i].id != _id) continue;
@@ -147,8 +152,10 @@ const Server = new function() {
 
     for (let localProject of localDBProjects) 
     {
-      if (localProject.users.Self) localProject.users = [localProject.users.Self];
-      let project = new Project(localProject);
+      let dataProject = Object.assign({}, localProject);
+      if (dataProject.users.Self) dataProject.users = [dataProject.users.Self];
+
+      let project = new Project(dataProject, localProject);
       await project.setup();
       projects.push(project);  
     }

@@ -448,16 +448,16 @@ function TaskHolder_task(_parent) {
 	
 
 	this.taskList = new TaskList();
-	this.addTaskList = function(_taskList) {
+	this.addTaskList = function(_taskList, _fromCache = false) {
 		if (!_taskList) return;
 		let promises = [];
-		for (let task of _taskList) promises.push(this.addTask(task));
+		for (let task of _taskList) promises.push(this.addTask(task, _fromCache));
 		return Promise.all(promises);
 	}
 
-	this.addTask = async function(_task) {
+	this.addTask = async function(_task, _fromCache = false) {
 		let taskWrapper = await this.taskList.add(_task);
-		await taskWrapper.render();
+		await taskWrapper.render(undefined, _fromCache);
 		return taskWrapper;
 	}
 
@@ -656,12 +656,12 @@ function TaskHolder_task(_parent) {
 			);
 		}
 		
-		async function render(_insertionIndex) {
+		async function render(_insertionIndex, _fromCache = false) {
 			This.removeHTML(false);
-
 			This.html = await MainContent.taskPage.renderer.renderTask(
 				This, 
-				Parent.config.renderPreferences
+				Parent.config.renderPreferences,
+				_fromCache
 			);
 			
 			if (typeof _insertionIndex != "number" || _insertionIndex == TaskHolder.taskList.length) return Parent.HTML.todoHolder.append(This.html);
