@@ -467,6 +467,13 @@ function TaskHolder_task(_parent) {
 		return this.addTaskList(_newTaskList);
 	}
 
+	this.reRenderTaskList = async function() {
+		let promises = [];
+		Parent.HTML.todoHolder.innerHTML = '';
+		for (let task of this.taskList) promises.push(task.render());
+		return Promise.all(promises);
+	}
+
 
 	this.removeTask = function(_id, _animate = true) {
 		for (let i = 0; i < this.taskList.length; i++)
@@ -483,8 +490,8 @@ function TaskHolder_task(_parent) {
 
 	this.dropTaskTo = async function(_taskWrapper, _taskIndex) {
 		let wrapper = this.taskList.add(_taskWrapper.task, _taskIndex);
-		wrapper.html = _taskWrapper.html; // Inherits its html from the previous task since that html was dropped to this taskholder.
 		await updateTaskToNewTaskHolder(_taskWrapper.task);
+		await this.reRenderTaskList();
 		Parent.onDropTaskTo(wrapper, _taskIndex);
 	}
 	this.dropTaskFrom = async function(_taskWrapper, _taskIndex) {
