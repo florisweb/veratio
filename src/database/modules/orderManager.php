@@ -47,7 +47,7 @@
 				if (!$date) continue;
 
 				$time = strtotime((new DateTime($date))->format('d-m-Y'));
-				if ($time < $curTime && $_taskList[$i]['groupType'] != 'overdue') continue; // We are not intrested in tasks in the past
+				if ($time < $curTime && $_taskList[$i]['groupType'] != 'overdue') continue; // We are not interested in tasks in the past
 
 				array_push($taskOrder, $_taskList[$i]['id']);
 				$taskOrderUpdated = true;
