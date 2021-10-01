@@ -314,7 +314,7 @@ function Project(_project = {id, title, importData}, _localProject) {
 
       new Promise(async function (resolve) { // Store data Localily  
         let foundTasks = await Local.tasks.getByDateRange(_info);
-        
+
         for (let i = 0; i < foundTasks.length; i++) await Local.tasks.remove(foundTasks[i]);
         for (let task of response.result) await Local.tasks.update(task);
         resolve();

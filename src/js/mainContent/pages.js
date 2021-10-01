@@ -450,11 +450,7 @@ function taskPage_tab_project() {
 
 	
 	async function getNotPlannedTaskList(_fromCache) {
-		let taskList = [];
-		if (_fromCache) 
-		{
-			let taskList = await project.getLocal().tasks.getByGroup({type: "default", value: "*"});
-		} else taskList = await project.tasks.getByGroup({type: "default", value: "*"});
+		let taskList =  await project.getInstance(_fromCache).tasks.getByGroup({type: "default", value: "*"});
 		return TaskSorter.defaultSort(taskList);
 	}
 
@@ -475,11 +471,7 @@ function taskPage_tab_project() {
 
 
 	async function getPlannedTaskList(_fromCache) {
-		let taskList = [];
-		if (_fromCache) 
-		{
-			taskList = await project.getLocal().tasks.getByDateRange({date: new Date(), range: 1000});
-		} else taskList = await project.tasks.getByDateRange({date: new Date(), range: 1000});
+		let taskList = await project.getInstance(_fromCache).tasks.getByDateRange({date: new Date(), range: 1000});
 		return TaskSorter.defaultSort(taskList);
 	}
 
@@ -500,11 +492,7 @@ function taskPage_tab_project() {
 
 
 	async function getToBePlannedTaskList(_fromCache) {
-		let taskList = [];
-		if (_fromCache) 
-		{
-			taskList = await project.getLocal().tasks.getByGroup({type: "toPlan", value: "*"});
-		} else taskList = await project.tasks.getByGroup({type: "toPlan", value: "*"});
+		let taskList = await project.getInstance(_fromCache).tasks.getByGroup({type: "toPlan", value: "*"});
 		return TaskSorter.defaultSort(taskList);
 	}
 

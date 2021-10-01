@@ -198,7 +198,7 @@ const LocalDB = new function() {
     let promises = [];
     for (let id of ids)
     {
-      promises.push(this.removeProject(id));
+      promises.push(removeProject(id));
     }
     await Promise.all(promises);
   }
@@ -478,7 +478,8 @@ function LocalDB_Project(_projectId, _DB, _serverProject) {
     let metaData = await this.getData("metaData");
     if (metaData.id === undefined) 
     {
-      await this.setData("metaData", {title: '❌ [Desync problem] ❌', index: -1});
+      console.log(metaData, metaData.id);
+      await this.setData("metaData", {title: '❌ [Desync problem] ❌' + this.id, index: -1});
       metaData = await this.getData("metaData");
     }
 
@@ -650,7 +651,12 @@ function LocalDB_Project(_projectId, _DB, _serverProject) {
     let Key       = _key;
     let TypeClass = _typeClass;
 
+    let updatePromise;
     this.update = async function(_newItem) {
+      if (updatePromise) await updatePromise;
+      let resolver; // Wait for the promise so there's only one script writing at the same time
+      updatePromise = new Promise(function (resolve) {resolver = resolve;}); 
+
       let data = await this.getAll();
       let found = false;
 
@@ -664,6 +670,8 @@ function LocalDB_Project(_projectId, _DB, _serverProject) {
 
       if (!found) data.push(_newItem);
       await this.set(data);
+
+      resolver(); updatePromise = false;
       return _newItem;
     }
 
@@ -679,8 +687,12 @@ function LocalDB_Project(_projectId, _DB, _serverProject) {
       return false;
     }
 
-
+    let removePromise;
     this.remove = async function(_id) {
+      if (removePromise) await removePromise;
+      let resolver; // Wait for the promise so there's only one script writing at the same time
+      removePromise = new Promise(function (resolve) {resolver = resolve;}); 
+
       let items = await this.getAll();
       
       for (let i = 0; i < items.length; i++)
@@ -689,8 +701,11 @@ function LocalDB_Project(_projectId, _DB, _serverProject) {
         items.splice(i, 1);
         
         await this.set(items);
+        resolver(); removePromise = false;
         return true;
       }
+
+      resolver(); removePromise = false;
       return false;
     }
 
