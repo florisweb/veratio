@@ -10,13 +10,16 @@ const Popup       = new _Popup();
 function _app() {
 
   this.setup = async function() {
+    let start = new Date();
     installServiceWorker();
     await LocalDB.setup();
+    console.log('localDB', new Date() - start);
     await Server.setup();
+    console.log('server', new Date() - start);
 
     let cachedOperations = await LocalDB.getCachedOperationsCount();
     if (cachedOperations) await LocalDB.sendCachedOperations();
-  
+    console.log('cached', new Date() - start);
 
 
     document.body.addEventListener("keydown", function(_e) {
@@ -50,9 +53,11 @@ function _app() {
     
 
     MainContent.startLoadingAnimation();
-    await SideBar.projectList.quickFillProjectHolder();    
+    await SideBar.projectList.quickFillProjectHolder();   
+    console.log('quickFill', new Date() - start); 
     SideBar.projectList.open();
     await MainContent.taskPage.reopenCurTab();
+    console.log('reopen', new Date() - start); 
     MainContent.stopLoadingAnimation();
 
 
@@ -78,7 +83,7 @@ function _app() {
 
     switch (MainContent.curPage.name)
     {
-      case "settings":  MainContent.settingsPage.open(MainContent.curProjectId);  break;
+      case "settings":  MainContent.settingsPage.open(MainContent.curProject);    break;
       default:          MainContent.taskPage.reopenCurTab();                      break;
     }
     MainContent.stopLoadingAnimation();

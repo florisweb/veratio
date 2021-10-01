@@ -7,7 +7,9 @@ function _TaskRenderer() {
 
 	this.renderTask = async function(_taskWrapper, _renderSettings, _fromCache = false) {
 		if (!_taskWrapper) 		return false;
-		let project 			= await Server.getProject(_taskWrapper.task.projectId, undefined, _fromCache);
+		let project 			= _taskWrapper.task.project;
+		if (!project) console.warn('invalid project', _taskWrapper);
+		if (!project) project 	= await Server.getProject(_taskWrapper.task.projectId, _fromCache);
 		if (!project) 			return false;
 
 		let html = createTaskHTMLTemplate();

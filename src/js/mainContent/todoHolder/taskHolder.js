@@ -210,7 +210,7 @@ function TaskHolder_default(_config, _taskHolderIndex, _title) {
 		if (this.config.title == "Planned" && _task.groupType != "date") return false;
 		if (_task.groupType != "default" && this.config.title != "Planned") return false;
 		
-		if (MainContent.curProjectId && MainContent.curProjectId != _task.projectId) return false;
+		if (MainContent.curProject && MainContent.curProject.id != _task.project.id) return false;
 
 		return true;
 	}
@@ -237,9 +237,7 @@ function TaskHolder_toPlan(_config, _taskHolderIndex) {
 
 	this.shouldRenderTask = function(_task) {
 		if (_task.groupType != "toPlan") return false;		
-		if (MainContent.curProjectId && MainContent.curProjectId != _task.projectId) return false;
-
-		return true;
+		return !(MainContent.curProject && MainContent.curProject.id != _task.project.id);
 	}
 }
 
@@ -262,7 +260,7 @@ function TaskHolder_date(_config, _taskHolderIndex, _date) {
 
 	this.shouldRenderTask = function(_task) {
 		if (_task.groupType != "date") return false;
-		if (MainContent.curProjectId && MainContent.curProjectId != _task.projectId) return false;
+		if (MainContent.curProject && MainContent.curProject.id != _task.project.id) return false;
 
 		let taskDate = new Date().setDateFromStr(_task.groupValue);
 		if (!this.date.compareDate(taskDate)) return false;
@@ -290,9 +288,7 @@ function TaskHolder_overdue(_config, _taskHolderIndex) {
 
 	this.shouldRenderTask = function(_task) {
 		if (_task.groupType != "overdue") return false;
-		if (MainContent.curProjectId && MainContent.curProjectId != _task.projectId) return false;
-
-		return true;
+		return !(MainContent.curProject && MainContent.curProject.id != _task.project.id);
 	}
 	
 	this.onTaskFinish = function(_taskWrapper) {
@@ -456,21 +452,28 @@ function TaskHolder_task(_parent) {
 	}
 
 	this.addTask = async function(_task, _fromCache = false) {
-		let taskWrapper = await this.taskList.add(_task);
+		let taskWrapper = this.taskList.add(_task);
 		await taskWrapper.render(undefined, _fromCache);
 		return taskWrapper;
 	}
 
-	this.setTaskList = function(_newTaskList) {
-		Parent.HTML.todoHolder.innerHTML = '';
+	this.setTaskList = async function(_newTaskList) {
 		this.taskList = new TaskList();
-		return this.addTaskList(_newTaskList);
+		
+		let taskWrappers = [];
+		for (let task of _newTaskList) taskWrappers.push(this.taskList.add(task));
+
+		// Parent.HTML.todoHolder.innerHTML = '';
+		// let promises = [];
+		// for (let taskWrapper of taskWrappers) promises.push(taskWrapper.render(undefined, true));
+		// await Promise.all(promises);
+		await this.reRenderTaskList();
 	}
 
 	this.reRenderTaskList = async function() {
 		let promises = [];
 		Parent.HTML.todoHolder.innerHTML = '';
-		for (let task of this.taskList) promises.push(task.render());
+		for (let task of this.taskList) promises.push(task.render(undefined));
 		return Promise.all(promises);
 	}
 
@@ -502,10 +505,7 @@ function TaskHolder_task(_parent) {
 	async function updateTaskToNewTaskHolder(_task) {
 		_task.groupType = Parent.type;
 		if (Parent.config.title == 'Planned') _task.groupType = 'date';
-		if (Parent.type == "date") _task.groupValue = Parent.date.toString();
-		
-		let project = await Server.getProject(_task.projectId);
-		
+		if (Parent.type == "date") _task.groupValue = Parent.date.toString();		
 		
 		let inFrontOfId = false;
 		for (let i = 0; i < TaskHolder.taskList.length - 1; i++) // - 1 because the last task wouldn't have a task behind it to write as it's inFrontOfId
@@ -516,8 +516,8 @@ function TaskHolder_task(_parent) {
 		}
 
 		return await Promise.all([
-			project.tasks.update(_task),
-			project.tasks.moveInFrontOf({
+			_task.project.tasks.update(_task),
+			_task.project.tasks.moveInFrontOf({
 				id: _task.id, 
 				inFrontOfId: inFrontOfId,
 				isPersonal: MainContent.taskPage.curTab.name != 'project'
@@ -591,8 +591,7 @@ function TaskHolder_task(_parent) {
 				This.task.finished = true;
 			}
 
-			let project = await Server.getProject(This.task.projectId);
-			project.tasks.update(This.task, true);
+			This.task.project.tasks.update(This.task, true);
 
 			//notify the taskHolder
 			This.taskHolder.onTaskFinish(This);
@@ -600,8 +599,7 @@ function TaskHolder_task(_parent) {
 
 
 		async function remove() {					
-			let project = await Server.getProject(This.task.projectId);
-			await project.tasks.remove(This.task.id);
+			await This.task.project.tasks.remove(This.task.id);
 			This.taskHolder.task.removeTask(This.task.id);
 
 			//notify the taskHolder
@@ -616,8 +614,7 @@ function TaskHolder_task(_parent) {
 
 		async function addToPlanner() {
 			This.task.groupType = "toPlan";
-			let project = await Server.getProject(This.task.projectId);
-			let result = await project.tasks.update(This.task);
+			let result = await This.task.project.tasks.update(This.task);
 			if (!result) return;
 
 			SideBar.projectList.updateProjectInfo();
@@ -629,8 +626,7 @@ function TaskHolder_task(_parent) {
 
 		async function removeFromPlanner() {
 			This.task.groupType = "default";
-			let project = await Server.getProject(This.task.projectId);
-			let result = await project.tasks.update(This.task);
+			let result = await This.task.project.tasks.update(This.task);
 			if (!result) return;
 
 			SideBar.projectList.updateProjectInfo();
@@ -656,7 +652,7 @@ function TaskHolder_task(_parent) {
 			);
 		}
 		
-		async function render(_insertionIndex, _fromCache = false) {
+		async function render(_insertionIndex, _fromCache = true) {
 			This.removeHTML(false);
 			This.html = await MainContent.taskPage.renderer.renderTask(
 				This, 
@@ -800,8 +796,7 @@ function TaskHolder_createMenu(_parent) {
 
 	this.openEdit = async function(_taskHTML, _task) {
 		if (!_task || !_taskHTML) return false;
-		let project = await Server.getProject(_task.projectId);
-		MainContent.searchOptionMenu.curProject = project;
+		MainContent.searchOptionMenu.curProject = _task.project;
 
 		resetEditMode(false);
 
@@ -894,7 +889,7 @@ function TaskHolder_createMenu(_parent) {
 		if ( // User moved an edit-task to another project
 			newTask &&
 			this.curTask.editing && 
-			this.curTask.originalTask.projectId != newTask.projectId
+			this.curTask.originalTask.project.id != newTask.project.id
 		) await removeOldTask(this.curTask.originalTask);
 
 		resetEditMode(true);
@@ -910,9 +905,7 @@ function TaskHolder_createMenu(_parent) {
 	}
 
 	async function removeOldTask(_task) {
-		let prevProject = await Server.getProject(_task.projectId);
-		if (!prevProject) return false;
-		return prevProject.tasks.remove(_task.id);
+		return _task.project.tasks.remove(_task.id);
 	}
 
 
@@ -1042,7 +1035,7 @@ function TaskHolder_createMenu(_parent) {
 			This.setTag(false);
 			setMemberIndicators([]);
 
-			if (_task && _task.projectId) 					This.setProject(await Server.getProject(_task.projectId));
+			if (_task && _task.project) 					This.setProject(await Server.getProject(_task.project.id));
 			if (!This.project && MainContent.curProjectId) 	This.setProject(await Server.getProject(MainContent.curProjectId));
 			if (!This.project)								This.setProject((await Server.getProjectList())[0]);
 
@@ -1097,7 +1090,7 @@ function TaskHolder_createMenu(_parent) {
 				groupType: 		Parent.type,
 				groupValue: 	'',
 				creatorId: 		this.project.users.Self.id,
-			});
+			}, this.project);
 
 			if (!task.title || task.title.split(" ").join("").length < 1) return "E_InvalidTitle";
 			

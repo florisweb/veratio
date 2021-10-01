@@ -180,7 +180,7 @@ function _Popup_inviteByEmail() {
 		
 		This.close();
 
-		MainContent.settingsPage.open(MainContent.curProjectId);
+		MainContent.settingsPage.open(MainContent.curProject);
 	}
 }
 
@@ -327,7 +327,7 @@ function _Popup_permissionMenu() {
 
 		This.close();
 
-		MainContent.settingsPage.open(MainContent.curProjectId);
+		MainContent.settingsPage.open(MainContent.curProject);
 	}
 }
 
@@ -368,17 +368,17 @@ function _Popup_createTag() {
 	let CurProject = false;
 	let EditData = {tag: false}
 
-	async function onOpen(_openResolver, _projectId, _tagName = null) {
+	function onOpen(_openResolver, _project, _tagName = null) {
 		updateMenuModeText();
 		tagTitleInput.setValue(_tagName);
 		tagTitleInput.focus();
 
-		CurProject = await Server.getProject(_projectId);
+		CurProject = _project
 		if (!CurProject) return This.close(false);
 	}
 
-	this.openEdit = function(_tag, _projectId) {
-		let onclosePromise = this.open(_projectId, _tag.title);
+	this.openEdit = function(_tag, _project) {
+		let onclosePromise = this.open(_project, _tag.title);
 		
 		EditData.tag = _tag;
 		if (!EditData.tag) return;

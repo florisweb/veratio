@@ -13,18 +13,18 @@ function MainContent_page(_config) {
 
 	this.isOpen = function() {return this.name == MainContent.curPage.name}
 
-	this.open = async function(_projectId) {
+	this.open = async function(_curProject = MainContent.curProject) {
 		HTML.mainContent.classList.add("loading");
 
 		resetPage();
 		
 		MainContent.curPage			= this;
-		if (_projectId) MainContent.curProjectId = _projectId;
+		MainContent.curProject = _curProject;
 
 		openPageByIndex(this.settings.index);
 		MainContent.header.showItemsByPage(this.name);
 
-		onOpen(_projectId);
+		onOpen(_curProject.id); // TODOf: _curProject.id -> _curProject
 
 		await SideBar.updateTabIndicator();
 		setTimeout('mainContent.classList.remove("loading");', 100);
@@ -71,7 +71,7 @@ function MainContent_taskPage() {
 	
 	this.reopenCurTab = function() {
 		if (!this.curTab) return this.todayTab.open();
-		this.curTab.open(MainContent.curProjectId);
+		this.curTab.open(MainContent.curProject);
 	}
 }
 
@@ -93,7 +93,7 @@ function taskPage_tab(_settings) {
 	}
 	
 
-	this.open = async function(_projectId = false) {
+	this.open = async function(_project = false) {
 		if (MainContent.taskPage.rendering) return;
 		MainContent.taskPage.rendering = true;
 		setTimeout(function() {MainContent.taskPage.rendering = false}, 1000);
@@ -103,14 +103,14 @@ function taskPage_tab(_settings) {
 		
 
 		MainContent.taskPage.curTab	= this;
-		MainContent.curProjectId 	= _projectId;
+		MainContent.curProject = _project;
 
 		if (!MainContent.taskPage.isOpen()) MainContent.taskPage.open();
 		resetPage();
 		await this.addOverdue(true);
 
 		MainContent.header.setTitleIcon(MainContent.taskPage.curTab.name);
-		await onOpen(_projectId);
+		await onOpen(_project);
 
 		MainContent.stopLoadingAnimation();
 		await SideBar.updateTabIndicator();
@@ -122,20 +122,22 @@ function taskPage_tab(_settings) {
 	}
 
 	let silentRendering = false;
-	this.silentRender = async function(_fromCache = false) {
+	this.silentRender = async function(_fromCache = true) {
 		if (silentRendering) return console.warn('bussy');
 		silentRendering = true;
 
 		MainContent.header.setTitleIcon('loading');
 		let overdueTaskList = await getOverdueTasks(_fromCache);
+		
 		let firstTaskHolder = MainContent.taskHolder.list[0];
 		if (firstTaskHolder && firstTaskHolder.type == 'overdue')
 		{
 			if (overdueTaskList.length) 
 			{
 				await firstTaskHolder.task.setTaskList(overdueTaskList);
-			} else firstTaskHolder.remove();
-		} else if (overdueTaskList) await this.addOverdue(_fromCache);
+			} 
+			else firstTaskHolder.remove();
+		} else if (overdueTaskList.length) await this.addOverdue(_fromCache);
 
 		await onSilentRender(_fromCache);
 		MainContent.header.setTitleIcon('finishedLoading');
@@ -155,7 +157,7 @@ function taskPage_tab(_settings) {
 	}
 
 
-	this.addOverdue = async function(_fromCache = false) {
+	this.addOverdue = async function(_fromCache = true) {
 		let taskList = await getOverdueTasks(_fromCache);
 		if (!taskList) return false;
 
@@ -171,16 +173,9 @@ function taskPage_tab(_settings) {
 		await taskHolder.task.addTaskList(taskList);
 	}
 
-	async function getOverdueTasks(_fromCache) {
-		let project;
-		if (_fromCache)
-		{
-			project = await LocalDB.getProject(MainContent.curProjectId);
-			if (!project) project = LocalDB.global;
-		} else {
-			project = await Server.getProject(MainContent.curProjectId);
-			if (!project) project = Server.global;
-		}
+	async function getOverdueTasks(_fromCache = true) {
+		let project = await Server.getProject(MainContent.curProjectId, _fromCache);
+		if (!project) project = Server.global;
 
 		let taskList = await project.tasks.getByGroup({type: "overdue", value: "*"});
 		if (!taskList || !taskList.length) return false;
@@ -221,7 +216,7 @@ function taskPage_tab_today() {
 		await taskHolder.task.addTaskList(taskList, true);
 	};
 
-	async function onSilentRender(_fromCache) {
+	async function onSilentRender(_fromCache = true) {
 		for (let taskHolder of MainContent.taskHolder.list)
 		{
 			switch (taskHolder.type) 
@@ -235,12 +230,8 @@ function taskPage_tab_today() {
 		}
 	}
 
-	async function getTodayTaskList(_fromCache) {
-		let taskList = [];
-		if (_fromCache) 
-		{
-			taskList = await LocalDB.global.tasks.getByDate(new Date());
-		} else taskList = await Server.global.tasks.getByDate(new Date());
+	async function getTodayTaskList(_fromCache = true) {
+		let taskList = await Server.global.getInstance(_fromCache).tasks.getByDate(new Date());
 		if (!taskList) return [];
 
 
@@ -267,13 +258,8 @@ function taskPage_tab_today() {
 
 
 	this.taskIsMine = async function(_task, _fromCache) {
-		let project = await Server.getProject(_task.projectId, undefined, true);
-
-		if (
-			_task.assignedTo.length > 0 && 
-			!_task.assignedTo.includes(project.users.Self.id)
-		) return false;
-		return true;
+		return 	_task.assignedTo.length <= 0 || 
+				_task.assignedTo.includes(_task.project.users.Self.id)
 	}
 }
 
@@ -334,7 +320,7 @@ function taskPage_tab_week() {
 		let taskList = [];
 		if (_fromCache) 
 		{ 
-			taskList = await LocalDB.global.tasks.getByDate(_date);
+			taskList = await Server.global.getLocal().tasks.getByDate(_date);
 		} else taskList = await Server.global.tasks.getByDate(_date);
 
 		if (!taskList) return returnList;
@@ -404,8 +390,8 @@ function taskPage_tab_project() {
 	});
 
 	let project;
-	async function onOpen(_projectId) {
-		project = await Server.getProject(_projectId);
+	async function onOpen(_project) {
+		project = _project;
 		if (!project) return;
 		
 		MainContent.header.showItemsByPage("project");
@@ -466,8 +452,7 @@ function taskPage_tab_project() {
 		let taskList = [];
 		if (_fromCache) 
 		{
-			let localProject = await LocalDB.getProject(project.id);
-			taskList = await localProject.tasks.getByGroup({type: "default", value: "*"});
+			let taskList = await project.getLocal().tasks.getByGroup({type: "default", value: "*"});
 		} else taskList = await project.tasks.getByGroup({type: "default", value: "*"});
 		return TaskSorter.defaultSort(taskList);
 	}
@@ -492,8 +477,7 @@ function taskPage_tab_project() {
 		let taskList = [];
 		if (_fromCache) 
 		{
-			let localProject = await LocalDB.getProject(project.id);
-			taskList = await localProject.tasks.getByDateRange({date: new Date(), range: 1000});
+			taskList = await project.getLocal().tasks.getByDateRange({date: new Date(), range: 1000});
 		} else taskList = await project.tasks.getByDateRange({date: new Date(), range: 1000});
 		return TaskSorter.defaultSort(taskList);
 	}
@@ -518,8 +502,7 @@ function taskPage_tab_project() {
 		let taskList = [];
 		if (_fromCache) 
 		{
-			let localProject = await LocalDB.getProject(project.id);
-			taskList = await localProject.tasks.getByGroup({type: "toPlan", value: "*"});
+			taskList = await project.getLocal().tasks.getByGroup({type: "toPlan", value: "*"});
 		} else taskList = await project.tasks.getByGroup({type: "toPlan", value: "*"});
 		return TaskSorter.defaultSort(taskList);
 	}
@@ -562,7 +545,7 @@ function taskPage_tab_project() {
 
 
 
-function MainContent_settingsPage(_projectId) {
+function MainContent_settingsPage() {
 	MainContent_page.call(this, {
 		name: "settings",
 		index: 1,
@@ -587,18 +570,16 @@ function MainContent_settingsPage(_projectId) {
 
 
 
-	async function onOpen(_projectId) {
-		let project = await Server.getProject(_projectId);
-		if (!project) project = (await Server.getProjectList())[0];
+	async function onOpen(_project) {
+		if (!_project) _project = (await Server.getProjectList())[0];
 		
 		HTML.inviteHolder.classList.add("hide");
 
-		MainContent.header.setTitle("Settings - " + project.title);
+		MainContent.header.setTitle("Settings - " + _project.title);
 		MainContent.header.setTitleIcon('settings');
 
-		let users = await project.users.getAll(true);
-
-		if (project.users.Self.permissions.users.invite) HTML.inviteHolder.classList.remove("hide");
+		let users = await _project.users.getAll(true);
+		if (_project.users.Self.permissions.users.invite) HTML.inviteHolder.classList.remove("hide");
 		This.setMemberItemsFromList(users);
 	}
 
@@ -612,7 +593,7 @@ function MainContent_settingsPage(_projectId) {
 		if (response.error) console.error("An error accured while inviting a user:", response);
 
 		Popup.inviteByLinkCopyMenu.open(window.location.href.split('?')[0] + "?link=" + response.result.id);
-		This.open(MainContent.curProjectId);
+		This.open(MainContent.curProject);
 	}
 
 

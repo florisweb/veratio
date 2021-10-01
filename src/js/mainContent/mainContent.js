@@ -12,6 +12,7 @@ function _MainContent() {
 	}
 
 	this.curProjectId = "";
+	this.curProject;
 	this.header 			= new _MainContent_header();
 	
 	this.taskHolder 		= new _MainContent_taskHolder();
@@ -369,7 +370,7 @@ function _MainContent_searchOptionMenu() {
 					break;
 					case tagType: 
 						project = MainContent.taskHolder.curCreateMenu.curTask.project;
-						let tag = await Popup.createTag.open(project.id, _item.item.title);
+						let tag = await Popup.createTag.open(project, _item.item.title);
 						if (tag) MainContent.taskHolder.curCreateMenu.curTask.setTag(tag);
 					break;
 				}
@@ -600,15 +601,12 @@ const TaskSorter = new function() {
 
 	this.sortAssignedToMe = function(_tasks = []) {
 		if (!_tasks) return [];
-		return _tasks.sort(async function(a, b) {
-			let projectA = await Server.getProject(a.projectId);
-			let projectB = await Server.getProject(b.projectId);
+		return _tasks.sort(function(a, b) {
+	     	if (!a.project || !a.project.users.Self.id) return 1;
+	    	if (!b.project || !b.project.users.Self.id) return -1;
 
-	     	if (!projectA || !projectA.users.Self.id) return 1;
-	    	if (!projectB || !projectB.users.Self.id) return -1;
-
-	    	if (a.assignedTo.includes(projectA.users.Self.id)) return -1;
-	    	if (b.assignedTo.includes(projectB.users.Self.id)) return 1;
+	    	if (a.assignedTo.includes(a.project.users.Self.id)) return -1;
+	    	if (b.assignedTo.includes(b.project.users.Self.id)) return 1;
 		});
 	}
 }

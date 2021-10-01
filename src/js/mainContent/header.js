@@ -17,7 +17,7 @@ function _MainContent_header() {
 		Menu.addOption(
 			"Settings", 
 			function () {
-				MainContent.settingsPage.open(MainContent.curProjectId);
+				MainContent.settingsPage.open(MainContent.curProject);
 				return true;
 			}, 
 			"images/icons/memberIcon.png"
@@ -25,7 +25,7 @@ function _MainContent_header() {
 		Menu.addOption(
 			"Manage Tags", 
 			function () {
-				Popup.tagMenu.open(MainContent.curProjectId);
+				Popup.tagMenu.open(MainContent.curProject);
 				return true;
 			}, 
 			"images/icons/tagIcon.png"
@@ -50,7 +50,7 @@ function _MainContent_header() {
 		Menu.addOption(
 			"Rename project", 
 			function () {
-				Popup.renameProjectMenu.open(MainContent.curProjectId);
+				Popup.renameProjectMenu.open(MainContent.curProject);
 				return true;
 			}, 
 			"images/icons/changeIconDark.png"
@@ -58,7 +58,7 @@ function _MainContent_header() {
 
 
 		this.open = async function() {
-			let project = await Server.getProject(MainContent.curProjectId);
+			let project = await Server.getProject(MainContent.curProject);
 			
 			Menu.enableAllOptions();
 
@@ -75,11 +75,9 @@ function _MainContent_header() {
 	}
 
 
-	DoubleClick.register(HTML.titleHolder, async function() {
-		let project = await Server.getProject(MainContent.curProjectId);
-		if (!project || !project.users.Self.permissions.project.rename) return false;
-
-		Popup.renameProjectMenu.open(project.id);
+	DoubleClick.register(HTML.titleHolder, function() {
+		if (!MainContent.curProject || !MainContent.curProject.users.Self.permissions.project.rename) return false;
+		Popup.renameProjectMenu.open(MainContent.curProject);
 	});
 
 

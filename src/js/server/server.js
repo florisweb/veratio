@@ -3,51 +3,39 @@ const Server = new function() {
   let This        = this;
   this.connected  = true;  
   this.global     = new GlobalProject();
+  const Local     = LocalDB.getProjectAccess();
+
 
   let linkUserId = false;
   this.isLinkUser = false;
-  this.setLinkUserId = function(_id) {
+  function setLinkUserId(_id) {
     if (!_id) return;
     linkUserId = _id;
-    this.isLinkUser = true;
+    This.isLinkUser = true;
   }
 
 
-  this.projectList = [];
   this.setup = async function() {
-    this.setLinkUserId(LinkUser.link);
-    await this.getLocalProjectList();
+    setLinkUserId(LinkUser.link);
+    await this.getProjectList(true);
   }
 
-  this.getLocalProjectList = async function() {
-    let projects = await getLocalProjectList();
-    if (projects) this.projectList = projects;
-    return this.projectList;
-  }
 
-  this.projectListNeedsUpdate = false;
+
   let getProjectListPromise = false;
-  
-  this.getProjectList = async function(_forceUpdate = false) {
+  this.getProjectList = async function(_fromCache = true) {
+    console.log('get projectList', _fromCache);
     if (getProjectListPromise) return await getProjectListPromise;
-    if (!_forceUpdate && !this.projectListNeedsUpdate) return this.projectList;
-    this.projectListNeedsUpdate = false;
-
-    getProjectListPromise       = getProjectList();
+    
+    getProjectListPromise       = getProjectList(_fromCache);
     let projects                = await getProjectListPromise;
     getProjectListPromise       = false;
-    
-    if (projects) this.projectList = projects;
-    return this.projectList;
+    return projects;
   }
 
  
-  this.getProject = async function(_id, _forceUpdate = false, _fromCache = false) {
-    let projects = [];
-    if (_fromCache)
-    {
-      projects = await this.getLocalProjectList();
-    } else projects = await this.getProjectList(_forceUpdate);
+  this.getProject = async function(_id, _fromCache = true) {
+    let projects = await this.getProjectList(_fromCache);
 
     for (let i = 0; i < projects.length; i++)
     {
@@ -96,7 +84,9 @@ const Server = new function() {
 
  
 
-  async function getProjectList() {
+  async function getProjectList(_fromCache = true) {
+    if (_fromCache !== false) return await getLocalProjectList();
+
     let response      = await fetchProjects();
     let noConnection  = response.error == "E_noConnection";
     
@@ -107,7 +97,7 @@ const Server = new function() {
     {
       return await getLocalProjectList();      
     } else {
-      await LocalDB.updateProjectList(projects);
+      await Local.updateProjectList(projects);
     }
 
     let promises = [];
@@ -125,7 +115,7 @@ const Server = new function() {
     let projectList = [];
     for (let i = 0; i < response.result.length; i++)
     {
-      let project = importProject(response.result[i]);
+      let project = await importProject(response.result[i]);
       if (!project) continue;
 
       projectList.push(project);
@@ -135,12 +125,15 @@ const Server = new function() {
     return response;
   }
 
-    function importProject(_project) {
+    async function importProject(_project) {
       if (!_project || typeof _project != "object") return;
-      let project               = new Project(Object.assign({}, _project));
+      let localProject = await Local.getProject(_project.id);
+
+      let project               = new Project(Object.assign({}, _project), localProject);
       project.importData        = Object.assign({}, _project);
       project.importData.tags   = project.importData.tags.map(r => new Tag(r));
       project.importData.users  = project.importData.users.map(r => new User(r));
+      localProject.Server = project;
 
       return project;
     }
@@ -148,7 +141,7 @@ const Server = new function() {
 
   async function getLocalProjectList() {
     let projects = [];
-    let localDBProjects = await LocalDB.getProjectList();
+    let localDBProjects = await Local.getProjectList();
 
     for (let localProject of localDBProjects) 
     {
@@ -156,8 +149,10 @@ const Server = new function() {
       if (dataProject.users.Self) dataProject.users = [dataProject.users.Self];
 
       let project = new Project(dataProject, localProject);
+      localProject.Server = project;
+      
       await project.setup();
-      projects.push(project);  
+      projects.push(project);
     }
 
     return projects;
@@ -182,6 +177,19 @@ const Server = new function() {
 
 
   this.onReConnect = function () {return LocalDB.onReConnect()};
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -221,9 +229,10 @@ const Server = new function() {
     return await this.fetchData("database/project/executeFunctionList.php", "functions=" + paramString);
   }
 
-
+  this.debug_requestCount = 0;
 
   this.fetchData = async function(_url, _parameters = "", _attempts = 0) {
+    this.debug_requestCount++;
     let parameters = _parameters;
     if (this.isLinkUser)
     {

@@ -5,6 +5,13 @@
 
 
 function GlobalProject() {
+  const Local = new LocalDB_globalProject();
+  this.getLocal = function() {return Local;};
+  this.getInstance = function(_localInstance) {
+    if (_localInstance) return Local;
+    return this;
+  }
+
   this.tasks = new function() {
     let Type = "tasks";
     TypeBaseClass.call(this, Type);
@@ -171,9 +178,15 @@ function Project(_project, _localProject) {
 
 
   let Local = _localProject;
+  Local.Server = this;
+  this.getLocal = function() {return Local;};
+  this.getInstance = function(_localInstance) {
+    if (_localInstance) return Local;
+    return this;
+  }
+  
+
   this.setup = async function() {
-    if (_localProject) return;
-    Local = await LocalDB.getProject(this.id, true);
   }
 
   this.moveToIndex = async function(_newIndex) {
@@ -189,7 +202,6 @@ function Project(_project, _localProject) {
     if (response.error == "E_noConnection") 
     {
       Local.addCachedOperation(functionRequest);
-      Server.projectListNeedsUpdate = true;
       return true;
     }
 
@@ -267,7 +279,7 @@ function Project(_project, _localProject) {
         {
           await Local.tasks.moveInFrontOf({id: id, inFrontOfId: inFrontOfId});
         } else {
-          await LocalDB.global.tasks.moveInFrontOf({id: id, inFrontOfId: inFrontOfId});
+          await Server.global.getLocal().tasks.moveInFrontOf({id: id, inFrontOfId: inFrontOfId});
         }
       } else if(!response.error && response.result)
       {
@@ -275,7 +287,7 @@ function Project(_project, _localProject) {
         {
           Local.tasks.moveInFrontOf({id: id, inFrontOfId: inFrontOfId});
         } else {
-          LocalDB.global.tasks.moveInFrontOf({id: id, inFrontOfId: inFrontOfId});
+          Server.global.getLocal().tasks.moveInFrontOf({id: id, inFrontOfId: inFrontOfId});
         }
       }
 
@@ -298,7 +310,7 @@ function Project(_project, _localProject) {
 
       let response = await Server.fetchFunctionRequest(functionRequest);
       if (response.error) return await Local.tasks.getByDateRange(_info);
-      response.result = response.result.map(r => new Task(r));
+      response.result = response.result.map(r => new Task(r, This));
 
       new Promise(async function (resolve) { // Store data Localily  
         let foundTasks = await Local.tasks.getByDateRange(_info);
@@ -321,7 +333,7 @@ function Project(_project, _localProject) {
 
       let response = await Server.fetchFunctionRequest(functionRequest);
       if (response.error) return await Local.tasks.getByGroup(_info);
-      response.result = response.result.map(r => new Task(r));
+      response.result = response.result.map(r => new Task(r, This));
 
       Local.tasks.getByGroup(_info).then(function (_result) {
         overWriteLocalData(response.result, _result);
@@ -646,11 +658,28 @@ function User({id, name, permissions, type, Self}) {
   }
 }
 
-function Task({id, tagId = false, projectId, title, finished = false, groupType, groupValue, assignedTo = [], creatorId, personalIndex, indexInProject}) {
+function Task({
+    id, 
+    tagId = false, 
+    projectId,
+    title, 
+    finished = false, 
+  
+    groupType, 
+    groupValue, 
+  
+    assignedTo = [], 
+    creatorId, 
+  
+    personalIndex, 
+    indexInProject
+  }, _project) {
+
   this.id             = id;
   this.tagId          = tagId;
   this.projectId      = projectId;
-
+  this.project        = _project; 
+  if (!_project) console.error('Task without project', _project);
   this.title          = title;
   this.finished       = !!finished;
   this.groupType      = groupType;

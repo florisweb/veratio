@@ -17,14 +17,14 @@ const Encoder = new function() {
     }
 
 
-    this.objToString = function(_JSON) {
-      let jsonStr = JSON.stringify(_JSON);      
+    this.objToString = function(_obj) {
+      let jsonStr = JSON.stringify(_obj);      
       return this.encodeString(jsonStr);
     }
 
 
-    this.decodeObj = function(_jsonObj) {
-      let newObj = JSON.parse(JSON.stringify(_jsonObj));
+    this.decodeObj = function(_obj) {
+      let newObj = JSON.parse(JSON.stringify(_obj));
       if (!newObj) return false;
       return recursivelyDecodeObj(newObj);
     }

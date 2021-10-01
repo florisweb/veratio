@@ -6,8 +6,7 @@ const LocalDB = new function() {
   let DBVersion = 2;
 
   let DB;
-
-  this.global = new LocalDB_globalProject();
+  this.debug_requestCount = 0;
 
   this.setup = function() {
     return new Promise(function (resolve, error) {
@@ -36,9 +35,22 @@ const LocalDB = new function() {
     });
   }
 
+  this.getProjectAccess = function() {
+    return {
+      getProjectList:     getProjectList,
+      getProject:         getProject,
+      updateProjectList:  updateProjectList,
+      removeProject:      removeProject
+    }
+  }
+
+  let cachedProjects = false;
 
 
-  this.getProjectList = async function(_ignoreUserAbsence = false) {
+  async function getProjectList(_ignoreUserAbsence = false) {
+    // if (cachedProjects !== false) return cachedProjects;
+    console.log('get local projects');
+
     let ids = await getProjectIdList();
 
     let projectList = [];
@@ -56,31 +68,31 @@ const LocalDB = new function() {
       return projectA.index - projectB.index;
     });
 
+    cachedProjects = projectList;
     return projectList;
   }
 
 
-  this.getProject = async function(_id, _ignoreUserAbsence = false) {
-    let projectList = await this.getProjectList(_ignoreUserAbsence);
-    for (let i = 0; i < projectList.length; i++)
-    {
-      if (projectList[i].id != _id) continue;
-      return projectList[i];
-    }
-
-    return false;
+  async function getProject(_id, _ignoreUserAbsence = false, _serverProject) {
+    if (!_id) return false;
+    let project = new LocalDB_Project(_id, DB, _serverProject);
+    await project.setMetaData();
+      
+    if (!project.users.Self && !_ignoreUserAbsence) return false;
+    return project;
   }
 
 
-  this.updateProjectList = async function(_newList) {
-    let invalidProjects = await this.getProjectList();
+
+  async function updateProjectList(_newList) {
+    let invalidProjects = await getProjectList();
 
     for (let i = 0; i < _newList.length; i++)
     {
       let index = invalidProjects.findIndex(function (v) {return v.id == _newList[i].id});
       if (index != -1) invalidProjects.splice(index, 1);
 
-      let project = await this.getProject(_newList[i].id);
+      let project = await getProject(_newList[i].id);
       if (project) continue;
 
       addProject(_newList[i], i);
@@ -88,6 +100,17 @@ const LocalDB = new function() {
 
     for (let project of invalidProjects) project.remove();
   }
+
+  async function removeProject(_id) {
+    let project = await getProject(_id);
+    if (!project) return false;
+    return await project.remove();
+  }
+
+
+
+
+
 
   let lastResync = false;
   this.onReConnect = async function() {
@@ -116,15 +139,10 @@ const LocalDB = new function() {
   }
 
 
-  this.removeProject = async function(_id) {
-    let project = await this.getProject(_id);
-    if (!project) return false;
-    return await project.remove();
-  }
-
+  
 
   this.sendCachedOperations = async function() {
-    let projects = await this.getProjectList(true);
+    let projects = await getProjectList(true);
     let promises = [];
     for (let project of projects) promises.push(project.sendCachedOperations());
 
@@ -133,7 +151,7 @@ const LocalDB = new function() {
 
 
   this.getCachedOperationsCount = async function() {
-    let projects = await this.getProjectList(true);
+    let projects = await getProjectList(true);
     let operations = 0;
     for (let project of projects)
     {
@@ -149,12 +167,12 @@ const LocalDB = new function() {
   this.resyncWithServer = async function() {
     if (!Server.connected) return false;
     await this.clearDB();
-    let projects = await Server.getProjectList(true);
+    let projects = await Server.getProjectList(false);
 
     let promises = [];
     for (let project of projects)
     {
-      let localProject = await LocalDB.getProject(project.id, true);
+      let localProject = await getProject(project.id, true);
       if (!localProject) continue;
 
       let projectPromises = [
@@ -198,6 +216,7 @@ const LocalDB = new function() {
 
 
   function getProjectIdList() {
+    LocalDB.debug_requestCount++;
     return new Promise(function (resolve, error) {
       let store = DB.transaction("metaData", "readonly").objectStore("metaData");
 
@@ -220,6 +239,7 @@ const LocalDB = new function() {
 
 
 function LocalDB_globalProject() {
+  let LocalAccess = LocalDB.getProjectAccess();
   this.tasks = new function() {
     const Key = "tasks";
     const TypeClass = Task;
@@ -230,7 +250,7 @@ function LocalDB_globalProject() {
     }
 
     this.getByDateRange = async function({date, range}) {
-      let projects = await LocalDB.getProjectList();
+      let projects = await LocalAccess.getProjectList();
       let tasks = [];
       let promises = [];
       for (let i = 0; i < projects.length; i++)
@@ -246,7 +266,7 @@ function LocalDB_globalProject() {
 
 
     this.getByGroup = async function({type, value = "*"}) {
-      let projects = await LocalDB.getProjectList();
+      let projects = await LocalAccess.getProjectList();
       let tasks = [];
       let promises = [];
       for (let i = 0; i < projects.length; i++)
@@ -261,7 +281,7 @@ function LocalDB_globalProject() {
     }
 
     this.getAll = async function() {
-      let projects = await LocalDB.getProjectList();
+      let projects = await LocalAccess.getProjectList();
       let tasks = [];
       let promises = [];
       for (let i = 0; i < projects.length; i++)
@@ -338,9 +358,7 @@ function LocalDB_globalProject() {
     }
 
     this.update = async function(_task) {
-      let project = await LocalDB.getProject(_task.projectId);
-      if (!project) return false;
-      return await project.tasks.update(_task);
+      return await _task.project.tasks.update(_task);
     }
 
   }
@@ -367,7 +385,7 @@ function LocalDB_globalProject() {
     let TypeClass = _typeClass;
 
     this.get = async function(_id) {
-      let projects = await LocalDB.getProjectList();
+      let projects = await LocalAccess.getProjectList();
       for (let i = 0; i < projects.length; i++)
       {
           let item = await projects[i][Key].get(_id);
@@ -378,7 +396,7 @@ function LocalDB_globalProject() {
 
 
     this.remove = async function(_id) {
-      let projects = await LocalDB.getProjectList();
+      let projects = await LocalAccess.getProjectList();
       for (let i = 0; i < projects.length; i++)
       {
           let success = await projects[i][Key].remove(_id);
@@ -404,12 +422,15 @@ function LocalDB_globalProject() {
 
 
 
-function LocalDB_Project(_projectId, _DB) {
+function LocalDB_Project(_projectId, _DB, _serverProject) {
   let This = this;
+  this.title = "Loading...";
+  this.Server = _serverProject; // The server project
+  
   LocalDB_ProjectInterface.call(this, _projectId, _DB);
  
 
-  this.title = "Loading...";
+  
 
   this.sendCachedOperations = async function() {
     let operations = await this.getData("cachedOperations");
@@ -434,7 +455,7 @@ function LocalDB_Project(_projectId, _DB) {
   }
 
   this.moveToIndex = async function(_newIndex) {
-    let projects = await LocalDB.getProjectList(true);
+    let projects = await LocalAccess.getProjectList(true);
     let project = projects.splice(this.index, 1)[0];
     projects.splice(_newIndex, 0, project);
 
@@ -461,6 +482,13 @@ function LocalDB_Project(_projectId, _DB) {
     let metaData = await this.getData("metaData");
     this.title = metaData.title;
     this.index = metaData.index;
+
+    if (this.Server) return;
+    this.Server = new Project({
+      id: _projectId,
+      title: this.title, // TODO: Actually has to be set in the setMetaData function so it has the correct title
+    }, this)
+
   }
 
   this.remove = async function() {
@@ -580,7 +608,7 @@ function LocalDB_Project(_projectId, _DB) {
     this.getAll = async function() {
       let items = await This.getData(Key);
       if (!items) return [];
-      let tasks = items.map(r => new Task(r));
+      let tasks = items.map(r => new Task(r, This.Server));
       tasks.sort(function(a, b) {
           if (a.indexInProject > b.indexInProject) return 1;
           if (a.indexInProject < b.indexInProject) return -1;
@@ -688,8 +716,11 @@ function LocalDB_ProjectInterface(_projectId, _DB) {
 
 
   this.getData = function(_key) {
+    if (!This.id) return false;
+    LocalDB.debug_requestCount++;
     return new Promise(function (resolve, error) {
       let store = DB.transaction(_key, "readonly").objectStore(_key);
+
       let request = store.get(This.id);
       
       request.onsuccess = function(_e) {
@@ -701,6 +732,8 @@ function LocalDB_ProjectInterface(_projectId, _DB) {
   }
 
   this.setData = function(_key, _value) {
+    if (!This.id) return false;
+    LocalDB.debug_requestCount++;
     return new Promise(function (resolve, error) {
       const transaction = DB.transaction(_key, "readwrite");
       transaction.onerror = error;
@@ -714,6 +747,8 @@ function LocalDB_ProjectInterface(_projectId, _DB) {
 
 
   this.removeData = function(_key) {
+    if (!This.id) return false;
+    LocalDB.debug_requestCount++;
     return new Promise(function (resolve, error) {
       const transaction = DB.transaction(_key, "readwrite");
       transaction.onerror = error;

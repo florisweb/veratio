@@ -244,17 +244,12 @@ function _SideBar_projectList() {
 
 
 	this.silentRender = async function(_fromCache) {
-		if (_fromCache)
-		{
-			this.projects = await LocalDB.getProjectList();
-		} else {
-			this.projects = await Server.getProjectList(true);
-		}
+		this.projects = await Server.getProjectList(_fromCache);
 
 		HTML.projectsHolder.innerHTML = "";
 		for (let project of this.projects) project.HTML = createProjectHTML(project);
 
-		await this.updateProjectInfo();
+		await this.updateProjectInfo(_fromCache);
 	}
 
 	this.quickFillProjectHolder = async function() {
@@ -272,12 +267,12 @@ function _SideBar_projectList() {
 		this.setLoadingIconStatus(false);
 	}
 
-	this.updateProjectInfo = function() {
+	this.updateProjectInfo = function(_fromCache) {
 		let promises = [];
 		for (let project of this.projects) 
 		{
 			promises.push(new Promise(async function(resolve) {
-				let tasks = await project.tasks.getByGroup({type: "toPlan", value: "*"});
+				let tasks = await project.getInstance(_fromCache).tasks.getByGroup({type: "toPlan", value: "*"});
 				let text = tasks.length;
 				if (text == 0) text = "";
 				setTextToElement(project.HTML.children[2], text);
@@ -297,7 +292,7 @@ function _SideBar_projectList() {
 						 '<div class="headerText projectInfoHolder"></div>';
 
 		HTML.projectsHolder.append(html);
-		html.onclick = function() {MainContent.taskPage.projectTab.open(_project.id);}
+		html.onclick = function() {MainContent.taskPage.projectTab.open(_project);}
 		setTextToElement(html.children[1], _project.title);
 
 		DragHandler.register(html, onDrop, getListHolder, DropRegionId);
