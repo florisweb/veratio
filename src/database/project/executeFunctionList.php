@@ -13,7 +13,7 @@
 	
 	$_functionDataList 			= json_decode(urldecode($_functionDataList), true);
 	if (!$_functionDataList) 	die("Invalid function");
-	sleep(2);
+	// sleep(2);
 
 	$returnValues = [];
 	for ($i = 0; $i < sizeof($_functionDataList); $i++)

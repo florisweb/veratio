@@ -171,12 +171,12 @@ function GlobalProject() {
 
 
 
-function Project(_project, _localProject) {
+function Project(_project = {id, title, importData}, _localProject) {
   const This  = this;
   this.id     = String(_project.id);
   this.title  = String(_project.title);
-
-
+  this.importData = _project.importData; // From the server for the LocalDB
+  if (!_localProject) console.trace('new without localProject', _localProject);
   let Local = _localProject;
   Local.Server = this;
   this.getLocal = function() {return Local;};
@@ -358,10 +358,10 @@ function Project(_project, _localProject) {
 
     this.list = [];
     this.Self;
-    if (_project.users && _project.users.length != undefined) 
+    if (This.importData && This.importData.users.length != undefined) 
     {
-      this.list = _project.users.map(r => new User(r));
-      setSelf(_project.users);
+      this.list = This.importData.users.map(r => new User(r));
+      setSelf(This.importData.users);
     }
 
 
@@ -446,7 +446,7 @@ function Project(_project, _localProject) {
     TypeBaseClass.call(this, Type, Tag);
     
     this.list = [];
-    if (_project.tags && _project.tags.length != undefined) this.list = _project.tags.map(r => new Tag(r));
+    if (This.importData && This.importData.tags.length != undefined) this.list = This.importData.tags.map(r => new Tag(r));
 
     this.get = async function(_id, _forceRequest) {
       let tags = await this.getAll(_forceRequest);
@@ -504,9 +504,9 @@ function Project(_project, _localProject) {
       let item = Encoder.decodeObj(response.result);
       if (!item) return false;
 
-      Local[Type].update(new TypeClass(item));
+      Local[Type].update(new TypeClass(item, This));
 
-      return new TypeClass(item);
+      return new TypeClass(item, This);
     }
 
     this.remove = async function(_id) {
@@ -535,7 +535,7 @@ function Project(_project, _localProject) {
 
     this.update = async function(_newItem) {
       this.needsUpdate = true;
-
+      console.log(_newItem);
       let functionRequest = {
           action: "update",
           type: Type,
@@ -549,12 +549,13 @@ function Project(_project, _localProject) {
         _newItem.creatorId = This.users.Self.id;
         Local[Type].update(_newItem);
         Local.addCachedOperation(functionRequest);
-        return new TypeClass(_newItem);
+        return new TypeClass(_newItem, This);
       };
       
       if (response.error) return response.result;
-      Local[Type].update(new TypeClass(response.result));
-      return new TypeClass(response.result);
+      let obj = new TypeClass(response.result, This);
+      Local[Type].update(obj);
+      return obj;
     }
   }
 }
@@ -625,7 +626,9 @@ function Project_userComponent_Self(_user) {
 
 
 
-function Tag({id, title, colour, creatorId}) {
+function Tag({id, title, colour, creatorId}, _project) {
+  this.project      = _project;
+
   this.id           = id;
   this.title        = title;
   
@@ -635,6 +638,7 @@ function Tag({id, title, colour, creatorId}) {
 
   this.export = function() {
     let tag = Object.assign({}, this);
+    delete tag.project;
     tag.colour = tag.colour.toHex();
     return tag;
   }
@@ -646,7 +650,9 @@ function Tag({id, title, colour, creatorId}) {
 
 
 
-function User({id, name, permissions, type, Self}) {
+function User({id, name, permissions, type, Self}, _project) {
+  this.project      = _project;
+
   this.id           = id;
   this.name         = name;
   this.permissions  = parseInt(permissions);
@@ -654,7 +660,9 @@ function User({id, name, permissions, type, Self}) {
   this.Self         = Self;
 
   this.export = function() {
-    return Object.assign({}, this);
+    let value = Object.assign({}, this);
+    delete value.project;
+    return value;
   }
 }
 
@@ -692,7 +700,9 @@ function Task({
   this.indexInProject = parseInt(indexInProject);
 
   this.export = function() {
-    return Object.assign({}, this);
+    let value = Object.assign({}, this);
+    delete value.project;
+    return value;
   }
 }
 

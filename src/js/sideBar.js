@@ -11,24 +11,24 @@ function _SideBar() {
 
 	this.noConnectionMessage = new _SideBar_noConnectionMessage();
 
-	this.updateTabIndicator = async function() {
-		if (MainContent.settingsPage.isOpen()) return await setProjectTabOnOpenById(MainContent.curProjectId);
+	this.updateTabIndicator = function() {
+		if (MainContent.settingsPage.isOpen()) return setProjectTabOnOpen(MainContent.curProject);
 		if (MainContent.plannerPage.isOpen()) return setTabOpenIndicator(HTML.plannerTab);
 	
 		switch (MainContent.taskPage.curTab.name)
 		{
-			case "today": 		setTabOpenIndicator(HTML.todayTab); 						break;
-			case "week": 		setTabOpenIndicator(HTML.weekTab); 							break;
-			default: 			await setProjectTabOnOpenById(MainContent.curProjectId); 	break;
+			case "today": 		setTabOpenIndicator(HTML.todayTab);				break;
+			case "week": 		setTabOpenIndicator(HTML.weekTab); 				break;
+			default: 			setProjectTabOnOpen(MainContent.curProject); 	break;
 		}
 	}
 	
 
-	async function setProjectTabOnOpenById(_id) {
+	function setProjectTabOnOpen(_project) {
 		let tabs = $("#sideBar .tab.projectTab");
 		for (let i = 0; i < tabs.length; i++)
 		{
-			if (tabs[i].getAttribute('id') != _id) continue;
+			if (tabs[i].getAttribute('id') != _project.id) continue;
 			setTabOpenIndicator(tabs[i]);
 			return;
 		}

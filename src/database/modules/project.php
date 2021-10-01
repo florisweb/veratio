@@ -70,8 +70,10 @@
 			return array(
 				"id" 	=> $this->id,
 				"title" => urlencode($this->title),
-				"users"	=> $this->users->getAll(),
-				"tags"	=> $this->tags->getAll()
+				"importData" => [
+					"users"	=> $this->users->getAll(),
+					"tags"	=> $this->tags->getAll()
+				]
 			);
 		}
 	}

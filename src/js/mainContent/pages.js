@@ -19,7 +19,7 @@ function MainContent_page(_config) {
 		resetPage();
 		
 		MainContent.curPage			= this;
-		MainContent.curProject = _curProject;
+		MainContent.curProject 		= _curProject;
 
 		openPageByIndex(this.settings.index);
 		MainContent.header.showItemsByPage(this.name);
@@ -94,9 +94,10 @@ function taskPage_tab(_settings) {
 	
 
 	this.open = async function(_project = false) {
+		let date = new Date();
 		if (MainContent.taskPage.rendering) return;
 		MainContent.taskPage.rendering = true;
-		setTimeout(function() {MainContent.taskPage.rendering = false}, 1000);
+		setTimeout(function() {MainContent.taskPage.rendering = false}, 5000);
 
 		MainContent.startLoadingAnimation();
 		HTML.loadMoreButton.classList.add("hide");
@@ -119,6 +120,7 @@ function taskPage_tab(_settings) {
 		MainContent.taskPage.rendering = false;
 
 		this.silentRender(false);
+		console.log('open', new Date() - date);
 	}
 
 	let silentRendering = false;
@@ -174,14 +176,13 @@ function taskPage_tab(_settings) {
 	}
 
 	async function getOverdueTasks(_fromCache = true) {
-		let project = await Server.getProject(MainContent.curProjectId, _fromCache);
+		let project = MainContent.curProject;
 		if (!project) project = Server.global;
 
-		let taskList = await project.tasks.getByGroup({type: "overdue", value: "*"});
+		let taskList = await project.getInstance(_fromCache).tasks.getByGroup({type: "overdue", value: "*"});
 		if (!taskList || !taskList.length) return false;
 
-		taskList = TaskSorter.defaultSort(taskList);
-		return taskList;
+		return TaskSorter.defaultSort(taskList);
 	}
 }
 

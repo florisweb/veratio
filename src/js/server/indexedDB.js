@@ -44,13 +44,8 @@ const LocalDB = new function() {
     }
   }
 
-  let cachedProjects = false;
-
 
   async function getProjectList(_ignoreUserAbsence = false) {
-    // if (cachedProjects !== false) return cachedProjects;
-    console.log('get local projects');
-
     let ids = await getProjectIdList();
 
     let projectList = [];
@@ -131,8 +126,11 @@ const LocalDB = new function() {
   async function addProject(_project, _index = 0) {
     let project = new LocalDB_Project(_project.id, DB);
     await project.setData("metaData", {title: _project.title, index: _index});
-    await project.tags.set(_project.importData.tags);
-    await project.users.set(_project.importData.users);
+    if (_project.importData) 
+    {
+      await project.tags.set(_project.importData.tags);
+      await project.users.set(_project.importData.users);
+    }
     await project.setMetaData();
 
     return project;
@@ -483,12 +481,18 @@ function LocalDB_Project(_projectId, _DB, _serverProject) {
     this.title = metaData.title;
     this.index = metaData.index;
 
-    if (this.Server) return;
+    if (this.Server) return this.importData = this.Server.importData;
+
+    this.importData = {
+      users:  users,
+      tags:   await this.tags.getAll()
+    };
+
     this.Server = new Project({
       id: _projectId,
-      title: this.title, // TODO: Actually has to be set in the setMetaData function so it has the correct title
-    }, this)
-
+      title: this.title,
+      importData: this.importData
+    }, this);
   }
 
   this.remove = async function() {
@@ -655,7 +659,6 @@ function LocalDB_Project(_projectId, _DB, _serverProject) {
       }
 
       if (!found) data.push(_newItem);
-
       await this.set(data);
       return _newItem;
     }
@@ -692,14 +695,19 @@ function LocalDB_Project(_projectId, _DB, _serverProject) {
     }
 
     this.set = async function(_data) {
-      return await This.setData(Key, _data.map(r => r.export()));
+      let formatedData = _data.map((_item) => {
+        if (_item.constructor.name == TypeClass.constructor.name) return _item.export();
+        return new TypeClass(_item, This).export();
+      });
+
+      return await This.setData(Key, formatedData);
     }
 
 
     this.getAll = async function() {
       let items = await This.getData(Key);
       if (!items) return [];
-      return items.map(r => new TypeClass(r));
+      return items.map(r => new TypeClass(r, This));
     }
   }
 }

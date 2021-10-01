@@ -24,7 +24,6 @@ const Server = new function() {
 
   let getProjectListPromise = false;
   this.getProjectList = async function(_fromCache = true) {
-    console.log('get projectList', _fromCache);
     if (getProjectListPromise) return await getProjectListPromise;
     
     getProjectListPromise       = getProjectList(_fromCache);
@@ -128,12 +127,10 @@ const Server = new function() {
     async function importProject(_project) {
       if (!_project || typeof _project != "object") return;
       let localProject = await Local.getProject(_project.id);
-
-      let project               = new Project(Object.assign({}, _project), localProject);
-      project.importData        = Object.assign({}, _project);
-      project.importData.tags   = project.importData.tags.map(r => new Tag(r));
-      project.importData.users  = project.importData.users.map(r => new User(r));
+      if (!localProject) console.log('localproject absent');
+      let project         = new Project(_project, localProject);
       localProject.Server = project;
+      // TODO: Set project metadata now, after the localProject.Server has been set
 
       return project;
     }

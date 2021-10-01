@@ -12,7 +12,7 @@
 		die(json_encode($response));
 	}
 
-sleep(2);
+// sleep(2);
 	if (sizeof($projects) == 0)
 	{
 		$GLOBALS["App"]->createProject("Your first project"); // TODO test for error returns

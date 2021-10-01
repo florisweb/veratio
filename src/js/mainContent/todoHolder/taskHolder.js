@@ -1091,6 +1091,7 @@ function TaskHolder_createMenu(_parent) {
 				groupValue: 	'',
 				creatorId: 		this.project.users.Self.id,
 			}, this.project);
+			console.log('create task', 'has project:', this.project);
 
 			if (!task.title || task.title.split(" ").join("").length < 1) return "E_InvalidTitle";
 			
