@@ -40,7 +40,7 @@ const LocalDB = new function() {
       getProjectList:     getProjectList,
       getProject:         getProject,
       updateProjectList:  updateProjectList,
-      removeProject:      removeProject
+      removeProject:      removeProject,
     }
   }
 
@@ -68,12 +68,10 @@ const LocalDB = new function() {
   }
 
 
-  async function getProject(_id, _ignoreUserAbsence = false, _serverProject) {
+  async function getProject(_id, _serverProject) {
     if (!_id) return false;
     let project = new LocalDB_Project(_id, DB, _serverProject);
     await project.setMetaData();
-      
-    if (!project.users.Self && !_ignoreUserAbsence) return false;
     return project;
   }
 
@@ -88,7 +86,7 @@ const LocalDB = new function() {
       if (index != -1) invalidProjects.splice(index, 1);
 
       let project = await getProject(_newList[i].id);
-      if (project) continue;
+      if (project && !project.userIsAbsent) continue;
 
       addProject(_newList[i], i);
     }
@@ -170,9 +168,7 @@ const LocalDB = new function() {
     let promises = [];
     for (let project of projects)
     {
-      let localProject = await getProject(project.id, true);
-      if (!localProject) continue;
-
+      let localProject = await getProject(project.id, project);
       let projectPromises = [
         project.tasks.getByDateRange({date: new Date(), range: 365}),
         project.tasks.getByGroup({type: "overdue", value: "*"}),
@@ -424,7 +420,8 @@ function LocalDB_Project(_projectId, _DB, _serverProject) {
   let This = this;
   this.title = "Loading...";
   this.Server = _serverProject; // The server project
-  
+  this.userIsAbsent = true;
+
   LocalDB_ProjectInterface.call(this, _projectId, _DB);
  
 
@@ -474,10 +471,17 @@ function LocalDB_Project(_projectId, _DB, _serverProject) {
     {
       if (!users[i].Self) continue;
       this.users.Self = users[i];
+      this.userIsAbsent = false;
       break;
     }
 
     let metaData = await this.getData("metaData");
+    if (metaData.id === undefined) 
+    {
+      await this.setData("metaData", {title: '❌ [Desync problem] ❌', index: -1});
+      metaData = await this.getData("metaData");
+    }
+
     this.title = metaData.title;
     this.index = metaData.index;
 
@@ -489,8 +493,8 @@ function LocalDB_Project(_projectId, _DB, _serverProject) {
     };
 
     this.Server = new Project({
-      id: _projectId,
-      title: this.title,
+      id:         _projectId,
+      title:      this.title,
       importData: this.importData
     }, this);
   }
