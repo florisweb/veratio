@@ -24,7 +24,7 @@ function MainContent_page(_config) {
 		openPageByIndex(this.settings.index);
 		MainContent.header.showItemsByPage(this.name);
 
-		onOpen(_curProject.id); // TODOf: _curProject.id -> _curProject
+		onOpen(_curProject);
 
 		await SideBar.updateTabIndicator();
 		setTimeout('mainContent.classList.remove("loading");', 100);
@@ -558,7 +558,7 @@ function MainContent_settingsPage() {
 
 
 	async function onOpen(_project) {
-		if (!_project) _project = (await Server.getProjectList())[0];
+		if (!_project) _project = (await Server.getProjectList(true))[0];
 		
 		HTML.inviteHolder.classList.add("hide");
 
@@ -615,9 +615,8 @@ function MainContent_settingsPage() {
 		
 		setTextToElement(html.children[1], _member.name);
 		setTextToElement(html.children[2].children[1], This.permissionData[parseInt(_member.permissions)].name);
-		DoubleClick.register(html.children[2].children[1], async function () {
-			let project = await Server.getProject(MainContent.curProjectId);
-			if (!project.users.Self.permissions.users.changePermissions(_member)) return false;
+		DoubleClick.register(html.children[2].children[1], function () {
+			if (!MainContent.curProject.users.Self.permissions.users.changePermissions(_member)) return false;
 			Popup.permissionMenu.open(_member.id);
 		})
 
@@ -641,15 +640,14 @@ function MainContent_settingsPage() {
 		Menu.addOption(
 			"Remove user", 
 			async function () {
-				let project = await Server.getProject(MainContent.curProjectId);
-				if (!project || !curMemberId) return false;
-				let member = await project.users.get(curMemberId);
+				if (!curMemberId) return false;
+				let member = await MainContent.curProject.users.get(curMemberId);
 				if (!member) return;
 
 
 				let actionValidated = await Popup.showMessage({
 					title: "Remove " + member.name + "?", 
-					text: "Are you sure you want to remove " + member.name + " from "+ project.title + "?",
+					text: "Are you sure you want to remove " + member.name + " from " + MainContent.curProject.title + "?",
 					buttons: [
 						{title: "Remove", value: true, filled: true, color: COLOUR.DANGEROUS}, 
 						{title: "Cancel", value: false}
@@ -658,9 +656,8 @@ function MainContent_settingsPage() {
 
 				if (!actionValidated) return;
 
-				let removed = await project.users.remove(curMemberId);
+				let removed = await MainContent.curProject.users.remove(curMemberId);
 				if (removed) curItem.classList.add("hide");
-
 				return removed;
 			}, 
 			"images/icons/removeIcon.png"
@@ -679,12 +676,11 @@ function MainContent_settingsPage() {
 			curItem 		= _target.parentNode.parentNode;
 			curMemberId 	= DOMData.get(curItem);
 			
-			let project 	= await Server.getProject(MainContent.curProjectId);
-			let member 		= await project.users.get(curMemberId);
+			let member 		= await MainContent.curProject.users.get(curMemberId);
 
 			Menu.enableAllOptions();
-			if (!project.users.Self.permissions.users.remove(member))				Menu.options[0].disable();
-			if (!project.users.Self.permissions.users.changePermissions(member)) 	Menu.options[1].disable();
+			if (!MainContent.curProject.users.Self.permissions.users.remove(member))				Menu.options[0].disable();
+			if (!MainContent.curProject.users.Self.permissions.users.changePermissions(member)) 	Menu.options[1].disable();
 
 			return Menu.open(_target, {left: -75, top: 30});
 		}

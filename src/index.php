@@ -89,10 +89,10 @@
 							Back
 						</a>
 					</div>
-					<a class="clickable functionItem button bDefault" onclick='MainContent.settingsPage.open(MainContent.curProjectId)'>
+					<a class="clickable functionItem button bDefault" onclick='MainContent.settingsPage.open(MainContent.curProject)'>
 						Share
 					</a>
-					<div class="functionItem memberList userText" onclick='MainContent.settingsPage.open(MainContent.curProjectId)'></div>
+					<div class="functionItem memberList userText" onclick='MainContent.settingsPage.open(MainContent.curProject)'></div>
 				</div>
 			</div>
 

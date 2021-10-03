@@ -95,8 +95,6 @@ function _Popup_createProject() {
 		if (!project) return console.error("Something went wrong while creating a project:", project);
 		
 		SideBar.projectList.fillProjectHolder();
-		// MainContent.taskPage.open();
-		// MainContent.curPage.projectTab.open(project.id);
 		
 		openResolver(project);		
 		this.close();
@@ -285,22 +283,22 @@ function _Popup_permissionMenu() {
 
 	let curMember = false;	
 	async function onOpen(_openResolver, _memberId) {
-		let project	= await Server.getProject(MainContent.curProjectId);
-		let member 	= await project.users.get(_memberId);
+		let member 	= await MainContent.curProject.users.get(_memberId);
 		curMember 	= member;
 		setMemberData(member);
 	}
 
 
-	async function setMemberData(_member) {
-		memberNameHolder.setText(_member.name + "'s");
-		let project = await Server.getProject(MainContent.curProjectId);
+	function setMemberData(_member) {
+		let possesiveUserName = _member.name + "'";
+		if (_member.name.substr(_member.name.length - 1, 1) != 's') possesiveUserName += 's';
+		memberNameHolder.setText(possesiveUserName);
 
 		optionMenu.removeAllOptions();
 		
 		for (let i = MainContent.settingsPage.permissionData.length - 1; i >= 0; i--) 
 		{
-			if (i > project.users.Self.permissions.value) continue;
+			if (i > MainContent.curProject.users.Self.permissions.value) continue;
 
 			let option = optionMenu.addOption({
 				title: 	MainContent.settingsPage.permissionData[i].name,
@@ -318,15 +316,10 @@ function _Popup_permissionMenu() {
 	this.updatePermissions = async function() {
 		if (!curMember) return;
 		curMember.permissions = parseInt(optionMenu.value);
-		
-		let project = await Server.getProject(MainContent.curProjectId);
-		if (!project) return false;
-
-		await project.users.update(curMember);
+		await MainContent.curProject.users.update(curMember);
 		curMember = false;
 
 		This.close();
-
 		MainContent.settingsPage.open(MainContent.curProject);
 	}
 }
@@ -522,8 +515,8 @@ function _Popup_tagManager() {
 				title: "+ Add Tag",
 				onclick: async function () {
 					This.close();
-					await Popup.createTag.open(CurProject.id);
-					This.open(CurProject.id);
+					await Popup.createTag.open(CurProject);
+					This.open(CurProject);
 				},
 				floatLeft: true,
 			}),
@@ -545,7 +538,7 @@ function _Popup_tagManager() {
 		if (!CurTag) return;
 		let result = await CurProject.tags.remove(CurTag.id);
 
-		This.open(CurProject.id);
+		This.open(CurProject);
 		return result;
 	}, "images/icons/removeIcon.png");
 
