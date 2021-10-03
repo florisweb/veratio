@@ -249,7 +249,9 @@ function _SideBar_projectList() {
 		HTML.projectsHolder.innerHTML = "";
 		for (let project of this.projects) project.HTML = createProjectHTML(project);
 
-		await this.updateProjectInfo(_fromCache);
+		// Always preload the text from the localDB
+		this.updateProjectInfo(true);
+		if (!_fromCache) await this.updateProjectInfo(_fromCache);
 	}
 
 	this.quickFillProjectHolder = async function() {
@@ -272,14 +274,18 @@ function _SideBar_projectList() {
 		for (let project of this.projects) 
 		{
 			promises.push(new Promise(async function(resolve) {
-				let tasks = await project.getInstance(_fromCache).tasks.getByGroup({type: "toPlan", value: "*"});
-				let text = tasks.length;
-				if (text == 0) text = "";
+				let text = await getProjectInfoText(project, _fromCache);
 				setTextToElement(project.HTML.children[2], text);
 				resolve();
 			}));
 		}
 		return Promise.all(promises);
+	}
+	
+	async function getProjectInfoText(_project, _fromCache) {
+		let tasks = await _project.getInstance(_fromCache).tasks.getByGroup({type: "toPlan", value: "*"});
+		if (tasks.length == 0) return "";
+		return tasks.length;
 	}
 
 	function createProjectHTML(_project) {
@@ -294,7 +300,6 @@ function _SideBar_projectList() {
 		HTML.projectsHolder.append(html);
 		html.onclick = function() {MainContent.taskPage.projectTab.open(_project);}
 		setTextToElement(html.children[1], _project.title);
-
 		DragHandler.register(html, onDrop, getListHolder, DropRegionId);
 
 		return html;

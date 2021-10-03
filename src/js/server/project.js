@@ -535,7 +535,6 @@ function Project(_project = {id, title, importData}, _localProject) {
 
     this.update = async function(_newItem) {
       this.needsUpdate = true;
-      console.log(_newItem);
       let functionRequest = {
           action: "update",
           type: Type,

@@ -94,7 +94,6 @@ function taskPage_tab(_settings) {
 	
 
 	this.open = async function(_project = false) {
-		let date = new Date();
 		if (MainContent.taskPage.rendering) return;
 		MainContent.taskPage.rendering = true;
 		setTimeout(function() {MainContent.taskPage.rendering = false}, 5000);
@@ -120,7 +119,6 @@ function taskPage_tab(_settings) {
 		MainContent.taskPage.rendering = false;
 
 		this.silentRender(false);
-		console.log('open', new Date() - date);
 	}
 
 	let silentRendering = false;
