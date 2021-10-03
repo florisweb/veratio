@@ -1,6 +1,9 @@
 
 
 
+
+
+
 const LocalDB = new function() {
   const DBName = "veratioDB";
   let DBVersion = 2;
@@ -8,8 +11,39 @@ const LocalDB = new function() {
   let DB;
   this.debug_requestCount = 0;
 
+  
+  let Promises = [];
+  this.registerPromise = async function(_promise) {
+    Promises.push(_promise);
+    return _promise;
+  }
+  
+  let curPromise = false;
+  this.isBussy = async function() {
+    if (curPromise) return await curPromise;
+
+    curPromise = subPromise();
+    await curPromise;
+    curPromise = false;
+    async function subPromise() {
+      return new Promise(async function (resolve) {
+        let result = await Promise.all(Promises);
+        if (result.length == Promises.length) 
+        {
+          Promises = [];
+          resolve();
+        } else await subPromise();
+        resolve();
+      });
+    }
+  }
+
+
+
+
+
   this.setup = function() {
-    return new Promise(function (resolve, error) {
+    return LocalDB.registerPromise(new Promise(function (resolve, error) {
       const request = indexedDB.open(DBName, DBVersion);
 
       request.onupgradeneeded = function(_e) { // create object stores
@@ -32,7 +66,7 @@ const LocalDB = new function() {
         indexedDB.deleteDatabase("veratioDB");
         error();
       }
-    });
+    }));
   }
 
   this.getProjectAccess = function() {
@@ -211,7 +245,7 @@ const LocalDB = new function() {
 
   function getProjectIdList() {
     LocalDB.debug_requestCount++;
-    return new Promise(function (resolve, error) {
+    return LocalDB.registerPromise(new Promise(function (resolve, error) {
       let store = DB.transaction("metaData", "readonly").objectStore("metaData");
 
       let ids = [];
@@ -222,7 +256,7 @@ const LocalDB = new function() {
           _e.target.result.map(function (_item) {return _item.id})
         );
       };
-    });
+    }));
   }
 }
 
@@ -745,7 +779,7 @@ function LocalDB_ProjectInterface(_projectId, _DB) {
   this.getData = function(_key) {
     if (!This.id) return false;
     LocalDB.debug_requestCount++;
-    return new Promise(function (resolve, error) {
+    return LocalDB.registerPromise(new Promise(function (resolve, error) {
       let store = DB.transaction(_key, "readonly").objectStore(_key);
 
       let request = store.get(This.id);
@@ -755,13 +789,13 @@ function LocalDB_ProjectInterface(_projectId, _DB) {
         if (typeof data != "object") data = [];
         resolve(data);
       }
-    });
+    }));
   }
 
   this.setData = function(_key, _value) {
     if (!This.id) return false;
     LocalDB.debug_requestCount++;
-    return new Promise(function (resolve, error) {
+    return LocalDB.registerPromise(new Promise(function (resolve, error) {
       const transaction = DB.transaction(_key, "readwrite");
       transaction.onerror = error;
       const store = transaction.objectStore(_key);
@@ -769,14 +803,14 @@ function LocalDB_ProjectInterface(_projectId, _DB) {
       _value.id = This.id;
       let trans2 = store.put(JSON.parse(JSON.stringify(_value)), This.id);
       resolve();//TODO actual success-checking
-    });
+    }));
   }
 
 
   this.removeData = function(_key) {
     if (!This.id) return false;
     LocalDB.debug_requestCount++;
-    return new Promise(function (resolve, error) {
+    return LocalDB.registerPromise(new Promise(function (resolve, error) {
       const transaction = DB.transaction(_key, "readwrite");
       transaction.onerror = error;
 
@@ -787,7 +821,7 @@ function LocalDB_ProjectInterface(_projectId, _DB) {
       request.onsuccess = function(event) {
         resolve(true);
       }
-    });
+    }));
   }
 
 

@@ -269,7 +269,10 @@ function _SideBar_projectList() {
 		this.setLoadingIconStatus(false);
 	}
 
-	this.updateProjectInfo = function(_fromCache) {
+	this.updateProjectInfo = async function(_fromCache) {
+		await LocalDB.isBussy();
+
+		console.log('updateProjectInfo');
 		let promises = [];
 		for (let project of this.projects) 
 		{

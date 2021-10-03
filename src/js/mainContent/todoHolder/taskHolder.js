@@ -229,16 +229,19 @@ function TaskHolder_toPlan(_config, _taskHolderIndex) {
 		project = _result;
 		if (project && !project.users.Self.permissions.tasks.update) This.createMenu.disable();
 	});
-
-	// this.onTaskCreate = function(_task) {
-	// 	SideBar.projectList.updateProjectInfo();
-	// }
 	
 
 	this.shouldRenderTask = function(_task) {
 		if (_task.groupType != "toPlan") return false;		
 		return !(MainContent.curProject && MainContent.curProject.id != _task.project.id);
 	}
+
+	const updateProjectInfo = () => {SideBar.projectList.updateProjectInfo(true)};
+	this.onTaskFinish 	= updateProjectInfo;
+	this.onDropTaskFrom = updateProjectInfo;
+	this.onDropTaskTo 	= updateProjectInfo;
+	this.onTaskRemove 	= updateProjectInfo;
+	this.onTaskCreate 	= updateProjectInfo;
 }
 
 
@@ -591,7 +594,7 @@ function TaskHolder_task(_parent) {
 				This.task.finished = true;
 			}
 
-			This.task.project.tasks.update(This.task, true);
+			await This.task.project.tasks.update(This.task, true);
 
 			//notify the taskHolder
 			This.taskHolder.onTaskFinish(This);
@@ -617,7 +620,7 @@ function TaskHolder_task(_parent) {
 			let result = await This.task.project.tasks.update(This.task);
 			if (!result) return;
 
-			SideBar.projectList.updateProjectInfo();
+			SideBar.projectList.updateProjectInfo(true);
 			This.taskHolder.task.removeTask(This.task.id);
 			This.taskHolder.onTaskRemove(This.task.id);
 
@@ -629,7 +632,7 @@ function TaskHolder_task(_parent) {
 			let result = await This.task.project.tasks.update(This.task);
 			if (!result) return;
 
-			SideBar.projectList.updateProjectInfo();
+			SideBar.projectList.updateProjectInfo(true);
 			This.taskHolder.task.removeTask(This.task.id);
 			This.taskHolder.onTaskRemove(This.task.id);
 			MainContent.taskHolder.renderTask(This.task);
@@ -1035,8 +1038,8 @@ function TaskHolder_createMenu(_parent) {
 			This.setTag(false);
 			setMemberIndicators([]);
 
-			if (_task && _task.project) 					This.setProject(await Server.getProject(_task.project.id));
-			if (!This.project && MainContent.curProjectId) 	This.setProject(await Server.getProject(MainContent.curProjectId));
+			if (_task && _task.project) 					This.setProject(_task.project);
+			if (!This.project && MainContent.curProject) 	This.setProject(MainContent.curProject);
 			if (!This.project)								This.setProject((await Server.getProjectList())[0]);
 
 			if (!_task || !This.project) return;
