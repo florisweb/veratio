@@ -574,9 +574,7 @@ function MainContent_settingsPage() {
 
 
 	this.inviteUserByLink = async function() {
-		let project = await Server.getProject(MainContent.curProjectId);
-		
-		let response = await project.users.inviteByLink();
+		let response = await MainContent.curProject.users.inviteByLink();
 		if (response.error) console.error("An error accured while inviting a user:", response);
 
 		Popup.inviteByLinkCopyMenu.open(window.location.href.split('?')[0] + "?link=" + response.result.id);

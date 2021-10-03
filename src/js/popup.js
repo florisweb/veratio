@@ -162,10 +162,8 @@ function _Popup_inviteByEmail() {
 	}
 
 	this.inviteUser = async function() {
-		let email = emailInputField.getValue();
-		let project = await Server.getProject(MainContent.curProjectId);
-		
-		let returnVal = await project.users.inviteByEmail(email);
+		let email = emailInputField.getValue();		
+		let returnVal = await MainContent.curProject.users.inviteByEmail(email);
 		if (returnVal.result !== true) 
 		{
 			switch (returnVal.error)
