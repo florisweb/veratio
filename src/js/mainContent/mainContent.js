@@ -45,12 +45,11 @@ function _MainContent() {
 
 
 	this.leaveCurrentProject = async function() {
-		let project = await Server.getProject(this.curProjectId);
-		if (!project) return false;
+		if (!MainContent.curProject) return false;
 
 		let actionValidated = await Popup.showMessage({
-			title: "Leave " + project.title + "?", 
-			text: "Are you sure you want to leave " + project.title + "? This action cannot be undone.", 
+			title: "Leave " + MainContent.curProject.title + "?", 
+			text: "Are you sure you want to leave " + MainContent.curProject.title + "? This action cannot be undone.", 
 			buttons: [
 				{title: "Leave", value: true, filled: true, color: COLOUR.DANGEROUS}, 
 				{title: "Cancel", value: false}
@@ -59,18 +58,17 @@ function _MainContent() {
 
 		if (!actionValidated) return;
 	
-		await project.leave();
+		await MainContent.curProject.leave();
 		MainContent.taskPage.todayTab.open();
 		App.update();
 	}
 
 	this.removeCurrentProject = async function() {
-		let project = await Server.getProject(this.curProjectId);
-		if (!project) return false;
+		if (!MainContent.curProject) return false;
 
 		let actionValidated = await Popup.showMessage({
-			title: "Remove " + project.title + "?", 
-			text: "Are you sure you want to remove " + project.title + "? This action cannot be undone.", 
+			title: "Remove " + MainContent.curProject.title + "?", 
+			text: "Are you sure you want to remove " + MainContent.curProject.title + "? This action cannot be undone.", 
 			buttons: [
 				{title: "Remove", value: true, filled: true, color: COLOUR.DANGEROUS}, 
 				{title: "Cancel", value: false}
@@ -78,7 +76,7 @@ function _MainContent() {
 		});
 		if (!actionValidated) return;
 		
-		await project.remove();
+		await MainContent.curProject.remove();
 		
 		MainContent.taskPage.todayTab.open();
 		App.update();
