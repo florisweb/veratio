@@ -267,7 +267,7 @@ const LocalDB = new function() {
 
 
 function LocalDB_globalProject() {
-  let LocalAccess = LocalDB.getProjectAccess();
+  const LocalAccess = LocalDB.getProjectAccess();
   this.tasks = new function() {
     const Key = "tasks";
     const TypeClass = Task;
@@ -451,7 +451,8 @@ function LocalDB_globalProject() {
 
 
 function LocalDB_Project(_projectId, _DB, _serverProject) {
-  let This = this;
+  const LocalAccess = LocalDB.getProjectAccess();
+  const This = this;
   this.title = "Loading...";
   this.Server = _serverProject; // The server project
   this.userIsAbsent = true;
@@ -512,7 +513,6 @@ function LocalDB_Project(_projectId, _DB, _serverProject) {
     let metaData = await this.getData("metaData");
     if (metaData.id === undefined) 
     {
-      console.log(metaData, metaData.id);
       await this.setData("metaData", {title: '❌ [Desync problem] ❌' + this.id, index: -1});
       metaData = await this.getData("metaData");
     }

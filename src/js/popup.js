@@ -544,8 +544,8 @@ function _Popup_tagManager() {
 	let CurTag = false;
 	let CurProject = false;
 	
-	async function onOpen(_openResolver, _projectId) {
-		CurProject = await Server.getProject(_projectId);
+	async function onOpen(_openResolver, _project) {
+		CurProject = _project;
 		if (!CurProject) return;
 
 		setTagList(await CurProject.tags.getAll(true));
@@ -573,8 +573,8 @@ function _Popup_tagManager() {
 		if (!CurProject.users.Self.permissions.tags.update) return;
 		This.close();
 		
-		await Popup.createTag.openEdit(CurTag, CurProject.id);
-		This.open(CurProject.id);
+		await Popup.createTag.openEdit(CurTag, CurProject);
+		This.open(CurProject);
 	}
 
 
