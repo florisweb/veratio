@@ -72,6 +72,8 @@ function _app() {
 
 
   this.update = async function() {
+    MainContent.curProject = await Server.getProject(MainContent.curProject.id, true);
+
     MainContent.startLoadingAnimation();
     await SideBar.projectList.fillProjectHolder();
 

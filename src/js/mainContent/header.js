@@ -2,13 +2,13 @@
 
 function _MainContent_header() {
 	let HTML = {
-		mainContent: mainContent,
-		Self: $("#mainContentHeader .header")[0],
-		titleIcon: $("#mainContentHeader .titleIcon.icon")[0],
-		titleHolder: $("#mainContentHeader .header.titleHolder")[0],
-		memberList: $("#mainContentHeader .functionHolder .memberList")[0],
-		optionIcon: $("#mainContentHeader .functionItem.icon.clickable")[0],
-		functionItems: $("#mainContentHeader .functionHolder > .functionItem"),
+		mainContent: 	mainContent,
+		Self: 			$("#mainContentHeader .header")[0],
+		titleIcon: 		$("#mainContentHeader .titleIcon.icon")[0],
+		titleHolder: 	$("#mainContentHeader .header.titleHolder")[0],
+		memberList: 	$("#mainContentHeader .functionHolder .memberList")[0],
+		optionIcon: 	$("#mainContentHeader .functionItem.icon.clickable")[0],
+		functionItems: 	$("#mainContentHeader .functionHolder > .functionItem"),
 	}
 
 	this.optionMenu = new function() {
@@ -58,12 +58,10 @@ function _MainContent_header() {
 
 
 		this.open = async function() {
-			let project = await Server.getProject(MainContent.curProject);
-			
 			Menu.enableAllOptions();
 
-			if (!project.users.Self.permissions.project.remove || !Server.connected)	Menu.options[3].disable();
-			if (!project.users.Self.permissions.project.rename)							Menu.options[4].disable();
+			if (!MainContent.curProject.users.Self.permissions.project.remove || !Server.connected)	Menu.options[3].disable();
+			if (!MainContent.curProject.users.Self.permissions.project.rename)						Menu.options[4].disable();
 
 			return Menu.open(HTML.optionIcon, {top: 45});
 		}

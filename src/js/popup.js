@@ -206,20 +206,17 @@ function _Popup_renameProject() {
 	});
 
 
-	let curProjectId = false;
-	async function onOpen(_openResolver, _projectId) {
-		let project = await Server.getProject(_projectId);
-		if (!project) return false;
-		curProjectId = project.id;
+	let curProject = false;
+	async function onOpen(_openResolver, _project) {
+		if (!_project) return false;
+		curProject = _project;
 
-		inputField.setPlaceHolder(project.title);
-		inputField.setValue(project.title);
+		inputField.setPlaceHolder(curProject.title);
+		inputField.setValue(curProject.title);
 		inputField.focus();
 	}	
 
 	this.renameProject = async function() {
-		let project = await Server.getProject(curProjectId);
-
 		let newTitle = inputField.getValue();
 		if (!newTitle || newTitle.length < 3) 
 		{
@@ -228,7 +225,7 @@ function _Popup_renameProject() {
 			return false;
 		}
 
-		project.rename(newTitle).then(async function () {
+		curProject.rename(newTitle).then(async function () {
 			This.close();
 			App.update();
 		});
