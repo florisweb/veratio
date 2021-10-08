@@ -84,6 +84,7 @@ function MainContent_taskPage() {
 
 
 function taskPage_tab(_settings) {
+	const This = this;
 	this.name = _settings.name;
 	let onOpen = _settings.onOpen;
 	let onSilentRender = _settings.onSilentRender;
@@ -121,27 +122,34 @@ function taskPage_tab(_settings) {
 		this.silentRender(false);
 	}
 
-	let silentRendering = false;
+	let silentRenderPromise;
 	this.silentRender = async function(_fromCache = true) {
-		if (silentRendering) return console.warn('bussy');
-		silentRendering = true;
+		while (silentRenderPromise) await silentRenderPromise;
 
-		MainContent.header.setTitleIcon('loading');
-		let overdueTaskList = await getOverdueTasks(_fromCache);
-		
-		let firstTaskHolder = MainContent.taskHolder.list[0];
-		if (firstTaskHolder && firstTaskHolder.type == 'overdue')
-		{
-			if (overdueTaskList.length) 
+		MainContent.header.setTitleIcon('loading');		
+		silentRenderPromise = new Promise(async function(resolve) {
+			setTimeout(() => {resolve();}, 10 * 1000); // If there is an error this will prevent the application for stalling forever.
+
+			let overdueTaskList = await getOverdueTasks(_fromCache);
+			
+			let firstTaskHolder = MainContent.taskHolder.list[0];
+			if (firstTaskHolder && firstTaskHolder.type == 'overdue')
 			{
-				await firstTaskHolder.task.setTaskList(overdueTaskList);
-			} 
-			else firstTaskHolder.remove();
-		} else if (overdueTaskList.length) await this.addOverdue(_fromCache);
+				if (overdueTaskList.length) 
+				{
+					await firstTaskHolder.task.setTaskList(overdueTaskList);
+				} 
+				else firstTaskHolder.remove();
+			} else if (overdueTaskList.length) await This.addOverdue(_fromCache);
 
-		await onSilentRender(_fromCache);
+			await onSilentRender(_fromCache);
+			resolve();
+		});
+		
+		await silentRenderPromise;
+		
+		silentRenderPromise = false;
 		MainContent.header.setTitleIcon('finishedLoading');
-		silentRendering = false;
 	}
 
 	function applySettings(_settings) {
