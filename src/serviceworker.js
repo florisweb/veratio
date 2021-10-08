@@ -1,20 +1,23 @@
 const Cache = new function() {
-  this.useCache = false;
+  this.useCache = true;
+  console.log('Cache: Use cache: ', this.useCache);
   
   this.name = 'veratio-cache-v1';
   this.contents = [
     './',
     './index.php',
-    './css/main_min.css',
-    './js/main_min.js',
-
+    './main_min.css',
+    './main_min.js',
     './images/sideBarBackground/?type=sidebar',
     './images/icons/todayIcon.png',
+    './images/icons/plannerIcon.png',
     './images/icons/weekIcon.png',
     './images/icons/dropDownIcon.png',
-    './images/icons/noConnectionIconLight.png',
-    './images/icons/optionIcon.png',
+    './images/loading.gif',
     './images/icons/dropDownIconDark.png',
+    './images/icons/todayIconDark.png',
+    './images/icons/optionIcon.png',
+    './images/icons/noConnectionIconLight.png',
     './images/icons/inviteIconLight.png',
     './images/icons/linkIconLight.png',
     './images/icons/leaveIconRed.png',
@@ -24,16 +27,19 @@ const Cache = new function() {
     './images/icons/removeIcon.png',
     './images/icons/changeIconDark.png',
     './images/icons/checkIcon.svg',
+    './images/icons/addToPlannerIconDark.png',
+    './images/icons/removeFromPlannerIconDark.png',
     './images/loadingDark.gif',
-    
-    './images/icons/projectIconDark.svg',
     './images/icons/projectIcon.png',
-
+    './images/icons/projectIconDark.svg',
     './images/icons/ownerIconDark.png',
-    './images/icons/linkIconDark.png',
     './images/icons/adminIcon.png',
+    './images/icons/weekIconDark.png',
+    './images/icons/linkIconDark.png',
   ];
 }
+
+
 
 self.addEventListener('install', function(event) {
   event.waitUntil(
@@ -44,12 +50,14 @@ self.addEventListener('install', function(event) {
   );
 });
 
-
+let urls = [];
 self.addEventListener('fetch', function(event) {
   event.respondWith(
     caches.match(event.request, {ignoreVary: true})
       .then(function(response) {
         if (response && Cache.useCache) return response;
+        let url = "./" + event.request.url.substr(37, Infinity);
+        console.log('Cache: not found:', url);
         return fetch(event.request);
       }
     )

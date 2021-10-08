@@ -110,7 +110,7 @@
 	}
 
 	.taskHolder.overdue .dropDownButton:after {
-		content: url("../images/icons/dropDownIconRed.png");
+		content: url("./images/icons/dropDownIconRed.png");
 	}
 
 
