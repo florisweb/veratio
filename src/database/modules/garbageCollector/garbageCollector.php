@@ -13,7 +13,7 @@
 			foreach ($this->projects as $project) $overdueTasks += $this->setTasksToOverdue($project);
 
 			$removedTaskOrders = $this->cleanOrderManager();
-			// echo '<div style="display: none">Overdue: ' . $overdueTasks . ' TaskOrder: ' . $removedTaskOrders . "</div>";
+			echo '<div style="display: none">GarbageCollector: Overdue: ' . $overdueTasks . ' TaskOrder: ' . $removedTaskOrders . "</div>";
 		}
 
 		private function setTasksToOverdue($_project) {

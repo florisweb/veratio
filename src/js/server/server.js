@@ -18,6 +18,7 @@ const Server = new function() {
   this.setup = async function() {
     setLinkUserId(LinkUser.link);
     await this.getProjectList(true);
+    this.triggerServerGarbageCollect();
   }
 
 
@@ -156,6 +157,12 @@ const Server = new function() {
   }
 
 
+
+
+
+  this.triggerServerGarbageCollect = async function() {
+    return await this.fetchData('database/modules/garbageCollector/garbageCollector.php');
+  }
 
 
   this.updateConnectionStatus = async function(_connected = false) {
