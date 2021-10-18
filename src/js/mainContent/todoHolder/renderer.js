@@ -167,8 +167,8 @@ function _TaskRenderer() {
 					let taskHolderId = _todoHolder.parentNode.getAttribute('taskHolderId');
 					let taskHolder = MainContent.taskHolder.get(taskHolderId);
 					if (!taskHolder) return;
-					await taskHolder.task.dropTaskTo(_taskWrapper, _newIndex);
-					await _taskWrapper.taskHolder.task.dropTaskFrom(_taskWrapper, _newIndex); // Notify the previous taskholder that a task was dropped from it
+					await taskHolder.task.dropTaskTo(_taskWrapper, _newIndex, _taskWrapper.taskHolder);
+					await _taskWrapper.taskHolder.task.dropTaskFrom(_taskWrapper, _newIndex, taskHolder); // Notify the previous taskholder that a task was dropped from it
 				}
 
 				function getListHolder(_dropTarget) {

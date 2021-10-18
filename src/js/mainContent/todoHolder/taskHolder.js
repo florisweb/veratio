@@ -494,14 +494,14 @@ function TaskHolder_task(_parent) {
 
 
 
-	this.dropTaskTo = async function(_taskWrapper, _taskIndex) {
+	this.dropTaskTo = async function(_taskWrapper, _taskIndex, _fromTaskHolder) {
 		let wrapper = this.taskList.add(_taskWrapper.task, _taskIndex);
 		await updateTaskToNewTaskHolder(_taskWrapper.task);
 		await this.reRenderTaskList();
 		Parent.onDropTaskTo(wrapper, _taskIndex);
 	}
-	this.dropTaskFrom = async function(_taskWrapper, _taskIndex) {
-		this.taskList.remove(_taskWrapper.task.id);
+	this.dropTaskFrom = async function(_taskWrapper, _taskIndex, _toTaskHolder) {
+		if (Parent.id != _toTaskHolder.id) this.taskList.remove(_taskWrapper.task.id);
 		Parent.onDropTaskFrom(_taskWrapper, _taskIndex);
 	}
 
