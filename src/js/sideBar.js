@@ -48,20 +48,19 @@ function _SideBar() {
 		let popupHolder = $(".messageHolder.popupHolder")[0];
 
 		this.curPopup;
-		const changeLogUrl = "https://github.com/florisweb/veratio/releases/tag/1.3";
+		const changeLogUrl = "https://github.com/florisweb/veratio/releases/tag/1.4";
 
 		let newVersionMessage = {
 			title: "Version 1.3", 
 			content: [
 				new Text({text: "Changelog", isHeader: true}),
 				new VerticalSpace({height: 5}),
-				new Text({text: "- Offline functionallity"}),
+				new Text({text: "- The app now works when fully offline."}),
 				new LineBreak(),
-				new Text({text: "- Redesigned the invitesystem"}),
+				new Text({text: "- Added taskorder"}),
 				new LineBreak(),
-				new Text({text: "- Improved the create-taskmenu"}),
+				new Text({text: "- Added 'to be planned' for when a task doesn\'t have an assigned date yet."}),
 				new LineBreak(),
-				new Text({text: "- A lot of small bug fixes and minor improvements."}),
 				new VerticalSpace({height: 25}),
 				new Button({title: "Close", filled: true, onclick: function() {
 					SideBar.messagePopup.close();

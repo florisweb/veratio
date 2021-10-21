@@ -1,14 +1,16 @@
 
 
 Version 1.4
-Planned features:
-- [x] Preloading - Huge performance increase
-- [x] PWA
+Features:
+- [x] Preloading - Huge increase in performance and responsiveness
+- [x] PWA and proper offline mode
+- [x] Implement full-data-caching
 - [x] Properly implement Drag And Drop
 - [x] Task order
 - [x] To be Planned-taskholder
 	- [x] An 'Add all to planner'-button on the overdue-menu
-- [x] Implement full-data-caching
+
+
 
 
 Version 1.5
