@@ -163,7 +163,7 @@ function _SideBar() {
 		}
 		
 
-		const curMessageIndex = 3;
+		const curMessageIndex = 4;
 		this.showLatestMessage = function() {
 			let isNewUser = !localStorage.getItem("hasSeenWelcomeMessage");
 			localStorage.setItem("hasSeenWelcomeMessage", true);
