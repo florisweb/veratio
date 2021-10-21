@@ -37,8 +37,8 @@
 		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0' name='viewport'/>
 		<meta name="theme-color" content="#636ad5">
 		<link rel="manifest" href="../manifest.json">
-		<link rel="stylesheet" type="text/css" href="../css/component.css?a=34">
-		<link rel="shortcut icon" href="https://florisweb.tk/git/veratio/images/pressSet/favicon.ico">
+		<link rel="stylesheet" type="text/css" href="component.css">
+		<link rel="shortcut icon" href="../images/pressSet/favicon.ico">
 
 		<style>
 			body {
@@ -263,7 +263,6 @@
 
 	
 			if (rawInviteData != "E_invalidLink") setup();
-
 
 
 			function setup() {

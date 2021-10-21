@@ -8,6 +8,7 @@
 
 	$App->userId = sha1((string)$link);
 	$projects = $App->getAllProjects();
+	
 	if (sizeof($projects) == 0) die("E_projectNotFound");
 	$project = $projects[0];
 
@@ -28,6 +29,6 @@
 		die();
 	}
 
-	header("Location: https://user.florisweb.tk/login?redirect=https://veratiodev.florisweb.tk/invite/join.php?link=" . $link);
+	header("Location: " . $GLOBALS["UserDomainUrl"] . "/login?redirect=" . $GLOBALS['ProjectUrls']['veratioDev'] . '/invite/join.php?' . $_SERVER['QUERY_STRING']);
 	die("Redirect user");
 ?>
