@@ -300,7 +300,10 @@ function _SideBar_projectList() {
 						 '<div class="headerText projectInfoHolder"></div>';
 
 		HTML.projectsHolder.append(html);
-		html.onclick = function() {MainContent.taskPage.projectTab.open(_project);}
+		html.onclick = function() {
+			document.body.classList.remove('showSideBar');
+			MainContent.taskPage.projectTab.open(_project);
+		}
 		setTextToElement(html.children[1], _project.title);
 		DragHandler.register(html, onDrop, getListHolder, DropRegionId);
 

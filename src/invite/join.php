@@ -29,6 +29,6 @@
 		die();
 	}
 
-	header("Location: " . $GLOBALS["UserDomainUrl"] . "/login?redirect=" . $GLOBALS['ProjectUrls']['veratio'] . '/invite/join.php?' . $_SERVER['QUERY_STRING']);
+	header("Location: " . $GLOBALS["UserDomainUrl"] . "/login?redirect=" . $GLOBALS['ProjectUrls']['veratioDev'] . '/invite/join.php?' . $_SERVER['QUERY_STRING']);
 	die("Redirect user");
 ?>

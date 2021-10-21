@@ -278,9 +278,12 @@ body.appLoading #sideBar {
 
 
 @media screen and (max-width: 600px) {
-	#sideBar {
+	body:not(.showSideBar) #sideBar {
 		left: -300px;
 		box-shadow: none;
+	}
+	#sideBar .navigationHolder {
+		display: none;
 	}
 }
 

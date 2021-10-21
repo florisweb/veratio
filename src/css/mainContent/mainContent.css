@@ -136,8 +136,9 @@ body.appLoading #mainContent {
 	top: 0;
 
 	width: 100%;
-	height: 100%;
-	
+	height: calc(100% - 55px);
+	overflow-y: auto;
+	overflow-x: hidden;
 	
 	transition: all .3s;
 	background-size: 70px 70px;
@@ -357,6 +358,57 @@ body.appLoading #mainContent {
 
 
 
+
+
+
+
+
+
+
+#mainContentFooter {
+	position: relative;
+	left:  0;
+	bottom:  0;
+
+	width: calc(100% - 35px - 15px);
+	height: calc(55px + 30px); /*30px = padding bottom*/
+	
+	padding-left: 35px;
+	padding-right: 15px;
+
+	display: none;
+}
+
+#mainContentFooter .pageButtonHolder {
+	position: relative;
+	width: auto;
+	height: 55px;
+	margin: auto;
+
+	border-top: 1px solid #ccc;
+
+	display: flex;
+}
+
+
+#mainContentFooter .pageButtonHolder .pageButton { 
+	position: relative;
+	margin: auto;
+}
+#mainContentFooter .pageButtonHolder .pageButton .buttonIcon { 
+	height: 25px;
+	width: auto;
+
+	padding:  7.5px;
+
+	filter: invert(100%);
+}
+
+
+
+
+
+
 @media screen and (max-width: 600px) {
 	#mainContent {
 		width: calc(100vw + 10px);
@@ -367,4 +419,11 @@ body.appLoading #mainContent {
 	.todoHolder .functionItem.projectHolder {
 		display: none;
 	}
+
+	#mainContentFooter {
+		display: block;
+	}
+	#mainContentHolder {
+		height: calc(100% - 55px - 80px);
+	}		
 }

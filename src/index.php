@@ -2,7 +2,7 @@
 	$enableRedirect = false;
 	function APP_noAuthHandler() {
 		if (!$enableRedirect) return;
-		header("Location: " . $GLOBALS['UserDomainUrl'] . '/login?redirect=' . $GLOBALS['ProjectUrls']['veratio']);
+		header("Location: " . $GLOBALS['UserDomainUrl'] . '/login?redirect=' . $GLOBALS['ProjectUrls']['veratioDev']);
 		die("E_noAuth");
 	}
 
@@ -27,7 +27,7 @@
 			}
 			
 			echo "<script>" . 
-				"const SignInUrl = '" . $GLOBALS['UserDomainUrl'] . '/login?redirect=' . $GLOBALS['ProjectUrls']['veratio'] . "';" . 
+				"const SignInUrl = '" . $GLOBALS['UserDomainUrl'] . '/login?redirect=' . $GLOBALS['ProjectUrls']['veratioDev'] . "';" . 
 			"</script>";
 		?>
 
@@ -77,7 +77,7 @@
 
 
 		<div id="mainContent">
-			<div id="mainContentHeader">
+			<div id="mainContentHeader" onclick="document.body.classList.remove('showSideBar');">
 				<img src="images/icons/todayIconDark.png" class="titleIcon icon">
 				<div class="header titleHolder userText"></div>
 
@@ -96,7 +96,7 @@
 				</div>
 			</div>
 
-			<div id="mainContentHolder">
+			<div id="mainContentHolder" onclick="document.body.classList.remove('showSideBar');">
 
 				<div class="mainContentPage doNotAlignLeft">
 					<div class="todoListHolder"></div>
@@ -137,6 +137,25 @@
 					<br>
 					<br>
 					<div class='text' style='text-align: center;'>Work in progress...</div>
+				</div>
+			</div>
+
+
+			<div id="mainContentFooter">
+				<div class='pageButtonHolder'>
+					<!-- TODO images to dark variant? -->
+					<div class="pageButton clickable tab tabOpen" onclick="MainContent.taskPage.todayTab.open()">
+						<img src="images/icons/todayIcon.png" class="buttonIcon">
+					</div>
+					<div class="pageButton clickable tab" onclick="MainContent.taskPage.weekTab.open()">
+						<img src="images/icons/weekIcon.png" class="buttonIcon">
+					</div>
+					<div class="pageButton clickable tab" onclick="MainContent.plannerPage.open()">
+						<img src="images/icons/plannerIcon.png" class="buttonIcon">
+					</div>
+					<div class="pageButton clickable tab" onclick="document.body.classList.add('showSideBar')">
+						<img src="images/icons/projectIcon.png" class="buttonIcon">
+					</div>
 				</div>
 			</div>
 		</div>
