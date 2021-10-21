@@ -7,23 +7,9 @@
 	}
 
 	require_once __DIR__ . "/database/modules/app.php";
-	require_once __DIR__ . "/database/modules/garbageCollector/garbageCollector.php";
 	$PM->includePacket('GLOBALS', '1.0');
 	$enableRedirect = true;
-
-	if ($GLOBALS['App']->isLinkUser)
-	{
-		echo "<script>const LinkUser = {link: '" . (string)$_GET["link"] . "'}</script>";
-	} else {
-		echo "<script>const LinkUser = {link: false}</script>";
-	}
-	
-	echo "<script>" . 
-		"const SignInUrl = '" . $GLOBALS['UserDomainUrl'] . '/login?redirect=' . $GLOBALS['ProjectUrls']['veratio'] . "';" . 
-	"</script>";
-?>
-
-<!DOCTYPE html>
+?><!DOCTYPE html>
 <html>
 	<head>
 		<title>Veratio - Florisweb</title>
@@ -32,6 +18,20 @@
  		<link rel="stylesheet" type="text/css" href="main_min.css">
 	</head>	
 	<body class="appLoading">
+		<?php
+			if ($GLOBALS['App']->isLinkUser)
+			{
+				echo "<script>const LinkUser = {link: '" . (string)$_GET["link"] . "'}</script>";
+			} else {
+				echo "<script>const LinkUser = {link: false}</script>";
+			}
+			
+			echo "<script>" . 
+				"const SignInUrl = '" . $GLOBALS['UserDomainUrl'] . '/login?redirect=' . $GLOBALS['ProjectUrls']['veratio'] . "';" . 
+			"</script>";
+		?>
+
+
 		<div id="sideBar">
 			<img class="sideBarBackground" src="images/sideBarBackground/?type=sidebar">
 			<div class="navigationHolder">
