@@ -51,7 +51,7 @@ function _SideBar() {
 		const changeLogUrl = "https://github.com/florisweb/veratio/releases/tag/1.4";
 
 		let newVersionMessage = {
-			title: "Version 1.3", 
+			title: "Version 1.4", 
 			content: [
 				new Text({text: "Changelog", isHeader: true}),
 				new VerticalSpace({height: 5}),
