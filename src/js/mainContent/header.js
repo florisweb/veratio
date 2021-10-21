@@ -123,6 +123,7 @@ function _MainContent_header() {
 
 		HTML.titleIcon.classList.remove('projectIcon');
 		HTML.titleIcon.classList.remove('settingsIcon');
+		HTML.titleIcon.classList.remove('invertIconColor');
 		switch (_type) 
 		{
 			case 'project':
@@ -138,6 +139,10 @@ function _MainContent_header() {
 			case 'settings':
 				HTML.titleIcon.classList.add('settingsIcon');
 				HTML.titleIcon.setAttribute('src', 'images/icons/memberIcon.png');
+			break;
+			case 'planner':
+				HTML.titleIcon.classList.add('invertIconColor');
+				HTML.titleIcon.setAttribute('src', 'images/icons/plannerIcon.png');
 			break;
 			case 'loading':
 				titleIconLoading = true;

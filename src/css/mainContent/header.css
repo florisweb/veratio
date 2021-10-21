@@ -38,7 +38,9 @@
 	#mainContentHeader .titleIcon.icon.settingsIcon {
 		margin-top: 3px;
 	}
-
+	#mainContentHeader .titleIcon.icon.invertIconColor {
+		filter:  invert(100%);
+	}
 	
 
 

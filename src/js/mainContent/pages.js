@@ -717,6 +717,10 @@ function MainContent_plannerPage() {
 	let This = this;
 
 	async function onOpen() {
+		MainContent.header.showItemsByPage("planner");
+		MainContent.header.setTitleIcon('planner');
+		MainContent.header.setTitle("Planner");
+		MainContent.header.setMemberList([]);
 	}
 }
 
