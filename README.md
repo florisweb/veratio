@@ -1,21 +1,22 @@
 
-
-Version 1.4
-Features:
-- [x] Preloading - Huge increase in performance and responsiveness
-- [x] PWA and proper offline mode
-- [x] Implement full-data-caching
-- [x] Properly implement Drag And Drop
-- [x] Task order
-- [x] To be Planned-taskholder
-	- [x] An 'Add all to planner'-button on the overdue-menu
-
-
-
-
 Version 1.5
 Planned features:
 - [ ] Planner
+	- [ ] Calendar view
+
+- [ ] Mobile friendly
+	- [ ] Proper PWA: Icons/logo etc
+	- [ ] Navigation
+		- [ ] Gestures
+	- [ ] Task createmenu mobile friendlier
+	- [ ] Task rendering: bigger, easier to touch
+
+- [ ] Task Suggestions
+	- [ ] You're almost done, completly done thingy
+	- [ ] Track finish habits
+	- [ ] Suggest to be planned tasks that have been unplanned for a while
+
+
 
 Version 1.6
 Planned features:
@@ -27,7 +28,6 @@ Future Features:
 - [ ] Tooltips to indicate what button does what
 - [ ] Subtasks
 - [ ] Project colours
-? - [ ] Drag and drop support for tasks (Order?)
 ? - [ ] Sorting and filtering UI
 ?    - [ ] Sort tasks by planned date
 - [ ] Extended offline support
@@ -41,8 +41,18 @@ Future Features:
 
 ====== Released versions ======
 
+Version 1.4
+Features:
+- [x] Preloading - Huge increase in performance and responsiveness
+- [x] PWA and proper offline mode
+- [x] Implement full-data-caching
+- [x] Properly implement Drag And Drop
+- [x] Task order
+- [x] To be Planned-taskholder
+	- [x] An 'Add all to planner'-button on the overdue-menu
+
 Version 1.3
-Planned features:
+Features:
 - [x] Offline service
 - [x] Redesigned the taskCreateMenu
 	- [x] When creating a task there will now be a little loading-icon-indicator to show when it's being uploaded.
@@ -57,7 +67,7 @@ Planned features:
 	- [x] Bind link-user to actual user
 
 Version 1.2
-Planned features:
+Features:
 - [x] Tags (Creation, usage, and such)
 - [x] Redesigned permission-system
 - [x] Curtab indicator
@@ -71,7 +81,7 @@ Planned features:
 
 
 Version 1.1
-Planned features:
+Features:
 - [x] Midend / clientside datamanagement redesign
 - [x] Drop-down-menu's for the taskHolders
 - [x] Drag and drop support for tasks (Cross-date)
