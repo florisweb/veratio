@@ -16,7 +16,7 @@
 	top: 0;
 
 	width: 300px;
-	height: calc(100vh - 20px * 2);
+	height: calc(var(--window-height) - 20px * 2);
 
 	padding: 20px 0;
 
@@ -180,7 +180,7 @@ body.appLoading #sideBar {
 		
 		overflow: hidden;
 		top: 0;
-		max-height: calc(100vh - 155px);
+		max-height: calc(var(--window-height) - 155px);
 		overflow: auto;
 		transition: all 0.45s;
 	}
@@ -195,7 +195,7 @@ body.appLoading #sideBar {
 	}
 
 	body.noConnection #sideBar .projectListHolder .projectList {
-		max-height: calc(100vh - 155px - 102px);
+		max-height: calc(var(--window-height) - 155px - 102px);
 	}
 
 
@@ -252,7 +252,7 @@ body.appLoading #sideBar {
 	position: absolute;
 	
 	width: 100%;
-	height: 100vh;
+	height: var(--window-height);
 
 	background: none;
 	pointer-events: none;
@@ -260,7 +260,7 @@ body.appLoading #sideBar {
 
 	#sideBar .messageHolder.popupHolder .popup {
 		position: relative;
-		top: calc(100vh - 10px);
+		top: calc(var(--window-height) - 10px);
 		transform: translateY(-100%);
 		max-width: calc(100% - 40px - 20px);
 

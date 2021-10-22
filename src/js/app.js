@@ -110,6 +110,14 @@ window.onload = async function() {
 
 
 
+{
+  window.onresize = function(_setup) {
+    if (!_setup) return;
 
-
-
+    // const viewPortH       = document.body.getBoundingClientRect().height;
+    const windowH         = window.innerHeight;
+    // const browserUiBarsH  = viewPortH - windowH;
+    document.documentElement.style.setProperty('--window-height', windowH + 'px');
+  }
+  window.onresize(true);
+}

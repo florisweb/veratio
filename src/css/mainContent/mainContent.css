@@ -33,7 +33,7 @@
 	top: 0;
 
 	width: calc(100vw - 300px - 25px);
-	height: calc(100vh);
+	height: var(--window-height);
 	padding-right: 25px;
 
 	transition: transform .3s, opacity .3s;
@@ -156,7 +156,7 @@ body.appLoading #mainContent {
 		position: absolute;
 		
 		width: calc(100% - 5px * 2 - 35px);
-		height: calc(100vh - 56px);
+		height: calc(var(--window-height) - 56px);
 		
 		padding: 0 5px;
 		padding-left: 35px;
@@ -366,17 +366,17 @@ body.appLoading #mainContent {
 
 
 #mainContentFooter {
-	position: relative;
+	position: fixed;
 	left:  0;
 	bottom:  0;
 
-	width: calc(100% - 35px - 15px);
-	height: calc(55px + 30px); /*30px = padding bottom*/
+	width: calc(100% - 15px - 15px);
+	height: calc(55px + 30px); /* 30px = padding bottom */
 	
-	padding-left: 35px;
+	padding-left: 15px;
 	padding-right: 15px;
 
-	display: none;
+	background: #fff;
 }
 
 #mainContentFooter .pageButtonHolder {
@@ -406,7 +406,9 @@ body.appLoading #mainContent {
 
 
 
-
+.phoneOnly {
+	display: none;
+}
 
 
 @media screen and (max-width: 600px) {
@@ -414,16 +416,15 @@ body.appLoading #mainContent {
 		width: calc(100vw + 10px);
 		padding-left: 0;
 		padding-right: 5px;
+		
+		height: calc(var(--window-height) - 55px);
 	}
 
 	.todoHolder .functionItem.projectHolder {
 		display: none;
 	}
 
-	#mainContentFooter {
+	.phoneOnly {
 		display: block;
 	}
-	#mainContentHolder {
-		height: calc(100% - 55px - 80px);
-	}		
 }

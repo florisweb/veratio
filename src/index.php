@@ -13,7 +13,7 @@
 <html>
 	<head>
 		<title>Veratio - Florisweb</title>
-		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0' name='viewport'/>
+		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, viewport-fit=cover'  name='viewport'/>
  		<link rel="manifest" href="manifest.json">
  		<link rel="stylesheet" type="text/css" href="main_min.css">
 	</head>	
@@ -139,23 +139,22 @@
 					<div class='text' style='text-align: center;'>Work in progress...</div>
 				</div>
 			</div>
+		</div>
 
-
-			<div id="mainContentFooter">
-				<div class='pageButtonHolder'>
-					<!-- TODO images to dark variant? -->
-					<div class="pageButton clickable tab tabOpen" onclick="MainContent.taskPage.todayTab.open()">
-						<img src="images/icons/todayIcon.png" class="buttonIcon">
-					</div>
-					<div class="pageButton clickable tab" onclick="MainContent.taskPage.weekTab.open()">
-						<img src="images/icons/weekIcon.png" class="buttonIcon">
-					</div>
-					<div class="pageButton clickable tab" onclick="MainContent.plannerPage.open()">
-						<img src="images/icons/plannerIcon.png" class="buttonIcon">
-					</div>
-					<div class="pageButton clickable tab" onclick="document.body.classList.add('showSideBar')">
-						<img src="images/icons/projectIcon.png" class="buttonIcon">
-					</div>
+		<div id="mainContentFooter" class='phoneOnly'>
+			<div class='pageButtonHolder'>
+				<!-- TODO images to dark variant? -->
+				<div class="pageButton clickable tab tabOpen" onclick="MainContent.taskPage.todayTab.open()">
+					<img src="images/icons/todayIcon.png" class="buttonIcon">
+				</div>
+				<div class="pageButton clickable tab" onclick="MainContent.taskPage.weekTab.open()">
+					<img src="images/icons/weekIcon.png" class="buttonIcon">
+				</div>
+				<div class="pageButton clickable tab" onclick="MainContent.plannerPage.open()">
+					<img src="images/icons/plannerIcon.png" class="buttonIcon">
+				</div>
+				<div class="pageButton clickable tab" onclick="document.body.classList.add('showSideBar')">
+					<img src="images/icons/projectIcon.png" class="buttonIcon">
 				</div>
 			</div>
 		</div>

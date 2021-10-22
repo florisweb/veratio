@@ -1,10 +1,15 @@
 
-html {
-	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-	position: fixed;
-	width: 100vw;
-	height: 100vh;
+:root {
+  --window-height:  100vh;
 }
+
+html {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  position: fixed;
+  width: 100vw;
+  height: var(--window-height);
+}
+
 
 .noselect {
   -webkit-touch-callout: none; /* iOS Safari */
