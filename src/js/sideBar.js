@@ -2,13 +2,34 @@
 
 function _SideBar() {
 	const HTML = {
+		self: 			sideBar,
+		mainContent:    mainContent,
 		todayTab: 		$("#sideBar .tab")[0],
 		weekTab: 		$("#sideBar .tab")[1],
 		plannerTab: 	$("#sideBar .tab")[2],
 	}
 
-	this.projectList = new _SideBar_projectList();
+	GestureManager.onSwipeLeft(document.body, function() {
+		SideBar.hide();
+	});
 
+	GestureManager.onSwipeRight(HTML.mainContent, function(_dx, _dy, _start) {
+		if (_start[0] > 100) return;
+		SideBar.show();
+	});
+
+
+	this.show = function() {
+		document.body.classList.add('showSideBar');
+	}
+
+	this.hide = function() {
+		document.body.classList.remove('showSideBar');
+	}
+
+
+
+	this.projectList = new _SideBar_projectList();
 	this.noConnectionMessage = new _SideBar_noConnectionMessage();
 
 	this.updateTabIndicator = function() {
@@ -301,7 +322,7 @@ function _SideBar_projectList() {
 
 		HTML.projectsHolder.append(html);
 		html.onclick = function() {
-			document.body.classList.remove('showSideBar');
+			SideBar.hide();
 			MainContent.taskPage.projectTab.open(_project);
 		}
 		setTextToElement(html.children[1], _project.title);

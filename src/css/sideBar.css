@@ -25,7 +25,7 @@
 	box-shadow: 5px 0 20px 5px rgba(0, 0, 0, 0.08);
 	z-index: 10;
 
-	transition: left .32s, opacity .5s, background .3s;
+	transition: left .3s, opacity .3s, background .3s;
 }
 
 body.noConnection #sideBar {
@@ -280,7 +280,7 @@ body.appLoading #sideBar {
 @media screen and (max-width: 600px) {
 	body:not(.showSideBar) #sideBar {
 		left: -300px;
-		box-shadow: none;
+		pointer-events: none;
 	}
 	#sideBar .navigationHolder {
 		display: none;

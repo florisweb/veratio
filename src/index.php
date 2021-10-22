@@ -78,7 +78,7 @@
 
 
 		<div id="mainContent">
-			<div id="mainContentHeader" onclick="document.body.classList.remove('showSideBar');">
+			<div id="mainContentHeader" onclick="SideBar.hide()">
 				<img src="images/icons/todayIconDark.png" class="titleIcon icon">
 				<div class="header titleHolder userText"></div>
 
@@ -97,7 +97,7 @@
 				</div>
 			</div>
 
-			<div id="mainContentHolder" onclick="document.body.classList.remove('showSideBar');">
+			<div id="mainContentHolder" onclick="SideBar.hide()">
 
 				<div class="mainContentPage doNotAlignLeft">
 					<div class="todoListHolder"></div>
@@ -154,7 +154,7 @@
 				<div class="pageButton clickable tab" onclick="MainContent.plannerPage.open()">
 					<img src="images/icons/plannerIcon.png" class="buttonIcon">
 				</div>
-				<div class="pageButton clickable tab" onclick="document.body.classList.add('showSideBar')">
+				<div class="pageButton clickable tab" onclick="SideBar.show()">
 					<img src="images/icons/projectIcon.png" class="buttonIcon">
 				</div>
 			</div>
