@@ -112,7 +112,7 @@ window.onload = async function() {
 
 {
   window.onresize = function(_setup) {
-    if (!_setup) return;
+    // if (!_setup) return;
 
     // const viewPortH       = document.body.getBoundingClientRect().height;
     const windowH         = window.innerHeight;

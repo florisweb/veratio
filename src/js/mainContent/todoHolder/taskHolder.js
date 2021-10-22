@@ -782,9 +782,15 @@ function TaskHolder_createMenu(_parent) {
 		MainContent.taskHolder.closeAllCreateMenus(Parent);
 		MainContent.searchOptionMenu.openWithInputField(Parent.HTML.inputField);
 		
-
+		document.body.classList.add('createTaskMenuOpen');
 		Parent.HTML.createMenuHolder.classList.remove("close");
 		Parent.HTML.inputField.focus();
+		setTimeout(() => {
+			console.log(window.p = Parent.HTML.inputField);
+			let newScrollTop = mainContentHolder.scrollTop + Parent.HTML.inputField.getBoundingClientRect().top - (window.innerHeight - 540); // TODO: 300 is hardcoded, 
+			scrollTo(mainContentHolder, newScrollTop, 300);
+		}, 1); // for safari on ios
+
 		Parent.HTML.inputField.value 		= null;
 		Parent.HTML.plannedDateField.value 	= null;
 
@@ -819,6 +825,7 @@ function TaskHolder_createMenu(_parent) {
 
 	this.close = function() {
 		this.openState = false;
+		document.body.classList.remove('createTaskMenuOpen');
 		Parent.HTML.inputField.readOnly = true;
 		Parent.HTML.createMenuHolder.classList.add("close");
 		resetEditMode(false);
