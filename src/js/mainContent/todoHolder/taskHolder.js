@@ -1111,7 +1111,7 @@ function TaskHolder_createMenu(_parent) {
 			if (taskDate) 
 			{
 				task.groupType = "date";
-				if (taskDate.getDateInDays() < new Date().getDateInDays()) task.groupType = "overdue";
+				if (taskDate.getDateInDays(true) < new Date().getDateInDays(true)) task.groupType = "overdue";
 				task.groupValue = taskDate.toString();
 			}
 

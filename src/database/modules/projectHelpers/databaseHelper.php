@@ -10,7 +10,6 @@
 
 	class _databaseHelper {
 		private $DBName = "eelekweb_veratio";
-		// private $DBName = "eelekweb_todo";
 
 		private $DB;
 		public $orderManager;
