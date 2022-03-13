@@ -528,7 +528,7 @@ function _Popup_tagManager() {
 	let addTagButton = this.content[3];
 	let itemList = this.content[2];
 
-	const Menu = OptionMenu.create(1001);	
+	const Menu = OptionMenu.create({zIndex: 1001});
 	Menu.addOption("Remove", async function () {
 		if (!CurTag) return;
 		let result = await CurProject.tags.remove(CurTag.id);

@@ -8,6 +8,7 @@ var MainContent   = new _MainContent();
 const Popup       = new _Popup();
 
 function _app() {
+  this.inPhoneMode = false;
 
   this.setup = async function() {
     installServiceWorker();
@@ -112,11 +113,10 @@ window.onload = async function() {
 
 {
   window.onresize = function(_setup) {
-    // if (!_setup) return;
+    App.inPhoneMode = window.innerWidth < 600;
+    console.log('phone', App.inPhoneMode);
 
-    // const viewPortH       = document.body.getBoundingClientRect().height;
     const windowH         = window.innerHeight;
-    // const browserUiBarsH  = viewPortH - windowH;
     document.documentElement.style.setProperty('--window-height', windowH + 'px');
   }
   window.onresize(true);

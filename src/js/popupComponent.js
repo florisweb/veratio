@@ -149,7 +149,7 @@ function InputField({placeHolder, maxLength = 32, readonly = false}) {
 
 function OptionSelector({onValueChange} = {}) {
 	let This 				= this;
-	let Menu 				= OptionMenu.create(1001);
+	let Menu 				= OptionMenu.create({zIndex: 1001});
 
 	this.getOpenState 		= function() {return Menu.openState};
 	this.removeAllOptions 	= Menu.removeAllOptions;

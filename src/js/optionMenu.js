@@ -1,9 +1,10 @@
 
 const OptionMenu = new function() {
-	this.create = function(_ZIndex = 100) {
+	this.create = function({zIndex = 100, phoneModeLocationSensitive} = {}) {
 		let html = document.createElement("div");
 		html.className = "optionMenuHolder hide";
-		html.style.zIndex = _ZIndex;
+		if (phoneModeLocationSensitive) html.classList.add('phoneModeLocationSensitive');
+		html.style.zIndex = zIndex;
 		document.body.append(html);
 
 		let Menu = new _OptionMenu_menu(html);

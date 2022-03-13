@@ -12,9 +12,15 @@
 ?><!DOCTYPE html>
 <html>
 	<head>
+		<meta charset="utf-8">
 		<meta name="theme-color" content="#faf6f6">
 		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, viewport-fit=cover'  name='viewport'/>
- 		<link rel="manifest" href="manifest.json">
+		
+		<link rel="shortcut icon" href="images/pressSet/logo.png">
+		<link rel="apple-touch-icon" href="images/pressSet/logo.png">
+		<meta name="description" content="A taskmanager"/>
+
+		<link rel="manifest" href="manifest.json">
  		<link rel="stylesheet" type="text/css" href="main_min.css">
  		<title>Veratio - Florisweb</title>
 	</head>	

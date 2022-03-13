@@ -150,11 +150,30 @@ function _TaskRenderer() {
 					_taskWrapper.openEdit();
 				});
 
-				RightClick.register(_html, function(_event, _html) {
-					MainContent.optionMenu.open(_html.children[2].children[0], _event);
+				RightClick.register(_html, openContextMenu);
+				
+				let mouseDown = false;
+				_html.addEventListener('mousedown', function(_e) {
+					console.log('mousedown')
+					if (!App.inPhoneMode) return;
+					mouseDown = true;	
+					setTimeout(function() {
+						if (!mouseDown) return;
+						openContextMenu(_e, _html);
+					}, 10);
 				});
+				_html.addEventListener('mouseup', function() {
+					mouseDown = false;
+				});
+			
+
+
 
 				return assignDragHandler(_html, _taskWrapper, _project);
+
+				function openContextMenu(_event, _html) {
+					MainContent.optionMenu.open(_html.children[2].children[0], _event);
+				}
 			}
 
 			

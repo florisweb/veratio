@@ -429,9 +429,37 @@ body.createTaskMenuOpen #mainContentHolder{
 		height: calc(var(--window-height) - 55px);
 	}
 
-	.todoHolder .functionItem.projectHolder {
+
+
+
+	.todoHolder .listItem.taskItem {
+		height: calc(20px + 20px);
+	}
+	
+	.taskHolder.overdue .todoHolder .taskItem .functionHolder,
+	.todoHolder .taskItem .functionHolder {
+		width: calc(100% - 40px);
+		margin-top: 20px;
+		padding-bottom: 3px;
+
+		border-bottom: 1px solid #eee;
+		background: none !important;
+		box-shadow: none !important;
+	}
+	.taskHolder.overdue .todoHolder .taskItem:last-child .functionHolder,
+	.todoHolder .taskItem:last-child .functionHolder {
+		border-bottom: none;
+	}
+
+	.todoHolder .taskItem .functionHolder .functionItem.optionIcon {
 		display: none;
 	}
+	.todoHolder .taskItem .functionHolder .projectHolder .functionItem.projectTitle.userText {
+		max-width: 50vw;
+		font-size: 11px;
+	}
+
+
 
 	.phoneOnly {
 		display: block;
@@ -440,4 +468,29 @@ body.createTaskMenuOpen #mainContentHolder{
 	body.createTaskMenuOpen #mainContentHolder .todoListHolder {
 		margin-top: 100vh;
 	}
+
+
+
+
+
+	.optionMenuHolder:not(.phoneModeLocationSensitive) {
+		float: bottom;
+		top:  auto !important;
+		left:  0px !important;
+		bottom: -5px !important;
+		
+		padding: 10px 20px;
+		padding-bottom: 50px;
+		width:  calc(100% - 0px * 2);
+		box-shadow: 5px -5px 20px 20px rgba(0, 0, 0, .05);
+		border-radius: 10px 10px 0 0;
+		transition: all .2s;
+	}
+
+	.optionMenuHolder:not(.phoneModeLocationSensitive).hide {
+		transform: scale(1);
+		bottom:  -50px !important;
+	}
+
+
 }

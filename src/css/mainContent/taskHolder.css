@@ -598,7 +598,7 @@
 			height: 20px;
 			padding: 0;
 
-			margin-right: 12px;
+			margin-right: 8px;
 			margin-left: 0;
 			line-height: 20px;
 			
@@ -621,7 +621,7 @@
 
 		.taskItem .functionHolder .plannedDateHolder {
 			color: #ccc;
-			font-size: 13px;
+			font-size: 11px;
 		}
 
 		.taskItem .functionHolder .plannedDateHolder.today {
@@ -635,6 +635,10 @@
 		.taskItem .functionHolder .plannedDateHolder.thisWeek {
 			color: #bbb;
 		}
+		.taskItem .functionHolder .functionItem.memberList {
+			color: #bbb;
+			font-size: 11px;
+		}
 
 
 		.taskItem .functionHolder .projectHolder {
@@ -643,13 +647,14 @@
 			
 			.taskItem .functionHolder .projectHolder .projectTitle {
 				color: #777;
-				font-size: 14px;
+				font-size: 13px;
 				max-width: 20vw;
+				margin-right: 5px;
 			}
 
 			.taskItem .functionHolder .projectHolder .projectIcon {
-				top: 1px;
-				height: 17px;
+				top: 3px;
+				height: 13px;
 				width: auto;
 				opacity: 0.4;
 			}

@@ -99,7 +99,7 @@ function _MainContent_userIndicatorMenu() {
 		mainContentHolder: mainContentHolder
 	}
 
-	let Menu = OptionMenu.create();
+	let Menu = OptionMenu.create({phoneModeLocationSensitive: true});
 
 	this.close = Menu.close;
 	this.open = async function(_user, _item, _event) {
@@ -129,7 +129,7 @@ function _MainContent_optionMenu() {
 	let This = this;
 	
 	let curDOMData;
-	let Menu = OptionMenu.create();
+	let Menu = OptionMenu.create({phoneModeLocationSensitive: false});
 	
 	this.openState 	= Menu.openState;
 	this.close 		= Menu.close;
@@ -217,7 +217,7 @@ function _MainContent_searchOptionMenu() {
 	};
 
 	let This = this;
-	let Menu = OptionMenu.create();
+	let Menu = OptionMenu.create({phoneModeLocationSensitive: true});
 
 
 	let inputField;

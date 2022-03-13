@@ -88,7 +88,7 @@
 				array_push($projects, $project);
 			}
 			
-			return $projects; //$GLOBALS['OrderManager']->sortProjectList($projects, $this->userId);
+			return $GLOBALS['OrderManager']->sortProjectList($projects, $this->userId);
 		}
 
 

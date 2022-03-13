@@ -12,7 +12,7 @@ function _MainContent_taskHolder() {
 
 
 	this.dateOptionMenu = function() {
-		let Menu = OptionMenu.create();
+		let Menu = OptionMenu.create({phoneModeLocationSensitive: true});
 	
 		Menu.removeAllOptions = function() {
 			for (let option of Menu.options) this.options[0].remove();
