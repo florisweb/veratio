@@ -7,18 +7,24 @@
 		private $dataTypeTemplate = array();
 		private $DBHelper;
 		
-		public function __construct($_projectId, $_dataTypeTemplate) {
+		public function __construct($_projectId, $_dataTypeTemplate, $_DB) {
 			$this->dataType 		= (string)array_keys($_dataTypeTemplate)[0];
 			$this->dataTypeTemplate = (array)$_dataTypeTemplate[$this->dataType];
 			
-			$this->DBHelper 		= $GLOBALS["DBHelper"]->getDBInstance($_projectId);
+			$this->DBHelper 		= $_DB;
 		}
 
+		private $cachedData = false;
 		public function getAllData() {
-			$data = $this->DBHelper->getProjectData();
-			if (!$data) 						return array();
-			if (!$data[$this->dataType]) 		return array();
-			return $data[$this->dataType];
+			if ($this->cachedData !== false) return $this->cachedData;
+			switch ($this->dataType)
+			{
+				case "tasks": $this->cachedData = $this->DBHelper->getTaskData(); break;
+				case "users": $this->cachedData = $this->DBHelper->getUserData(); break;
+				case "tags": $this->cachedData = $this->DBHelper->getTagData(); break;
+				default: $this->cachedData = array(); break;
+			}
+			return $this->cachedData;
 		}
 
 			public function writeData($_data) {

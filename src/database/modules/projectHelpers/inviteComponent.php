@@ -10,18 +10,20 @@
 
 
 	
-		public function __construct($_parent, $_project) {
+		public function __construct($_parent, $_project, $_DB) {
 			$this->Parent = $_parent;
 			$this->Project = $_project;
 			$this->DTTemplate = new _project_dataTypeTemplate(
 				(string)$_project->id, 
 				array("users" => [
-					"id" 			=> "String",
-					"name" 			=> "String",
-					"permissions" 	=> "Int",
-					"type"			=> "String",
-				]
-			));
+						"id" 			=> "String",
+						"name" 			=> "String",
+						"permissions" 	=> "Int",
+						"type"			=> "String",
+					]
+				),
+				$_DB
+			);
 		}
 
 		public function inviteByEmail($_emailAdress) {

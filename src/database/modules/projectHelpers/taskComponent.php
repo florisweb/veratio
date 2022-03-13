@@ -14,28 +14,30 @@
 		}
 
 		
-		public function __construct($_parent, $_projectId) {
+		public function __construct($_parent, $_projectId, $_DB) {
 			$this->projectId = (string)$_projectId;
 			$this->Parent = $_parent;
 
 			$this->DTTemplate = new _project_dataTypeTemplate(
 				$_projectId, 
 				array("tasks" => [
-					"id" 			=> "String",
-					"title" 		=> "String",
-					"groupType" 	=> "String",
-					"groupValue"	=> "String",
-					"tagId" 		=> "String",
-					"finished" 		=> "Boolean",
-					"assignedTo"	=> "Array",
-					"creatorId" 	=> "String"
-				]
-			));
+						"id" 			=> "String",
+						"title" 		=> "String",
+						"groupType" 	=> "String",
+						"groupValue"	=> "String",
+						"tagId" 		=> "String",
+						"finished" 		=> "Boolean",
+						"assignedTo"	=> "Array",
+						"creatorId" 	=> "String"
+					]
+				),
+				$_DB
+			);
 		}
 
 		public function getAll($_addPersonalIndices = true) {
 			$tasks = $this->DTTemplate->getAllData();
-			return $GLOBALS['OrderManager']->addTaskIndicesToTaskList($tasks, $_addPersonalIndices, $this->Parent->App->userId);
+			return $GLOBALS['OrderManager']->addTaskIndicesToTaskList($tasks, $this->Parent->App->userId, $_addPersonalIndices);
 		}
 
 

@@ -7,19 +7,21 @@
 		private $DTTemplate;
 		private $projectId;
 		
-		public function __construct($_parent, $_projectId) {
+		public function __construct($_parent, $_projectId, $_DB) {
 			$this->projectId = (string)$_projectId;
 			$this->Parent = $_parent;
 
 			$this->DTTemplate = new _project_dataTypeTemplate(
 				$_projectId, 
 				array("tags" => [
-					"id" 		=> "String",
-					"title" 	=> "String",
-					"colour" 	=> "String",
-					"creatorId" => "String"
-				]
-			));
+						"id" 		=> "String",
+						"title" 	=> "String",
+						"colour" 	=> "String",
+						"creatorId" => "String"
+					]
+				),
+				$_DB
+			);
 		}
 
 

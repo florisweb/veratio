@@ -124,27 +124,36 @@
 			return $foundIds;
 		}
 
-
-
-		private function getAllProjectData() {
-			return $this->DB->execute("SELECT * FROM $this->DBTableName WHERE id=?", array($this->projectId));
+		public function getTitle() {
+			$data = $this->DB->execute("SELECT title FROM $this->DBTableName WHERE id=? LIMIT 1", array($this->projectId));
+			if (!isset($data[0])) return;
+			return $data[0]["title"];
 		}
 
-		public function getProjectData() {
-			$data = $this->getAllProjectData();
-			if (!$data[0]) return false;
-
-			$project = $data[0];
-			$project["users"] 	= json_decode($project["users"], true);
-			$project["tasks"] 	= json_decode($project["tasks"], true);
-			$project["tags"] 	= json_decode($project["tags"], true);
-
-			if ($project["users"] == NULL) 	$project["users"] = array();
-			if ($project["tasks"] == NULL) 	$project["tasks"] = array();
-			if ($project["tags"] == NULL) 	$project["tags"] = array();
-
-			return $project;
+		public function getUserData() {
+			$rawData = $this->DB->execute("SELECT users FROM $this->DBTableName WHERE id=? LIMIT 1", array($this->projectId));
+			if (!isset($rawData[0])) return false;
+			$data = json_decode($rawData[0]["users"], true);
+			if ($data == NULL) return array();
+			return $data;
 		}
+		
+		public function getTagData() {
+			$rawData = $this->DB->execute("SELECT tags FROM $this->DBTableName WHERE id=? LIMIT 1", array($this->projectId));
+			if (!isset($rawData[0])) return false;
+			$data = json_decode($rawData[0]["tags"], true);
+			if ($data == NULL) return array();
+			return $data;
+		}
+
+		public function getTaskData() {
+			$rawData = $this->DB->execute("SELECT tasks FROM $this->DBTableName WHERE id=? LIMIT 1", array($this->projectId));
+			if (!isset($rawData[0])) return false;
+			$data = json_decode($rawData[0]["tasks"], true);
+			if ($data == NULL) return array();
+			return $data;
+		}
+
 
 		public function writeProjectData($_column, $_data) {
 			$columns = $this->DB->getColumnNames($this->DBTableName);

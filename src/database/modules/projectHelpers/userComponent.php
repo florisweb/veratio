@@ -11,18 +11,20 @@
 
 		public $Self;
 		
-		public function __construct($_parent, $_projectId) {
+		public function __construct($_parent, $_projectId, $_DB) {
 			$this->DTTemplate = new _project_dataTypeTemplate(
 				(string)$_projectId, 
 				array("users" => [
-					"id" 			=> "String",
-					"name" 			=> "String",
-					"permissions" 	=> "Int",
-					"type"			=> "String",
-				]
-			));
+						"id" 			=> "String",
+						"name" 			=> "String",
+						"permissions" 	=> "Int",
+						"type"			=> "String",
+					]
+				),
+				$_DB
+			);
 
-			$this->InviteComponent 	= new _project_user_inviteComponent($this, $_parent);
+			$this->InviteComponent 	= new _project_user_inviteComponent($this, $_parent, $_DB);
 			$this->Parent 			= $_parent;
 
 			$this->Self = $this->get($this->Parent->App->userId);
@@ -62,7 +64,7 @@
 			if (!$user) return false;
 			
 			$user["Self"] = false;
-			if ($user["id"] == $this->Self["id"]) $user["Self"] = true;
+			if (isset($this->Self) && $user['id'] == $this->Self["id"]) $user["Self"] = true;
 
 			return $user;
 		}

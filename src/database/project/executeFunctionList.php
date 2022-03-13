@@ -5,7 +5,7 @@
 		"users" 	=> ["update", "remove", "getAll", "inviteByEmail", "inviteByLink"],
 		"project" 	=> ["rename", "remove", "create", "getAll", 'move'],
 	]);
-
+	
 	require_once __DIR__ . "/../modules/app.php";
 
 	$_functionDataList			= (String)$_POST["functions"];

@@ -11,7 +11,7 @@
 	class _OrderManager {
 		public function __construct() {}
 
-		public function addTaskIndicesToTaskList($_taskList, $_addPersonalIndices = true, $_userId) {
+		public function addTaskIndicesToTaskList($_taskList, $_userId, $_addPersonalIndices = true) {
 			$curTime 			= strtotime((new DateTime())->format('d-m-Y'));
 			$taskOrder 			= [];
 			$taskOrderUpdated 	= false;
@@ -95,12 +95,13 @@
 			$orderListUpdated = false;
 
 			$newList = [];
+
 			for ($i = 0; $i < sizeof($orderList); $i++)
 			{
 				$foundProject = false;
 				for ($p = 0; $p < sizeof($_projectList); $p++)
-				{	
-					if ($_projectList[$p]->checked) continue;			
+				{
+					if (isset($_projectList[$p]->checked)) continue;
 					if ($orderList[$i] != $_projectList[$p]->id) continue;
 					array_push($newList, $_projectList[$p]);
 					$_projectList[$p]->checked = true;

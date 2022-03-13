@@ -33,9 +33,12 @@
 		}
 
 		private function validateLinkUser() {
-			$link = (string)$_POST['linkId'];
-			if (!$link) $link = (string)$_GET['link'];
-			if (!$link || !isset($link) || strlen($link) > 100) return false;
+			$link = false;
+			if (isset($_POST['linkId'])) 
+			{
+				$link = (string)$_POST['linkId'];
+			} else if (isset($_GET['link'])) $link = (string)$_GET['link'];
+			if (!$link || strlen($link) > 100) return false;
 
 			$this->isLinkUser = true;
 			$this->userId = sha1($link);;
@@ -73,18 +76,19 @@
 		public function getAllProjects() {
 			if (!$this->userId) {$this->throwNoAuthError(); return "E_noAuth";}
 
-			$DBHelper = $GLOBALS["DBHelper"]->getDBInstance(null);
+			$DBHelper 	= $GLOBALS["DBHelper"]->getDBInstance(null);
 			$projectIds = $DBHelper->getAllProjectIds();
-			$projects = array();
-			
+			$projects 	= array();
 			for ($i = 0; $i < sizeof($projectIds); $i++)
 			{
-				$curProject = $this->getProject($projectIds[$i]);
-				if (!$curProject || is_string($curProject)) continue;
-				array_push($projects, $curProject); 
+				$project = new _Project($projectIds[$i], $this);
+				if ($project->errorOnCreation) continue;
+				if ($this->isLinkUser && $project->users->get($this->userId)["type"] != "link") continue;
+
+				array_push($projects, $project);
 			}
 			
-			return $GLOBALS['OrderManager']->sortProjectList($projects, $this->userId);
+			return $projects; //$GLOBALS['OrderManager']->sortProjectList($projects, $this->userId);
 		}
 
 

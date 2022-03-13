@@ -25,19 +25,16 @@
 		public function __construct($_projectId, $_App) {
 			$this->id = (string)$_projectId;
 			$this->App = $_App;
-			
-			$this->users = new _project_userComponent($this, $this->id);
-			$this->tasks = new _project_taskComponent($this, $this->id);
-			$this->tags  = new _project_tagComponent($this, $this->id);
+	
+			$this->DB 	 = $GLOBALS["DBHelper"]->getDBInstance($this->id);			
+			$this->users = new _project_userComponent($this, $this->id, $this->DB);
+			$this->tasks = new _project_taskComponent($this, $this->id, $this->DB);
+			$this->tags  = new _project_tagComponent($this, $this->id, $this->DB);
 
-			$this->DB 	 = $GLOBALS["DBHelper"]->getDBInstance($this->id);
-
-			$projectData = $this->DB->getProjectData();
-			if (!$projectData) return $this->errorOnCreation = "E_projectNotFound";
-
+			$this->title = $this->DB->getTitle();
+			if (!is_string($this->title)) return $this->errorOnCreation = "E_projectNotFound";
 			if (!$this->users->Self) return $this->errorOnCreation = "E_userNotInProject";
 
-			$this->title = $projectData["title"];
 			$this->errorOnCreation = false;
 		}
 
