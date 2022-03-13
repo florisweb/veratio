@@ -28,6 +28,7 @@
 		}
 
 			public function writeData($_data) {
+				$this->cachedData = json_decode($_data, true);
 				return $this->DBHelper->writeProjectData(
 					$this->dataType, 
 					(string)$_data
