@@ -447,8 +447,11 @@
 
 
 
-.taskItem.listItem.finished {
-	opacity: 0.4;
+.taskItem.listItem > *:not(.statusCircleHitBox) {
+	transition: opacity .3s;
+}
+.taskItem.listItem.finished > *:not(.statusCircleHitBox) {
+	opacity: .4;
 }
 
 
@@ -482,11 +485,12 @@
 
 	border-radius: 100%;
 	background: rgb(175, 107, 237);
-	opacity: 0;
+	opacity: 0 !important;
 }
 
+
 .taskItem.listItem.isNotMyTask .taskOwnerIndicator {
-	opacity: .35;
+	opacity: .35 !important;
 }
 
 
@@ -510,14 +514,52 @@
 		padding-right: 20px;
 		margin-right: -5px;
 	}
+	.taskItem .statusCircleHitBox .statusCircle {
+		padding: 3px;
+		width: 10px;
+		height: 10px;
+	}
+
+	.taskItem.finished .statusCircleHitBox .statusCircle {
+		animation: taskFinish_tagIconAnimation .25s 1;
+		opacity: .6;
+	}
+
+		@keyframes taskFinish_tagIconAnimation {
+		    0% {
+		    	transform:  scale(1);
+		    	padding: 5px;
+				width: 6px;
+				height: 6px;
+		    }
+		    50% {
+		    	transform:  scale(1.2);
+		    	padding: 2px;
+				width: 12px;
+				height: 12px;
+		    }
+		    100% {
+		    	transform:  scale(1);
+		    	padding: 3px;
+				width: 10px;
+				height: 10px;
+		    }
+		}
+
+		.taskItem .statusCircleHitBox .statusCircle rect {
+			transition: fill-opacity .3s;
+		}
+
+		.taskItem:not(.finished) .statusCircleHitBox:hover .statusCircle rect {
+			fill-opacity: .4;
+		}
 
 		.taskItem:not(.finished) .statusCircleHitBox .statusCircle rect {
 			fill-opacity: 0;
 		}
 			
-		.taskItem.finished .statusCircleHitBox .statusCircle {
-			opacity: 1;
-		}
+		
+
 
 	.taskItem .titleHolder {
 		pointer-events: none;

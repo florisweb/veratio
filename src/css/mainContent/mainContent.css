@@ -2,8 +2,9 @@
 
 .statusCircle {
 	margin-top: 2px;
-	width: 15px;
-	height: 15px;
+	padding: 3px;
+	width: 9px;
+	height: 9px;
 	border-radius: 100%;
 
 	border: 1px solid #ccc;
@@ -341,6 +342,7 @@ body.createTaskMenuOpen #mainContentHolder{
 
 				width: 11px;
 				height: 11px;
+				padding: 1px;
 				border-width: 1px;
 
 				opacity: .8;

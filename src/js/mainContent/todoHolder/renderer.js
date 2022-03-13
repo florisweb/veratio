@@ -185,7 +185,7 @@ function _TaskRenderer() {
 
 
 	this.createTagCircle = function(_tag, _showCheckIcon = false) {
-		if (!_tag) _tag = {colour: new Color("#999")};
+		if (!_tag) _tag = {colour: new Color("#aaa")};
 		
 		let html = document.createElement("div");
 		html.innerHTML = '<?xml version="1.0" standalone="no"?><svg class="statusCircle clickable" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="isolation:isolate" viewBox="0 0 83 83" width="83" height="83"><defs><clipPath id="_clipPath_EvyxEBqQoipdaXxIJMEjCjvXV7edc1qw"><rect width="83" height="83"/></clipPath></defs><g clip-path="url(#_clipPath_EvyxEBqQoipdaXxIJMEjCjvXV7edc1qw)"><rect x="0.729" y="42.389" width="43.308" height="20" transform="matrix(0.707,0.707,-0.707,0.707,43.601,-0.482)"/><rect x="16.22" y="30.02" width="70" height="20" transform="matrix(0.707,-0.707,0.707,0.707,-13.296,47.939)"/></g></svg>';
@@ -193,9 +193,10 @@ function _TaskRenderer() {
 		let tagCircle = html.children[0];
 		if (_showCheckIcon) tagCircle.classList.add("showCheckIcon");
 
-		tagCircle.style.backgroundColor		= _tag.colour.merge(new Color("rgba(255, 255, 255, .1)"), .3).toRGBA();
-		tagCircle.style.borderColor 		= _tag.colour.merge(new Color("#fff"), .8).toRGBA();
-		tagCircle.style.fill 				= _tag.colour.merge(new Color("rgb(130, 130, 130)"), .5).toRGBA();
+		tagCircle.style.backgroundColor		= _tag.colour.merge(new Color("rgba(255, 255, 255, .1)"), .2).toRGBA();
+		tagCircle.style.borderColor 		= _tag.colour.merge(new Color("#fff"), .9).toRGBA();
+		tagCircle.style.fill 				= _tag.colour.merge(new Color("#fff"), .9).toRGBA();
+		// tagCircle.style.fill 				= _tag.colour.merge(new Color("rgb(130, 130, 130)"), .5).toRGBA();
 
 		return tagCircle;
 	}
