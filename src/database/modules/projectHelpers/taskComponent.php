@@ -25,6 +25,7 @@
 						"title" 		=> "String",
 						"groupType" 	=> "String",
 						"groupValue"	=> "String",
+						"deadLine"		=> "String",
 						"tagId" 		=> "String",
 						"finished" 		=> "Boolean",
 						"assignedTo"	=> "Array",
@@ -125,7 +126,6 @@
 			$oldTask 				= $this->get($_newTask["id"]);
 			
 			if (!$_newTask) return false;
-
 			// Check if the action is allowed
 			if ($permissions < 1)
 			{
@@ -139,26 +139,27 @@
 				if (!in_array($user["id"], $oldTask["assignedTo"])) return "E_actionNotAllowed";
 			}
 
+			$deadLine = $this->filterDate($_newTask["deadLine"]);
+			$_newTask["deadLine"] = $deadLine ? $deadLine : "";
 
-			// Content checks
+			// Group-specific checks
 			if (!$this->groupTypeExists($_newTask["groupType"])) return "E_groupTypeDoesNotExist";
-
-			if ($_newTask["groupType"] == "overdue" && $_newTask["finished"]) $_newTask["groupType"] = "date";
-			$_newTask["creatorId"] = $user["id"];
-
-			if ($_newTask["groupType"] == "date") 
+			switch ($_newTask["groupType"])
 			{
-				$curDate 		= new DateTime();
-				$curTime 		= strtotime($curDate->format('d-m-Y'));
+				case "overdue":
+					if ($_newTask["finished"]) $_newTask["groupType"] = "date";
+				break;
+				case "date":
+					$curDate 		= new DateTime();
+					$curTime 		= strtotime($curDate->format('d-m-Y'));
 
-				$date 			= $this->filterDate($_newTask["groupValue"]);
-				if (!$date) 	return false;
+					$date = $this->filterDate($_newTask["groupValue"]);
+					if (!$date) return false;
+					$_newTask["groupValue"] = $date;
 
-				$_newTask["groupValue"] = $date;
-
-
-				$time = strtotime((new DateTime($date))->format('d-m-Y'));
-				if ($time < $curTime && !$_newTask["finished"]) $_newTask["groupType"] = "overdue";
+					$time = strtotime((new DateTime($date))->format('d-m-Y'));
+					if ($time < $curTime && !$_newTask["finished"]) $_newTask["groupType"] = "overdue";
+				break;
 			}
 			
 

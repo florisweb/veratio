@@ -103,6 +103,36 @@ Features:
 
 
 
+Task:
+- id			=> String
+- title 		=> String
+- groupType 	=> String
+- groupValue	=> String
+- deadLine		=> String
+- tagId 		=> String
+- finished 		=> Boolean
+- assignedTo	=> Array
+- creatorId 	=> String
+
+
+Task.overdue
+- groupValue: The date at which the task was planned
+
+Task.date
+- groupValue: The date at which the task is planned
+
+Task.default - Normal list item
+- groupValue: /
+
+Task.toPlan - Task added to the planner
+- groupValue: /
+
+
+
+
+
+
+
 
 App
 - 	Client:			UI and User Input, Page Generation, Filtration and Sorting		Only keeps project-data

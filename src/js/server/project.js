@@ -666,19 +666,20 @@ function User({id, name, permissions, type, Self}, _project) {
 }
 
 function Task({
-    id, 
-    tagId = false, 
+    id,
+    tagId = false,
     projectId,
-    title, 
-    finished = false, 
+    title,
+    finished = false,
+    deadLine = false,
   
-    groupType, 
-    groupValue, 
+    groupType,
+    groupValue,
   
     assignedTo = [], 
-    creatorId, 
+    creatorId,
   
-    personalIndex, 
+    personalIndex,
     indexInProject
   }, _project) {
 
@@ -689,6 +690,9 @@ function Task({
   if (!_project) console.error('Task without project', _project);
   this.title          = title;
   this.finished       = !!finished;
+  this.deadLine       = deadLine;
+
+
   this.groupType      = groupType;
   this.groupValue     = groupValue;
 
