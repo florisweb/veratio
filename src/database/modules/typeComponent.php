@@ -19,7 +19,7 @@
 			return false;
 		}
 
-		protected function getAll() {
+		public function getAll() {
 			$data = $this->readData();
 			$actualData = [];
 			foreach ($data as $dataPoint)
@@ -27,7 +27,7 @@
 				$obj = $this->createTypeObject(arrayToObject($dataPoint));
 				if ($obj->Error)
 				{
-					var_dump("An error accured, while typeSetting in " . $this->Type . ': ', $obj->Error);
+					var_dump("An error accured, while typeSetting in " . $this->Type . ': ', $obj->Error, $obj);
 					continue;
 				}
 				array_push($actualData, $obj);
