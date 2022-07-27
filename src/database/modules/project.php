@@ -1,79 +1,74 @@
 <?php
-	require_once __DIR__ . "/../getRoot.php";
-	include_once($GLOBALS["Root"] . "/PHP/PacketManager.php");
-	$PM->includePacket("SESSION", "1.0");
-
-	require_once __DIR__ . "/orderManager.php";
-	require_once __DIR__ . "/projectHelpers/userComponent.php";
-	require_once __DIR__ . "/projectHelpers/taskComponent.php";
-	require_once __DIR__ . "/projectHelpers/tagComponent.php";
-	
-
-	class _Project {
-		public $title = "";
-		public $id = "";
-		
-		public $users;
-		public $tasks;
-
-		private $DB;
-
-		public $errorOnCreation = true;
-		public $App;
+	require_once __DIR__ . "/databaseHelper.php";
+	require_once __DIR__ . "/Error.php";
 
 
-		public function __construct($_projectId, $_App) {
+	// A project is cached, so if a property changes the project will have to be reinitiated
+
+	class Project {
+		public $id;
+		public $title;
+		public $curUser;
+
+		private $_projectInfo;
+
+
+		public function __construct($_projectId, $_projectInfo = null) {
 			$this->id = (string)$_projectId;
-			$this->App = $_App;
-	
-			$this->DB 	 = $GLOBALS["DBHelper"]->getDBInstance($this->id);			
-			$this->users = new _project_userComponent($this, $this->id, $this->DB);
-			$this->tasks = new _project_taskComponent($this, $this->id, $this->DB);
-			$this->tags  = new _project_tagComponent($this, $this->id, $this->DB);
+			$this->_projectInfo = $_projectInfo;
+			if (isset($_projectInfo)) $this->title = $_projectInfo['title'];
+		}
 
-			$this->title = $this->DB->getTitle();
-			if (!is_string($this->title)) return $this->errorOnCreation = "E_projectNotFound";
-			if (!$this->users->Self) return $this->errorOnCreation = "E_userNotInProject";
+		public function setCurUser($_user) {
+			if (!$_user || !isset($_user->id)) return false;
+			$user = $this->getUserById($_user->id);
+			if (!$user) return E_USER_NOT_IN_PROJECT;
+			$_user->permissions = $user['permissions'];
+			$_user->type 		= $user['type'];
+			$_user->name 		= $user['name'];
+			$this->curUser 		= $_user;
+			return true;
+		}
 
-			$this->errorOnCreation = false;
+		public function projectExists() {
+			return !!$this->getProjectInfo();
 		}
 
 
-		public function moveToIndex($_index) {
-			return $GLOBALS['OrderManager']->moveProjectToIndex($this->id, $_index, $GLOBALS['App']->userId);
-		}
-
-		public function rename($_newTitle = "Titleless") {
-			$user = $this->users->Self;
-			if (!$user) return "E_userNotInProject";
-
-			if ((int)$user["permissions"] < 2) return "E_actionNotAllowed";
-
-			return $this->DB->writeProjectData("title", (string)$_newTitle);
+		public function userInProject($_user) {
+			if (!$_user || !isset($_user->id)) return false;
+			return !!$this->getUserById($_user->id);
 		}
 
 
+		private function getUserById($_userId) {
+			$projectInfo = $this->getProjectInfo();
+			if (!$projectInfo) return false;
+			for ($i = 0; $i < sizeof($projectInfo['users']); $i++)
+			{
+				if ($projectInfo['users'][$i]['id'] == $_userId) return $projectInfo['users'][$i];
+			}
+			return false;
+		}
 
-		public function remove() {
-			$user = $this->users->Self;
-			if (!$user) return "E_userNotInProject";
 
-			if ((int)$user["permissions"] < 3) return "E_actionNotAllowed";
-
-			return $this->DB->removeProject();
+		private function getProjectInfo() {
+			if (!is_null($this->_projectInfo)) return $this->_projectInfo;
+			$this->_projectInfo = $GLOBALS['DBHelper']->getProjectInfo($this->id);
+			if ($this->_projectInfo) $this->title = $this->_projectInfo["title"];
+			return $this->_projectInfo;
 		}
 
 		public function export() {
-			return array(
-				"id" 	=> $this->id,
-				"title" => urlencode($this->title),
-				"importData" => [
-					"users"	=> $this->users->getAll(),
-					"tags"	=> $this->tags->getAll()
-				]
-			);
+			$info = $this->getProjectInfo();
+			if (!$this->curUser) return $info;
+			for ($i = 0; $i < sizeof($info['users']); $i++)
+			{
+				if ($info['users'][$i]['id'] != $this->curUser->id) continue;
+				$info['users'][$i]['self'] = true;
+				return $info;
+			}
+			return $info;
 		}
 	}
-
-
 ?>

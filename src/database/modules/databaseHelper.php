@@ -1,79 +1,69 @@
 <?php
-	require_once __DIR__ . "/../../getRoot.php";
+	require_once __DIR__ . "/../getRoot.php";
+	require_once __DIR__ . "/Error.php";
 	include_once($GLOBALS["Root"] . "/PHP/PacketManager.php");
 
 	$GLOBALS["PM"]->includePacket("DB", "1.0");
-	$GLOBALS["PM"]->includePacket("SESSION", "1.0");
 
 	global $DBHelper;
 	$DBHelper = new _databaseHelper;
 
 	class _databaseHelper {
 		private $DBName = "eelekweb_veratio";
+		private $DBTableName = "projectList";
 
 		private $DB;
-		public $orderManager;
 		public function __construct() {
 			$this->DB = $GLOBALS["DB"]->connect($this->DBName);
-			if (!$this->DB) die("databaseHelper.php: DB doesn't exist");
-			$this->orderManager = new _databaseHelper_orderManager($this->DB);
+			if (!$this->DB) die(createErrorResponse(E_INTERNAL));
 		}
 
-		public function getDBInstance($_projectId) {
-			return new _databaseHelper_DBInstance($this->DB, $_projectId);
+
+		public function getProjectInfo($_projectId) {
+			$rawData = $this->DB->execute("SELECT title, users FROM $this->DBTableName WHERE id=? LIMIT 1", array($_projectId));
+			if (!isset($rawData[0])) return false;
+			return array(
+				"id" => $_projectId,
+				"title" => $rawData[0]["title"],
+				"users" => decodeJSON($rawData[0]["users"], []),
+			);
 		}
 
-		public function getUserId() {
-			$userId = $GLOBALS["SESSION"]->get("userId");
-			if (!$userId) return false;
-			return $userId;
+		public function getProjectInfoList() {
+			$rawData = $this->DB->execute("SELECT id, title, users FROM $this->DBTableName");
+			$projects = [];
+			for ($i = 0; $i < sizeof($rawData); $i++)
+			{
+				$project = array(
+					"id" => $rawData[$i]["id"],
+					"title" => $rawData[$i]["title"],
+					"users" => decodeJSON($rawData[$i]["users"], []),
+				);
+				array_push($projects, $project);
+			}
+
+			return $projects;
+		}
+
+	
+		public function writeProjectDataToColumn(string $_projectId, string $_type, string $_data) {
+			if (!in_array($_type, ['tasks', 'tags', 'users', 'title'])) return E_INVALID_PARAMETERS;
+			return $this->DB->execute(
+				"UPDATE $this->DBTableName SET $_type=? WHERE id=? LIMIT 1", 
+				array($_data, $_projectId)
+			);
+		}
+		public function readProjectDataToColumn(string $_projectId, string $_type) {
+			if (!in_array($_type, ['tasks', 'tags', 'users', 'title'])) return E_INVALID_PARAMETERS;
+			$data = $this->DB->execute(
+				"SELECT $_type FROM $this->DBTableName WHERE id=? LIMIT 1", 
+				array($_projectId)
+			);
+			if (!$data) return E_PROJECT_NOT_FOUND;
+			return decodeJSON($data[0][$_type], []);
 		}
 	}
 
-	class _databaseHelper_orderManager {
-		private $DBTableName = "orderManager";
-		private $DB;
-
-
-		public function __construct($_DB) {
-			$this->DB = $_DB;
-		}
-
-		public function getProjectOrder($_userId) {
-			$data = $this->DB->execute("SELECT projectOrder FROM $this->DBTableName WHERE userId=? LIMIT 1", array($_userId));
-			$order = $data[0]['projectOrder'];
-			if (!$order || !isset($order)) return [];
-			return json_decode($order, true);
-		}
-		public function setProjectOrder($_orderArr, $_userId) {
-			$orderStr = json_encode($_orderArr);
-			if ($this->dataExists($_userId))
-			{
-				return $this->DB->execute("UPDATE $this->DBTableName SET projectOrder=? WHERE userId=?", array($orderStr, $_userId));
-			}
-			return $this->DB->execute("INSERT INTO $this->DBTableName (userId, projectOrder) VALUES (?, ?)", array($_userId, $orderStr));
-		}
-		
-		public function getTaskOrder($_userId) {
-			$data = $this->DB->execute("SELECT taskOrder FROM $this->DBTableName WHERE userId=? LIMIT 1", array($_userId));
-			$order = $data[0]['taskOrder'];
-			if (!$order || !isset($order)) return [];
-			return json_decode($order, true);
-		}
-
-		public function setTaskOrder($_orderArr, $_userId) {
-			$orderStr = json_encode($_orderArr);
-			if ($this->dataExists($_userId))
-			{
-				return $this->DB->execute("UPDATE $this->DBTableName SET taskOrder=? WHERE userId=?", array($orderStr, $_userId));
-			}
-			return $this->DB->execute("INSERT INTO $this->DBTableName (userId, taskOrder) VALUES (?, ?)", array($_userId, $orderStr));
-		}
-		private function dataExists($_userId) {
-			$data = $this->DB->execute("SELECT * FROM $this->DBTableName WHERE userId=? LIMIT 1", array($_userId));
-			return sizeof($data) != 0;
-		}
-	}
 
 
 
@@ -126,32 +116,26 @@
 
 		public function getTitle() {
 			$data = $this->DB->execute("SELECT title FROM $this->DBTableName WHERE id=? LIMIT 1", array($this->projectId));
-			if (!isset($data[0])) return;
+			if (!isset($data[0]) || is_null($data[0]["title"])) return "";
 			return $data[0]["title"];
 		}
 
 		public function getUserData() {
 			$rawData = $this->DB->execute("SELECT users FROM $this->DBTableName WHERE id=? LIMIT 1", array($this->projectId));
-			if (!isset($rawData[0])) return false;
-			$data = json_decode($rawData[0]["users"], true);
-			if ($data == NULL) return array();
-			return $data;
+			if (!isset($rawData[0]) || is_null($rawData[0]["users"])) return [];
+			return decodeJSON($rawData[0]["users"], []);
 		}
 		
 		public function getTagData() {
 			$rawData = $this->DB->execute("SELECT tags FROM $this->DBTableName WHERE id=? LIMIT 1", array($this->projectId));
-			if (!isset($rawData[0])) return false;
-			$data = json_decode($rawData[0]["tags"], true);
-			if ($data == NULL) return array();
-			return $data;
+			if (!isset($rawData[0]) || is_null($rawData[0]["tags"])) return [];
+			return decodeJSON($rawData[0]["tags"], []);
 		}
 
 		public function getTaskData() {
 			$rawData = $this->DB->execute("SELECT tasks FROM $this->DBTableName WHERE id=? LIMIT 1", array($this->projectId));
-			if (!isset($rawData[0])) return false;
-			$data = json_decode($rawData[0]["tasks"], true);
-			if ($data == NULL) return array();
-			return $data;
+			if (!isset($rawData[0]) || is_null($rawData[0]["tasks"])) return [];
+			return decodeJSON($rawData[0]["tasks"], []);
 		}
 
 
@@ -179,6 +163,16 @@
 				"DELETE FROM $this->DBTableName WHERE id=? LIMIT 1", 
 				array($this->projectId)
 			);
+		}
+	}
+
+
+	function decodeJSON(string $_string, $_fallbackValue) {
+		try {
+			return json_decode($_string, true);
+		} 
+		catch (Exception $e) {
+			return $_fallbackValue;
 		}
 	}
 
