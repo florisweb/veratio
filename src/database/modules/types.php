@@ -44,6 +44,7 @@
 
 
 	class Task extends Struct {
+		public static $GroupTypes = ["date", "default", "overdue", "toPlan"];
 		protected $requiredProperties = ['id', 'title'];
 		protected $optionalProperties = ['finished', 'groupType', 'groupValue', 'deadLine', 'tagId', 'assignedTo', 'creatorId'];
 
@@ -59,6 +60,25 @@
 
 		public Array $assignedTo = [];
 		public string $creatorId = '';
+
+
+		public function __construct($_item) {
+			parent::__construct($_item);
+			if ($this->Error) return;
+			if (!in_array($this->groupType, Task::$GroupTypes)) $this->Error = 'Invalid GroupType';
+
+			switch ($this->groupType)
+			{
+				case "date":
+				case "overdue":
+					$this->groupValue = filterDate($this->groupValue);
+					if ($this->groupType === false) $this->Error = 'Invalid GroupValue';
+				break;
+				default:
+					$this->groupValue = '';
+				break;
+			}
+		}
 	}
 
 
@@ -112,5 +132,12 @@
 			$obj->{$key} = $value;
 		}
 		return $obj;
+	}
+
+	function filterDate($_dateStr) {
+		$dateParts = explode("-", $_dateStr);
+		if (sizeof($dateParts) != 3) return false;
+
+		return (int)substr($dateParts[0], 0, 2) . "-" . (int)substr($dateParts[1], 0, 2) . "-" . (int)substr($dateParts[2], 0, 4);
 	}
 ?>
