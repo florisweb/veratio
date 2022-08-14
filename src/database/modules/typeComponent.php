@@ -72,7 +72,7 @@
 
 
 
-		public function remove(string $_id) {
+		public function remove(String $_id) {
 			$rawData = $this->readData();
 
 			for ($i = 0; $i < sizeof($rawData); $i++)

@@ -54,7 +54,7 @@
 
 		public function update($_newTask) {
 			$newTask = new Task(arrayToObject($_newTask));
-			if (!$newTask) return E_INVALID_PARAMETERS;
+			if (!$newTask || $newTask->Error) return E_INVALID_PARAMETERS;
 
 			if (!$this->Project->curUser) return E_ACTION_NOT_ALLOWED;
 			$oldTask = $this->get($_newTask['id']);
@@ -96,6 +96,14 @@
 			return parent::update($newTask);
 		}
 
+
+
+		public function remove($_id) {
+			if (!$this->Project->curUser) return E_ACTION_NOT_ALLOWED;
+			$permissions = $this->Project->curUser->permissions;
+			if ($permissions < 1) return E_ACTION_NOT_ALLOWED;
+			return parent::remove($_id);
+		}
 
 
 
