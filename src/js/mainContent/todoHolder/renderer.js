@@ -23,7 +23,7 @@ function _TaskRenderer() {
 	}
 		function setHtmlClasses(html, task, project) {
 			if (task.finished) 										html.classList.add("finished");
-			if (task.assignedTo.includes(project.users.Self.id)) 	html.classList.add("isSelf");
+			if (task.assignedTo.includes(project.users.self.id)) 	html.classList.add("isSelf");
 		}
 
 		function createTaskHTMLTemplate() {
@@ -141,12 +141,12 @@ function _TaskRenderer() {
 
 			function assignEventHandlers(_html, _taskWrapper, _project) {
 				_html.children[1].onclick = async function() {
-					if (!_project.users.Self.permissions.tasks.finish(_taskWrapper.task)) return false;
+					if (!_project.users.self.permissions.tasks.finish(_taskWrapper.task)) return false;
 					_taskWrapper.finish();
 				}
 
 				DoubleClick.register(_html, async function() {
-					if (!_project.users.Self.permissions.tasks.update) return false;
+					if (!_project.users.self.permissions.tasks.update) return false;
 					_taskWrapper.openEdit();
 				});
 
@@ -179,7 +179,7 @@ function _TaskRenderer() {
 			
 
 			function assignDragHandler(_html, _taskWrapper, _project) {
-				if (!_project.users.Self.permissions.tasks.update) return _html;
+				if (!_project.users.self.permissions.tasks.update) return _html;
 				DragHandler.register(_html, onDrop, getListHolder, MainContent.taskHolder.dropRegionId);
 
 				async function onDrop(_ownHTML, _curDropTarget, _todoHolder, _newIndex) {

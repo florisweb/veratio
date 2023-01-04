@@ -12,9 +12,13 @@
 		private function createTypeObject($_params) {
 			switch ($this->Type)
 			{
-				case "tasks": 	return new Task($_params);
-				case "tags": 	return new Tag($_params);
-				case "users": 	return new User($_params);
+				case "tasks": 	
+					$_params->projectId = $this->Project->id;
+					return new Task($_params);
+				case "tags": 	
+					return new Tag($_params);
+				case "users": 	
+					return new User($_params);
 			}
 			return false;
 		}

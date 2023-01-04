@@ -112,16 +112,6 @@ Example: updateTask.php ?task=?&projectId=?
 
 
 
-<h2>BACKEND STRUCTURE</h2>
-
-
-
-new DataTypeTemplate(_project_, _dataTypeTemplate_)
-
-
-
-
-
 
 
 <h2>ERRORS</h2>
@@ -136,6 +126,38 @@ E_INVALID_PARAMETERS
 
 
 
+
+<h2>ACCESS POINTS</h2>
+
+/action/getProjectList.php
+- Returns: [
+  {id, title, users}
+]
+
+/action/getProjectTasks.php?projectId
+- Returns: {
+  overdue: []
+  planned: []
+  toBePlanned: []
+  default: []
+}
+
+/action/getTodaysTasks.php
+- Returns: {
+  overdue: []
+  tasks: []
+}
+
+/action/getTasksByDateRange.php?date&range (range = 0, only the given date)
+- Returns: []
+
+
+
+/action/user/inviteByLink.php
+- Returns: String -> link
+
+/action/user/inviteByEmail.php?email
+- Returns: 
 
 
 

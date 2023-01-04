@@ -62,7 +62,7 @@ body.appLoading #sideBar {
 		position: relative;
 		height: 20px;
 		
-		padding: 6px 20px;
+		padding: 7px 20px;
 
 		opacity: .9;
 
@@ -86,16 +86,17 @@ body.appLoading #sideBar {
 		#sideBar .header .headerIcon {
 			position: relative;
 			float: left;
-			height: 20px;
+			height: 16px;
 			width: auto;
 
-			margin-right: 9px;
-			opacity: 0.9;
+			margin: 2px;
+			margin-left: 2px;
+			margin-right: 12px;
+			/*opacity: .9;*/
 		}
 		#sideBar .header .headerIcon.dropDownButton {
-			left: 3px;
-			height: 15px;
-			padding: 2.5px;
+			height: 12px;
+			padding: 2px;
 			transition: all 0.2s;
 		}
 
@@ -109,9 +110,14 @@ body.appLoading #sideBar {
 			float: left;
 			max-width: calc(100% - 25px);
 		
-			font-size: 15px;
+			font-size: 14px;
 			color: #f5f5f5;
 			line-height: 20px;
+		}
+
+		#sideBar .navigationHolder .tab .headerText {
+			/*font-weight: bold;*/
+
 		}
 
 		#sideBar .projectListHolder .header .icon.loadingIcon {
@@ -131,8 +137,8 @@ body.appLoading #sideBar {
 
 
 	#sideBar .tab.projectTab {
-		padding: 7px 20px;
-		padding-left: 29px;
+		padding: 6px 20px;
+		padding-left: 26px;
 		transition: all .2s
 	}
 	#sideBar .tab.projectTab.showDropRegion {
@@ -149,10 +155,11 @@ body.appLoading #sideBar {
 
 
 		#sideBar .tab.projectTab .headerIcon {
-			top: 1px;
+			margin-left: 1px;
 			height: 16px;
 		}
 		#sideBar .tab.projectTab .headerText {
+			margin-left: -1px;
 			font-size: 14px;
 		}
 		#sideBar .tab.projectTab .headerText.projectInfoHolder {
@@ -168,17 +175,21 @@ body.appLoading #sideBar {
 		margin-top: 5px;
 	}
 
-	#sideBar .projectListHolder .header {
+	#sideBar .projectListHolder > .header {
 		transition: padding-bottom .2s;
 	}
 	#sideBar .projectListHolder .header.showDropRegion {
 		padding-bottom: 30px;
+	}
+	#sideBar .projectListHolder > .header .headerText {
+		font-weight: bold;
 	}
 
 	#sideBar .projectListHolder .projectList {
 		position: relative;
 		
 		overflow: hidden;
+		margin-top: -5px;
 		top: 0;
 		max-height: calc(var(--window-height) - 155px);
 		overflow: auto;

@@ -28,6 +28,8 @@
 		margin: 5px;
 		margin-left: 0;
 		margin-right: 10px;
+
+		opacity: .6;
 	}
 
 	#mainContentHeader .titleIcon.icon.projectIcon {
@@ -53,9 +55,9 @@
 		height: 30px;
 		width: calc(100% - 20px - 10px - 2px);
 
-		font-size: 18px;
-		color: #999;
-		line-height: 30px;
+		font-size: 16px;
+		color: #666;
+		line-height: 28px;
 	}
 
 

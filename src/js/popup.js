@@ -293,7 +293,7 @@ function _Popup_permissionMenu() {
 		
 		for (let i = MainContent.settingsPage.permissionData.length - 1; i >= 0; i--) 
 		{
-			if (i > MainContent.curProject.users.Self.permissions.value) continue;
+			if (i > MainContent.curProject.users.self.permissions.value) continue;
 
 			let option = optionMenu.addOption({
 				title: 	MainContent.settingsPage.permissionData[i].name,
@@ -570,7 +570,7 @@ function _Popup_tagManager() {
 
 	async function openTagEditMenu() {
 		if (!CurTag) return;
-		if (!CurProject.users.Self.permissions.tags.update) return;
+		if (!CurProject.users.self.permissions.tags.update) return;
 		This.close();
 		
 		await Popup.createTag.openEdit(CurTag, CurProject);
@@ -582,9 +582,9 @@ function _Popup_tagManager() {
 		addTagButton.enable();
 		Menu.enableAllOptions();
 
-		if (!CurProject.users.Self.permissions.tags.remove) Menu.options[0].disable();
-		if (!CurProject.users.Self.permissions.tags.update) Menu.options[1].disable();
-		if (!CurProject.users.Self.permissions.tags.update) addTagButton.disable();
+		if (!CurProject.users.self.permissions.tags.remove) Menu.options[0].disable();
+		if (!CurProject.users.self.permissions.tags.update) Menu.options[1].disable();
+		if (!CurProject.users.self.permissions.tags.update) addTagButton.disable();
 	}
 }
 

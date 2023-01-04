@@ -1,4 +1,5 @@
 
+const E_LocalProjectNotFound = Symbol('not Found');
 
 
 
@@ -42,7 +43,7 @@ const LocalDB = new function() {
 
 
 
-  this.setup = function() {
+  this.setup = async function() {
     return LocalDB.registerPromise(new Promise(function (resolve, error) {
       const request = indexedDB.open(DBName, DBVersion);
 
@@ -71,15 +72,29 @@ const LocalDB = new function() {
 
   this.getProjectAccess = function() {
     return {
-      getProjectList:     getProjectList,
-      getProject:         getProject,
-      updateProjectList:  updateProjectList,
-      removeProject:      removeProject,
+      getLocalProjectList:  getLocalProjectList, // Implements the 
+      getProjectList:       getProjectList, // Implements the LocalDB_Project class
+      getProject:           getProject,
+      updateProjectList:    updateProjectList,
+      removeProject:        removeProject,
+      createLocalProject:   createLocalProject,
     }
   }
 
+  async function getProjectList(_ignoreUserAbsence) {
+    let localProjects = await getLocalProjectList(_ignoreUserAbsence);
+    let projects = [];
+    for (let local of localProjects) 
+    {
+      let project = local._Server;
+      await project.importFromLocalProject(local);
+      projects.push(project);
+    }
 
-  async function getProjectList(_ignoreUserAbsence = false) {
+    return projects;
+  }
+
+  async function getLocalProjectList(_ignoreUserAbsence = false) {
     let ids = await getProjectIdList();
 
     let projectList = [];
@@ -87,8 +102,7 @@ const LocalDB = new function() {
     {
       let project = new LocalDB_Project(ids[i], DB);
       await project.setMetaData();
-      
-      if (!project.users.Self && !_ignoreUserAbsence) continue; // project.remove(); -- should remove after some time, but we still need to keep it around for storing the cachedoperation of removing itself
+      if (!project.users.self && !_ignoreUserAbsence) continue; // project.remove(); -- should remove after some time, but we still need to keep it around for storing the cachedoperation of removing itself
 
       projectList.push(project);
     }
@@ -122,7 +136,7 @@ const LocalDB = new function() {
       let project = await getProject(_newList[i].id);
       if (project && !project.userIsAbsent) continue;
 
-      addProject(_newList[i], i);
+      importProject(_newList[i], i);
     }
 
     for (let project of invalidProjects) project.remove();
@@ -147,15 +161,15 @@ const LocalDB = new function() {
     lastResync = new Date();
 
     if (dt < 60 * 1000) return updatedSomething; // only resync once a minute for low connectivity situations
-    console.warn("Syncing with Server...");
-    await this.resyncWithServer();
-    console.warn("Synced with Server!");
+    // console.warn("Syncing with Server...");
+    // await this.resyncWithServer();
+    // console.warn("Synced with Server!");
 
     return updatedSomething;
   }
 
 
-  async function addProject(_project, _index = 0) {
+  async function importProject(_project, _index = 0) {
     let project = new LocalDB_Project(_project.id, DB);
     await project.setData("metaData", {title: _project.title, index: _index});
     if (_project.importData) 
@@ -165,6 +179,13 @@ const LocalDB = new function() {
     }
     await project.setMetaData();
 
+    return project;
+  }
+  async function createLocalProject(_serverProject) {
+    let project = new LocalDB_Project(_serverProject.id, DB, _serverProject);
+    await project.setData("metaData", {title: _serverProject.title, index: _serverProject.index});
+    await project.users.set(_serverProject.users.list);
+    await project.setMetaData();
     return project;
   }
 
@@ -203,26 +224,20 @@ const LocalDB = new function() {
     for (let project of projects)
     {
       let localProject = await getProject(project.id, project);
-      let projectPromises = [
-        project.tasks.getByDateRange({date: new Date(), range: 365}),
-        project.tasks.getByGroup({type: "overdue", value: "*"}),
-        project.tasks.getByGroup({type: "default", value: "*"}),
-        project.tasks.getByGroup({type: "toPlan", value: "*"})
-      ];
+      let response = await project.tasks.getAll();
+      if (response.error) 
+      {
+        console.error('resyncWithServer: An error has accured', response);
+        continue
+      }
 
-      promises.push(new Promise(async function (resolve) {        
-        let results = await Promise.all(projectPromises);
-        
-        let tasks = results[0];
-        tasks = tasks.concat(results[1]);
-        tasks = tasks.concat(results[2]);
-        
-        localProject.tasks.set(tasks);
-        resolve();
-      }));
+      let tasks = response.result.overdue;
+      tasks = tasks.concat(response.result.toPlan);
+      tasks = tasks.concat(response.result.default);
+      tasks = tasks.concat(response.result.planned);
+      
+      await localProject.tasks.set(tasks);
     }
-
-    await Promise.all(promises);
     return true;
   }
 
@@ -403,7 +418,7 @@ function LocalDB_globalProject() {
     const TypeClass = User;
     TypeBaseClass.call(this, Key, TypeClass);
 
-    this.Self = false;
+    this.self = false;
   }
 
 
@@ -454,8 +469,9 @@ function LocalDB_Project(_projectId, _DB, _serverProject) {
   const LocalAccess = LocalDB.getProjectAccess();
   const This = this;
   this.title = "Loading...";
-  this.Server = _serverProject; // The server project
+  this._Server = _serverProject; // The server project
   this.userIsAbsent = true;
+  this.error = false;
 
   LocalDB_ProjectInterface.call(this, _projectId, _DB);
  
@@ -504,8 +520,8 @@ function LocalDB_Project(_projectId, _DB, _serverProject) {
     let users = await this.users.getAll();
     for (let i = 0; i < users.length; i++)
     {
-      if (!users[i].Self) continue;
-      this.users.Self = users[i];
+      if (!users[i].self) continue;
+      this.users.self = users[i];
       this.userIsAbsent = false;
       break;
     }
@@ -514,24 +530,15 @@ function LocalDB_Project(_projectId, _DB, _serverProject) {
     if (metaData.id === undefined) 
     {
       await this.setData("metaData", {title: '❌ [Desync problem] ❌' + this.id, index: -1});
+      this.error = E_LocalProjectNotFound;
       metaData = await this.getData("metaData");
     }
 
     this.title = metaData.title;
     this.index = metaData.index;
 
-    if (this.Server) return this.importData = this.Server.importData;
-
-    this.importData = {
-      users:  users,
-      tags:   await this.tags.getAll()
-    };
-
-    this.Server = new Project({
-      id:         _projectId,
-      title:      this.title,
-      importData: this.importData
-    }, this);
+    if (this._Server) return this.importData = this._Server.importData;
+    this._Server = await (new Project()).importFromLocalProject(this);
   }
 
   this.remove = async function() {
@@ -651,7 +658,7 @@ function LocalDB_Project(_projectId, _DB, _serverProject) {
     this.getAll = async function() {
       let items = await This.getData(Key);
       if (!items) return [];
-      let tasks = items.map(r => new Task(r, This.Server));
+      let tasks = items.map(r => new Task(r, This._Server));
       tasks.sort(function(a, b) {
           if (a.indexInProject > b.indexInProject) return 1;
           if (a.indexInProject < b.indexInProject) return -1;
@@ -672,7 +679,7 @@ function LocalDB_Project(_projectId, _DB, _serverProject) {
     const TypeClass = User;
     TypeBaseClass.call(this, Key, TypeClass);
 
-    this.Self = false;
+    this.self = false;
   }
 
 

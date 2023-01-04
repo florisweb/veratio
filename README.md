@@ -1,4 +1,32 @@
 
+
+Data:
+- cached
+- localDB
+- server
+
+General:
+- get data from cache - which loads from localDB (every cache should be kept up to date with the localDB)
+- fetch actual data in the background -> update localDB and cache
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Version 1.5
 Planned features:
 - [ ] Planner

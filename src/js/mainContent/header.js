@@ -60,8 +60,8 @@ function _MainContent_header() {
 		this.open = async function() {
 			Menu.enableAllOptions();
 
-			if (!MainContent.curProject.users.Self.permissions.project.remove || !Server.connected)	Menu.options[3].disable();
-			if (!MainContent.curProject.users.Self.permissions.project.rename)						Menu.options[4].disable();
+			if (!MainContent.curProject.users.self.permissions.project.remove || !Server.connected)	Menu.options[3].disable();
+			if (!MainContent.curProject.users.self.permissions.project.rename)						Menu.options[4].disable();
 
 			return Menu.open(HTML.optionIcon, {top: 45});
 		}
@@ -74,7 +74,7 @@ function _MainContent_header() {
 
 
 	DoubleClick.register(HTML.titleHolder, function() {
-		if (!MainContent.curProject || !MainContent.curProject.users.Self.permissions.project.rename) return false;
+		if (!MainContent.curProject || !MainContent.curProject.users.self.permissions.project.rename) return false;
 		Popup.renameProjectMenu.open(MainContent.curProject);
 	});
 

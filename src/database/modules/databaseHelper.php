@@ -167,7 +167,8 @@
 	}
 
 
-	function decodeJSON(string $_string, $_fallbackValue) {
+	function decodeJSON($_string, $_fallbackValue) {
+		if (is_null($_string)) return $_fallbackValue;
 		try {
 			return json_decode($_string, true);
 		} 

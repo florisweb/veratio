@@ -185,10 +185,9 @@ function taskPage_tab(_settings) {
 		let project = MainContent.curProject;
 		if (!project) project = Server.global;
 
-		let taskList = await project.getInstance(_fromCache).tasks.getByGroup({type: "overdue", value: "*"});
+		let taskList = await project.tasks.getByGroup({type: "overdue", value: "*"}, _fromCache);
 		if (!taskList || !taskList.length) return false;
-
-		return TaskSorter.defaultSort(taskList);
+		return taskList;
 	}
 }
 
@@ -238,9 +237,8 @@ function taskPage_tab_today() {
 	}
 
 	async function getTodayTaskList(_fromCache = true) {
-		let taskList = await Server.global.getInstance(_fromCache).tasks.getByDate(new Date());
+		let taskList = await Server.accessPoints.todayTab.getTasks();
 		if (!taskList) return [];
-
 
 		let finalList = [];
 		let promises = [];
@@ -252,7 +250,6 @@ function taskPage_tab_today() {
 			}));
 		}
 		await Promise.all(promises);
-
 		return TaskSorter.defaultSort(finalList);
 	}
 
@@ -266,7 +263,7 @@ function taskPage_tab_today() {
 
 	this.taskIsMine = async function(_task, _fromCache) {
 		return 	_task.assignedTo.length <= 0 || 
-				_task.assignedTo.includes(_task.project.users.Self.id)
+				_task.assignedTo.includes(_task.project.users.self.id)
 	}
 }
 
@@ -574,7 +571,7 @@ function MainContent_settingsPage() {
 		MainContent.header.setTitleIcon('settings');
 
 		let users = await _project.users.getAll(true);
-		if (_project.users.Self.permissions.users.invite) HTML.inviteHolder.classList.remove("hide");
+		if (_project.users.self.permissions.users.invite) HTML.inviteHolder.classList.remove("hide");
 		This.setMemberItemsFromList(users);
 	}
 
@@ -622,7 +619,7 @@ function MainContent_settingsPage() {
 		setTextToElement(html.children[1], _member.name);
 		setTextToElement(html.children[2].children[1], This.permissionData[parseInt(_member.permissions)].name);
 		DoubleClick.register(html.children[2].children[1], function () {
-			if (!MainContent.curProject.users.Self.permissions.users.changePermissions(_member)) return false;
+			if (!MainContent.curProject.users.self.permissions.users.changePermissions(_member)) return false;
 			Popup.permissionMenu.open(_member.id);
 		})
 
@@ -685,8 +682,8 @@ function MainContent_settingsPage() {
 			let member 		= await MainContent.curProject.users.get(curMemberId);
 
 			Menu.enableAllOptions();
-			if (!MainContent.curProject.users.Self.permissions.users.remove(member))				Menu.options[0].disable();
-			if (!MainContent.curProject.users.Self.permissions.users.changePermissions(member)) 	Menu.options[1].disable();
+			if (!MainContent.curProject.users.self.permissions.users.remove(member))				Menu.options[0].disable();
+			if (!MainContent.curProject.users.self.permissions.users.changePermissions(member)) 	Menu.options[1].disable();
 
 			return Menu.open(_target, {left: -75, top: 30});
 		}

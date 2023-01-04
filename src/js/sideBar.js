@@ -263,8 +263,10 @@ function _SideBar_projectList() {
 	}
 
 
-	this.silentRender = async function(_fromCache) {
-		this.projects = await Server.getProjectList(_fromCache);
+	this.render = async function(_fromCache) {
+		if (!_fromCache) {
+			this.projects =  await Server.fetchProjectList();
+		} else this.projects = Server.projectList;
 
 		HTML.projectsHolder.innerHTML = "";
 		for (let project of this.projects) project.HTML = createProjectHTML(project);
@@ -276,29 +278,28 @@ function _SideBar_projectList() {
 
 	this.quickFillProjectHolder = async function() {
 		this.setLoadingIconStatus(true);
-		await this.silentRender(true)
-		this.silentRender(false).then(function () {
+		await this.render(true)
+		this.render(false).then(function () {
 			SideBar.projectList.setLoadingIconStatus(false);
 		});
 	}
 
 	this.fillProjectHolder = async function() {
 		this.setLoadingIconStatus(true);
-		await this.silentRender(true)
-		await this.silentRender(false);
+		await this.render(true)
+		await this.render(false);
 		this.setLoadingIconStatus(false);
 	}
 
 	this.updateProjectInfo = async function(_fromCache) {
 		await LocalDB.isBussy();
 
-		console.log('updateProjectInfo');
 		let promises = [];
 		for (let project of this.projects) 
 		{
 			promises.push(new Promise(async function(resolve) {
-				let text = await getProjectInfoText(project, _fromCache);
-				setTextToElement(project.HTML.children[2], text);
+				// let text = await getProjectInfoText(project, _fromCache);
+				// setTextToElement(project.HTML.children[2], text);
 				resolve();
 			}));
 		}

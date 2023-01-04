@@ -1,9 +1,9 @@
 <?php
 	require __DIR__ . '/../getProjectFromUserData.php'; // Does the necessery checks and writes to the $project variable
 	require_once __DIR__ . "/../../modules/userComponent.php";
-	if (!isset($_GET['user'])) die(createErrorResponse(E_INVALID_PARAMETERS));
+	if (!isset($_POST['user'])) die(createErrorResponse(E_INVALID_PARAMETERS));
 
-	$userArray = decodeJSON($_GET['user'], false);
+	$userArray = decodeJSON($_POST['user'], false);
 	if (!$userArray) die(createErrorResponse(E_INVALID_PARAMETERS));
 	$user = new User(arrayToObject($userArray));
 

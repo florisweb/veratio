@@ -22,7 +22,11 @@
 	}
 
 	function createResponse($_resultOrError) {
-		if (in_array($_resultOrError, $GLOBALS['Errors'])) return createErrorResponse($_resultOrError);
+		if (isError($_resultOrError)) return createErrorResponse($_resultOrError);
 		return createResultResponse($_resultOrError);
+	}
+
+	function isError($_error) {
+		return in_array($_error, $GLOBALS['Errors']);
 	}
 ?>

@@ -1,13 +1,14 @@
 <?php
 	class User extends Struct {
 		protected $requiredProperties = ['id', 'permissions', 'type'];
-		protected $optionalProperties = ['name'];
+		protected $optionalProperties = ['name', 'self'];
 
 		public string $id;
 		public string $name;
 
 		public int $permissions;
 		public string $type;
+		public bool $self = false;
 
 		public string $creatorId = '';
 		public function __construct($_item) {
@@ -46,7 +47,7 @@
 	class Task extends Struct {
 		public static $GroupTypes = ["date", "default", "overdue", "toPlan"];
 		protected $requiredProperties = ['id', 'title'];
-		protected $optionalProperties = ['finished', 'groupType', 'groupValue', 'deadLine', 'tagId', 'assignedTo', 'creatorId'];
+		protected $optionalProperties = ['finished', 'groupType', 'groupValue', 'deadLine', 'tagId', 'assignedTo', 'creatorId', 'projectId'];
 
 		public string $id;
 		public string $title;
@@ -60,6 +61,7 @@
 
 		public Array $assignedTo = [];
 		public string $creatorId = '';
+		public string $projectId = '';
 
 
 		public function __construct($_item) {

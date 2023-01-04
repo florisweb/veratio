@@ -11,12 +11,13 @@ function _app() {
   this.inPhoneMode = false;
 
   this.setup = async function() {
-    installServiceWorker();
+    // installServiceWorker();
     await LocalDB.setup();
     await Server.setup();
+    await LocalDB.resyncWithServer();
 
-    let cachedOperations = await LocalDB.getCachedOperationsCount();
-    if (cachedOperations) await LocalDB.sendCachedOperations();
+    // let cachedOperations = await LocalDB.getCachedOperationsCount();
+    // if (cachedOperations) await LocalDB.sendCachedOperations();
 
 
     document.body.addEventListener("keydown", function(_e) {
@@ -56,7 +57,7 @@ function _app() {
     MainContent.stopLoadingAnimation();
 
 
-    Server.onReConnect(); // Don't await, so it can sync in the background as to not keep the user waiting
+    // Server.onReConnect(); // Don't await, so it can sync in the background as to not keep the user waiting
   }
 
   function installServiceWorker() {
@@ -73,8 +74,7 @@ function _app() {
 
 
   this.update = async function() {
-    MainContent.curProject = await Server.getProject(MainContent.curProject.id, true);
-
+    MainContent.curProject = Server.getProject(MainContent.curProject.id);
     MainContent.startLoadingAnimation();
     await SideBar.projectList.fillProjectHolder();
 

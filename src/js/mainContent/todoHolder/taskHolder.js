@@ -200,11 +200,8 @@ function TaskHolder_default(_config, _taskHolderIndex, _title) {
 	TaskHolder.call(this, _config, "default", _taskHolderIndex);
 	TaskHolder_createMenuConstructor.call(this, _config);
 	
-	let project; 
-	Server.getProject(MainContent.curProjectId).then(function (_result) {
-		project = _result;
-		if (project && !project.users.Self.permissions.tasks.update) This.createMenu.disable();
-	});
+	let project = Server.getProject(MainContent.curProjectId)
+	if (project && !project.users.self.permissions.tasks.update) This.createMenu.disable();
 
 	this.shouldRenderTask = function(_task) {
 		if (this.config.title == "Planned" && _task.groupType != "date") return false;
@@ -224,11 +221,8 @@ function TaskHolder_toPlan(_config, _taskHolderIndex) {
 	TaskHolder.call(this, _config, "toPlan", _taskHolderIndex);
 	TaskHolder_createMenuConstructor.call(this, _config);
 	
-	let project; 
-	Server.getProject(MainContent.curProjectId).then(function (_result) {
-		project = _result;
-		if (project && !project.users.Self.permissions.tasks.update) This.createMenu.disable();
-	});
+	let project = Server.getProject(MainContent.curProjectId);
+	if (project && !project.users.self.permissions.tasks.update) This.createMenu.disable();
 	
 
 	this.shouldRenderTask = function(_task) {
@@ -255,11 +249,8 @@ function TaskHolder_date(_config, _taskHolderIndex, _date) {
 	TaskHolder_createMenuConstructor.call(this, _config);
 
 	
-	let project; 
-	Server.getProject(MainContent.curProjectId).then(function (_result) {
-		project = _result;
-		if (project && !project.users.Self.permissions.tasks.update) This.createMenu.disable();
-	});
+	let project = Server.getProject(MainContent.curProjectId);
+	if (project && !project.users.self.permissions.tasks.update) This.createMenu.disable();
 
 	this.shouldRenderTask = function(_task) {
 		if (_task.groupType != "date") return false;
@@ -1099,7 +1090,7 @@ function TaskHolder_createMenu(_parent) {
 
 				groupType: 		Parent.type,
 				groupValue: 	'',
-				creatorId: 		this.project.users.Self.id,
+				creatorId: 		this.project.users.self.id,
 			}, this.project);
 			console.log('create task', 'has project:', this.project);
 

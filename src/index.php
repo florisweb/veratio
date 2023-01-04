@@ -1,14 +1,5 @@
 <?php
-	$enableRedirect = false;
-	function APP_noAuthHandler() {
-		if (!$enableRedirect) return;
-		header("Location: " . $GLOBALS['UserDomainUrl'] . '/login?redirect=' . $GLOBALS['ProjectUrls']['veratioDev']);
-		die("E_noAuth");
-	}
-
-	require_once __DIR__ . "/database/modules/app.php";
-	$PM->includePacket('GLOBALS', '1.0');
-	$enableRedirect = true;
+	require_once __DIR__ . "/database/modules/CurUser.php";
 ?><!DOCTYPE html>
 <html>
 	<head>
@@ -26,7 +17,7 @@
 	</head>	
 	<body class="appLoading">
 		<?php
-			if ($GLOBALS['App']->isLinkUser)
+			if ($GLOBALS['CurUser']->isLinkUser)
 			{
 				echo "<script>const LinkUser = {link: '" . (string)$_GET["link"] . "'}</script>";
 			} else {

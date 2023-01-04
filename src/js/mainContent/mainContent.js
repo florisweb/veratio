@@ -185,12 +185,12 @@ function _MainContent_optionMenu() {
 
 		Menu.enableAllOptions();
 		Menu.showAllOptions();
-		if (!project.users.Self.permissions.tasks.remove)						Menu.options[0].disable();
-		if (!project.users.Self.permissions.tasks.finish(curDOMData.task))		Menu.options[1].disable();
-		if (!project.users.Self.permissions.tasks.update || 
+		if (!project.users.self.permissions.tasks.remove)						Menu.options[0].disable();
+		if (!project.users.self.permissions.tasks.finish(curDOMData.task))		Menu.options[1].disable();
+		if (!project.users.self.permissions.tasks.update || 
 			 curDOMData.task.groupType == "overdue")							Menu.options[2].disable();
 
-		if (!project.users.Self.permissions.tasks.update) 
+		if (!project.users.self.permissions.tasks.update) 
 		{
 			Menu.options[3].disable(); 
 			Menu.options[4].disable(); 
@@ -600,11 +600,11 @@ const TaskSorter = new function() {
 	this.sortAssignedToMe = function(_tasks = []) {
 		if (!_tasks) return [];
 		return _tasks.sort(function(a, b) {
-	     	if (!a.project || !a.project.users.Self.id) return 1;
-	    	if (!b.project || !b.project.users.Self.id) return -1;
+	     	if (!a.project || !a.project.users.self.id) return 1;
+	    	if (!b.project || !b.project.users.self.id) return -1;
 
-	    	if (a.assignedTo.includes(a.project.users.Self.id)) return -1;
-	    	if (b.assignedTo.includes(b.project.users.Self.id)) return 1;
+	    	if (a.assignedTo.includes(a.project.users.self.id)) return -1;
+	    	if (b.assignedTo.includes(b.project.users.self.id)) return 1;
 		});
 	}
 }

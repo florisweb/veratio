@@ -7,6 +7,21 @@
 	class UserComponent extends TypeComponent {
 		protected $Type = 'users';
 		
+		public function getAll() {
+			$users = parent::getAll();
+			if (!is_array($users)) return $users;
+			if (!$this->Project->curUser) return $users;
+
+			for ($i = 0; $i < sizeof($users); $i++)
+			{
+				if ($users[$i]->id != $this->Project->curUser->id) continue;
+				$users[$i]->self = true;
+				break; // There's only one self anyway, so might as well optimise it a bit
+			}
+			return $users;
+		}
+
+
 		public function remove($_id) {
 			if (!$this->Project->curUser) return E_ACTION_NOT_ALLOWED;
 			$permissions = $this->Project->curUser->permissions;
@@ -37,6 +52,5 @@
 			if ($oldUser) $newUser->type = $oldUser->type;
 			return parent::update($newUser);
 		}
-
 	}
 ?>
