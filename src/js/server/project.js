@@ -3,7 +3,7 @@
 class Project extends ProjectData {
   _Local;
   users = new Project_userComponent(this);
-  // tasks = new Project_taskComponent(this);
+  tasks = new Project_taskComponent(this);
   tags  = new Project_tagComponent(this);
 
   constructor() {

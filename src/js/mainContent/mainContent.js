@@ -316,7 +316,7 @@ function _MainContent_searchOptionMenu() {
 				return tags;
 			break;
 			case projectType: 	return await Server.getProjectList();	break;
-			default: 			return await project.users.getAll(); 	break;
+			default: 			return project.users.list; 	break;
 		}
 	}
 	

@@ -62,12 +62,11 @@ function _TaskRenderer() {
 			
 				async function createMemberText(_userIdList, _project) {
 					if (!_project || !_userIdList || !_userIdList.length) return "";
-					let users = await _project.users.getAll();
 
 					let memberList = [];
 					for (let id of _userIdList)
 					{
-						for (let user of users)
+						for (let user of _project.users.list)
 						{
 							if (user.id != id) continue;
 							memberList.push(user);

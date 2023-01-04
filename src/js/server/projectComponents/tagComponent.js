@@ -1,6 +1,4 @@
 
-
-
 class Project_tagComponent extends Project_TypeComponentBaseClass {
   #list = [];
   constructor(_project) {
@@ -17,4 +15,3 @@ class Project_tagComponent extends Project_TypeComponentBaseClass {
     return this.#list;
   }
 }
-

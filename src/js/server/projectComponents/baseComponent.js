@@ -2,34 +2,13 @@
 class Project_TypeComponentBaseClass {
   #type;
   #typeClass;
-  #project;
+  _project;
 
   constructor(_type, _typeClass, _project) {
     this.#type      = _type;
     this.#typeClass = _typeClass;
-    this.#project   = _project;
+    this._project   = _project;
   }
-
-  
-  // async get(_id) {
-  //   let functionRequest = {
-  //       action: "get",
-  //       type: Type,
-  //       parameters: _id,
-  //       projectId: This.id,
-  //   };
-
-  //   let response = await Server.fetchFunctionRequest(functionRequest);
-  //   if (response.error) return await Local[Type].get(_id);
-
-  //   let item = Encoder.decodeObj(response.result);
-  //   if (!item) return false;
-
-  //   Local[Type].update(new TypeClass(item, This));
-
-  //   return new TypeClass(item, This);
-  // }
-
 
 
   async remove(_id) {

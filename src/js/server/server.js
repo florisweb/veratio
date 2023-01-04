@@ -18,10 +18,10 @@ class Server_GlobalProject {
 
 class Server_GlobalProject_tasks {
   async getByDate(_date, _fromCache) {
-    return this.getByDateRange({date: _date, range: 1}, _fromCache);
+    return this.getByDateRange({date: _date, range: 0}, _fromCache);
   }
   async getByDateRange({date = new Date(), range = 1}, _fromCache) {
-    let response = await Server.fetchData('database/action/task/global/getByDateRange.php', "date=" + date.toString() + "&range=" + Math.max(1, range));
+    let response = await Server.fetchData('database/action/task/global/getByDateRange.php', "date=" + date.toString() + "&range=" + Math.max(0, range));
     if (response.error) return response.error;
     return response.result;
   }
