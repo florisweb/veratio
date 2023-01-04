@@ -21,21 +21,26 @@ class AccessPoint {
 
 class TodayTabAccessPoint extends AccessPoint {
   async getTasks(_fromCache = false) {
-    let todayResponse = await Server.global.tasks.getByDate(new Date(), _fromCache);
-    if (todayResponse.error) return todayResponse.error;
-    return todayResponse.result;
+    return await Server.global.tasks.getByDate(new Date(), _fromCache);
   }
 }
 
 
 
 class ProjectTabAccessPoint extends AccessPoint {
-  async getTasks(_projectId, _fromCache = false) {
-    if (_fromCache)
-    {
-
-    }
-
-    return 
+  async getPlannedTasks(_projectId, _fromCache) {
+    let project = Server.getProject(_projectId);
+    if (!project) return false;
+    return await project.tasks.getByDateRange({date: new Date(), range: 365}, _fromCache);
+  }
+  async getDefaultTasks(_projectId, _fromCache) {
+    let project = Server.getProject(_projectId);
+    if (!project) return false;
+    return await project.tasks.getByGroup({groupType: 'default'}, _fromCache);
+  }
+  async getToBePlannedTasks(_projectId, _fromCache) {
+    let project = Server.getProject(_projectId);
+    if (!project) return false;
+    return await project.tasks.getByGroup({groupType: 'toPlan'}, _fromCache);
   }
 }

@@ -400,7 +400,7 @@ function taskPage_tab_project() {
 		
 		MainContent.header.showItemsByPage("project");
 		MainContent.header.setTitle(project.title);
-		MainContent.header.setMemberList(await project.users.list);
+		MainContent.header.setMemberList(project.users.list);
 
 		await This.addNotPlannedTaskHolder(false, true);
 		await This.addToBePlannedTaskHolder(true, true);
@@ -409,8 +409,8 @@ function taskPage_tab_project() {
 
 
 	async function onSilentRender(_fromCache) {
-		let toBePlannedTasks = await getToBePlannedTaskList(_fromCache);
-		let plannedTasks = await getPlannedTaskList(_fromCache);
+		let toBePlannedTasks = TaskSorter.defaultSort(await Server.accessPoints.projectTab.getToBePlannedTasks(project.id, _fromCache))
+		let plannedTasks = TaskSorter.defaultSort(await Server.accessPoints.projectTab.getPlannedTasks(project.id, _fromCache))
 		let plannedTaskHolderExists = false;
 		let toBePlannedTaskHolderExists = false;
 
@@ -441,7 +441,7 @@ function taskPage_tab_project() {
 						break;
 					}
 
-					let taskList = await getNotPlannedTaskList(_fromCache);
+					let taskList = TaskSorter.defaultSort(await Server.accessPoints.projectTab.getDefaultTasks(project.id, _fromCache))
 					await taskHolder.task.setTaskList(taskList);
 				break;
 			}
@@ -451,11 +451,7 @@ function taskPage_tab_project() {
 		if (plannedTasks.length && !plannedTaskHolderExists) await This.addPlannedTaskHolder(true, _fromCache);
 	}
 
-	
-	async function getNotPlannedTaskList(_fromCache) {
-		let taskList =  await project.getInstance(_fromCache).tasks.getByGroup({type: "default", value: "*"});
-		return TaskSorter.defaultSort(taskList);
-	}
+
 
 	this.addNotPlannedTaskHolder = async function(_collapseTaskList = false, _fromCache) {
 		let taskHolder = MainContent.taskHolder.add(
@@ -466,20 +462,16 @@ function taskPage_tab_project() {
 			['']
 		);
 
-		let tasks = await getNotPlannedTaskList(_fromCache);
+		let tasks = await Server.accessPoints.projectTab.getDefaultTasks(project.id, _fromCache)
+		tasks = TaskSorter.defaultSort(tasks);
 		if (_collapseTaskList && tasks.length != 0) taskHolder.collapseTaskList();
 		taskHolder.task.addTaskList(tasks);
 	}
 
 
-
-	async function getPlannedTaskList(_fromCache) {
-		let taskList = await project.getInstance(_fromCache).tasks.getByDateRange({date: new Date(), range: 1000});
-		return TaskSorter.defaultSort(taskList);
-	}
-
 	this.addPlannedTaskHolder = async function(_collapseTaskList = false, _fromCache = false) {
-		let tasks = await getPlannedTaskList(_fromCache);
+		let tasks = await Server.accessPoints.projectTab.getPlannedTasks(project.id, _fromCache)
+		tasks = TaskSorter.defaultSort(tasks);
 		if (!tasks.length) return;
 		
 		let taskHolder = MainContent.taskHolder.add(
@@ -494,13 +486,10 @@ function taskPage_tab_project() {
 	}
 
 
-	async function getToBePlannedTaskList(_fromCache) {
-		let taskList = await project.getInstance(_fromCache).tasks.getByGroup({type: "toPlan", value: "*"});
-		return TaskSorter.defaultSort(taskList);
-	}
 
 	this.addToBePlannedTaskHolder = async function(_collapseTaskList = false, _fromCache = false) {
-		let tasks = await getToBePlannedTaskList(_fromCache);
+		let tasks = await Server.accessPoints.projectTab.getToBePlannedTasks(project.id, _fromCache)
+		tasks = TaskSorter.defaultSort(tasks);
 		if (!tasks.length) return;
 		
 		let taskHolder = MainContent.taskHolder.add(
