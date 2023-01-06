@@ -38,7 +38,9 @@ class Project_taskComponent extends Project_TypeComponentBaseClass {
     // }
 
   async fetchAll() {
-    return await Server.fetchData("database/project/getProjectTasks.php", "projectId=" + this._project.id);
+    let response = await Server.fetchData("database/project/getProjectTasks.php", "projectId=" + this._project.id);
+    if (response.error) return response.error;
+    return response.result.map(task => new Task(task, this._project));
   }
 
 
@@ -49,13 +51,13 @@ class Project_taskComponent extends Project_TypeComponentBaseClass {
   async getByDateRange({date = new Date(), range = 1}, _fromCache) {
     let response = await Server.fetchData('database/action/task/getByDateRange.php', "date=" + date.toString() + "&range=" + Math.max(0, range) + "&projectId=" + this._project.id);
     if (response.error) return response.error;
-    return response.result;
+    return response.result.map(task => new Task(task, this._project));
   }
   
   async getByGroup({groupType = 'default', groupValue = '*'}, _fromCache) {
     let response = await Server.fetchData('database/action/task/getByGroup.php', "groupType=" + groupType + "&groupValue=" + groupValue + "&projectId=" + this._project.id);
     if (response.error) return response.error;
-    return response.result;
+    return response.result.map(task => new Task(task, this._project));
   }
 
 

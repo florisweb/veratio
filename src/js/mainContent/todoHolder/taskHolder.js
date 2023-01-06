@@ -777,7 +777,6 @@ function TaskHolder_createMenu(_parent) {
 		Parent.HTML.createMenuHolder.classList.remove("close");
 		Parent.HTML.inputField.focus();
 		setTimeout(() => {
-			console.log(window.p = Parent.HTML.inputField);
 			let newScrollTop = mainContentHolder.scrollTop + Parent.HTML.inputField.getBoundingClientRect().top - (window.innerHeight - 540); // TODO: 300 is hardcoded, 
 			scrollTo(mainContentHolder, newScrollTop, 300);
 		}, 1); // for safari on ios

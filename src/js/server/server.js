@@ -23,12 +23,12 @@ class Server_GlobalProject_tasks {
   async getByDateRange({date = new Date(), range = 1}, _fromCache) {
     let response = await Server.fetchData('database/action/task/global/getByDateRange.php', "date=" + date.toString() + "&range=" + Math.max(0, range));
     if (response.error) return response.error;
-    return response.result;
+    return response.result.map(task => new Task(task, this._project));
   }
    async getByGroup({groupType = 'default', groupValue = '*'}, _fromCache) {
     let response = await Server.fetchData('database/action/task/global/getByGroup.php', "groupType=" + groupType + "&groupValue=" + groupValue);
     if (response.error) return response.error;
-    return response.result;
+    return response.result.map(task => new Task(task, this._project));
   }
 }
 

@@ -70,7 +70,10 @@ class Task extends DataObject {
   indexInProject;
 
   #project;
-  get project() {return this.#project;}
+  get project() {
+    if (this.#project) return this.#project;
+    return Server.getProject(this.projectId);
+  }
 
   constructor(_data, _project) {
     super();

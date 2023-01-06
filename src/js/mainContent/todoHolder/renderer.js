@@ -5,12 +5,10 @@ function _TaskRenderer() {
 		scrollHolder: $(".mainContentPage")[0]
 	}
 
-	this.renderTask = async function(_taskWrapper, _renderSettings, _fromCache = false) {
+	this.renderTask = async function(_taskWrapper, _renderSettings) {
 		if (!_taskWrapper) 		return false;
 		let project 			= _taskWrapper.task.project;
-		if (!project) console.warn('invalid project', _taskWrapper);
-		if (!project) project 	= await Server.getProject(_taskWrapper.task.projectId, _fromCache);
-		if (!project) 			return false;
+		if (!project) {console.warn('invalid project', _taskWrapper); return false;}
 
 		let html = createTaskHTMLTemplate();
 		fillInTaskData(html, _taskWrapper.task, project, _renderSettings);
