@@ -18,6 +18,13 @@ class Project_userComponent extends Project_TypeComponentBaseClass {
     let self = this.#list.find((_user) => _user.self);
     return new Project_userComponent_Self(self);
   }
+
+  async fetchAll() {
+    let response = await Server.fetchData("database/action/user/getAll.php", "projectId=" + this._project.id);
+    if (response.error) return response.error;
+    this.#list = response.result.map(user => new User(user, this._project));
+    return this.#list;
+  }
 }
 
 

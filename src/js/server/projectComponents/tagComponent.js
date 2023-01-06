@@ -14,4 +14,13 @@ class Project_tagComponent extends Project_TypeComponentBaseClass {
   get list() {
     return this.#list;
   }
+
+
+  async fetchAll() {
+    let response = await Server.fetchData("database/action/tag/getAll.php", "projectId=" + this._project.id);
+    if (response.error) return response.error;
+    console.log(response);
+    this.#list = response.result.map(tag => new Tag(tag, this._project));
+    return this.#list;
+  }
 }

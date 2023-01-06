@@ -438,7 +438,7 @@ function _Popup_createTag() {
 
 		tag = await CurProject.tags.update(tag);
 		if (!tag) return console.error("Something went wrong while creating a tag:", tag);
-		await CurProject.tags.getAll(true);
+		await CurProject.tags.fetchAll();
 		this.close(await CurProject.tags.get(tag.id));
 	} 
 	
@@ -461,8 +461,7 @@ function _Popup_createTag() {
 	}
 
 	async function testIfTagTitleAlreadyExists(_tagTitle) {
-		let tags = await CurProject.tags.getAll(true);
-		for (tag of tags) 
+		for (let tag of CurProject.tags.list) 
 		{
 			if (tag.title.toLowerCase() == _tagTitle.toLowerCase()) return true;
 		}
@@ -548,7 +547,7 @@ function _Popup_tagManager() {
 		CurProject = _project;
 		if (!CurProject) return;
 
-		setTagList(await CurProject.tags.getAll(true));
+ 		setTagList(await CurProject.tags.fetchAll());
 
 		enableFeaturesByPermissions();	
 	}
