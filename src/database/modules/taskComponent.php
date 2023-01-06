@@ -53,13 +53,10 @@
 
 
 		public function update($_newTask) {
-			$newTask = new Task(arrayToObject($_newTask));
-			if (!$newTask || $newTask->Error) return E_INVALID_PARAMETERS;
-
+			if (!$_newTask || $_newTask->Error) return E_INVALID_PARAMETERS;
 			if (!$this->Project->curUser) return E_ACTION_NOT_ALLOWED;
-			$oldTask = $this->get($_newTask['id']);
+			$oldTask = $this->get($_newTask->id);
 			$permissions = $this->Project->curUser->permissions;
-
 
 			if ($permissions < 1) // Read only permissions
 			{
@@ -67,33 +64,34 @@
 
 				if (!in_array($this->Project->curUser->id, $oldTask->assignedTo)) return E_ACTION_NOT_ALLOWED;
 				// Only allowed to change the finish-state
-				$finished = $newTask->finished;
-				$newTask = $oldTask;
-				$newTask->finished = $finished;
+				$finished = $_newTask->finished;
+				$_newTask = $oldTask;
+				$_newTask->finished = $finished;
 			}
 
+
 			// Filter the deadline
-			$deadLine = filterDate($newTask->deadLine);
-			$newTask->deadLine = $deadLine ? $deadLine : "";
+			$deadLine = filterDate($_newTask->deadLine);
+			$_newTask->deadLine = $deadLine ? $deadLine : "";
 
 
 
 			// Group-specific checks
-			switch ($newTask->groupType)
+			switch ($_newTask->groupType)
 			{
 				case "overdue":
-					if ($newTask->finished) $newTask->groupType = "date";
+					if ($_newTask->finished) $_newTask->groupType = "date";
 				break;
 				case "date":
 					$curDate = new DateTime();
 					$curTime = strtotime($curDate->format('d-m-Y'));
 
-					$time = strtotime((new DateTime($newTask->groupValue))->format('d-m-Y'));
-					if ($time < $curTime && !$newTask->finished) $newTask->groupType = "overdue";
+					$time = strtotime((new DateTime($_newTask->groupValue))->format('d-m-Y'));
+					if ($time < $curTime && !$_newTask->finished) $_newTask->groupType = "overdue";
 				break;
 			}
 
-			return parent::update($newTask);
+			return parent::update($_newTask);
 		}
 
 

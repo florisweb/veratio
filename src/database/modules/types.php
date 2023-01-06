@@ -25,7 +25,7 @@
 
 		public string $id;
 		public string $title;
-		public string $colour;
+		public string $colour = '';
 
 		public string $creatorId = '';
 		public function __construct($_item) {
@@ -49,14 +49,14 @@
 		protected $requiredProperties = ['id', 'title'];
 		protected $optionalProperties = ['finished', 'groupType', 'groupValue', 'deadLine', 'tagId', 'assignedTo', 'creatorId', 'projectId'];
 
-		public string $id;
-		public string $title;
+		public string $id = '';
+		public string $title = '';
 		public bool $finished = false;
 
 		public string $groupType = 'default';
 		public string $groupValue = '';
 
-		public string $deadLine;
+		public string $deadLine = '';
 		public string $tagId = '';
 
 		public Array $assignedTo = [];
@@ -137,6 +137,7 @@
 	}
 
 	function filterDate($_dateStr) {
+		if (!$_dateStr || !is_string($_dateStr)) return false;
 		$dateParts = explode("-", $_dateStr);
 		if (sizeof($dateParts) != 3) return false;
 
