@@ -1037,7 +1037,7 @@ function TaskHolder_createMenu(_parent) {
 
 			if (_task && _task.project) 					This.setProject(_task.project);
 			if (!This.project && MainContent.curProject) 	This.setProject(MainContent.curProject);
-			if (!This.project)								This.setProject((await Server.getProjectList())[0]);
+			if (!This.project)								This.setProject(Server.projectList[0]);
 
 			if (!_task || !This.project) return;
 		

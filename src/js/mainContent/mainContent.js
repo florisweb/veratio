@@ -309,13 +309,13 @@ function _MainContent_searchOptionMenu() {
 		switch (_type)
 		{
 			case tagType: 	
-				let tags = Object.assign([], await project.tags.getAll());
+				let tags = Object.assign([], project.tags.list);
 				if (!MainContent.taskHolder.curCreateMenu.curTask.tag) return tags;
 				
 				tags.push({id: false, title: "No tag", colour: new Color("#000"), isNoOptionItem: true}); 
 				return tags;
 			break;
-			case projectType: 	return await Server.getProjectList();	break;
+			case projectType: 	return Server.projectList;	break;
 			default: 			return project.users.list; 	break;
 		}
 	}

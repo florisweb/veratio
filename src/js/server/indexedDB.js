@@ -218,10 +218,9 @@ const LocalDB = new function() {
   this.resyncWithServer = async function() {
     if (!Server.connected) return false;
     await this.clearDB();
-    let projects = await Server.getProjectList(false);
 
     let promises = [];
-    for (let project of projects)
+    for (let project of Server.projectList)
     {
       let localProject = await getProject(project.id, project);
       let response = await project.tasks.getAll();

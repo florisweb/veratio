@@ -3,6 +3,7 @@
 class Server_AccessPoints {
   todayTab = new TodayTabAccessPoint();
   projectTab = new ProjectTabAccessPoint();
+  weekTab   = new WeekTabAccessPoint();
   constructor() {
 
   }
@@ -44,3 +45,25 @@ class ProjectTabAccessPoint extends AccessPoint {
     return await project.tasks.getByGroup({groupType: 'toPlan'}, _fromCache);
   }
 }
+
+
+class WeekTabAccessPoint extends AccessPoint {
+  async getTasksByDateRange(_info, _fromCache) {
+    let tasks = await Server.global.tasks.getByDateRange(_info, _fromCache);
+
+    let shouldRenderTasks = [];
+    for (let task of tasks) {
+       if (!(await MainContent.taskPage.todayTab.taskIsMine(task))) continue;
+       shouldRenderTasks.push(task);
+    }
+
+    return shouldRenderTasks;
+  }
+}
+
+
+
+
+
+
+

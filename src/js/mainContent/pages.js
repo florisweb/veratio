@@ -280,18 +280,18 @@ function taskPage_tab_week() {
 		onSilentRender: onSilentRender
 	});
 
-	
+	let startDate = new Date();
+	let daysLoaded = 7;
 	async function onOpen() {
 		MainContent.header.showItemsByPage("taskPage - week");
 		MainContent.header.setTitle("This week");
 		MainContent.header.setMemberList([]);
 
+		startDate = new Date();
+		daysLoaded = 0;
 		This.loadMoreDays(7, new Date());
 	}
 
-	async function shouldRenderTask(_task) {
-		return await MainContent.taskPage.todayTab.taskIsMine(_task);
-	}
 
 	function addTaskHolder(_date, _taskList) {
 		let taskHolder 	= MainContent.taskHolder.add(
@@ -306,71 +306,40 @@ function taskPage_tab_week() {
 	}
 
 	async function onSilentRender(_fromCache) {
+		let splitTasks = getTaskListByDateRange({date: startDate, range: daysLoaded}, _fromCache);
 		for (let taskHolder of MainContent.taskHolder.list)
 		{
-			switch (taskHolder.type) 
-			{
-				case "overdue": break; // is being handled by the general tab-class
-				case "date": 
-					let taskList = await getTaskListByDate(taskHolder.date, _fromCache); 
-					await taskHolder.task.setTaskList(taskList);
-				break;
-			}
+			if (taskHolder.type !== 'date') continue;
+			let taskList = splitTasks[taskHolder.date.toString()];
+			if (!taskList) continue;
+			await taskHolder.task.setTaskList(taskList);
 		}
 	}
 
-	async function getTaskListByDate(_date, _fromCache) {
-		let returnList = [];
-		let taskList = [];
-		if (_fromCache) 
-		{ 
-			taskList = await Server.global.getLocal().tasks.getByDate(_date);
-		} else taskList = await Server.global.tasks.getByDate(_date);
-
-		if (!taskList) return returnList;
-		
-		for (let task of taskList)
-		{
-			if (!(await shouldRenderTask(task))) continue;
-			returnList.push(task);
-		}
-		return TaskSorter.defaultSort(returnList);
+	async function getTaskListByDateRange(_info = {date: startDate, range: daysLoaded}, _fromCache) {
+		let taskList = await Server.accessPoints.weekTab.getTasksByDateRange(_info, _fromCache);
+		return splitTasksByDate(TaskSorter.defaultSort(taskList));
 	}
-
-
 
 
 	let loadingMoreDays = false;
-	this.loadMoreDays = async function(_days = 1, _date) {
+	this.loadMoreDays = async function(_days = 1) {
 		if (loadingMoreDays) return false;
 		loadingMoreDays = true;
-		
-		let startDate = _date;
-		if (!startDate) startDate = getNewDate();
+
+		let daysAlreadyLoaded = daysLoaded;
+		daysLoaded += _days;
+		let splitTasks = getTaskListByDateRange({date: startDate.copy().moveDay(daysAlreadyLoaded), range: daysLoaded}, true);
 
 		let promises = [];
 		let taskHolderDataList = [];
-		for (let i = 0; i < _days; i++)
+		for (let i = daysAlreadyLoaded; i < daysLoaded; i++)
 		{
-			promises.push(new Promise(async function (resolve) {
-				let date = startDate.copy().moveDay(i);
-
-				let infoObj = {
-					date: date, 
-					taskList: []
-				}
-				taskHolderDataList.push(infoObj);
-
-				let taskList = await getTaskListByDate(date, true);
-				if (!taskList) return resolve();
-				infoObj.taskList = taskList;
-				
-				resolve();
-			}))	
+			let curDate = startDate.copy().moveDay(i);
+			let taskList = splitTasks[curDate.toString()];
+			if (!taskList) taskList = [];
+			addTaskHolder(curDate, taskList);
 		}
-
-		await Promise.all(promises);
-		for (let info of taskHolderDataList) addTaskHolder(info.date, info.taskList);
 
 		loadingMoreDays = false;
 		This.silentRender(false);
@@ -380,6 +349,17 @@ function taskPage_tab_week() {
 		let lastTaskHolder = MainContent.taskHolder.list[MainContent.taskHolder.list.length - 1];
 		if (lastTaskHolder.type != "date") return false;
 		return lastTaskHolder.date.copy().moveDay(1);
+	}
+
+	function splitTasksByDate(_tasks) {
+		let response = {};
+		for (let task of _tasks) 
+		{
+			if (task.groupType !== 'date') continue;
+			if (!response[task.groupValue]) response[task.groupValue] = [];
+			response[task.groupValue].push(task);
+		}
+		return response;
 	}
 }
 
@@ -552,7 +532,7 @@ function MainContent_settingsPage() {
 
 
 	async function onOpen(_project) {
-		if (!_project) _project = (await Server.getProjectList(true))[0];
+		if (!_project) _project = Server.projectList[0];
 		
 		HTML.inviteHolder.classList.add("hide");
 
