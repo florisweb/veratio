@@ -42,6 +42,7 @@ function _TaskRenderer() {
 		}
 
 		function fillInTaskData(html, task, project, renderSettings) {
+			console.log('fill', project, task);
 			setTextToElement(html.children[2], task.title);
 			setMemberText(html, task, project);
 			setOwnerIndicator(html, task, project);
@@ -77,7 +78,7 @@ function _TaskRenderer() {
 
 
 			async function setOwnerIndicator(html, task, project) {
-				let taskOwner = await project.users.get(task.creatorId);
+				let taskOwner = project.users.get(task.creatorId);
 				if (!taskOwner || taskOwner.self) return;
 
 				html.classList.add("isNotMyTask");
@@ -99,7 +100,7 @@ function _TaskRenderer() {
 
 
 			async function addTagCircle(html, task, project) {
-				let tag = await project.tags.get(task.tagId);
+				let tag = project.tags.get(task.tagId);
 				html.children[1].append(This.createTagCircle(tag, true));
 			}
 

@@ -34,27 +34,9 @@ class Project_TypeComponentBaseClass {
   }
 
   async update(_newItem) {
-    let functionRequest = {
-        action: "update",
-        type: Type,
-        parameters: _newItem.export(),
-        projectId: This.id,
-    };
-
-    let response = await Server.fetchFunctionRequest(functionRequest);
-
-    if (response.error == "E_noConnection" && Local) 
-    {
-      _newItem.creatorId = This.users.self.id;
-      Local[Type].update(_newItem);
-      Local.addCachedOperation(functionRequest);
-      return new TypeClass(_newItem, This);
-    };
-    
-    if (response.error) return response.result;
-    let obj = new TypeClass(response.result, This);
-    Local[Type].update(obj);
-    return obj;
+    let url = 'database/action/' + this.#type.substr(0, this.#type.length - 1) + '/update.php'; // substr to remove the s
+    let response = await Server.fetchData(url, "item=" + JSON.stringify(_newItem.export()) + "&projectId=" + this._project.id);
+    if (response.error) return response.error;
+    return new this.#typeClass(response.result, this._project);
   }
-
 }

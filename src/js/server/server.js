@@ -81,7 +81,7 @@ const Server = new class {
     if (CurUser.linkUserId) parameters += (parameters ? '&' : '') + 'linkId=' + CurUser.linkUserId;
 
     return new Promise((resolve) => {
-      this.sendRequest(_url, parameters).then(async (response) => {
+      this.#sendRequest(_url, parameters).then(async (response) => {
          let result = await response.text();
           try {
             result = Encoder.decodeObj(JSON.parse(result));
@@ -99,7 +99,7 @@ const Server = new class {
   }
 
   
-  sendRequest(_url, _parameters) {
+  #sendRequest(_url, _parameters) {
     return new Promise(function (resolve, error) {
       fetch(_url, {
         method: 'POST', 
