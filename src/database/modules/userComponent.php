@@ -48,7 +48,6 @@
 			if ($permissions < $oldUserPermissions) return E_ACTION_NOT_ALLOWED;  // don't downgrade someone superior
 			if ($permissions < $newUser->permissions) $newUser->permissions = $permissions; // You can only give as much permissions as you have
 
-			$newUser->type = "member";
 			if ($oldUser) $newUser->type = $oldUser->type;
 			return parent::update($newUser);
 		}

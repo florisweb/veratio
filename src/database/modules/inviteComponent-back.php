@@ -18,17 +18,17 @@
 			if (!$this->Project->curUser || $this->Project->curUser->permissions < 2) return E_ACTION_NOT_ALLOWED;
 			$inviteId 			= sha1(uniqid(mt_rand(), true));
 			$emailAdress 		= $this->filterEmailAdress($_emailAdress);
-			if (!$emailAdress) 	return E_INVALID_EMAIL;
+			if (!$emailAdress) 	return "E_invalidEmail";
 
 			$emailExists 		= $this->checkIfEmailAdressAlreadyExists($emailAdress);
-			if ($emailExists) 	return E_EMAIL_ALREADY_INVITED;
-			$user = new User(arrayToObject(
-				$xc = array(
+			if ($emailExists) 	return "E_emailAlreadyInvited";
+
+			$user = new User(arrayToObject(array(
 				"id" 			=> sha1($inviteId),
 				"name"			=> $emailAdress,
 				"permissions" 	=> 1,
 				"type"			=> "invite"
-			)));
+			));
 
 			$messageSend = $this->sendMail($emailAdress, $inviteId);
 			if (!$messageSend) return E_INTERNAL;
@@ -46,7 +46,7 @@
 				"name"			=> "Link " . substr(sha1($inviteId), 0, 4),
 				"permissions" 	=> 1,
 				"type"			=> "link"
-			)));
+			));
 
 			$result = $this->userComponent->update($user);
 			if (isError($result)) return $result;
@@ -68,77 +68,77 @@
 
 
 
-		// // public function joinAsMember($_originalInviteId, $_inviteUserObj) {
-		// // 	$userName 	= $_inviteUserObj["name"];
+		// public function joinAsMember($_originalInviteId, $_inviteUserObj) {
+		// 	$userName 	= $_inviteUserObj["name"];
 
-		// // 	$userId 	= $this->getUserId();
-		// // 	$user 		= $GLOBALS["USER"]->getById($userId);
-		// // 	if (!$user) return "E_userNotFound";
+		// 	$userId 	= $this->getUserId();
+		// 	$user 		= $GLOBALS["USER"]->getById($userId);
+		// 	if (!$user) return "E_userNotFound";
 
-		// // 	$newUser 	= array(
-		// // 		"id" 			=> sha1($userId),
-		// // 		"name" 			=> $user["name"],
-		// // 		"permissions" 	=> $_inviteUserObj["permissions"],
-		// // 		"type" 			=> "member"
-		// // 	);
+		// 	$newUser 	= array(
+		// 		"id" 			=> sha1($userId),
+		// 		"name" 			=> $user["name"],
+		// 		"permissions" 	=> $_inviteUserObj["permissions"],
+		// 		"type" 			=> "member"
+		// 	);
 
-		// // 	$this->joinByInviteId(sha1($_originalInviteId), $newUser);
-		// // }
+		// 	$this->joinByInviteId(sha1($_originalInviteId), $newUser);
+		// }
 
-		// // private function joinByInviteId($_inviteUser_placeholderId, $_newUser) {
-		// // 	$success = $this->DTTemplate->remove($_inviteUser_placeholderId);
-		// // 	if (!$success) return false;
+		// private function joinByInviteId($_inviteUser_placeholderId, $_newUser) {
+		// 	$success = $this->DTTemplate->remove($_inviteUser_placeholderId);
+		// 	if (!$success) return false;
 
-		// // 	$userAlreadyExists = $this->DTTemplate->get($_newUser["id"]);
-		// // 	if ($userAlreadyExists) return true;
+		// 	$userAlreadyExists = $this->DTTemplate->get($_newUser["id"]);
+		// 	if ($userAlreadyExists) return true;
 			
-		// // 	$success = $this->DTTemplate->update($_newUser);
-		// // 	return $success;
-		// // }
+		// 	$success = $this->DTTemplate->update($_newUser);
+		// 	return $success;
+		// }
 
-		// // public function bindAccount($_originalInviteId, $_inviteUserObj) {
-		// // 	$this->joinAsMember($_originalInviteId, $_inviteUserObj);
-		// // 	$oldId 		= $_inviteUserObj["id"];
-		// // 	$newId 		= $this->getUserId();
-		// // 	if (!$newId) return;
-		// // 	$newId = sha1($newId);
+		// public function bindAccount($_originalInviteId, $_inviteUserObj) {
+		// 	$this->joinAsMember($_originalInviteId, $_inviteUserObj);
+		// 	$oldId 		= $_inviteUserObj["id"];
+		// 	$newId 		= $this->getUserId();
+		// 	if (!$newId) return;
+		// 	$newId = sha1($newId);
 			
-		// // 	// Transfer ownership of all tasks and tags
+		// 	// Transfer ownership of all tasks and tags
 
-		// // 	$this->Project->users->Self['permissions']	= 4; // Raise permissions temporarily to change the ids
-		// // 	$this->Project->users->Self['id'] 			= $newId;
-
-
-		// // 	$tags = $this->Project->tags->getAll();
-		// // 	foreach ($tags as $tag)
-		// // 	{
-		// // 		if ($tag["creatorId"] != $oldId) continue;
-		// // 		$tag["creatorId"] = $newId;
-		// // 		$this->Project->tags->update($tag);
-		// // 	}
+		// 	$this->Project->users->Self['permissions']	= 4; // Raise permissions temporarily to change the ids
+		// 	$this->Project->users->Self['id'] 			= $newId;
 
 
-		// // 	$tasks = $this->Project->tasks->getAll();
-		// // 	foreach ($tasks as $task)
-		// // 	{
-		// // 		if ($task["creatorId"] != $oldId) continue;
-		// // 		$task["creatorId"] = $newId;
-		// // 		$this->Project->tasks->update($task);
-		// // 	}
+		// 	$tags = $this->Project->tags->getAll();
+		// 	foreach ($tags as $tag)
+		// 	{
+		// 		if ($tag["creatorId"] != $oldId) continue;
+		// 		$tag["creatorId"] = $newId;
+		// 		$this->Project->tags->update($tag);
+		// 	}
 
-		// // 	foreach ($tasks as $task)
-		// // 	{
-		// // 		if (!in_array($oldId, $task["assignedTo"])) continue;
-		// // 		for ($i = 0; $i < sizeof($task["assignedTo"]); $i++)
-		// // 		{
-		// // 			if ($task["assignedTo"][$i] != $oldId) continue;
-		// // 			$task["assignedTo"][$i] = $newId;
-		// // 			break;
-		// // 		}
 
-		// // 		$this->Project->tasks->update($task);
-		// // 	}
-		// // }
+		// 	$tasks = $this->Project->tasks->getAll();
+		// 	foreach ($tasks as $task)
+		// 	{
+		// 		if ($task["creatorId"] != $oldId) continue;
+		// 		$task["creatorId"] = $newId;
+		// 		$this->Project->tasks->update($task);
+		// 	}
+
+		// 	foreach ($tasks as $task)
+		// 	{
+		// 		if (!in_array($oldId, $task["assignedTo"])) continue;
+		// 		for ($i = 0; $i < sizeof($task["assignedTo"]); $i++)
+		// 		{
+		// 			if ($task["assignedTo"][$i] != $oldId) continue;
+		// 			$task["assignedTo"][$i] = $newId;
+		// 			break;
+		// 		}
+
+		// 		$this->Project->tasks->update($task);
+		// 	}
+		// }
 
 
 
@@ -189,6 +189,7 @@
 
 			return preg_replace("/[^0-9,^a-z,^A-Z,.,@,,]/", "", $_emailAdress);
 		}
-	}
 
+	
+	}
 ?>

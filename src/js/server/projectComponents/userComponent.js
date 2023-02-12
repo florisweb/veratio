@@ -25,6 +25,19 @@ class Project_userComponent extends Project_TypeComponentBaseClass {
     this.#list = response.result.map(user => new User(user, this._project));
     return this.#list;
   }
+
+
+  async inviteByEmail(_email) {
+    let response = await Server.fetchData("database/action/user/invite/byEmail.php", "projectId=" + this._project.id + "&email=" + _email);
+    if (!response.error) await this.fetchAll();
+    return response;
+  }
+  async inviteByLink() {
+    let response = await Server.fetchData("database/action/user/invite/byLink.php", "projectId=" + this._project.id);
+    if (response.error) return false;
+    await this.fetchAll();
+    return response.result;
+  }
 }
 
 

@@ -545,10 +545,10 @@ function MainContent_settingsPage() {
 
 
 	this.inviteUserByLink = async function() {
-		let response = await MainContent.curProject.users.inviteByLink();
-		if (response.error) console.error("An error accured while inviting a user:", response);
+		let result = await MainContent.curProject.users.inviteByLink();
+		if (result === false) return console.error("An error accured while inviting a user:");
 
-		Popup.inviteByLinkCopyMenu.open(window.location.href.split('?')[0] + "?link=" + response.result.id);
+		Popup.inviteByLinkCopyMenu.open(window.location.href.split('?')[0] + "?link=" + result.id);
 		This.open(MainContent.curProject);
 	}
 

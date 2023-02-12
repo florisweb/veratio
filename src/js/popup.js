@@ -163,19 +163,18 @@ function _Popup_inviteByEmail() {
 
 	this.inviteUser = async function() {
 		let email = emailInputField.getValue();		
-		let returnVal = await MainContent.curProject.users.inviteByEmail(email);
-		if (returnVal.result !== true) 
+		let response = await MainContent.curProject.users.inviteByEmail(email);
+		if (response.error) 
 		{
-			switch (returnVal.error)
+			switch (response.error)
 			{
 				case "E_invalidEmail": return Popup.showMessage({title: "Invalid email", text: "Please enter a valid email-adress.", buttons: [{title: "close", filled: true}]}); break;
 				case "E_emailAlreadyInvited": Popup.showMessage({title: "Already invited", text: "An invite has already been send to this email-adress.", buttons: [{title: "close", filled: true}]}); break;
- 				default: Popup.showMessage({title: "Error while inviting", text: "An error accured while trying to invite a user: " + returnVal.error, buttons: [{title: "close", filled: true}]}); break;
+ 				default: Popup.showMessage({title: "Error while inviting", text: "An error accured while trying to invite a user: " + response.error, buttons: [{title: "close", filled: true}]}); break;
  			}
 		}
 		
 		This.close();
-
 		MainContent.settingsPage.open(MainContent.curProject);
 	}
 }
