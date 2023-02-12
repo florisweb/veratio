@@ -29,7 +29,7 @@
 
 			$user = $this->get($_id);
 			if (!$user) return E_INVALID_PARAMETERS;
-			if ($user->permissions <= $permissions && $user->id !== $this->Project->curUser->id) return E_ACTION_NOT_ALLOWED;
+			if ($user->permissions > $permissions && $user->id !== $this->Project->curUser->id) return E_ACTION_NOT_ALLOWED;
 			return parent::remove($_id);
 		}
 	

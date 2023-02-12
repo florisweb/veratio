@@ -529,7 +529,7 @@ function MainContent_settingsPage() {
 
 
 
-	async function onOpen(_project) {
+	function onOpen(_project) {
 		if (!_project) _project = Server.projectList[0];
 		
 		HTML.inviteHolder.classList.add("hide");
@@ -537,9 +537,8 @@ function MainContent_settingsPage() {
 		MainContent.header.setTitle("Settings - " + _project.title);
 		MainContent.header.setTitleIcon('settings');
 
-		let users = await _project.users.getAll(true);
 		if (_project.users.self.permissions.users.invite) HTML.inviteHolder.classList.remove("hide");
-		This.setMemberItemsFromList(users);
+		This.setMemberItemsFromList(_project.users.list);
 	}
 
 

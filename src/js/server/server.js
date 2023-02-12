@@ -69,6 +69,7 @@ const Server = new class {
         this.#projectList.push(_project);
       }));
     }
+    this.#projectList = [];
     await Promise.all(promises)
     return this.#projectList;
   }
