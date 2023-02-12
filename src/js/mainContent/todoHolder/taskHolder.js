@@ -457,10 +457,6 @@ function TaskHolder_task(_parent) {
 		let taskWrappers = [];
 		for (let task of _newTaskList) taskWrappers.push(this.taskList.add(task));
 
-		// Parent.HTML.todoHolder.innerHTML = '';
-		// let promises = [];
-		// for (let taskWrapper of taskWrappers) promises.push(taskWrapper.render(undefined, true));
-		// await Promise.all(promises);
 		await this.reRenderTaskList();
 	}
 
@@ -653,6 +649,7 @@ function TaskHolder_task(_parent) {
 				Parent.config.renderPreferences,
 				_fromCache
 			);
+			if (This.html === false) return false;
 			
 			if (typeof _insertionIndex != "number" || _insertionIndex == TaskHolder.taskList.length) return Parent.HTML.todoHolder.append(This.html);
 			let insertBeforeElement = Parent.HTML.todoHolder.children[_insertionIndex];

@@ -40,7 +40,7 @@ class TodayTabAccessPoint extends AccessPoint {
 class ProjectTabAccessPoint extends AccessPoint {
   async getPlannedTasks(_projectId, _fromCache) {
     let project = Server.getProject(_projectId);
-    if (!project) return false;
+    if (!project || isError(project)) return false;
     return await project.tasks.getByDateRange({date: new Date(), range: 365}, _fromCache);
   }
   async getDefaultTasks(_projectId, _fromCache) {

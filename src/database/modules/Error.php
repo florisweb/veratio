@@ -6,8 +6,8 @@
 	define('E_INTERNAL', 				'E_INTERNAL');
 	define('E_INVALID_PARAMETERS', 		'E_INVALID_PARAMETERS');
 
-	define('E_INVALID_EMAIL', 			'E_invalidEmail');
-	define('E_EMAIL_ALREADY_INVITED', 	'E_emailAlreadyInvited');
+	define('E_INVALID_EMAIL', 			'E_INVALID_EMAIL');
+	define('E_EMAIL_ALREADY_INVITED', 	'E_EMAIL_ALREADY_INVITED');
 
 	$Errors = [E_NO_AUTH, E_PROJECT_NOT_FOUND, E_USER_NOT_IN_PROJECT, E_ACTION_NOT_ALLOWED, E_INTERNAL, E_INVALID_PARAMETERS, E_INVALID_EMAIL, E_EMAIL_ALREADY_INVITED];
 	global $Errors;
@@ -31,6 +31,7 @@
 	}
 
 	function isError($_error) {
+		if ($_error === true) return false;
 		return in_array($_error, $GLOBALS['Errors']);
 	}
 ?>

@@ -139,7 +139,8 @@ function taskPage_tab(_settings) {
 
 	async function getOverdueTasks(_fromCache = true) {
 		// False defaults to Server.global
-		let tasks = await Server.accessPoints.generalTab.getOverdueTasks(MainContent.curProject ? MainContent.curProject.id : false, _fromCache)
+		let tasks = await Server.accessPoints.generalTab.getOverdueTasks(MainContent.curProject ? MainContent.curProject.id : false, _fromCache);
+		if (isError(tasks)) return false;
 		tasks = TaskSorter.defaultSort(tasks);
 		return tasks;
 	}
@@ -192,7 +193,7 @@ function taskPage_tab_today() {
 
 	async function getTodayTaskList(_fromCache = true) {
 		let taskList = await Server.accessPoints.todayTab.getTasks();
-		if (!taskList) return [];
+		if (!taskList || isError(taskList)) return [];
 
 		let finalList = [];
 		let promises = [];
@@ -272,6 +273,7 @@ function taskPage_tab_week() {
 
 	async function getTaskListByDateRange(_info = {date: startDate, range: daysLoaded}, _fromCache) {
 		let taskList = await Server.accessPoints.weekTab.getTasksByDateRange(_info, _fromCache);
+		if (isError(taskList)) return [];
 		return splitTasksByDate(TaskSorter.defaultSort(taskList));
 	}
 
@@ -386,6 +388,7 @@ function taskPage_tab_project() {
 		);
 
 		let tasks = await Server.accessPoints.projectTab.getDefaultTasks(project.id, _fromCache)
+		if (isError(tasks)) return;
 		tasks = TaskSorter.defaultSort(tasks);
 		if (_collapseTaskList && tasks.length != 0) taskHolder.collapseTaskList();
 		taskHolder.task.addTaskList(tasks);
@@ -394,8 +397,8 @@ function taskPage_tab_project() {
 
 	this.addPlannedTaskHolder = async function(_collapseTaskList = false, _fromCache = false) {
 		let tasks = await Server.accessPoints.projectTab.getPlannedTasks(project.id, _fromCache)
+		if (!tasks.length || isError(tasks)) return;
 		tasks = TaskSorter.defaultSort(tasks);
-		if (!tasks.length) return;
 		
 		let taskHolder = MainContent.taskHolder.add(
 			"default",
@@ -412,8 +415,8 @@ function taskPage_tab_project() {
 
 	this.addToBePlannedTaskHolder = async function(_collapseTaskList = false, _fromCache = false) {
 		let tasks = await Server.accessPoints.projectTab.getToBePlannedTasks(project.id, _fromCache)
+		if (!tasks.length || isError(tasks)) return;
 		tasks = TaskSorter.defaultSort(tasks);
-		if (!tasks.length) return;
 		
 		let taskHolder = MainContent.taskHolder.add(
 			"toPlan",

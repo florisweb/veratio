@@ -1,3 +1,29 @@
+const Errors = { // Captial E for server-given errors, small e for client errors/connection errors
+  NO_AUTH:                Symbol('E_NO_AUTH'),
+  PROJECT_NOT_FOUND:      Symbol('E_PROJECT_NOT_FOUND'),
+  USER_NOT_IN_PROJECT:    Symbol('E_USER_NOT_IN_PROJECT'),
+  ACTION_NOT_ALLOWED:     Symbol('E_ACTION_NOT_ALLOWED'),
+  INTERNAL:               Symbol('E_INTERNAL'),
+  INVALID_PARAMETERS:     Symbol('E_INVALID_PARAMETERS'),
+  
+  INVALID_EMAIL:          Symbol('E_INVALID_EMAIL'),
+  EMAIL_ALREADY_INVITED:  Symbol('E_EMAIL_ALREADY_INVITED'),
+
+
+  RESPONSE_ERROR:         Symbol('e_RESPONSE_ERROR'),
+}
+
+function isError(_error) {
+  for (let key in Errors)
+  {
+    if (Errors[key] === _error) return true;
+  }
+  return false;
+}
+
+
+
+
 
 // System:
 // 1. Fill cache from localDB: initial data
@@ -93,16 +119,23 @@ const Server = new class {
 
     return new Promise((resolve) => {
       this.#sendRequest(_url, parameters).then(async (response) => {
-         let result = await response.text();
+          let result = await response.text();
           try {
             result = Encoder.decodeObj(JSON.parse(result));
           } catch (e) {}
 
           if (result.error == "E_noAuth") App.promptAuthentication();
+          if (result.error) 
+          {
+            console.log('e2', result.error);
+              console.log('e', Errors[result.error.substr(2, Infinity)]);
+            result.error = Errors[result.error.substr(2, Infinity)];
+        }
+
           resolve(result);
       }, async (error) => {
         console.log(error, '-> E_noConnection');
-        if (_attemptsLeft <= 0) return resolve({error: "E_responseError", result: false});
+        if (_attemptsLeft <= 0) return resolve({error: Errors['RESPONSE_ERROR'], result: false});
         await wait(500);
         resolve(this.fetchData(_url, _parameters, _attemptsLeft - 1));
       });

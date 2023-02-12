@@ -168,8 +168,8 @@ function _Popup_inviteByEmail() {
 		{
 			switch (response.error)
 			{
-				case "E_invalidEmail": return Popup.showMessage({title: "Invalid email", text: "Please enter a valid email-adress.", buttons: [{title: "close", filled: true}]}); break;
-				case "E_emailAlreadyInvited": Popup.showMessage({title: "Already invited", text: "An invite has already been send to this email-adress.", buttons: [{title: "close", filled: true}]}); break;
+				case Errors.INVALID_EMAIL: return Popup.showMessage({title: "Invalid email", text: "Please enter a valid email-adress.", buttons: [{title: "close", filled: true}]}); break;
+				case Errors.EMAIL_ALREADY_INVITED: Popup.showMessage({title: "Already invited", text: "An invite has already been send to this email-adress.", buttons: [{title: "close", filled: true}]}); break;
  				default: Popup.showMessage({title: "Error while inviting", text: "An error accured while trying to invite a user: " + response.error, buttons: [{title: "close", filled: true}]}); break;
  			}
 		}
