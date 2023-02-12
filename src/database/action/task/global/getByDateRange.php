@@ -20,9 +20,8 @@
 			{
 				array_push($output, $task->toArray());
 			}
-			die(createResponse($result));
 		}
 	}
 
-	echo createResponse($result);
+	echo createResponse($output);
 ?>

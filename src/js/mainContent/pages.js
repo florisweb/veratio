@@ -304,7 +304,7 @@ function taskPage_tab_week() {
 	}
 
 	async function onSilentRender(_fromCache) {
-		let splitTasks = getTaskListByDateRange({date: startDate, range: daysLoaded}, _fromCache);
+		let splitTasks = await getTaskListByDateRange({date: startDate, range: daysLoaded}, _fromCache);
 		for (let taskHolder of MainContent.taskHolder.list)
 		{
 			if (taskHolder.type !== 'date') continue;
