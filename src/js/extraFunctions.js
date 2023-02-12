@@ -195,3 +195,10 @@ Math.easeInOutQuad = function (t, b, c, d) {
   t--;
   return -c/2 * (t*(t-2) - 1) + b;
 };
+
+
+function wait(_ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, _ms);
+  });
+}

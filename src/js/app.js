@@ -48,7 +48,6 @@ function _app() {
     setTimeout(function () {
       SideBar.messagePopup.showLatestMessage();
     }, 1000);
-    
 
     MainContent.startLoadingAnimation();
     await SideBar.projectList.quickFillProjectHolder();   

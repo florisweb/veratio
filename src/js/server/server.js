@@ -58,19 +58,29 @@ const Server = new class {
   }
 
 
+  #fetchingProjectList = false;
   async fetchProjectList() {
-    let response = await this.fetchData('database/action/getFilledProjectList.php');
-    if (response.error) {console.warn(response.error, response); return false;}
+    if (this.#fetchingProjectList) return await this.#fetchingProjectList;
 
-    let promises = [];
-    for (let projectData of response.result)
-    {
-      promises.push((new Project().import(projectData)).then((_project) => {
-        this.#projectList.push(_project);
-      }));
-    }
-    this.#projectList = [];
-    await Promise.all(promises)
+    this.#fetchingProjectList = new Promise(async (resolve) => {
+      let response = await this.fetchData('database/action/getFilledProjectList.php');
+      if (response.error) {console.warn(response.error, response); resolve(false); return false;}
+
+      let promises = [];
+      for (let projectData of response.result)
+      {
+        promises.push((new Project().import(projectData)).then((_project) => {
+          this.#projectList.push(_project);
+        }));
+      }
+
+      this.#projectList = [];
+      await Promise.all(promises)
+      resolve(this.#projectList);
+    });
+
+    await this.#fetchingProjectList;
+    this.#fetchingProjectList = false;
     return this.#projectList;
   }
   
