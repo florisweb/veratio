@@ -37,6 +37,23 @@
 	background: rgb(255, 245, 227);
 }
 
+.mainContentPage.plannerPage .dayHolder .UIDayElement.inPast .dateHolder {
+	opacity: .5;
+}
+
+
+.mainContentPage.plannerPage .dayHolder .UIDayElement .taskHolder {
+	width: 100%;
+	height: calc(100px - 30px);
+	overflow: hidden;
+}
+.mainContentPage.plannerPage .dayHolder .UIDayElement .taskHolder .taskPreview {
+	white-space: nowrap;
+	font-size: 13px;
+	text-overflow: ellipsis;
+	margin-bottom: 5px;
+}
+
 
 .mainContentPage.plannerPage .dayHolder.dayNameHolder .UIDayElement {
 	padding: 0 10px;
@@ -45,6 +62,13 @@
 	line-height: 30px;
 }
 
+
+
+
+
 .mainContentPage.plannerPage .dayHolder.dayNameHolder .UIDayElement:not(.weekend) {
 	background: #fff;
 }
+
+
+
