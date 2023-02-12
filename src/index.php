@@ -102,7 +102,7 @@
 					<div class='optionMenuHolder searchOption hide'></div>
 
 
-					<div onclick="MainContent.taskPage.weekTab.loadMoreDays(3)" class="smallTextHolder clickable loadMoreButton">
+					<div onclick="MainContent.taskPage.weekTab.loadMoreDays(7)" class="smallTextHolder clickable loadMoreButton">
 						<a class="smallText smallTextIcon">+</a>
 						<div class="titleHolder userText smallText">Load more</div>
 					</div>

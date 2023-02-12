@@ -60,7 +60,7 @@ const Server = new class {
 
   async fetchProjectList() {
     let response = await this.fetchData('database/action/getFilledProjectList.php');
-    if (response.error) {console.warn(response.error, response); return response.error;}
+    if (response.error) {console.warn(response.error, response); return false;}
 
     let promises = [];
     for (let projectData of response.result)

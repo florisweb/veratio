@@ -265,8 +265,9 @@ function _SideBar_projectList() {
 
 	this.render = async function(_fromCache) {
 		if (!_fromCache) {
-			this.projects =  await Server.fetchProjectList();
+			this.projects = await Server.fetchProjectList();
 		} else this.projects = Server.projectList;
+		if (!this.projects) return;
 
 		HTML.projectsHolder.innerHTML = "";
 		for (let project of this.projects) project.HTML = createProjectHTML(project);
