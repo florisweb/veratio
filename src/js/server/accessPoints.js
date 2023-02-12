@@ -1,9 +1,10 @@
 
 
 class Server_AccessPoints {
-  todayTab = new TodayTabAccessPoint();
-  projectTab = new ProjectTabAccessPoint();
-  weekTab   = new WeekTabAccessPoint();
+  todayTab    = new TodayTabAccessPoint();
+  projectTab  = new ProjectTabAccessPoint();
+  weekTab     = new WeekTabAccessPoint();
+  generalTab  = new GeneralTabAccessPoint();
   constructor() {
 
   }
@@ -19,6 +20,14 @@ class AccessPoint {
   }
 }
 
+
+class GeneralTabAccessPoint extends AccessPoint {
+  async getOverdueTasks(_projectId, _fromCache) {
+    let project = Server.getProject(_projectId);
+    if (!project) project = Server.global;
+    return await project.tasks.getByGroup({groupType: 'overdue'}, _fromCache);
+  }
+}
 
 class TodayTabAccessPoint extends AccessPoint {
   async getTasks(_fromCache = false) {

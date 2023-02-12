@@ -42,7 +42,6 @@ function _TaskRenderer() {
 		}
 
 		function fillInTaskData(html, task, project, renderSettings) {
-			console.log('fill', project, task);
 			setTextToElement(html.children[2], task.title);
 			setMemberText(html, task, project);
 			setOwnerIndicator(html, task, project);

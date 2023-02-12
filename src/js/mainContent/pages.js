@@ -182,12 +182,10 @@ function taskPage_tab(_settings) {
 	}
 
 	async function getOverdueTasks(_fromCache = true) {
-		let project = MainContent.curProject;
-		if (!project) project = Server.global;
-
-		let taskList = await project.tasks.getByGroup({type: "overdue", value: "*"}, _fromCache);
-		if (!taskList || !taskList.length) return false;
-		return taskList;
+		// False defaults to Server.global
+		let tasks = await Server.accessPoints.generalTab.getOverdueTasks(MainContent.curProject ? MainContent.curProject.id : false, _fromCache)
+		tasks = TaskSorter.defaultSort(tasks);
+		return tasks;
 	}
 }
 
