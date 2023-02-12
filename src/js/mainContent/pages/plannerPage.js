@@ -2,7 +2,7 @@
 
 
 class MainContent_plannerPage {
-	#dayHeightScrollMargin = 5 * 100; // 100 = height element
+	#dayHeightScrollMargin = 10; // 100 = height element
 
 	HTML = {};
 	constructor() {
@@ -23,17 +23,17 @@ class MainContent_plannerPage {
 		MainContent.header.setMemberList([]);
 
 		this.render();
-		this.HTML.infiniteScrollHolder.scrollTop = this.#dayHeightScrollMargin;
+		this.HTML.infiniteScrollHolder.scrollTop = this.#dayHeightScrollMargin * 100;
 	}
 
 
 	#UIDays = [];
 	async render() {
 		let date = new Date();
-		let firstDateOfWeek = date.moveDay(-date.getDay() + 1 - 7 * (5 + 1)); // 0: sunday -> 1: monday
+		let firstDateOfWeek = date.moveDay(-date.getDay() + 1 - 7 * (this.#dayHeightScrollMargin + 1)); // 0: sunday -> 1: monday
 
 		this.#firstWeekDate = firstDateOfWeek;
-		for (let i = 0; i < 20; i++)
+		for (let i = 0; i < 10 + this.#dayHeightScrollMargin * 2; i++)
 		{
 			let curDate = firstDateOfWeek.copy().moveDay(i * 7);
 			this.renderWeekAtEnd(curDate);
@@ -91,18 +91,20 @@ class MainContent_plannerPage {
 
 	#onScroll() {
 		let scrollY = this.HTML.infiniteScrollHolder.scrollTop;
-		let scrollFromTop = scrollY - this.#dayHeightScrollMargin;
-		let scrollFromBottom = this.HTML.dayHolder.offsetHeight - scrollY - this.HTML.infiniteScrollHolder.offsetHeight - this.#dayHeightScrollMargin;
+		let scrollFromTop = scrollY - this.#dayHeightScrollMargin * 100;
+		let scrollFromBottom = this.HTML.dayHolder.offsetHeight - scrollY - this.HTML.infiniteScrollHolder.offsetHeight - this.#dayHeightScrollMargin * 100;
 
 		if (scrollFromTop < 0)
 		{
 			this.renderWeekAtStart(this.#firstWeekDate.copy().moveDay(-7));
+			this.HTML.infiniteScrollHolder.scrollTop += 100;
 			this.removeWeekAtEnd();
 			this.#onWeekChange();
 		} else if (scrollFromBottom < 0)
 		{
 			this.renderWeekAtEnd(this.#lastWeekDate.copy().moveDay(7));
 			this.removeWeekAtStart();
+			this.HTML.infiniteScrollHolder.scrollTop -= 100;
 			this.#onWeekChange();
 		}
 
@@ -110,7 +112,6 @@ class MainContent_plannerPage {
 	}
 
 	#onWeekChange() {
-		console.log(this.#firstWeekDate);
 		let curWeek = this.#firstWeekDate.copy().moveDay(7 * 7);
 		MainContent.header.setTitle("Planner - " + curWeek.getMonths()[curWeek.getMonth()].name + ' ' + curWeek.getFullYear());
 	}
