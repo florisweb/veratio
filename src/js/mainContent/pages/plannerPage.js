@@ -38,6 +38,7 @@ class MainContent_plannerPage {
 			let curDate = firstDateOfWeek.copy().moveDay(i * 7);
 			this.renderWeekAtEnd(curDate);
 		}
+		this.#onWeekChange();
 	}
 
 
@@ -76,7 +77,6 @@ class MainContent_plannerPage {
 
 		let taskList = await Server.accessPoints.weekTab.getTasksByDateRange({date: _firstDay, range: 7}, true);
 		let tasksByDate = splitTasksByDate(TaskSorter.defaultSort(taskList));
-		console.log(tasksByDate);
 		for (let day of UIDays) day.setTasks(tasksByDate[day.date.toString()]);
 	}
 	
@@ -98,13 +98,21 @@ class MainContent_plannerPage {
 		{
 			this.renderWeekAtStart(this.#firstWeekDate.copy().moveDay(-7));
 			this.removeWeekAtEnd();
+			this.#onWeekChange();
 		} else if (scrollFromBottom < 0)
 		{
 			this.renderWeekAtEnd(this.#lastWeekDate.copy().moveDay(7));
 			this.removeWeekAtStart();
+			this.#onWeekChange();
 		}
 
 		if (scrollY === 0) wait(0).then(() => {this.HTML.infiniteScrollHolder.scrollTop++; this.#onScroll()});
+	}
+
+	#onWeekChange() {
+		console.log(this.#firstWeekDate);
+		let curWeek = this.#firstWeekDate.copy().moveDay(7 * 7);
+		MainContent.header.setTitle("Planner - " + curWeek.getMonths()[curWeek.getMonth()].name + ' ' + curWeek.getFullYear());
 	}
 
 }
