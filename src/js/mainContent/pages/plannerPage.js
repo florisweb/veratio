@@ -139,9 +139,16 @@ class PlannerPage_UIDay {
 
 		this.#HTML.dateHolder = this.#HTML.self.children[0];
 		this.#HTML.taskHolder = this.#HTML.self.children[1];
-		let title = this.date.getDate()
-		if (this.date.getDate() === 1) title += ' ' + this.date.getMonths()[this.date.getMonth()].name.substr(0, 3);
-		setTextToElement(this.#HTML.dateHolder, title);
+		
+
+		if (this.date.getDate() === 1)
+		{
+			let monthLabel = createElement('div', 'text monthLabel');
+			setTextToElement(monthLabel, this.date.getMonths()[this.date.getMonth()].name);
+			this.#HTML.self.append(monthLabel);
+		}
+
+		setTextToElement(this.#HTML.dateHolder, this.date.getDate());
 	}
 
 	get HTML() {
@@ -156,7 +163,7 @@ class PlannerPage_UIDay {
 			let curTask = _tasks[i];
 			let taskHolder = createElement('div', 'taskPreview text');
 			setTextToElement(taskHolder, curTask.title);
-			if (curTask.tagId) 
+			if (curTask.tagId && curTask.project) 
 			{
 				let tag = curTask.project.tags.get(curTask.tagId);
 				if (tag) taskHolder.style.color = tag.colour.toHex();
