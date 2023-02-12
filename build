@@ -9,7 +9,7 @@ cat src/js/extraFunctions.js src/js/DOMData.js src/js/time.js src/js/color.js sr
 cd "$(dirname "$0")"
 echo - Building CSS
 
-cat src/css/component.css src/css/popup.css src/css/main.css src/css/sideBar.css src/css/mainContent/mainContent.css src/css/mainContent/taskHolder.css src/css/mainContent/header.css > dist/main_min.css
+cat src/css/component.css src/css/popup.css src/css/main.css src/css/sideBar.css src/css/mainContent/mainContent.css src/css/mainContent/taskHolder.css src/css/mainContent/header.css src/css/mainContent/planner.css > dist/main_min.css
 
 cp -r src/images dist
 cp -r src/database dist

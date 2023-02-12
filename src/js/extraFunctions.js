@@ -202,3 +202,23 @@ function wait(_ms) {
     setTimeout(resolve, _ms);
   });
 }
+
+
+function createElement(_tag, _class) {
+  let elem = document.createElement(_tag);
+  elem.className = _class;
+  return elem;
+}
+
+
+
+function splitTasksByDate(_tasks) {
+  let response = {};
+  for (let task of _tasks) 
+  {
+    if (task.groupType !== 'date') continue;
+    if (!response[task.groupValue]) response[task.groupValue] = [];
+    response[task.groupValue].push(task);
+  }
+  return response;
+}

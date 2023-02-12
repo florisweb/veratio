@@ -131,10 +131,11 @@
 					</div>
 				</div>
 
-				<div class="mainContentPage doNotAlignLeft plannerPage hide">
-					<br>
-					<br>
-					<div class='text' style='text-align: center;'>Work in progress...</div>
+				<div class="mainContentPage plannerPage hide">
+					<div class="infiniteScrollHolder">
+						<div class='dayHolder'>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

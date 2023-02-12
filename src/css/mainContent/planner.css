@@ -1,0 +1,36 @@
+
+
+
+.mainContentPage.plannerPage .infiniteScrollHolder {
+	position: relative;
+	border: 1px solid red;
+	width: 100%;
+	height: calc(100vh - 100px);
+	overflow: auto;
+}
+.mainContentPage.plannerPage .infiniteScrollHolder::-webkit-scrollbar {
+	display: none;
+}
+
+
+.mainContentPage.plannerPage .dayHolder {
+	position: absolute;
+	width: 100%;
+	height: auto;
+	display: grid;
+	grid-template-columns: repeat(7, auto);
+}
+
+
+.mainContentPage.plannerPage .dayHolder * {
+	box-sizing: border-box;
+}
+
+.mainContentPage.plannerPage .dayHolder .UIDayElement {
+	border: 1px solid blue;
+	padding: 10px;
+	height: 100px;
+}
+.mainContentPage.plannerPage .dayHolder .UIDayElement.weekend {
+	background: rgb(248, 245, 237);
+}

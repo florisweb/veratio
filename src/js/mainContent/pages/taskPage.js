@@ -304,17 +304,6 @@ function taskPage_tab_week() {
 		if (lastTaskHolder.type != "date") return false;
 		return lastTaskHolder.date.copy().moveDay(1);
 	}
-
-	function splitTasksByDate(_tasks) {
-		let response = {};
-		for (let task of _tasks) 
-		{
-			if (task.groupType !== 'date') continue;
-			if (!response[task.groupValue]) response[task.groupValue] = [];
-			response[task.groupValue].push(task);
-		}
-		return response;
-	}
 }
 
 
