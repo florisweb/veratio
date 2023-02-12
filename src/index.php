@@ -132,8 +132,19 @@
 				</div>
 
 				<div class="mainContentPage plannerPage hide">
-					<div class="infiniteScrollHolder">
-						<div class='dayHolder'>
+					<div class='plannerHolder'>
+						<div class='dayHolder dayNameHolder'>
+							<div class="UIDayElement text">Mon</div>
+							<div class="UIDayElement text">Tue</div>
+							<div class="UIDayElement text">Wed</div>
+							<div class="UIDayElement text">Thu</div>
+							<div class="UIDayElement text">Fri</div>
+							<div class="UIDayElement text weekend">Sat</div>
+							<div class="UIDayElement text weekend">Sun</div>
+						</div>
+						<div class="infiniteScrollHolder">
+							<div class='dayHolder'>
+							</div>
 						</div>
 					</div>
 				</div>

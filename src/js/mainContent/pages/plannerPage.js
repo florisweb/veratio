@@ -115,8 +115,9 @@ class PlannerPage_UIDay {
 		`;
 
 		this.#HTML.dateHolder = this.#HTML.self.children[0];
-
-		setTextToElement(this.#HTML.dateHolder, this.date.toString() + ' (' + tasks.length + ')');
+		let title = this.date.getDate()
+		if (this.date.getDate() === 1) title += ' ' + this.date.getMonths()[this.date.getMonth()].name.substr(0, 3);
+		setTextToElement(this.#HTML.dateHolder, title);
 	}
 
 	get HTML() {
