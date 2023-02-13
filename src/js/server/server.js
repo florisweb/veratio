@@ -75,6 +75,17 @@ const Server = new class {
     this.fetchProjectList(); // Overwrites later
   }
 
+
+  async createProject(_title) {
+    let response = await this.fetchData('database/action/createProject.php', "title=" + _title);
+    console.log('response', response);
+    if (response.error) return response.error;
+    this.#projectList.push((new Project()).import(response.result));
+    return true;
+  }
+
+
+
   get projectList() {
     return this.#projectList;
   }

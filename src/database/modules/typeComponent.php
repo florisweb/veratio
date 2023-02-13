@@ -50,7 +50,7 @@
 		}
 		private function readData() { // returns array in raw (non typed) way
 			if (!$this->Project) return false;
-			return $GLOBALS['DBHelper']->readProjectDataToColumn(
+			return $GLOBALS['DBHelper']->readProjectDataFromColumn(
 				$this->Project->id,
 				$this->Type, 
 			);

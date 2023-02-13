@@ -40,6 +40,14 @@
 			return !!$this->getUserById($_user->id);
 		}
 
+		public function rename($_newTitle) {
+			if (!$this->curUser) return E_NO_AUTH;
+			if ($this->curUser->permissions < 2) return E_ACTION_NOT_ALLOWED;
+			$result = $GLOBALS['DBHelper']->writeProjectTitle($this->id, $_newTitle);
+			if ($result) {$this->title = $_newTitle; $this->_projectInfo['title'] = $_newTitle;}
+			return $result;
+		}
+
 
 		private function getUserById($_userId) {
 			$projectInfo = $this->getProjectInfo();

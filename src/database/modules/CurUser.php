@@ -12,6 +12,7 @@
 		public $isLinkUser 			= false;
 		public $linkUserVerified 	= false;
 		public $isSignedIn 			= false;
+		public $name 				= '---';
 
 		public function __construct() {
 			if ($this->validateLinkUser()) return;
@@ -19,6 +20,7 @@
 			if (!$id || is_null($id)) return;
 			$this->id 			= sha1($id);
 			$this->isSignedIn 	= true;
+			$this->name = (string)$GLOBALS["SESSION"]->get("userName");
 		}
 
 		private function validateLinkUser() {
@@ -49,6 +51,27 @@
 			}
 			return $projects;
 		}
+
+		public function getProject($_id) {
+			$project = new Project($_id);
+			if (!$project->projectExists()) return E_PROJECT_NOT_FOUND;
+			if (!$project->userInProject($this)) return E_USER_NOT_IN_PROJECT;
+			$project->setCurUser($this);
+			return $project;
+		}
+
+		public function createProject($_title) {
+			if (!$_title || strlen($_title) < 2) return E_INVALID_PARAMETERS;
+			$projectId = $GLOBALS['DBHelper']->createProject($this);
+			if (!$projectId) return E_PROJECT_NOT_CREATED;
+		
+			$project = $this->getProject($projectId);
+			if (!$project || isError($project)) return E_PROJECT_NOT_CREATED;
+			$titleChanged = $project->rename($_title);
+			if (!$titleChanged) return E_PROJECT_NOT_CREATED;
+			if (isError($titleChanged)) return $titleChanged;
+			return $project;
+		}
 	}
-	
+
 ?>

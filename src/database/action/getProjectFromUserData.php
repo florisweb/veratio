@@ -3,8 +3,6 @@
 	if (!isset($_POST['projectId'])) die(createErrorResponse(E_INVALID_PARAMETERS));
 
 	$_projectId = $_POST['projectId'];
-	$project 	= new Project($_projectId);
-	if (!$project->projectExists()) die(createErrorResponse(E_PROJECT_NOT_FOUND));
-	if (!$project->userInProject($CurUser)) die(createErrorResponse(E_USER_NOT_IN_PROJECT));
-	$project->setCurUser($CurUser);
+	$project = $CurUser->getProject($_projectId);
+	if (isError($project)) die(createErrorResponse($project));
 ?>
