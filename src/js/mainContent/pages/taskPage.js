@@ -228,12 +228,23 @@ function taskPage_tab_today() {
 
 function taskPage_tab_week() {
 	let This = this;
+	let HTML = {
+		loadMoreButton: $('.titleHolder.userText.smallText')[0],
+		page: ('.mainContentPage')[0],
+	}
+	
 	taskPage_tab.call(this, {
 		name: "week",
 		onOpen: onOpen,
 		showLoadMoreButton: true,
 		onSilentRender: onSilentRender
 	});
+
+	registerInfiniteScroller();
+
+	
+
+
 
 	let startDate = new Date();
 	let daysLoaded = 7;
@@ -305,6 +316,24 @@ function taskPage_tab_week() {
 		let lastTaskHolder = MainContent.taskHolder.list[MainContent.taskHolder.list.length - 1];
 		if (lastTaskHolder.type != "date") return false;
 		return lastTaskHolder.date.copy().moveDay(1);
+	}
+
+
+	function registerInfiniteScroller() {
+		function callback(_e) {
+			let entry = _e[0];
+			if (!entry.isIntersecting) return;
+			This.loadMoreDays(7);
+		}
+
+		let options = {
+		  root: HTML.page.parentElement,
+		  rootMargin: '0px',
+		  threshold: 1.0
+		}
+
+		let observer = new IntersectionObserver(callback, options);
+		observer.observe(HTML.loadMoreButton)
 	}
 }
 
