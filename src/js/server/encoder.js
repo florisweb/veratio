@@ -29,8 +29,15 @@ const Encoder = new function() {
       return recursivelyDecodeObj(newObj);
     }
 
+    this.decodeObjFromString = function(_str) {
+      let newObj = JSON.parse(_str);
+      if (!newObj) return false;
+      return recursivelyDecodeObj(newObj);
+    }
+
 
     function recursivelyDecodeObj(_obj) {
+      if (!_obj) return _obj;
       let keys = Object.keys(_obj);
       for (let k = 0; k < keys.length; k++)
       {

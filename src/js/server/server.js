@@ -132,16 +132,11 @@ const Server = new class {
       this.#sendRequest(_url, parameters).then(async (response) => {
           let result = await response.text();
           try {
-            result = Encoder.decodeObj(JSON.parse(result));
-          } catch (e) {}
+            result = Encoder.decodeObjFromString(result);
+          } catch (e) {console.warn('Error decoding result:', e, result);}
 
           if (result.error == "E_noAuth") App.promptAuthentication();
-          if (result.error) 
-          {
-            console.log('e2', result.error);
-              console.log('e', Errors[result.error.substr(2, Infinity)]);
-            result.error = Errors[result.error.substr(2, Infinity)];
-        }
+          if (result.error) result.error = Errors[result.error.substr(2, Infinity)];
 
           resolve(result);
       }, async (error) => {
