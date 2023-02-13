@@ -14,10 +14,18 @@ class Project extends ProjectData {
 
   }
 
-  remove() {
-    
+  async rename(_newTitle) {
+    let response = await Server.fetchData('database/action/project/rename.php', "projectId=" + this.id + "&title=" + _newTitle);
+    if (response.error) return response.error;
+    this.title = response.title;
+    return response.result;
+  }
+
+  async remove() {
 
   }
+
+
 
   async import(_data) {
     this.users.import(_data.users);

@@ -48,6 +48,10 @@
 			return $result;
 		}
 
+		public function remove() {
+			
+		}
+
 
 		private function getUserById($_userId) {
 			$projectInfo = $this->getProjectInfo();
