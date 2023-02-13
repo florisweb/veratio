@@ -1,5 +1,5 @@
 <?php
-	require_once __DIR__ . "/checkAuth.php";
+	require_once __DIR__ . "/../checkAuth.php";
 	if (!isset($_POST['title'])) die(createErrorResponse(E_INVALID_PARAMETERS));
 
 	$project = $CurUser->createProject($_POST['title']);

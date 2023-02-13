@@ -75,7 +75,6 @@ function _MainContent() {
 			]
 		});
 		if (!actionValidated) return;
-		
 		await MainContent.curProject.remove();
 		
 		MainContent.taskPage.todayTab.open();

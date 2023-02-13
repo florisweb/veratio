@@ -42,7 +42,7 @@ function _MainContent_header() {
 		Menu.addOption(
 			"Remove project", 
 			function () {
-				MainContent.removeCurrentProject()
+				MainContent.removeCurrentProject();
 				return true;
 			}, 
 			"images/icons/removeIcon.png"
@@ -60,8 +60,8 @@ function _MainContent_header() {
 		this.open = async function() {
 			Menu.enableAllOptions();
 
-			if (!MainContent.curProject.users.self.permissions.project.remove || !Server.connected)	Menu.options[3].disable();
-			if (!MainContent.curProject.users.self.permissions.project.rename)						Menu.options[4].disable();
+			if (!MainContent.curProject.users.self.permissions.project.remove)	Menu.options[3].disable();
+			if (!MainContent.curProject.users.self.permissions.project.rename)	Menu.options[4].disable();
 
 			return Menu.open(HTML.optionIcon, {top: 45});
 		}

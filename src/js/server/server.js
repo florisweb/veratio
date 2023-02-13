@@ -77,11 +77,11 @@ const Server = new class {
 
 
   async createProject(_title) {
-    let response = await this.fetchData('database/action/createProject.php', "title=" + _title);
-    console.log('response', response);
+    let response = await this.fetchData('database/action/project/create.php', "title=" + _title);
     if (response.error) return response.error;
-    this.#projectList.push((new Project()).import(response.result));
-    return true;
+    let project = (new Project()).import(response.result);
+    this.#projectList.push(project);
+    return project;
   }
 
 
