@@ -23,14 +23,22 @@
 
 
 		public function remove($_id) {
-			if (!$this->Project->curUser) return E_ACTION_NOT_ALLOWED;
+			if (!$this->Project->curUser) return E_NO_AUTH;
 			$permissions = $this->Project->curUser->permissions;
 			if ($permissions < 2) return E_ACTION_NOT_ALLOWED;
 
 			$user = $this->get($_id);
 			if (!$user) return E_INVALID_PARAMETERS;
 			if ($user->permissions > $permissions && $user->id !== $this->Project->curUser->id) return E_ACTION_NOT_ALLOWED;
-			return parent::remove($_id);
+			$result = parent::remove($_id);
+			if ($result) $this->onRemove();
+			return $result;
+		}
+
+		private function onRemove() {
+			$list = $this->getAll();
+			if (sizeof($list) > 0) return;
+			return $GLOBALS['DBHelper']->removeProject($this->Project->id);
 		}
 	
 
