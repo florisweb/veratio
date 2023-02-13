@@ -49,7 +49,9 @@
 		}
 
 		public function remove() {
-			
+			if (!$this->curUser) return E_NO_AUTH;
+			if ($this->curUser->permissions < 3) return E_ACTION_NOT_ALLOWED;
+			return $GLOBALS['DBHelper']->removeProject($this->id);
 		}
 
 

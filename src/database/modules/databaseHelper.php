@@ -46,12 +46,7 @@
 		}
 
 
-		public function writeProjectTitle(string $_projectId, string $_title) {
-			return $this->DB->execute(
-				"UPDATE $this->DBTableName SET title=? WHERE id=? LIMIT 1", 
-				array($_title, $_projectId)
-			);
-		}
+		
 
 	
 		public function writeProjectDataToColumn(string $_projectId, string $_type, string $_data) {
@@ -97,6 +92,20 @@
 			return $projectId;
 		}
 
+		public function removeProject($_projectId) {
+			return $this->DB->execute(
+				"DELETE FROM $this->DBTableName WHERE id=? LIMIT 1", 
+				array($_projectId)
+			);
+		}
+
+
+		public function writeProjectTitle(string $_projectId, string $_title) {
+			return $this->DB->execute(
+				"UPDATE $this->DBTableName SET title=? WHERE id=? LIMIT 1", 
+				array($_title, $_projectId)
+			);
+		}
 
 
 

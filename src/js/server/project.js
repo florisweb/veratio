@@ -22,13 +22,18 @@ class Project extends ProjectData {
   }
 
   async remove() {
-
+    let response = await Server.fetchData('database/action/project/remove.php', "projectId=" + this.id);
+    if (response.error) return response.error;
+    return response.result;
   }
 
 
   async leave() {
     return this.users.remove(this.users.self.id);
   }
+
+
+
 
 
 
