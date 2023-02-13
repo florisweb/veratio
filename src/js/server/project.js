@@ -26,6 +26,11 @@ class Project extends ProjectData {
   }
 
 
+  async leave() {
+    return this.users.remove(this.users.self.id);
+  }
+
+
 
   async import(_data) {
     this.users.import(_data.users);
