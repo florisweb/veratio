@@ -354,7 +354,7 @@ function taskPage_tab_project() {
 		
 		MainContent.header.showItemsByPage("project");
 		MainContent.header.setTitle(project.title);
-		MainContent.header.setMemberList(project.users.list);
+		MainContent.header.setMemberList(project.users.list.filter((_user) => !_user.self));
 
 		await This.addNotPlannedTaskHolder(false, true);
 		await This.addToBePlannedTaskHolder(true, true);
